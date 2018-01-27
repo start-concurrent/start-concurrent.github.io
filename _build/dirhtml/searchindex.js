@@ -1,0 +1,1 @@
+Search.setIndex({docnames:["index"],envversion:52,filenames:["index.rst"],objects:{},objnames:{},objtypes:{},terms:{index:0,modul:0,page:0,search:0},titles:["Welcome to Start Concurrent\u2019s documentation!"],titleterms:{concurr:0,document:0,indic:0,start:0,tabl:0,welcom:0}})
