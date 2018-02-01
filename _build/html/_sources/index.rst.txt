@@ -1,20 +1,14 @@
-.. Start Concurrent documentation master file, created by
-   sphinx-quickstart on Fri Jan 26 21:06:14 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Welcome to Programming with Java!
+=================================
 
-Welcome to Start Concurrent's documentation!
-============================================
+*Start Concurrent: A Gentle Introduction to Concurrent Programming*
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :numbered:
+   :caption: Table of Contents
 
-
-
-Indices and tables
-==================
+   chapters/01-introduction/index
+   chapters/02-getting-started/index
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
