@@ -3,7 +3,7 @@ import java.util.*;
 public class GetInputCLI {
     public static void main(String[] args) {
         // Create an object named in for input
-        Scanner in = new Scanner(System.in); /*@\label{createScannerGetInputDataObject}@*/
+        Scanner in = new Scanner(System.in); // <1>
 
         // Declare variables to hold input data
         double height, coefficient;
