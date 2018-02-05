@@ -5,6 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.6.1">
+<meta name="author" content="Barry Wittman, Aditya Mathur, Tim Korb">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -424,17 +425,98 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .hide-for-print{display:none!important}
 .show-for-print{display:inherit!important}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<style>
+.listingblock .pygments .hll { background-color: #ffffcc }
+.listingblock .pygments, .listingblock .pygments code { background: #f8f8f8; }
+.listingblock .pygments .tok-c { color: #408080; font-style: italic } /* Comment */
+.listingblock .pygments .tok-err { border: 1px solid #FF0000 } /* Error */
+.listingblock .pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+.listingblock .pygments .tok-o { color: #666666 } /* Operator */
+.listingblock .pygments .tok-ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.listingblock .pygments .tok-cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.listingblock .pygments .tok-cp { color: #BC7A00 } /* Comment.Preproc */
+.listingblock .pygments .tok-cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.listingblock .pygments .tok-c1 { color: #408080; font-style: italic } /* Comment.Single */
+.listingblock .pygments .tok-cs { color: #408080; font-style: italic } /* Comment.Special */
+.listingblock .pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+.listingblock .pygments .tok-ge { font-style: italic } /* Generic.Emph */
+.listingblock .pygments .tok-gr { color: #FF0000 } /* Generic.Error */
+.listingblock .pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.listingblock .pygments .tok-gi { color: #00A000 } /* Generic.Inserted */
+.listingblock .pygments .tok-go { color: #888888 } /* Generic.Output */
+.listingblock .pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.listingblock .pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+.listingblock .pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.listingblock .pygments .tok-gt { color: #0044DD } /* Generic.Traceback */
+.listingblock .pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.listingblock .pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.listingblock .pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.listingblock .pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+.listingblock .pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.listingblock .pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+.listingblock .pygments .tok-m { color: #666666 } /* Literal.Number */
+.listingblock .pygments .tok-s { color: #BA2121 } /* Literal.String */
+.listingblock .pygments .tok-na { color: #7D9029 } /* Name.Attribute */
+.listingblock .pygments .tok-nb { color: #008000 } /* Name.Builtin */
+.listingblock .pygments .tok-nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.listingblock .pygments .tok-no { color: #880000 } /* Name.Constant */
+.listingblock .pygments .tok-nd { color: #AA22FF } /* Name.Decorator */
+.listingblock .pygments .tok-ni { color: #999999; font-weight: bold } /* Name.Entity */
+.listingblock .pygments .tok-ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.listingblock .pygments .tok-nf { color: #0000FF } /* Name.Function */
+.listingblock .pygments .tok-nl { color: #A0A000 } /* Name.Label */
+.listingblock .pygments .tok-nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.listingblock .pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+.listingblock .pygments .tok-nv { color: #19177C } /* Name.Variable */
+.listingblock .pygments .tok-ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.listingblock .pygments .tok-w { color: #bbbbbb } /* Text.Whitespace */
+.listingblock .pygments .tok-mb { color: #666666 } /* Literal.Number.Bin */
+.listingblock .pygments .tok-mf { color: #666666 } /* Literal.Number.Float */
+.listingblock .pygments .tok-mh { color: #666666 } /* Literal.Number.Hex */
+.listingblock .pygments .tok-mi { color: #666666 } /* Literal.Number.Integer */
+.listingblock .pygments .tok-mo { color: #666666 } /* Literal.Number.Oct */
+.listingblock .pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+.listingblock .pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+.listingblock .pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+.listingblock .pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+.listingblock .pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.listingblock .pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+.listingblock .pygments .tok-se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.listingblock .pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+.listingblock .pygments .tok-si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.listingblock .pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+.listingblock .pygments .tok-sr { color: #BB6688 } /* Literal.String.Regex */
+.listingblock .pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+.listingblock .pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+.listingblock .pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+.listingblock .pygments .tok-fm { color: #0000FF } /* Name.Function.Magic */
+.listingblock .pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+.listingblock .pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+.listingblock .pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+.listingblock .pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+.listingblock .pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
 </head>
-<body class="book">
+<body class="book toc2 toc-left">
 <div id="header">
 <h1>Start Concurrent: A Gentle Introduction to Concurrent Programming</h1>
-<div id="toc" class="toc">
+<div class="details">
+<span id="author" class="author">Barry Wittman</span><br>
+<span id="email" class="email"><a href="mailto:bwittman@gmail.com">bwittman@gmail.com</a></span><br>
+<span id="author2" class="author">Aditya Mathur</span><br>
+<span id="email2" class="email"><a href="mailto:apm@purdue.edu">apm@purdue.edu</a></span><br>
+<span id="author3" class="author">Tim Korb</span><br>
+<span id="email3" class="email"><a href="mailto:jtk@purdue.edu">jtk@purdue.edu</a></span><br>
+</div>
+<div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_introduction">Introduction</a>
 <ul class="sectlevel2">
 <li><a href="#_buying_a_computer">Buying a computer</a></li>
 <li><a href="#_concepts">Concepts</a></li>
+<li><a href="#_syntax_and_semantics">Syntax and Semantics</a></li>
 <li><a href="#_solution">Solution</a></li>
 </ul>
 </li>
@@ -444,6 +526,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_test_of_outside_file">Test of Outside File</a></li>
 </ul>
 </li>
+<li><a href="#_index">Index</a></li>
 </ul>
 </div>
 </div>
@@ -451,14 +534,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
-<div class="literalblock">
-<div class="content">
-<pre>Computers are useless.  They can only give you answers.</pre>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Computers are useless.  They can only give you answers.</p>
 </div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>-Pablo Picasso</pre>
+</blockquote>
+<div class="attribution">
+&#8212; Pablo Picasso
 </div>
 </div>
 <div class="sect2">
@@ -466,7 +549,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>We begin almost every chapter of this book with a motivating problem.
 Why? Sometimes it helps to see how tools can be applied in order to see why
-they&#8217;re useful. As we move through each chapter, we cover :index:<code>background</code>
+they&#8217;re useful. As we move through each chapter, we cover :index:`background`
 concepts needed to solve the problem in the Concepts_ section, the
 specific technical details (usually in the form of Java syntax) required in the
 `Syntax and Semantics`_ section, and eventually the solution to the
@@ -486,7 +569,7 @@ more for? Why are there so many buzzwords and so much impenetrable jargon associ
 with buying a computer?</p>
 </div>
 <div class="paragraph">
-<p>When many people hear ":index:<code>computer science</code>," these are often the first questions
+<p>When many people hear ":index:`computer science`," these are often the first questions
 that come to mind. Most of this book is about programming computers in a
 language called Java and not about the computers themselves. We try to present
 all the material so that almost any kind of computer can be used when
@@ -500,9 +583,9 @@ the programs you write work.</p>
 <div class="paragraph">
 <p>A section with lots of concepts in it, related to the main theme of the chapter.</p>
 </div>
-<div class="paragraph">
-<p>===Syntax and Semantics</p>
 </div>
+<div class="sect2">
+<h3 id="_syntax_and_semantics">Syntax and Semantics</h3>
 <div class="paragraph">
 <p>Here is a section on syntax and semantics.</p>
 </div>
@@ -518,38 +601,58 @@ the programs you write work.</p>
 <div class="sect1">
 <h2 id="_programming_and_problem_solving">Programming and Problem Solving</h2>
 <div class="sectionbody">
-<div class="literalblock">
-<div class="content">
-<pre>If you can't solve a problem, then there is an easier problem you can solve: find it.</pre>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>If you can&#8217;t solve a problem, then there is an easier problem you can solve: find it.</p>
 </div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>-George Pólya</pre>
+</blockquote>
+<div class="attribution">
+&#8212; George Pólya
 </div>
 </div>
 <div class="sect2">
 <h3 id="_test_of_regular_java_formatting">Test of Regular Java Formatting</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Here is an inline-specified :index:<code>program example</code></dt>
-<dd>
-<p>import java.util.Scanner;</p>
-<div class="literalblock">
+<div class="paragraph">
+<p>Here is an inline-specified program example:</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<pre>public class Example {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter an integer: ");
-        int value = in.nextInt();
-        System.out.print("That number doubled is: ");
-        System.out.println(value * 2);
-    }
-}</pre>
+<pre class="pygments highlight"><code data-lang="java"><table class="pyhltable"><tr><td class="linenos"><div class="linenodiv"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</div></td><td class="code"><span></span><span class="tok-kn">import</span> <span class="tok-nn">java.util.Scanner</span><span class="tok-o">;</span>
+
+<span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Example</span> <span class="tok-o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-n">Scanner</span> <span class="tok-n">in</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Scanner</span><span class="tok-o">(</span><span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">in</span><span class="tok-o">);</span>
+        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">print</span><span class="tok-o">(</span><span class="tok-s">&quot;Enter an integer: &quot;</span><span class="tok-o">);</span>
+        <span class="tok-kt">int</span> <span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-n">in</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">();</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">print</span><span class="tok-o">(</span><span class="tok-s">&quot;That number doubled is: &quot;</span><span class="tok-o">);</span>
+        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">*</span> <span class="tok-mi">2</span><span class="tok-o">);</span>
+    <span class="tok-o">}</span>
+<span class="tok-o">}</span>
+</td></tr></table></code></pre>
 </div>
 </div>
-</dd>
-</dl>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Beginning of class declaration.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get next integer from the input stream.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>End of program text example.</p>
@@ -558,15 +661,71 @@ the programs you write work.</p>
 <div class="sect2">
 <h3 id="_test_of_outside_file">Test of Outside File</h3>
 <div class="paragraph">
-<p>Here is an imported-file :index:<code>program example</code>:</p>
+<p>Here is an imported-file program example:</p>
 </div>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>literalinclude:: programs/GetInputCLI.java
-:linenos:</p>
-</li>
-</ol>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><table class="pyhltable"><tr><td class="linenos"><div class="linenodiv"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</div></td><td class="code"><span></span><span class="tok-kn">import</span> <span class="tok-nn">java.util.*</span><span class="tok-o">;</span>
+
+<span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">GetInputCLI</span> <span class="tok-o">{</span>
+    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-c1">// Create an object named in for input</span>
+        <span class="tok-n">Scanner</span> <span class="tok-n">in</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Scanner</span><span class="tok-o">(</span><span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">in</span><span class="tok-o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
+
+        <span class="tok-c1">// Declare variables to hold input data</span>
+        <span class="tok-kt">double</span> <span class="tok-n">height</span><span class="tok-o">,</span> <span class="tok-n">coefficient</span><span class="tok-o">;</span>
+        <span class="tok-kt">int</span> <span class="tok-n">bounces</span><span class="tok-o">;</span>
+
+        <span class="tok-c1">// Declare user prompt strings</span>
+        <span class="tok-n">String</span> <span class="tok-n">enterHeight</span> <span class="tok-o">=</span> <span class="tok-s">&quot;Enter the height: &quot;</span><span class="tok-o">;</span>
+        <span class="tok-n">String</span> <span class="tok-n">enterCoefficient</span> <span class="tok-o">=</span> <span class="tok-s">&quot;Enter restitution coefficient: &quot;</span><span class="tok-o">;</span>
+        <span class="tok-n">String</span> <span class="tok-n">enterBounces</span> <span class="tok-o">=</span> <span class="tok-s">&quot;Enter the number of bounces: &quot;</span><span class="tok-o">;</span>
+
+        <span class="tok-c1">// Prompt the user and read data from the keyboard</span>
+        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Bouncing Ball: Subproblem 1&quot;</span><span class="tok-o">);</span>
+        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">print</span><span class="tok-o">(</span><span class="tok-n">enterHeight</span><span class="tok-o">);</span>
+        <span class="tok-n">height</span> <span class="tok-o">=</span> <span class="tok-n">in</span><span class="tok-o">.</span><span class="tok-na">nextDouble</span><span class="tok-o">();</span>
+        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">print</span><span class="tok-o">(</span><span class="tok-n">enterCoefficient</span><span class="tok-o">);</span>
+        <span class="tok-n">coefficient</span> <span class="tok-o">=</span> <span class="tok-n">in</span><span class="tok-o">.</span><span class="tok-na">nextDouble</span><span class="tok-o">();</span>
+        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">print</span><span class="tok-o">(</span><span class="tok-n">enterBounces</span><span class="tok-o">);</span>
+        <span class="tok-n">bounces</span> <span class="tok-o">=</span> <span class="tok-n">in</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">();</span>
+    <span class="tok-o">}</span>
+<span class="tok-o">}</span>
+</td></tr></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create a Scanner object to read from the standard input stream.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>A Java program to get the height, coefficient of
@@ -575,10 +734,28 @@ restitution, and number of bounces from the command line.</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_index">Index</h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The index is not currently being generated by the Asciidoctor HTML5 backend.  Need to use
+the DocBook toolchain to get it.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-02-03 12:18:34 EST
+Last updated 2018-02-05 09:32:58 EST
 </div>
 </div>
 </body>
