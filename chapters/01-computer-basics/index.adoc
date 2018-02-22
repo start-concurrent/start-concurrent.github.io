@@ -1,0 +1,1927 @@
+== Computer Basics
+:imagesdir: chapters/01-computer-basics/images
+
+[quote, Pablo Picasso]
+____
+Computers are useless. They can only give you answers.
+____
+
+NOTE: This chapter was converted from LaTeX using +
+``$ pandoc ComputersTheVeryBasicsChapter.tex -t asciidoc -o index.ad`` +
+and a lot of editing.
+
+NOTE: Need to convert PDF images to jpg, e.g., using `convert`: +
+``$ convert -density 300 figures/vonNeumann.pdf images/vonNeumann.png``
+
+WARNING: Fix all latexmath entries (removing extra $, mainly).
+
+=== Problem: Buying a Computer
+
+We begin almost every chapter of this book with a motivating problem.
+Why? Sometimes it helps to see how tools can be applied in order to see
+why they’re useful. As we move through each chapter, we cover background
+concepts needed to solve the problem in the *Concepts* section, the
+specific technical details (usually in the form of Java syntax) required
+in the *Syntax and Semantics* section, and eventually the solution to
+the problem in the *Solution* sections. If you’re not interested in the
+problem, that’s fine! Feel free to skip ahead to the <<Concepts: Hardware and Software>> section
+or directly to the <<Syntax: Data Representation>> section, especially if you
+already have some programming experience. Then, if you’d like to see
+another detailed example, the <<Solution: Buying a computer>> is
+available as a reference.
+
+We’ll start with a problem that is not about programming and may be
+familiar to you. Imagine you are just about to start college and need a
+computer. Should you buy a Mac or PC? What kind of computer is going to
+run programs faster? Do some kinds of computers crash more than others?
+Which features are worth paying more for? Why are there so many
+buzzwords and so much impenetrable jargon associated with buying a
+computer?
+
+When many people hear "`computer science,`" these are often the first
+questions that come to mind. Most of this book is about programming
+computers in a language called Java and not about the computers
+themselves. We try to present all the material so that almost any kind
+of computer can be used when programming the problems and examples.
+Nevertheless, both the hardware that makes up your computer and the
+other software running on it affect the way the programs you write work.
+
+=== Concepts: Hardware and Software
+
+Computers are ubiquitous. We see them nearly everywhere. They are found
+in most homes, shops, cars, aircraft, phones, and inside many other
+devices. Sometimes they are obvious, like a laptop sitting on a desk.
+But, most computers are hidden inside other devices such as a watch or a
+flat panel television. Computers can be complex or relatively simple
+machines. Despite their diversity, we can think of all computers in
+terms of their _hardware_ and the _software_ that runs on it.
+
+==== Hardware
+
+Hardware consists of the physical components that make up a computer but
+not the programs or data stored on it. Hardware components can be seen
+and touched, if you are willing to open the computer case. One way to
+organize hardware is to break it down into three categories: the
+processor, the memory, and input and output (I/O) devices.
+
+This view of a computer is a simplified version of what is called the
+von Neumann architecture or a stored-program computer. It is a good (but
+imperfect) model of most modern computers. In this model, a program (a
+list of instructions) is stored in memory. The processor loads the
+program and performs the instructions, some of which require the
+processor to do a lot of number-crunching. Sometimes the processor reads
+data out of memory or writes new data into it. Periodically, the
+processor may send output to one of the output devices or receive input
+from one of the input devices.
+
+In other words, the processor thinks, the memory stores, and the I/O
+devices interact with the outside world. The processor sits between the
+memory and the I/O devices. Let’s examine these categories further.
+
+.Hardware components in a typical desktop computer categorized into CPU, memory, and I/O devices.
+image::vonNeumann.png[vonNeumann Architecture]
+
+===== CPU
+
+The processor, or central processing unit (CPU), is the "`brain`" of a
+computer. It fetches instructions, decodes them, and executes them. It
+may send data to or from memory or I/O devices. The CPU on virtually all
+modern computers is a _microprocessor_, meaning that all the computation
+is done by a single integrated circuit fabricated out of silicon. What
+are the important features of CPUs? How do we measure their speed and
+power?
+
+[horizontal]
+Frequency::
+The speed of a CPU (and indeed a computer as a whole) is often quoted
+in gigahertz (GHz). Hertz (Hz) is a measurement of frequency. If
+something happens once per second, it has a frequency of exactly 1 Hz.
+Perhaps the second hand on your watch moves with a frequency of 1 Hz.
+In North America, the current in electrical outlets alternates with a
+frequency of approximately 60 Hz. Sound can also be measured by
+frequency. The lowest-pitched sound the human ear can hear is around
+20 Hz. The highest-pitched sound is around 20,000 Hz. Such a sound
+pulses against your eardrum 20,000 times per second. That sounds like
+a lot, but many modern computers operate at a frequency of 1 to 4
+gigahertz. The prefix "`giga`" means "`billion.`" So, we are talking
+about computers doing *something* more than a billion (1,000,000,000)
+times per second.
++
+But *what* are they doing? This frequency is the _clock rate_, which
+marks how often a regular electrical signal passes through the CPU. On
+each tick, the CPU does some computation. How much? It depends. On
+some systems, simple instructions (like adding two numbers) can be
+computed in a single clock cycle. Other instructions can take ten or
+more clock cycles. Different processor designs can take different
+numbers of cycles to execute the same instructions. Instructions are
+also _pipelined_, meaning that one instruction is being executed while
+another one is being fetched or decoded. Different processors can have
+different ways of optimizing this process. Because of these
+differences, the frequency of a processor as measured in gigahertz is
+not a good way to compare the effective speed of one processor to
+another, unless the two processors are very closely related. Even
+though it doesn’t really make sense, clock rate is commonly advertised
+as the speed of a computer.
+Word size::
+Perhaps you have heard of a 32-bit or 64-bit computer. As we discuss
+in the subsection about memory, a bit is a 0 or a 1, the smallest
+amount of information you can record. Most new laptop and desktop
+computers are 64-bit machines, meaning that they operate on 64 bits at
+a time and can use 64-bit values as memory addresses. The instructions
+that it executes work on 64-bit quantities, i.e., numbers made up of
+64 0s and 1s. The size of data that a computer can operate on with a
+single instruction is known as its _word size_.
++
+In day to day operations, word size is not important to most users.
+Certain programs that interact directly with the hardware, such as the
+operating system, may be affected by the word size. For example, most
+modern 32-bit operating systems are designed to run on a 64-bit
+processor, but most 64-bit operating systems do not run on a 32-bit
+processor.
++
+Programs often run faster on machines with a larger word size, but
+they typically take up more memory. A 32-bit processor (or operating
+system) cannot use more than 4 gigabytes (defined below) of memory.
+Thus, a 64-bit computer is needed to take advantage of the larger
+amounts of memory that are now available.
+Cache::
+Human brains both perform computations and store information. A
+computer CPU performs computations, but, for the most part, does not
+store information. The CPU cache is the exception. Most modern CPUs
+have a small, very fast section of memory built right onto the chip.
+By guessing about what information the CPU is going to use next, it
+can preload it into the cache and avoid waiting around for the slower
+regular memory.
++
+Over time, caches have become more complicated and often have multiple
+levels. The first level is very small but incredibly fast. The second
+level is larger and slower. And so on. It would be preferable to have
+a large, first-level cache, but fast memory is expensive memory. Each
+level is larger, slower, and cheaper than the last.
++
+Cache size is not a heavily advertised CPU feature, but it makes a
+huge difference in performance. A processor with a larger cache can
+often outperform a processor that is faster in terms of clock rate.
+Cores::
+Most laptops and desktops available today have _multicore_ processors.
+These processors contain two, four, six, or even more cores. Each core
+is a processor capable of independently executing instructions, and
+they can all communicate with the same memory.
++
+In theory, having six cores could allow your computer to run six times
+as fast. In practice, this speedup is rarely the case. Learning how to
+get more performance out of multicore systems is one of the major
+themes of this book. Chapters <<Concurrent Programming>> and <<Synchronization>> as well as
+sections marked *Concurrency* in other chapters are specifically
+tailored for students interested in programming these multicore
+systems to work effectively. If you aren’t interested in concurrent
+programming, you can skip these chapters and sections and use this
+book as a traditional introductory Java programming textbook. On the
+other hand, if you are interested in the increasingly important area
+of concurrent programming, <<Concurrency: Multicore processors>>
+near the end of this chapter is the first *Concurrency* section of the
+book and discusses multicore processors more deeply.
+
+===== Memory
+
+Memory is where all the programs and data on a computer are stored. The
+memory in a computer is usually not a single piece of hardware. Instead,
+the storage requirements of a computer are met by many different
+technologies.
+
+At the top of the pyramid of memory is primary storage, memory that the
+CPU can access and control directly. On desktop and laptop computers,
+primary storage usually takes the form of random access memory (RAM). It
+is called random access memory because it takes the same amount of time
+to access any part of RAM. Traditional RAM is volatile, meaning that its
+contents are lost when it’s unpowered. All programs and data must be
+loaded into RAM to be used by the CPU.
+
+After primary storage comes secondary storage, which is dominated by
+hard drives that store data on spinning magnetic platters. Optical
+drives (such as CD, DVD, and Blu-ray), flash drives, and the now
+virtually obsolete floppy drives fall into the category of secondary
+storage as well. Secondary storage is slower than primary storage, but
+it is non-volatile. Some forms of secondary storage such as CD-ROM and
+DVD-ROM are read only, but most are capable of reading and writing.
+
+Before we can compare these kinds of storage effectively, we need to
+have a system for measuring how much they store. In modern digital
+computers, all data is stored as a sequence of 0s and 1s. In memory, the
+space that can hold either a single 0 or a single 1 is called a _bit_,
+which is short for "`binary digit.`"
+
+.Computer memory contains bits organized as bytes and words. One bit contains either a 0 or a 1.  A byte contains eight bits. A word may contain two or more bytes. Shown here is a word containing four bytes, or 32 bits. Computer scientists often number items starting at zero, as we discuss in <<Arrays>>.
+image::bitsBytesFigure.png[Bits Bytes Figure]
+
+A bit is a tiny amount of information. For organizational purposes, we
+call a sequence of eight bits a _byte_. The word size of a CPU is two or
+more bytes, but memory capacity is usually listed in bytes not words.
+Both primary and secondary storage capacities have become so large that
+it is inconvenient to describe them in bytes. Computer scientists have
+borrowed prefixes from physical scientists to create suitable units.
+
+Common units for measuring memory are bytes, kilobytes, megabytes,
+gigabytes, and terabytes. Each unit is 1,024 times the size of the
+previous unit. Notice that latexmath:[2^{10}] (1,024) is almost the
+same as latexmath:[10^3] (1,000). Sometimes it is not clear which
+value is meant. Disk drive manufacturers always use powers of 10 when
+they quote the size of their disks. Thus, a 1 TB hard disk can hold
+latexmath:[10^{12}] (1,000,000,000,000) bytes, not
+latexmath:[2^{40}] (1,099,511,627,776) bytes. Standards organizations
+have advocated that the terms kibibyte (KiB), mebibyte (MiB), gibibyte
+(GiB), and tebibyte (TiB) be used to refer to the units based on powers
+of 2, while the traditional names be used to refer only to the units
+based on powers of 10, but the new terms have not yet become popular.
+
+[cols="<,<,<,<",options="header",]
+|=======================================================================
+|*Unit* |*Size* |*Bytes* |*Practical Measure*
+|byte |8 bits |latexmath:[2^0 = 10^0] |a single character
+
+|kilobyte (KB) |1,024 bytes |latexmath:[2^{10} \approx 10^3] |a
+paragraph of text
+
+|megabyte (MB) |1,024 kilobytes |latexmath:[2^{20} \approx 10^6] |a
+minute of MP3 music
+
+|gigabyte (GB) |1,024 megabytes |latexmath:[2^{30} \approx 10^9] |half
+an hour of DVD video
+
+|terabyte (TB) |1,024 gigabytes |latexmath:[2^{40} \approx 10^{12}]
+|80% of a human’s memory capacity, estimated by Raymond Kurzweil
+|=======================================================================
+
+We called memory a pyramid earlier in this section. At the top there is
+a small but very fast amount of memory. As we work down the pyramid, the
+storage capacity grows but the speed slows down. Of course, the pyramid
+for every computer is different. Below is a table that shows many kinds
+of memory moving from the fastest and smallest to the slowest and
+largest. Effective speed is hard to measure (and is changing as
+technology progresses), but note that each layer in the pyramid tends to
+be 10-100 times slower than the previous layer.
+
+[cols="<,<,<",]
+|=======================================================================
+| |*Typical* |
+
+|*Memory* |*Capacity* |*Use*
+
+|Cache |kilobytes or megabytes |Cache is fast, temporary storage for the
+CPU itself. Modern CPUs have two or three levels of cache that get
+progressively bigger and slower.
+
+|RAM |gigabytes |The bulk of primary memory is RAM. RAM comes on sticks
+that can be swapped out to upgrade a computer.
+
+|Flash drives |gigabytes or tens of gigabytes |Flash drives mark the
+beginning of secondary storage. Flash drives come as USB keychain drives
+but also as drives that sit inside the computer (sometimes called _solid
+state drives_ or SSDs). As the price of flash drives drops, they are
+expected to replace hard drives entirely. (Some expensive SSDs already
+have capacities in the terabyte range.)
+
+|Hard drives |hundreds of gigabytes or terabytes |Hard drives are still
+the most common secondary storage for desktops, laptops, and servers.
+They are limited in speed partly because of their moving parts.
+
+|Tape backup |terabytes and beyond |Some large companies still store
+huge quantities of information on magnetic tape. Tape performs well for
+long sequential accesses.
+
+|Network storage |terabytes and beyond |Storage that is accessed through
+a network is limited by the speed of the network. Many companies use
+networked computers for backup and redundancy as well as distributed
+computation. Microsoft, Amazon, Google, and others rent their network
+storage systems at rates based on storage size and total data
+throughput. These services are part of what is called _cloud computing_.
+|=======================================================================
+
+===== I/O devices
+
+I/O devices have much more variety than CPUs or memory. Some I/O
+devices, such as USB ports, are permanently connected by a printed
+circuit board to the CPU. Other devices called _peripherals_ are
+connected to a computer as needed. Their types and features are many and
+varied, and in this book, we do not go deeply into how to interact with
+I/O devices.
+
+Common input devices include mice, keyboards, touch pads, microphones,
+game pads, and drawing tablets. Common output devices include monitors,
+speakers, and printers. Some devices perform both input and output, such
+as a network card.
+
+Remember that our view of computer hardware as CPU, memory, and I/O
+devices is only a model. A PCI Express socket can be considered an I/O
+device, but the graphics card that fits into the socket can be
+considered one as well. And the monitor that connects to the graphics
+card is yet another one. Although the graphics card is an I/O device, it
+has its own processor and memory, too. It’s pointless to get bogged down
+in too many details. One of the most important skills in computer
+science is finding the right level of detail and abstraction to view a
+given problem.
+
+==== Software
+
+Without hardware computers would not exist, but software is equally
+important. Software is the programs and data that are executed and
+stored by the computer. The focus of this book is learning to write
+software.
+
+Software includes the infinite variety of computer programs. With the
+right tools (many of which are free), anyone can write a program that
+runs on a Windows, Mac, or Linux machine. Although it would be nearly
+impossible to list all the different kinds of software, a few categories
+are worth mentioning.
+
+[horizontal]
+Operating Systems:::
+The _operating system_ (OS) is the software that manages the
+interaction between the hardware and the rest of the software.
+Programs called _drivers_ are added to the OS for each hardware
+device. For example, when an application wants to print a document, it
+communicates with the printer via a printer driver that is customized
+for the specific printer, the OS, and the computer hardware. The OS
+also schedules, runs, and manages memory for all other programs. The
+three most common OSes for desktop machines are Microsoft Windows, Mac
+OS, and Linux. At the present time, all three run on similar hardware
+based on the Intel x86 and x64 architectures.
++
+Microsoft does not sell desktop computers, but many desktop and laptop
+computers come bundled with Windows. For individuals and businesses
+who assemble their own computer hardware, it is also possible to
+purchase Windows separately. In contrast, most computers running Mac
+OS are sold by Apple, and Mac OS is usually bundled with the computer.
+Linux is _open-source software_, meaning that all the source code used
+to create it is freely available. In spite of Linux being free, many
+consumers prefer Windows or Mac OS because of ease of use,
+compatibility with specific software, and technical support. Many
+consumers are also unaware that hardware can be purchased separately
+from an OS or that Linux is a free alternative to the other two.
++
+Other computers have OSes as well. The Motorola Xoom and many kinds of
+mobile telephones use the Google Android OS. The Apple iPad and iPhone
+use the competing Apple iOS. Phones, microwave ovens, automobiles, and
+countless other devices have computers in them that use some kind of
+embedded OS.
++
+Consider two applications running on a mobile phone with a single core
+CPU. One application is a web browser and the other is a music player.
+The user may start listening to music and then start the browser. In
+order to function, both applications need to access the CPU at the
+same time. Since the CPU only has a single core, it can execute only
+one instruction at a time.
++
+Rather than forcing the user to finish listening to the song before
+using the web browser, the OS switches the CPU between the two
+applications very quickly. This switching allows the user to continue
+browsing while the music plays in the background. The user perceives
+an illusion that both applications are using the CPU at the same time.
++
+Compilers:::
+A _compiler_ is a kind of program that is particularly important to
+programmers. Computer programs are written in special languages, such
+as Java, that are human readable. A compiler takes this human-readable
+program and turns it into instructions (often machine code) that a
+computer can understand.
++
+To compile the programs in this book, you use the Java compiler
+`javac`, either directly by typing its name as a command or indirectly
+as Eclipse, DrJava, or some other tool that runs the compiler for you.
+Business Applications:::
+Many different kinds of programs fall under the umbrella of business
+or productivity software. Perhaps the most famous is the Microsoft
+Office suite of tools, which includes the word-processing software
+Word, the spreadsheet software Excel, and the presentation software
+PowerPoint.
++
+Programs in this category are often the first to come to mind when
+people think of software, and this category has had tremendous
+historical impact. The popularity of Microsoft Office led to the
+widespread adoption of Microsoft Windows in the 1990s. A single
+application that is so desirable that a consumer is willing to buy the
+hardware and the OS just to be able to run it is sometimes called a
+_killer app_.
+Video Games:::
+Video games are software like other programs, but they deserve special
+attention because they represent an enormous, multi-billion dollar
+industry. They are usually challenging to program, and the video game
+development industry is highly competitive.
++
+The intense 3D graphics required by modern video games have pushed
+hardware manufacturers such as Nvidia, AMD, and Intel to develop
+high-performance graphics cards for desktop and laptop computers. At
+the same time, companies like Nintendo, Sony, and Microsoft have
+developed computers such as the Wii, PS3, and Xbox 360 that specialize
+in video games but are not designed for general computing tasks.
+Web Browsers:::
+Web browsers are programs that can connect to the Internet and
+download and display web pages and other files. Early web browsers
+could only display relatively simple pages containing text and images.
+Because of the growing importance of communication over the Internet,
+web browsers have evolved to include plug-ins that can play sounds,
+display video, and allow for sophisticated real-time communication.
++
+Popular web browsers include Microsoft Internet Explorer, Mozilla
+Firefox, Apple Safari, and Google Chrome. Each has advantages and
+disadvantages in terms of compatibility, standards compliance,
+security, speed, and customer support. The Opera web browser is not
+well known on desktop computers, but it is commonly used on mobile
+telephones.
+
+==== Examples
+
+NOTE: Left off working here.
+
+Here are a few examples of modern computers with a brief description of
+their hardware and some of the software that runs on them.
+
+The Inspiron 560 Desktop is a modestly priced computer manufactured and
+sold by Dell, Inc. It can be configured with different hardware options,
+but one choice uses a 64-bit Intel Pentium E6700 CPU that runs at a
+clock rate of 3.2 GHz with a 2 MB cache and two cores. In terms of
+memory, you can choose between 4 and 6 GB worth of RAM. You can also
+choose to have a 500 GB or 1 TB hard drive. The computer comes with a
+DVDlatexmath:[$\pm$]RW optical drive.
+
+For I/O, the computer has various ports for connecting USB devices,
+monitors, speakers, microphones, and network cables. By default, it
+includes a keyboard, a mouse, a network card, a graphics card, and an
+audio card. For an additional charge, a monitor, speakers, and other
+peripherals can be purchased.
+
+A 64-bit edition of Microsoft Windows 7 is included. (Software often
+uses version numbers to mark changes in features and support, but
+Microsoft has adopted some very confusing numbering schemes. Windows 7
+is the successor to Windows Vista, which is the successor to Windows XP.
+Windows 7 is *not* the seventh version of the Windows OS, but Windows 8
+is the successor to Windows 7. ) Depending on the price, different
+configurations of Microsoft Office 2010 with more or fewer features can
+be included.
+Figure link:#ComputerPictureFigure1[[ComputerPictureFigure1]](a) shows a
+picture of the Dell Inspiron 560.
+
+to
+
+All mobile phones contain a computer, but a phone that has features like
+a media player, calendar, GPS, or camera is often called a _smartphone_.
+Such phones often have sophisticated software that is comparable to a
+desktop computer. One example is the Apple iPhone 4.
+
+This phone uses a CPU called the A4, which has a single core, a cache of
+512 KB, and a maximum clock rate of 1 GHz, though the clock rate used in
+the iPhone 4 is not publicly known. The phone has 512 MB of RAM and uses
+either a 16 GB or 32 GB flash drive for secondary storage.
+
+In terms of I/O, the iPhone 4 has a built-in liquid crystal display
+(LCD) that is also a touch screen for input. It has two cameras, an LED
+flash, a microphone, a speaker, a headphone jack, a docking connector,
+buttons, gyroscopes, accelerometers, and the capability to communicate
+on several kinds of wireless networks.
+
+In addition to the Apple iOS 4 operating system, the iPhone runs a
+variety of applications just like a desktop computer. These applications
+are available from the iTunes App Store.
+Figure link:#ComputerPictureFigure2[[ComputerPictureFigure2]](b) shows a
+picture of the iPhone 4.
+
+The Motorola Xoom is a _tablet computer_. A tablet computer has a touch
+screen and is generally lighter than a laptop. Some tablets have
+keyboards, but many newer models use the touch screen instead.
+
+The Xoom uses the Nvidia Tegra 2 CPU, which runs at 1 GHz and has 1 MB
+of cache and two cores. It has 1 GB of RAM and a 32 GB flash drive for
+storage. It has a built-in LCD that is also a touch screen for input,
+with a connector for a monitor. It has two cameras, an LED flash, a
+microphone, a speaker, a headset jack, buttons, gyroscopes,
+accelerometers, a barometer, and the capability to communicate on
+several kinds of wireless networks.
+
+It uses the Google Android 3 operating system, which can run
+applications available from the Android Market.
+Figure link:#ComputerPictureFigure3[[ComputerPictureFigure3]](c) shows a
+picture of the Motorola Xoom.
+
+=== Syntax: Data Representation
+
+After each *Concepts* section, this book usually has a *Syntax* section.
+Syntax is the rules for a language. These *Syntax* sections generally
+focus on concrete Java language features and technical specifics that
+are related to the concepts described in the chapter.
+
+In this chapter, we are still trying to describe computers at a general
+level. Consequently, the technical details we cover in this section will
+not be Java syntax. Although everything we say applies to Java, it also
+applies to many other programming languages.
+
+==== Compilers and interpreters
+
+This book is primarily about solving problems with computer programs.
+From now on, we only mention hardware when it has an impact on
+programming. The first step to writing a computer program is deciding
+what language to use.
+
+Most humans communicate via natural languages such as Chinese, English,
+French, Russian, or Tamil. However, computers are poor at understanding
+natural languages. As a compromise, programmers write programs
+(instructions for a computer to follow) in a language more similar to a
+natural language than it is to the language understood by the CPU. These
+languages are called _high-level languages_ because they are closer to
+natural language (the highest level) than they are to _machine language_
+(the lowest level). We may also refer to machine language as _machine
+code_ or _native code_.
+
+Thousands of programming languages have been created over the years, but
+some of the most popular high level languages of all time include
+Fortran, Cobol, Visual Basic, C, C++, Python, Java, and C#.
+
+As we mentioned in the previous section, a compiler is a program that
+translates one language into another. In many cases, a compiler
+translates a high-level language into a low level language that the CPU
+can understand and execute. Because all the work is done ahead of time,
+this kind of compilation is known as static or ahead-of-time
+compilation. In other cases, the output of the compiler is an
+intermediate language that is easier for the computer to understand than
+the high-level language but still takes some translation before the
+computer can follow the instructions.
+
+An _interpreter_ is a program that is similar to a compiler. However, an
+interpreter takes code in one language as input and, on the fly, runs
+each instruction on the CPU as it translates it. Interpreters generally
+execute the code more slowly than if it had been translated to machine
+language before execution.
+
+Note that both compilers and interpreters are normal programs. They are
+usually written in high-level languages and compiled into machine
+language before execution. This raises a philosophical question: If you
+need a compiler to create a program, where did the first compiler come
+from?
+
+==== Example: Java compilation
+
+Java is the popular high-level programming language we will focus on in
+this book. The standard way to run a Java program has an extra step that
+most compiled languages do not. Most compilers for Java, though not all,
+translate a program written in Java to an intermediate language known as
+_bytecode_. This intermediate version of the high-level program is used
+as input for another program called the Java Virtual Machine (JVM). Most
+popular JVMs translate the bytecode into machine code that is executed
+directly by the CPU. This conversion from bytecode into machine code is
+done with a just-in-time (JIT) compiler. It’s called ``just-in-time''
+because sections of bytecode are not compiled until the moment they are
+needed. Because the output is going to be used for this specific
+execution of the program, the JIT can do optimizations to make the final
+machine code run particularly well in the current environment.
+
+Why does Java use the intermediate step of bytecode? One of Java’s
+design goals is to be platform independent, meaning that it can be
+executed on any kind of computer. This is a difficult goal because every
+combination of OS and CPU will need different low level instructions.
+Java attacks the problem by keeping its bytecode platform independent.
+You can compile a program into bytecode on a Windows machine and then
+run the bytecode on a JVM in a Mac OS X environment. Part of the work is
+platform independent, and part is not. Each JVM must be tailored to the
+combination of OS and hardware that it runs on.
+
+The Java language and original JVM were developed by Sun Microsystems,
+Inc., which was bought by Oracle Corporation in 2009. Oracle continues
+to produce HotSpot, the standard JVM, but many other JVMs exist,
+including Apache Harmony and Dalvik, the Google Android JVM.
+
+==== Numbers
+
+All data inside of a computer is represented with numbers. Although
+humans use numbers in our daily lives, the representation and
+manipulation of numbers by computers work differently. In this
+subsection we introduce the notions of number systems, bases, conversion
+from one base to another, and arithmetic in number systems.
+
+===== A few number systems
+
+A number system is a way to represent numbers. It is easy to confuse the
+_numeral_ that represents the number with the number itself. You might
+think of the number ten as ``10,'' a numeral made of two symbols, but
+the number itself is the concept of *ten-ness*. You could express that
+quantity by holding up all your fingers, with the symbol ``X,'' or by
+knocking ten times.
+
+Representing ten with ``10'' is an example of a _positional number
+system_, namely base 10. In a positional number system, the position of
+the digits determines the magnitude they represent. For example, the
+numeral 3,432 contains the digit 3 twice. The first time, it represents
+three groups of one thousand. The second time, it represents three
+groups of ten. (The Roman numeral system is an example of a number
+system that is *not* positional.)
+
+The numeral 3,432 and possibly every other normally written number you
+have seen is expressed in the base 10 or _decimal_ system. It is called
+base 10 because, as you move from the rightmost digit leftward, the
+value of each position goes up by a factor of 10. Also, in base 10, ten
+is the smallest positive integer that requires two digits for
+representation. Each smaller number has its own digit: 0, 1, 2, 3, 4, 5,
+6, 7, 8, and 9. Representing ten requires two existing digits to be
+combined. Every base has the property that the number it is named after
+takes two digits to write, namely ``1'' and ``0.'' (An exception is base
+1, which does not behave like the other bases and is not a normal
+positional number system.)
+
+===== Example: Decimal numbers
+
+The number latexmath:[723] can be written as
+latexmath:[723=7 \times 10^2+2 \times 10^1+3 \times 10^0].
+
+Note that the rightmost digit is the ones place, which is equivalent to
+latexmath:[$10^0$]. Be sure to start with latexmath:[$b^0$] and not
+latexmath:[$b^1$] when considering the value of a number written in base
+latexmath:[$b$], no matter what latexmath:[$b$] is. The second digit
+from the right is multiplied by latexmath:[$10^1$], and so on. The
+product of a digit and the corresponding power of 10 tells us how much a
+digit contributes to the number. In the above expansion, digit 7
+contributes 700 to the number 723. Similarly, digits 2 and 3 contribute,
+respectively, 20 and 3 to 723.
+
+As we move to the right, the power of 10 goes down by one, and this
+pattern works even for negative powers of 10. If we expand the
+fractional value 0.324, we get
+latexmath:[$0.324=3\times10^{-1}+2\times10^{-2}+4\times10^{-3}$].
+
+We can combine the above two numbers to get
+latexmath:[$723.324=7 \times 10^2+2 \times 10^1+ 3\times 10^0+
+3\times10^{-1}+2\times10^{-2}+4\times10^{-3}$].
+
+We can expand these ideas to any base, checking our logic against the
+familiar base 10. Suppose that a numeral consists of latexmath:[$n$]
+symbols latexmath:[$s_{n-1},
+s_{n-2}, \ldots, s_1, s_0$]. Furthermore, suppose that this numeral
+belongs to the base latexmath:[$b$] number system. We can expand the
+value of this numeral to:
+latexmath:[\[s_{n-1} s_{n-2} \ldots s_1 s_0=s_{n-1}\times b^{n-1}+ s_{n-2}\times b^{n-2}+
+\ldots +s_1\times b^1+ s_0\times b^0\]]
+
+The leftmost symbol in the numeral is the _highest order digit_ and the
+rightmost symbol is the _lowest order digit_. For example, in the
+decimal numeral 492, 4 is the highest order digit and 2 the lowest order
+digit.
+
+Fractions can also be expanded in a similar manner. For example, a
+fraction with latexmath:[$n$] symbols
+latexmath:[$s_{1}, s_{2}, \ldots, s_{n-1}, s_{n}$] in a number system
+with base latexmath:[$b$], can be expanded to:
+latexmath:[\[0.s_{1} s_{2} \ldots s_{n-2} s_{n-1}=s_{1}\times b^{-1}+ s_{2}\times b^{-2}+
+\ldots s_{n-1}\times b^{n-1}+s_{n}\times b^{-n}\]]
+
+To avoid confusion, the base number is always written in base 10. As
+computer scientists, we are interested in base 2 because that’s the base
+used to express numbers inside of a computer. Base 2 is also called
+_binary_. The only symbols allowed to represent numbers in binary are
+``0'' and ``1,'' the binary digits or _bits_.
+
+In the binary numeral 100110, the leftmost 1 is the highest order bit
+and the rightmost 0 is the lowest order bit. By the rules of positional
+number systems, the highest order bit represents
+latexmath:[$1 \times 2^5 = 32$].
+
+Examples of numbers written in binary are 100, 111, 0111, and 10101.
+Recall that the base of the binary number system is 2. Thus, we can
+write a number in binary as the sum of products of powers of 2. For
+example, the numeral 10011 can be expanded to:
+latexmath:[\[10011 = 1 \times 2^4+0 \times 2^3+0 \times 2^2+1 \times 2^1+1 \times
+2^0=16+0+0+2+1 = 19\]]
+
+By expanding the number, we have also shown how to convert a binary
+numeral into a decimal numeral. Remember that both 10011 and 19
+represent the same value, namely nineteen. The conversion between bases
+changes only the way the number is written. As before, the rightmost bit
+is multiplied by latexmath:[$2^0$] to determine its contribution to the
+binary number. The bit to its left is multiplied by latexmath:[$2^1$] to
+determine its contribution, and so on. In this case, the leftmost 1
+contributes latexmath:[$1 \times 2^4 = 16$] to the value.
+
+Another useful number system is _base 16_, also known as _hexadecimal_.
+Hexadecimal is surprising because it requires more than the familiar 10
+digits. Numerals in this system are written with 16 hexadecimal digits
+that include the ten digits 0 through 9 and the six letters A, B, C, D,
+E, and F. The six letters, starting from A, correspond to the values 10,
+11, 12, 13, 14, and 15.
+
+Hexadecimal is used as a compact representation of binary. Binary
+numbers can get very long, but four binary digits can be represented
+with a single hexadecimal digit.
+
+39A, 32, and AFBC12 are examples of numbers written in hexadecimal. A
+hexadecimal numeral can be expressed as the sum of products of powers of
+16. For example, the hexadecimal numeral A0BF can be expanded to:
+latexmath:[\[\mathrm{A} \times 16^3+0 \times 16^2+ \mathrm{B} \times 16^1+ \mathrm{F} \times
+16^0\]]
+
+To convert a hexadecimal numeral to decimal, we must substitute the
+values 10 through 15 for the digits A through F. Now we can rewrite the
+sum of products from above as:
+latexmath:[\[10 \times 16^3+0 \times 16^2+11 \times 16^1+15 \times 16^0=40960+0+176+15=41151\]]
+
+Thus, we get latexmath:[$\mathrm{A}0\mathrm{BF}_{16} = 41151_{10}$].
+
+The base 8 number system is also called _octal_. Like hexadecimal, octal
+is used as a shorthand for binary. A numeral in octal uses the octal
+digits 0, 1, 2, 3, 4, 5, 6, and 7. Otherwise the same rules apply. For
+example, the octal numeral 377 can be expanded to:
+latexmath:[\[377=3 \times 8^2+7 \times 8^1+7 \times 8^0=255\]]
+
+You may have noticed that it is not always clear which base a numeral is
+written in. The digit sequence 337 is a legal numeral in octal, decimal,
+and hexadecimal, but it represents different numbers in each system.
+Mathematicians use a subscript to denote the base in which a numeral is
+written.
+
+Thus, latexmath:[$337_8 = 255_{10}$], latexmath:[$377_{10} = 377_{10}$],
+and latexmath:[$377_{16} = 887_{10}$]. Base numbers are always written
+in base 10. A number without a subscript is assumed to be in base 10. In
+Java, there is no way to mark subscripts and so prefixes are used. A
+prefix of is used for octal, no prefix is used for decimal, and a prefix
+of is used for hexadecimal. A numeral cannot be marked as binary in
+Java. The corresponding numerals in Java code would thus be written , ,
+and . Be careful not to pad numbers with zeroes in Java. Remember that
+the value is *not* the same as the value in Java.
+
+The following table lists a few characteristics of the four number
+systems we have discussed with representations of the numbers 7 and
+29. +
+
+[cols="<,^,<,<,<",]
+|=======================================================================
+|*Number* | | |*Math* |*Java*
+
+|*System* |*Base* |*Digits* |*Numerals* |*Numerals*
+
+|Binary |2 |0, 1 |latexmath:[$111_2$], latexmath:[$11101_2$] |—
+
+|Octal |8 |0, 1, 2, 3, 4, 5, 6, 7 |latexmath:[$7_8$], latexmath:[$35_8$]
+|,
+
+|Decimal |10 |0, 1, 2, 3, 4, 5, 6, 7, 8, 9 |latexmath:[$7$],
+latexmath:[$29$] |,
+
+|Hexadecimal |16 |0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
+|latexmath:[$7_{16}$], latexmath:[$1\mathrm{D}_{16}$] |,
+|=======================================================================
+
+===== Conversion across number systems
+
+It is often useful to know how to convert a number represented in one
+base to the equivalent representation in another base. The examples have
+shown how to convert a numeral in any base to decimal by expanding the
+numeral in the sum-of-product form and then adding the different terms
+together. But how do you convert a decimal numeral to another base?
+
+===== Decimal to binary conversion
+
+There are at least two different ways to convert a decimal numeral to
+binary. One way is to write the decimal number as a sum of powers of two
+as in the following conversion of the number 23.
+latexmath:[\[23=16+0+4+2+1=1\times 2^4+0\times 2+3+1\times 2+2+1\times 2+1+1\times 2^0= 10111_2\]]
+
+First, find the largest power of two that is greater than or equal to
+the number. In this case, 16 fits the bill because 32 is too large.
+Subtract that value from the number, leaving 7 in this case. Then repeat
+the process. The last step is to collect the coefficients of the powers
+of two into a sequence to get the binary equivalent. We used 16, 4, 2,
+and 1 but skipped 8. If we write a 1 for every place we used and a 0 for
+every place we skipped, we get latexmath:[$23=10111_2$]. While this is a
+straightforward procedure for decimal to binary conversion, it can be
+cumbersome for larger numbers.
+
+An alternate way to convert a decimal numeral to an equivalent binary
+numeral is to divide the given number by 2 until the quotient is 0
+(keeping only the integer part of the quotient). At each step, record
+the remainder found when dividing by 2. Collect these remainders (which
+will always be either 0 or 1) to form the binary equivalent. The least
+significant bit is the remainder obtained after the first division, and
+the most significant bit is the remainder obtained after the last
+division.
+
+Let’s use this method to convert 23 to its binary equivalent. The
+following table shows the steps need for the conversion. The leftmost
+column lists the step number. The second column contains the number to
+be divided by 2 at each step. The third column contains the quotient for
+each step, and the last column contains the current remainder.
+
+[cols="<,<,<,<",options="header",]
+|=========================================
+|*Step* |*Number* |*Quotient* |*Remainder*
+|1 |23 |11 |1
+|2 |11 |5 |1
+|3 |5 |2 |1
+|4 |2 |1 |0
+|5 |1 |0 |1
+|=========================================
+
+We begin by dividing 23 by 2, yielding 11 as the quotient and 1 as the
+remainder. The quotient 11 is then divided by 2, yielding 5 as the
+quotient and 1 as the remainder. This process continues until we get a
+quotient of 0 and a remainder of 1 in Step 5. We now collect the
+remainders and get the same result as before,
+latexmath:[$23 = 10111_2$].
+
+===== Other conversions
+
+A decimal number can be converted to its hexadecimal equivalent by using
+either of the two procedures described above. Instead of writing a
+decimal number as a sum of powers of 2, one writes it as a sum of powers
+of 16. Similarly, when using the division method, instead of dividing by
+2, one divides by 16. Octal conversion is similar.
+
+We use hexadecimal because it is straightforward to convert from it to
+binary or back. The following table lists binary equivalents for the 16
+hexadecimal digits.
+
+[cols="<,<,<,<,<",options="header",]
+|==============================================================
+|*Hexadecimal digit* |*Binary* | |*Hexadecimal digit* |*Binary*
+|0 |0000 | |8 |1000
+|1 |0001 | |9 |1001
+|2 |0010 | |A |1010
+|3 |0011 | |B |1011
+|4 |0100 | |C |1100
+|5 |0101 | |D |1101
+|6 |0110 | |E |1110
+|7 |0111 | |F |1111
+|[[hexBinaryTable]][hexBinaryTable] | | | |
+|==============================================================
+
+With the help of the table above, let’s convert
+latexmath:[$3\mathrm{FA}_{16}$] to binary. By simple substitution,
+latexmath:[$3\mathrm{FA}_{16} = 0011\mbox{ }1111\mbox{
+}1010_2$]. Note that we have grouped the binary digits into clusters of
+4 bits each. Of course, the leftmost zeroes in the binary equivalent are
+useless as they do not contribute to the value of the number.
+
+===== Integer representation in a computer
+
+In mathematics, binary numerals can represent arbitrarily big numbers.
+Inside of a computer, the size of a number is constrained by the number
+of bits used to represent it. For general purpose computation, 32- and
+64-bit integers are the most commonly used. The largest integer that
+Java represents with 32 bits is 2,147,483,647, which is good enough for
+most tasks. For larger numbers, Java can represent up to
+9,223,372,036,854,775,807 with 64 bits. Java also provides
+representations for integers using 8 and 16 bits.
+
+These representations are easy to determine for positive numbers: Find
+the binary equivalent of the number and then pad the left side with
+zeroes to fill the remaining space. For example,
+latexmath:[$19 = 10011_2$]. If stored using 8 bits, 19 would be
+represented as `0001 0011`. If stored using 16 bits, 19 would be
+represented as `0000 0000 0001 0011`. (We separate groups of 4 bits for
+easier reading.)
+
+===== Binary arithmetic
+
+Recall that computers deal with numbers in their binary representation,
+meaning that all arithmetic is done on binary numbers. Sometimes it is
+useful to understand how this process works and how it is similar and
+different from decimal arithmetic. The table below lists rules for
+binary addition. +
+
+[cols="^,>,>",options="header",]
+|========
+|+ |0 |1
+|0 |0 |1
+|1 |1 |10
+|========
+
+As indicated above, the addition of two 1s leads to a 0 with a carry of
+1 into the next position to the left. Addition for numbers composed of
+more than one bit use the same rules as any addition, carrying values
+that are too large into the next position. In decimal addition, values
+over 9 must to be carried. In binary addition, values over 1 must be
+carried. The next example shows a sample binary addition. To simplify
+its presentation, we assume that integers are represented with 8 bits.
+
+Let’s add the numbers 60 and 6 in binary. Using the conversion
+techniques described above, we can find that latexmath:[$60 = 111100_2$]
+and latexmath:[$6 = 110_2$]. Inside the computer, these numbers would
+already be in binary and padded to fill 8 bits. +
+
+[cols="^,>,>",]
+|=====================
+| |*Binary* |*Decimal*
+| |`0011 1100` |60
+|`+` |`0000 0110` |6
+| |0100 0010 |66
+|=====================
+
+The result is no surprise, but note that the addition can proceed in
+binary without conversion to decimal at any point.
+
+Subtraction in binary is also similar to subtraction in decimal. The
+rules are given in the following table.
+
+[cols="^,>,>",options="header",]
+|==========
+|- |0 |1
+|0 |0 |1
+|1 |(1)1 |0
+|==========
+
+When subtracting a 1 from a 0, a 1 is borrowed from the next left
+position. The next example illustrates binary subtraction.
+
+Again, we’ll use 60 and 6 and their binary equivalents given above.
+
+[cols="^,>,>",]
+|=====================
+| |*Binary* |*Decimal*
+| |`0011 1100` |60
+|- |`0000 0110` |6
+| |`0011 0110` |54
+|=====================
+
+===== Negative integers in a computer
+
+Negative integers are also represented in computer memory as binary
+numbers, using a system called _two’s complement_. When looking at the
+binary representation of a signed integer in a computer, the leftmost
+(most significant) bit will be 1 if the number is negative and 0 if it
+is positive. Unfortunately, there’s more to finding the representation
+of a negative number than flipping this bit.
+
+Suppose that we need to find the binary equivalent of the decimal number
+latexmath:[$-12$] using 8-bits in two’s complement form. The first step
+is to convert 12 to its 8-bit binary equivalent. Doing so we get 12 =
+`0000 1100`. Note that the leftmost bit of the representation is a 0,
+indicating that the number is positive. Next we take the two’s
+complement of the 8-bit representation in two steps. In the first step,
+we flip every bit, i.e., change every 0 to 1 and every 1 to 0. This
+gives us the _one’s complement_ of the number, `1111 0011`. In the
+second step, we add 1 to the one’s complement to get the two’s
+complement. The result is `1111 0011` + `1` = `1111 0100`.
+
+Thus, the 8-bit, two’s complement binary equivalent of -12 is
+`1111 0100`. Note that the leftmost bit is a 1, indicating that this is
+a negative number.
+
+Let us convert -29 to its binary equivalent assuming that the number is
+to be stored in 8-bit, two’s complement form. First we convert positive
+29 to its 8-bit binary equivalent, latexmath:[$29 =$] `0001 1101`.
+
+Next we obtain the one’s complement of the binary representation by
+flipping 0s to 1s and 1s to 0s. This gives us `1110 0010`. Finally, we
+add 1 to the one’s complement representation to get `1110 0010` + `1` =
+`1110 0011`, which is the desired binary equivalent of -29.
+
+Let us now convert the 8-bit, two’s complement value `1000 1100` to
+decimal. We note that the leftmost bit of this number is 1, making it a
+negative number. Therefore, we reverse the process of making a two’s
+complement. First, we subtract 1 from the representation, yielding
+`1000 1100` - `1` = `1000 1011`. Next, we flip all the bits in this
+one’s complement form, yielding `0111 0100`.
+
+Now we convert this binary representation to its decimal equivalent,
+yielding 116. Thus, the decimal equivalent of `1000 1100` is -116.
+
+Why do we use two’s complement? First of all, we needed a system that
+could represent both positive and negative numbers. We could have simply
+used the leftmost bit as a sign bit and represented the rest of the
+number as a positive binary number. Doing so would require a check on
+the bit and some conversion for negative numbers every time a computer
+wanted to perform an addition or subtraction.
+
+Because of the way it’s designed, positive and negative integers stored
+in two’s complement can be added or subtracted *without* any special
+conversions. The leftmost bit is added or subtracted just like any other
+bit, and values that carry past the leftmost bit are ignored. Two’s
+complement has an advantage over one’s complement in that there is only
+one representation for zero. The next example shows two’s complement in
+action.
+
+We’ll add -126 and 126. If you perform the needed conversions, their
+8-bit, two’s complement representations are `1000 0010` and `0111 1110`.
+
+[cols="^,>,>",]
+|=====================
+| |*Binary* |*Decimal*
+| |`1000 0010` |-126
+|+ |`0111 1110` |126
+| |`0000 0000` |0
+|=====================
+
+As expected, the sum is 0.
+
+Now, let’s add the two negative integers -126 and -2, whose 8-bit, two’s
+complement representations are `1000 0010` and `1111 1110`.
+
+[cols="^,>,>",]
+|=====================
+| |*Binary* |*Decimal*
+| |`1000 0010` |-126
+|+ |`1111 1110` |-2
+| |`1000 0000` |-128
+|=====================
+
+The result is -128, which is the smallest negative integer that can be
+represented in 8-bit two’s complement.
+
+===== Overflow and underflow
+
+When performing an arithmetic or other operation on numbers, an overflow
+is said occur when the result of the operation is larger than the
+largest value that can be stored in that representation. An underflow is
+said to occur when the result of the operation is smaller than the
+smallest possible value.
+
+Both overflows and underflows lead to wrapped around values. For
+example, adding two positive numbers together can result in a negative
+number or adding two negative numbers together can result in a positive
+number.
+
+Let’s add the numbers 124 and 6. Their 8-bit, two’s complement
+representations are `0111 1100` and `0000 0110`.
+
+[cols="^,>,>",]
+|=====================
+| |*Binary* |*Decimal*
+| |`0111 1100` |124
+|+ |`0000 0110` |6
+| |`1000 0010` |-126
+|=====================
+
+This surprising result happens because the largest 8-bit two’s
+complement integer is 127. Adding 124 and 6 yields 130, a value larger
+than this maximum, resulting in overflow with a negative answer.
+
+The smallest (most negative) number that can be represented in 8-bit
+two’s complement is -128. A result smaller than this will result in
+underflow. For example, -115 - 31 = 110. Try out the conversions needed
+to test this result.
+
+===== Bitwise operators
+
+Although we will most commonly manipulate numbers using traditional
+mathematical operations such as addition, subtraction, multiplication,
+and division, there are also operations that work directly on the binary
+representations of the numbers. Some of these operators are equivalent
+to mathematical operations, and some are not.
+
+[cols="^,<,<",options="header",]
+|=======================================================================
+|*Operator* |*Name* |*Description*
+| |Bitwise AND |Combines two binary representations into a new
+representation which has 1s in every position that both the original
+representations have a 1
+
+| |Bitwise OR |Combines two binary representations into a new
+representation which has 1s in every position that either of the
+original representations have a 1
+
+| |Bitwise XOR |Combines two binary representations into a new
+representation which has 1s in every position that the original
+representations have different values
+
+|`` |Bitwise complement |Takes a representation and creates a new
+representation in which every bit is flipped from 0 to 1 and 1 to 0
+
+| |Signed left shift |Moves all the bits the specified number of
+positions to the left, leaving the sign bit unchanged
+
+| |Signed right shift |Moves all the bits the specified number of
+positions to the right, padding the left with copies of the sign bit
+
+| |Unsigned right shift |Moves all the bits the specified number of
+positions to the right, padding with 0s
+|=======================================================================
+
+Bitwise AND, bitwise OR, and bitwise XOR take two integer
+representations and combine them to make a new representation. In
+bitwise AND, each bit in the result will be a 1 if *both* of the
+original integer representations in that position are 1 and 0 otherwise.
+In bitwise OR, each bit in the result will be a 1 if *either* of the
+original integer representations in that position are 1 and 0 otherwise.
+In bitwise XOR, each bit in the result will be a 1 if the two bits of
+the original integer representations in that position are not the same
+and 0 otherwise.
+
+Bitwise complement is a unary operator like the negation operator ().
+Instead of just changing the sign of a value (which it will also do),
+its result has every 1 in the original representation changed to 0 and
+every 0 to 1.
+
+The signed left shift, signed right shift, and unsigned right shift
+operators all create a new binary representation by shifting the bits in
+the original representation a certain number of places to the left or
+the right. The signed left shift moves the bits to the left, padding
+with 0s, but does not change the sign bit. If you do a signed left shift
+by latexmath:[$n$] positions, it is equivalent to multiplying the number
+by latexmath:[$2^n$]. The signed right shift moves the bits to the
+right, padding with whatever the sign bit is. If you do a signed right
+shift by latexmath:[$n$] positions, it is equivalent to dividing the
+number by latexmath:[$2^n$] (with integer division). The unsigned right
+shift moves the bits to the right, including the sign bit, filling the
+left side with 0s. And unsigned right shift will always make a value
+positive but is otherwise similar to a signed right shift. A few
+examples follow.
+
+Here are a few examples of the result of bitwise operations. We will
+assume that the values are represented using 32-bit two’s complement,
+instead of using 8-bit values as before. In Java, bitwise operators
+automatically convert smaller values to 32-bit representations before
+proceeding.
+
+Let’s consider the result of latexmath:[$21 \& 27$].
+
+[cols="^,>,>",]
+|==================================================
+| |*Binary* |*Decimal*
+| |`0000 0000 0000 0000 0000 0000 0001 0101` |21
+|`&` |`0000 0000 0000 0000 0000 0000 0001 1011` |27
+| |`0000 0000 0000 0000 0000 0000 0001 0001` |17
+|==================================================
+
+Note how this result is different from latexmath:[$21 | 27$].
+
+[cols="^,>,>",]
+|==================================================
+| |*Binary* |*Decimal*
+| |`0000 0000 0000 0000 0000 0000 0001 0101` |21
+|`|` |`0000 0000 0000 0000 0000 0000 0001 1011` |27
+| |`0001 1111` |31
+|==================================================
+
+And also from latexmath:[$21 \caret 27$].
+
+[cols="^,>,>",]
+|=================================================
+| |*Binary* |*Decimal*
+| |`0000 0000 0000 0000 0000 0000 0001 0101` |21
+|`` |`0000 0000 0000 0000 0000 0000 0001 1011` |27
+| |`0000 1110` |14
+|=================================================
+
+Ignoring overflows, signed left shifting is equivalent to repeated
+multiplications by 2. Consider latexmath:[$11 << 3$]. The representation
+`0000 0000 0000 0000 0000 0000 0000 1011` is shifted to the left to make
+`0000 0000 0000 0000 0000 0000 0101 1000`
+latexmath:[$= 88 = 11\times 2^3$].
+
+Signed right shifting is equivalent to repeated integer divisions by 2.
+Consider latexmath:[$-104 >> 2$]. The representation
+`1111 1111 1111 1111 1111 1111 1001 1000` is shifted to the right to
+make `1111 1111 1111 1111 1111 1111 1110 0110`
+latexmath:[$= -26 = -104\div 2^2$].
+
+Unsigned right shifting is the same as signed right shifting except when
+it is done on negative numbers. Since their sign bit is replaced by `0`,
+an unsigned right shift produces a (generally large) positive number.
+Consider latexmath:[$-104 >>> 2$]. The representation
+`1111 1111 1111 1111 1111 1111 1001 1000` is shifted to the right to
+make `0011 1111 1111 1111 1111 1111 1110 0110`
+latexmath:[$= 1,073,741,798$].
+
+Because of the way two’s complement is designed, bitwise complement is
+equivalent to negating the sign of the number and then subtracting
+latexmath:[$1$]. Consider latexmath:[$\complement(-104)$]. The
+representation `1111 1111 1111 1111 1111 1111 1001 1000` is complemented
+to `0000 0000 0000 0000 0000 0000 0110 0111` latexmath:[$=
+103$].
+
+===== Rational numbers
+
+We have seen how to represent positive and negative integers in computer
+memory. In this section we see how rational numbers, such as 12.33,
+-149.89, and 3.14159, can be converted into binary and represented.
+
+===== Scientific notation
+
+_Scientific notation_ is closely related to the way a computer
+represents a rational number in memory. Scientific notation is a tool
+for representing very large or very small numbers without writing a lot
+of zeroes. A decimal number in scientific notation is written
+latexmath:[$a\times 10^b$] where latexmath:[$a$] is called the
+_mantissa_ and latexmath:[$b$] is called the _exponent_.
+
+For example, the number 3.14159 can be written in scientific notation as
+latexmath:[$0.314159\times 10^1$]. In this case, latexmath:[$0.314159$]
+is the mantissa, and latexmath:[$1$] is the exponent. Here a few more
+examples of writing numbers in scientific notation. +
+latexmath:[$\begin{array}{ l c l}
+3.14159&=&3.14159\times 10^0\\
+3.14159&=&314159\times 10^{-5}\\
+-141.324&=&-0.141324\times10^2\\
+30,000&=& .3\times10^5\\
+\end{array}$] +
+There are many ways of writing a number in scientific notation. A more
+standardized way of writing real numbers is _normalized scientific
+notation_. In this notation, the mantissa is always written as a number
+whose absolute value is less than 10 but greater than or equal to 1.
+Following are a few examples of decimal numbers in normalized scientific
+notation. +
+latexmath:[$\begin{array}{ l c l}
+3.14159&=&3.14159\times 10^0\\
+-141.324&=&-1.41324\times10^3\\
+30,000&=& 3.0\times10^4\\
+\end{array}$] +
+A shorthand for scientific notation is E notation, which is written with
+the mantissa followed by the letter `E' followed by the exponent. For
+example, 39.2 in E notation can be written latexmath:[$3.92\mathrm{E}1$]
+or latexmath:[$0.392\mathrm{E}2$]. The letter `E' should be read
+``multiplied by 10 to the power.'' E notation can be used to represent
+numbers in scientific notation in Java. Instead of writing the number in
+Java code, or could be used instead.
+
+===== Fractions
+
+A rational number can be broken into an integer part and a fractional
+part. In the number 3.14, 3 is the integer part, and .14 is the
+fractional part. We have already seen how to convert the integer part to
+binary. Now we will see how to convert the fractional part into binary.
+We can then combine the binary equivalents of the integer and fractional
+parts to find the binary equivalent of a decimal real number.
+
+A decimal fraction latexmath:[$f$] is converted to its binary equivalent
+by successively multiplying it by 2. At the end of each multiplication
+step, either a 0 or a 1 is obtained as an integer part and is recorded
+separately. The remaining fraction is again multiplied by 2 and the
+resulting integer part recorded. This process continues until the
+fraction reduces to zero or enough binary digits for the desired
+precision have been found. The binary equivalent of latexmath:[$f$] then
+consists of the bits in the order they have been recorded, as shown in
+the next example.
+
+Let’s convert 0.8125 to binary. The table below shows the steps to do
+so. +
+
+[cols="<,<,<,<,<",options="header",]
+|=======================================================================
+|*Step* |*latexmath:[$f$]* |*latexmath:[$f \times 2$]* |*Integer part*
+|*Remainder*
+|1 |0.8125 |1.625 |1 |0.625
+
+|2 |0.625 |1.25 |1 |0.25
+
+|3 |0.25 |0.5 |0 |0.5
+
+|4 |0.5 |1.0 |1 |0
+|=======================================================================
+
+We then collect all the integer parts and get 0.1101 as the binary
+equivalent of 0.8125. We can convert this binary fraction back into
+decimal to verify that it is correct.
+latexmath:[\[0.1101=1\times 2^{-1}+1\times2^{-2}+0\times 2^{-3}+1\times
+2^{-4}=0.5+0.25+0+0.0625=0.8125\]]
+
+In some cases, the process described above will never have a remainder
+of 0. In such cases we can only find an approximate representation of
+the given fraction as demonstrated in the next example.
+
+Let us convert 0.3 to binary assuming that we have only five bits in
+which to represent the fraction. The following table shows the five
+steps in the conversion process. +
+
+[cols="<,<,<,<,<",options="header",]
+|=======================================================================
+|*Step* |*latexmath:[$f$]* |*latexmath:[$f \times 2$]* |*Integer part*
+|*Remainder*
+|1 |0.3 |0.6 |0 |0.6
+
+|2 |0.6 |1.2 |1 |0.2
+
+|3 |0.2 |0.4 |0 |0.4
+
+|4 |0.4 |0.8 |0 |0.8
+
+|5 |0.8 |1.6 |1 |0.6
+|=======================================================================
+
+Collecting the integer parts we get 0.01001 as the binary representation
+of 0.3. Let’s convert this back to decimal to see how accurate it is.
+latexmath:[\[0.01001=0\times2^{-1}+1\times 2^{-2}+ 0\times2^{-3}+ 0\times 2^{-4}+ 1\times
+2^{-5}= 0.25+0.03125=0.28125\]]
+
+Five bits are not enough to represent 0.3 fully. In this case, we have
+an error of latexmath:[$0.3 - 0.28125=0.01875$]. Most computers use many
+more bits to represent fractions and obtain much better accuracy in
+their representation.
+
+Now that we understand how integers as well as fractions can be
+converted from one number base to another, we can convert any rational
+number from one base to another. The next example demonstrates one such
+conversion.
+
+Let’s convert 14.3 to binary assuming that we will only use six bits to
+represent the fractional part. First we convert 14 to binary using the
+technique described earlier. This gives us latexmath:[$14 = 1110_{2}$].
+Taking the method outlined in Example  one step further, our six bit
+representation of 0.3 is 0.010011. Combining the two representations
+gives latexmath:[$14.3_{10} = 1110.010011_{2}$].
+
+===== Floating point notation
+
+_Floating point notation_ is a system used to represent rational numbers
+in computer memory. In this notation a number is represented as
+latexmath:[$a\times b^{e}$], where latexmath:[$a$] gives the
+_significant digits_ (mantissa) of the number and latexmath:[$e$] is the
+exponent. The system is very similar to scientific notation, but
+computers usually have base latexmath:[$b = 2$] instead of
+latexmath:[$10$].
+
+For example, we could write the binary number 1010.1 in floating point
+notation as latexmath:[$10.101\times 2^2$] or as
+latexmath:[$101.01\times2^1$]. In any case, this number is equivalent to
+10.5 in decimal.
+
+In standardized floating point notation, latexmath:[$a$] is written so
+that only the most significant non-zero digit is to the left of the
+decimal point. Most computers use the IEEE 754 floating point notation
+to represent rational numbers. In this notation, the memory to store the
+number is divided into three segments: one bit used to mark the sign of
+the number, latexmath:[$m$] bits to represent the mantissa (also known
+as the _significand_), and latexmath:[$e$] bits to represent the
+exponent.
+
+In IEEE floating point notation, numbers are commonly represented using
+32 bits (known as _single precision_) or using 64 bits (known as _double
+precision_). In single precision, latexmath:[$m = 23$] and
+latexmath:[$e = 8$]. In double precision, latexmath:[$m = 52$] and
+latexmath:[$e = 11$]. To represent positive and negative exponents, the
+exponent has a _bias_ added to it so that the result is never negative.
+This bias is 127 for single precision and 1,023 for double precision.
+The packing of the sign bit, the exponent, and the mantissa is shown in
+Figure link:#numberRepresentationFigure[[numberRepresentationFigure1]](a)
+and (b).
+
+The following is a step-by-step demonstration of how to construct the
+single precision binary representation in IEEE format of the number
+10.5.
+
+1.  Convert 10.5 to its binary equivalent using methods described
+earlier, yielding latexmath:[$10.5_{10} = 1010.1_{2}$]. Unlike the case
+of integers, the sign of the number is taken care of separately for
+floating point. Thus, we would use latexmath:[$1010.1_2$] for
+latexmath:[$-10.5$] as well.
+2.  Write this binary number in standardized floating point notation,
+yielding latexmath:[$1.0101\times2^3$].
+3.  Remove the leading bit (always a 1 for non-zero numbers), leaving
+.0101.
+4.  Pad the fraction with zeroes on the right to fill the 23-bit
+mantissa, yielding `0101 0000 0000 0000 0000 000`. Note that the decimal
+point is ignored in this step.
+5.  Add 127 to the exponent. This gives us an exponent of
+latexmath:[$3+127=130$].
+6.  Convert the exponent to its 8-bit unsigned binary equivalent. Doing
+so gives us latexmath:[$130_{10}=10000011_2$].
+7.  Set the sign bit to 0 if the number is positive and to 1 otherwise.
+Since 10.5 is positive, we set the sign bit to 0.
+
+We now have the three components of 10.5 in binary. The memory
+representation of 10.5 is shown in
+Figure link:#numberRepresentationFigure[[numberRepresentationFigure2]].
+Note in the figure how the sign bit, the exponent, and the mantissa are
+packed into 32 bits.
+
+to
+
+===== Largest and smallest numbers
+
+Fixing the number of bits used for representing a real number limits the
+numbers that can be represented in computer memory using the floating
+point notation. The largest rational number that can be represented in
+single precision has an exponent of 127 (254 after bias) with a mantissa
+consisting of all 1s: +
+`0 1111 1110 1111 1111 1111 1111 1111 111` +
+This number is approximately latexmath:[$3.402\times10^{38}$]. To
+represent the smallest (closest to zero) non-zero number, we need to
+examine one more complication in the IEEE format. An exponent of 0
+implies that the number is unnormalized. In this case, we no longer
+assume that there is a 1 bit to the left of the mantissa. Thus, the
+smallest non-zero single precision number has its exponent set to 0 and
+its mantissa set to all zeros with a 1 in its
+23latexmath:[$^{\mathrm{rd}}$] bit: +
+`0 0000 0000 0000 0000 0000 0000 0000 001` +
+Unnormalized single precision values are considered to have an exponent
+of -126. Thus, the value of this number is
+latexmath:[$2^{-23} \times 2^{-126} =
+2^{-149} \approx 1.4 \times 10^{-45}.$] Now that we know the rules for
+storing both integers and floating point numbers, we can list the
+largest and smallest values possible in 32- and 64-bit representations
+in Java as shown in the following table. Note that *largest* means the
+largest positive number for both integers and floating point values, but
+*smallest* means the most negative number for integers and the smallest
+positive non-zero value for floating point values. +
+
+[cols="<,<,<",options="header",]
+|=======================================================================
+|*Format* |*Largest number* |*Smallest number*
+|32-bit integer |latexmath:[$2,147,483,647$]
+|latexmath:[$-2,147,483,648$]
+
+|64-bit integer |latexmath:[$9,223,372,036,854,775,807$]
+|latexmath:[$-9,223,372,036,854,775,808$]
+
+|32-bit floating point |latexmath:[$3.4028235\times 10^{38}$]
+|latexmath:[$1.4\times 10^{-45}$]
+
+|64-bit floating point |latexmath:[$1.7976931348623157\times 10^{308}$]
+|latexmath:[$4.9^{-324}$]
+|=======================================================================
+
+Using the same number of bits, floating point representation can store
+much larger numbers than integer representation. However, floating point
+numbers are not always exact, resulting in approximate results when
+performing arithmetic. Always use integer formats when fractional parts
+are not needed.
+
+===== Special numbers
+
+Several binary representations in the floating point notation correspond
+to special numbers. These numbers are set aside and not used for results
+in normal computation.
+
+0.0 and -0.0:::
+  When the exponent as well as the mantissa is 0, the number is
+  interpreted as a 0.0 or -0.0 depending on the sign bit. For example,
+  in a Java program, dividing 0.0 by -1.0 results in -0.0. Similarly,
+  -0.0 divided by -1.0 is 0.0. Positive and negative zeroes only exist
+  for floating point values. -0 is the same as 0 for integers. Dividing
+  the integer 0 by -1 in Java results in 0 and not in -0.
+Positive and negative infinity:::
+  An overflow or an underflow might occur while performing arithmetic on
+  floating point values. In the case of an overflow, the resulting
+  number is the special value that Java recognizes as infinity. In the
+  case of an underflow, it is a special negative infinity value. For
+  example, dividing 1.0 by 0.0 in Java results in infinity and dividing
+  -1.0 by 0.0 results in negative infinity. These values have well
+  defined behavior. For example, adding 1.0 to infinity yields infinity.
+  +
+  Note that floating point values and integers do not behave in the same
+  way. Dividing the integer 1 by the integer 0 creates an error that can
+  crash a Java program.
+Not-a-number (`NaN`):::
+  Some mathematical operations may result in an undefined number. For
+  example, latexmath:[$\sqrt{-2}$] is an imaginary number. Java has a
+  value set aside for results that are not rational numbers. When we
+  discuss how to find the square root of a value in Java, this
+  not-a-number value will be the answer for the square root of a
+  negative number.
+
+===== Errors in floating point arithmetic
+
+As we have seen, many rational numbers can only be approximately
+represented in computer memory. Thus, arithmetic done on the approximate
+values yields approximate answers. For example, 1.3 cannot be
+represented exactly using a 32-bit value. In this case, the product
+latexmath:[$1.3\times
+3.0$] will be 3.8999999 instead of 3.9. This error will propagate as
+additional operations are performed on previous results. The next
+example illustrates this propagation of errors when a sequence of
+floating point operations are performed.
+
+Suppose that the price of several products is to be added to determine
+the total price of a purchase at a cash register that uses floating
+point arithmetic. For simplicity, let’s assume that all items have a
+price of $1.99. We don’t know how many items will be purchased ahead of
+time and simply add the price of each item until all items have been
+scanned at the register. The table below shows the value of the total
+cost for different number of items purchased.
+
+[cols="<,<,<,<,<",options="header",]
+|=======================================================================
+|*Items* |*Correct Cost* |*Calculated Cost* |*Absolute Error* |*Relative
+Error*
+|100 |199.0 |1.9900015E02 |1.5258789E-04 |7.6677333E-07
+
+|500 |995.0 |9.9499670E02 |3.2958984E-03 |3.3124606E-06
+
+|1000 |1990.0 |1.9899918E03 |8.1787109E-03 |4.1099051E-06
+
+|10000 |19900.0 |1.9901842E04 |1.8417969E00 |9.2552604E-05
+|=======================================================================
+
+The first column in the table above is the number of items. The second
+column is the correct cost of all items purchased. The third column is
+the cost calculated by adding each item using single precision floating
+point addition. The fourth and fifth columns give the absolute and
+relative errors, respectively, of the calculated value. Note how the
+error increases as the number of additions goes up. In the last row, the
+absolute error is almost two dollars.
+
+While the above example may seem unrealistic, it does expose the
+inherent dangers of floating point calculations. Although the errors are
+much less when using double precision representations, they still exist.
+
+=== Solution: Buying a computer
+
+We pose a motivating problem in the *Problem* section near the beginning
+of most chapters. Whenever there is a *Problem* section, there is a
+*Solution* section near the end in which we give a solution to the
+problem given earlier.
+
+After all the discussion of the hardware, software, and data
+representation inside of a computer, you might feel more confused about
+which computer to buy than before. As a programmer, it is important to
+understand how data is represented, but this information plays virtually
+no role in deciding which computer to buy. Unlike most problems in this
+book, there is no concrete answer we can give here. Because the
+development of technology progresses so rapidly, any advice about
+computer hardware or software has a short shelf-life.
+
+Software is a huge consideration, beginning with the OS. Because the
+choice of OS usually affects choice of hardware, we’ll start there. The
+three major choices for a desktop or laptop OS are Microsoft Windows,
+Mac OS X, and Linux.
+
+Windows is the most commonly used and is also heavily marketed for
+business use. Windows suffered from many stability and security issues,
+but Microsoft has worked hard to address these. Mac OS (and the
+computers it is installed on) are marketed to an artistic and
+counter-culture population. Linux is popular among tech savvy users.
+Putting marketing biases aside, the three operating systems have become
+more similar to each other over time, and most people could be
+productive using any of the three. The following table lists some pros
+and cons for each OS.
+
+[cols="<,<,<",options="header",]
+|=======================================================================
+|*OS* |*Pros* |*Cons*
+|*Microsoft Windows* a|
+* Compatible with the largest number of programs
+* Can be purchased separately from hardware
+* Can run on Mac hardware
+
+ a|
+* Expensive
+* Security concerns
+
+|*Mac OS X* a|
+* Polished user interface
+* Bundled with many useful programs
+* Tested for use on the hardware it comes with
+
+ a|
+* Most expensive
+* Many business applications and games are released late or not at all
+for OS X
+* Difficult to run on non-Mac hardware
+
+|*Linux* a|
+* Free
+* Runs on almost any hardware
+* Highly customizable
+* Serviced by a community that develops many free applications for it
+
+ a|
+* Can be difficult to install or configure
+* Few commercial applications are available for it
+* Limited customer support
+
+|=======================================================================
+
+Once you have decided on an OS, you can pick hardware and other software
+that is compatible with it. For Mac OS X, most of your hardware choices
+will be computers sold by Apple. For Windows and Linux, you can either
+have a computer built for you or build your own. Although computer
+hardware changes quickly, let’s examine some general guidelines.
+
+CPU::
+Remember that the speed of a CPU is measured in GHz (billions of clock
+cycles per second). Higher GHz is generally better, but it’s hard to
+compare performance across different designs of CPU. There is also a
+diminishing returns effect: The very fastest, very newest CPUs are
+often considerably more expensive even if they only provide slightly
+better performance. It’s usually more cost effective to select a CPU
+in the middle of the performance spectrum.
++
+Cache size also has a huge effect on performance. The larger the
+cache, the less often the CPU has to read data from much slower
+memory. Since most new CPUs available today are 64-bit, the question
+of word size is not significant.
++
+Although some specialists may prefer one or the other, both Intel and
+AMD make powerful, competitive consumer CPUs.
+Memory::
+Memory includes RAM, hard drives, optical drives, and any other
+storage. RAM is usually easy to upgrade for desktop machines and less
+easy (though often possible) for laptops. The price of RAM per
+gigabyte goes down over time. It may be reasonable to start with a
+modest amount of RAM and then upgrade after a year or two when it
+becomes cheaper to do so. It takes a little bit of research to get
+exactly the right kind of RAM for your CPU and motherboard. The amount
+of RAM is dependent on what you want to do with your system. The
+minimum amount of RAM to run Microsoft Windows 7 is 1 GB for 32-bit
+versions and 2 GB for 64-bit versions. The minimum amount of RAM to
+run Apple Mac OS X 10.7 ``Lion'' is 2 GB. One rule of thumb is to have
+at least twice the minimum required RAM.
++
+Hard drive storage is heavily dependent on how you expect to use your
+computer. 500 GB and 1 TB drives are not very expensive, and this
+represents a huge amount of storage. Only if you plan to have enormous
+libraries of video or uncompressed audio data will you likely need
+more. Corporate level databases and web servers and some other
+business systems can also require huge amounts of space. Hard drive
+speed is greatly affected by the hard drive’s cache size. As always, a
+bigger cache means better performance. Using a solid state drive (SSD)
+instead of a traditional hard drive has much better performance but
+higher cost.
++
+Installing optical drives and other storage devices depends on
+individual needs. Note that a DVDlatexmath:[$\pm$]RW drive is an
+inexpensive solution for backing up data or reinstalling an operating
+system.
+I/O Devices::
+The subject of I/O devices is very personal. It is difficult to say
+what anyone should buy without considering his or her specific needs.
+A monitor is the essential visual output device while a keyboard and
+mouse are the essential input devices. Speakers are very important as
+well. Most laptops have all of these things integrated in some form or
+another.
++
+Someone interested in video games might want to invest in a powerful
+graphics card. Newer cards with more video RAM are generally better
+than older cards with less, but which card is best at a given price
+point is the subject of continual discussion at sites like AnandTech
+(http://www.anandtech.com/) and Tom’s Hardware
+(http://www.tomshardware.com/).
++
+Printers are still useful output devices. Graphics tablets can make it
+easier to create digital art on a computer. The number of potentially
+worthwhile I/O devices is limitless.
+
+This section is just a jumping off point for purchasing a computer. As
+you learn more about computer hardware and software, it will become
+easier to know what combination of the two will serve your needs. Of
+course, there is always more to know, and technology changes quickly.
+
+==== Concurrency: Multicore processors
+
+In the last decade, the word ``core'' has been splattered all over CPU
+packaging. Intel in particular has marketed the idea heavily with its
+Core, Core 2, i3 Core, i5 Core, and i7 Core chips. What are all these
+cores?
+
+Looking back into the past, most consumer processors had a single
+_core_, or brain. They could only execute one instruction at a time.
+(Even this definition is a little hazy, because pipelining kept more
+than one instruction in the process of being executed, but overall
+execution proceeded sequentially.)
+
+The advent of multicore processors has changed this design
+significantly. Each processor has several independent cores, each of
+which can execute different instructions at the same time. Before the
+arrival of multicore processors, a few desktop computers and many
+supercomputers had multiple separate processors that could achieve a
+similar effect. However, since multicore processors have more than one
+effective processor on the same silicon die, the communication time
+between processors is much faster and the overall cost of a
+multi-processor system is cheaper.
+
+===== The Good
+
+Multicore systems have impressive performance. The first multicore
+processors had two cores, but current designs have four, six, or eight,
+and much greater numbers are expected. A processor with eight cores can
+execute eight different programs at the same time. Or, when faced with a
+computationally intense problem like matrix math, code breaking, or
+scientific simulation, a processor with eight cores could solve the
+problem eight times as fast. A desktop processor with 100 cores that can
+solve a problem 100 times faster is not out of reach.
+
+In fact, modern graphics cards are already blazing this trail. Consider
+the 1080p standard for high definition video, which has a resolution of
+1,920 latexmath:[$\times$] 1,080 _pixels_. Each pixel (short for picture
+element) is a dot on the screen. A screen whose resolution is 1080p has
+2,073,600 dots. To maintain the illusion of smooth movement, these dots
+should be updated around 30 times per second. Computing the color for
+more than 2 million dots based on 3D geometry, lighting, and physics
+effects 30 times a second is no easy feat. Some of the cards used to
+render computer games have hundreds or thousands of cores. These cores
+are not general purpose or completely independent. Instead, they’re
+specialized to do certain kinds of matrix transformations and floating
+point computations.
+
+===== The Bad
+
+Although chip-makers have spent a lot of money marketing multicore
+technology, they have not spent much money explaining that one of the
+driving forces behind the ``multicore revolution'' is a simple failure
+to make processors faster in other ways. In 1965, Gordon Moore, one of
+the founders of Intel, remarked that the density of silicon
+microprocessors had been doubling every year (though he later revised
+this to every two years), meaning that twice as many transistors
+(computational building blocks) could fit in the same physical space.
+This trend, often called Moore’s Law, has held up reasonably well. For
+years, clever designs relying on shorter communication times,
+pipelining, and other schemes succeeded in doubling the effective
+performance of processors every two years.
+
+At some point, the tricks became less effective and exponential gains in
+processor clock rate could no longer be maintained. As clock frequency
+increases, the signal becomes more chaotic, and it becomes more
+difficult to tell the difference between the voltages that represent 0s
+and 1s. Another problem is heat. The energy that a processor uses is
+related to the *square* of the clock rate. This relationship means that
+increasing the clock rate of a processor by a factor of 4 will increase
+its energy consumption (and heat generation) by a factor of 16.
+
+The legacy of Moore’s Law lives on. We are still able to fit more and
+more transistors into tinier and tinier spaces. After decades of
+increasing clock rate, chip-makers began using the additional silicon
+density to make processors with more than one core instead. Since 2005
+or so, increases in clock rate have stagnated.
+
+===== The Ugly
+
+Does a processor with eight cores solve problems eight times as fast as
+its single core equivalent? Unfortunately, the answer is, ``Almost
+never.'' Most problems are not easy to break into eight independent
+pieces.
+
+For example, if you want to build eight houses and you have eight
+construction teams, then you probably can get pretty close to completing
+all eight houses in the time it would have taken for one team to build a
+single house. But what if you have eight teams and only one house to
+build? You might be able to finish the house a little early, but some
+steps necessarily come after others: The concrete foundation must be
+poured and solid before framing can begin. Framing must be finished
+before the roof can be put on. And so on.
+
+Like building a house, most problems you can solve on a computer are
+difficult to break into concurrent tasks. A few problems are like
+painting a house and can be completed much faster with lots of
+concurrent workers. Other tasks simply cannot be done faster with more
+than one team on the job. Worse, some jobs can actually interfere with
+each other. If a team is trying to frame the walls while another team is
+trying to put the roof onto unfinished walls, neither will succeed, the
+house might be ruined, and people could get hurt.
+
+On a desktop computer, individual cores generally have their own level 1
+cache but share level 2 cache and RAM. If the programmer isn’t careful,
+he or she can give instructions to the cores that will make them fight
+with each other, overwriting the memory that other cores are using and
+potentially crashing the program or giving an incorrect answer. Imagine
+if different parts of your brain were completely independent and fought
+with one another. The words that came out of your mouth might be random
+and chaotic and make no sense to your listener.
+
+To recap, the first problem with concurrent programming is finding ways
+to break down problems so that they can be solved faster with multiple
+cores. The second problem is making sure that the different cores
+cooperate so that the answer is correct and makes sense. These are not
+easy problems, and many researchers are still working on finding better
+ways to do both.
+
+Some educators believe that beginners will be confused by concurrency
+and should wait until later courses to confront these problems. We
+disagree: Forewarned is forearmed. Concurrency is an integral part of
+modern computation, and the earlier you get introduced to it, the more
+familiar it will be.
+
+=== Summary
+
+This introductory chapter focused on the fundamentals of a computer. We
+began with a description of computer hardware, including the CPU,
+memory, and I/O devices. We also described the software of a computer,
+highlighting key programs such as the operating system and compilers as
+well as other useful programs like business applications, video games,
+and web browsers.
+
+Then, we introduced the topic of how numbers are represented inside the
+computer. Various number systems and conversion from one system to
+another were explained. We discussed how floating point notation is used
+to represent rational numbers. A sound knowledge of data representation
+helps a programmer decide what kind of data to use (integer or floating
+point and how much precision) as well as what kind of errors to expect
+(overflow, underflow, and floating point precision errors).
+
+The next chapter extends the idea of data representation into the
+specific types of data that Java uses and introduces representation
+systems for individual characters and text.
+
+Name a few programming languages other than Java.
+
+What is the difference between machine code and bytecode?
+
+What are some advantages of JIT compilation over traditional,
+ahead-of-time compilation?
+
+Without converting to decimal, how can one find out whether a given
+binary number is odd or even?
+
+Convert the following positive binary numbers into decimal.
+
+a.  latexmath:[$100_2$]
+b.  latexmath:[$111_2$]
+c.  latexmath:[$100000_2$]
+d.  latexmath:[$111101_2$]
+e.  latexmath:[$10101_2$]
+
+Convert the following positive decimal numbers into binary.
+
+a.  latexmath:[$1$]
+b.  latexmath:[$15$]
+c.  latexmath:[$100$]
+d.  latexmath:[$1025$]
+e.  latexmath:[$567,899$]
+
+What is the process for converting the representation of a binary
+integer given in one’s complement into two’s complement?
+
+Perform the conversion from one’s complement to two’s complement on the
+representation `1011 0111`, which uses 8 bits for storage.
+
+Convert the following decimal numbers to their hexadecimal and octal
+equivalents.
+
+a.  latexmath:[$29$]
+b.  latexmath:[$100$]
+c.  latexmath:[$255$]
+d.  latexmath:[$382$]
+e.  latexmath:[$4,096$]
+
+Create a table similar to the one on page  that lists the binary
+equivalents of octal digits. Hint: Each octal digit can be represented
+as a sequence of three binary digits.
+
+Use this table to convert the following octal numbers to binary.
+
+a.  latexmath:[$337_8$]
+b.  latexmath:[$24_8$]
+c.  latexmath:[$777_8$]
+
+The ternary number system has a base of 3 and uses symbols 0, 1, and 2
+to construct numbers.
+
+Convert the following decimal numbers to their ternary equivalents.
+
+a.  latexmath:[$23$]
+b.  latexmath:[$333$]
+c.  latexmath:[$729$]
+
+Convert the following decimal numbers to 8-bit, two’s complement binary
+representations.
+
+a.  latexmath:[$-15$]
+b.  latexmath:[$-101$]
+c.  latexmath:[$-120$]
+
+Given the following 8-bit binary representations in two’s complement,
+find their decimal equivalents.
+
+a.  `1100 0000`
+b.  `1111 1111`
+c.  `1000 0001`
+
+Perform the following arithmetic operation on the following 8-bit, two’s
+complement binary representations of integers. Check your answers by
+performing arithmetic on equivalent decimal numbers.
+
+a.  `0000 0011` + `0111 1110` =
+b.  `1000 1110` + `0000 1111` =
+c.  `1111 1111` + `1000 0000` =
+d.  `0000 1111` - `0001 1110` =
+e.  `1000 0001` - `1111 1100` =
+
+Extrapolate the rules for decimal and binary addition to rules for the
+hexadecimal system. Then, use these rules to perform the following
+additions in hexadecimal. Check your answers by converting the values
+and their sums to decimal.
+
+a.  latexmath:[$\mathrm{A}2\mathrm{F}_{16} + \mathrm{BB}_{16} =$] +
+b.  latexmath:[$32\mathrm{C}_{16} + \mathrm{D}11\mathrm{F}_{16} =$] +
+
+Expand Example  assuming that you have ten bits to represent the
+fraction. Convert the representation back to base 10. How far off is
+this value from 0.3?
+
+Will the process in Example  ever terminate assuming that we can use as
+many bits as needed to represent 0.3 in binary?
+
+Derive the binary representation of the following decimal numbers
+assuming 32-bit (single) precision representation using the IEEE
+floating point format.
+
+a.  latexmath:[$0.0125$]
+b.  latexmath:[$7.7$]
+c.  latexmath:[$-10.3$]
+
+The IEEE 754 standard also defines a 16-bit (half) precision format. In
+this format, there is one sign bit, five bits for the exponent, and ten
+bits for the mantissa. This format is the same as single and double
+precision in that it assumes that a bit with a value of 1 precedes the
+ten bits in the mantissa. It also uses a bias of 15 for the exponent.
+What is the largest decimal number that can be stored in this format?
+
+Let latexmath:[$a, b$] and latexmath:[$c$] denote three real numbers.
+With real numbers, each of the equations below is true. Now suppose that
+all arithmetic operations are performed using floating point
+representations of these numbers. Indicate which of the following
+expressions are still always true and which are sometimes false.
+
+a.  latexmath:[$( a + b )+ c = a + ( b + c )$]
+b.  latexmath:[$a+b=b+a$]
+c.  latexmath:[$a \times b=b \times a$]
+d.  latexmath:[$a+0=a$]
+e.  latexmath:[$(a\times b)\times c=a\times (b\times c)$]
+f.  latexmath:[$a\times (b+c)=(a\times b)+(a\times c)$]
+
+What is a multicore microprocessor? Why do you think a multicore chip
+might be better than a single core chip? Search on the Internet to find
+the names of a few common multicore chips. Which chip does your computer
+use?
