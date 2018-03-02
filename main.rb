@@ -1,6 +1,7 @@
 require 'asciidoctor'
 
-# Use the Ascidoctor API to load the adoc file and convert it.
+# Use the Ascidoctor API to load the adoc file and convert it
+# (apparently without same css as command-line conversion).
 Asciidoctor.convert_file "README.adoc"
 
 # Do the same thing, but break down the steps...
