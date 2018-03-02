@@ -1,0 +1,33 @@
+== README
+
+=== Software Needed
+
+. https://git-scm.com/downloads[Git] (and a https://github.com[GitHub] account to access the
+https://github.com/start-concurrent/start-concurrent.github.io[Start Concurrent repository])
+. https://pandoc.org[Pandoc] (to convert from LaTeX)
+. https://asciidoctor.org[Asciidoctor]
+. https://www.ruby-lang.org/en/downloads/[Ruby]
+
+=== Converting Chapters from LaTeX
+
+These are the steps I used to convert chapter 1.
+
+. Converted LaTeX to AsciiDoc using +
+``$ pandoc ComputersTheVeryBasicsChapter.tex -t asciidoc -o index.ad`` +
+and a lot of editing.  Pandoc doesn't handle the imported figures (they're dropped) and the math
+is buggy (must remove extra $, mainly).
+. Converted images from PDF to png, e.g., using `convert`: +
+``$ convert -density 600 figures/vonNeumann.pdf images/vonNeumann.png``
+The density of 600 is better than 300, but still not as elegant as using svg or pdf directly.
+
+I tried using <embed> and <object> in "pass" mode (an AsciiDoc feature that allows passing
+html through), but the results are not satisfactory (see below)
+and browser dependent.  Seems like svg would be better, but I don't know what tools yet to use.
+
+Using embed...
+
+pass:[<embed src="chapters/01-computer-basics/figures/vonNeumann.pdf" width=800/>]
+
+Using object...
+
+pass:[<object data="chapters/01-computer-basics/figures/vonNeumann.pdf" width=800>Missing</object>]
