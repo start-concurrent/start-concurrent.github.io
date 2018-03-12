@@ -10,18 +10,18 @@ ____
 
 We begin almost every chapter of this book with a motivating problem.
 Why? Sometimes it helps to see how tools can be applied in order to see
-why they’re useful. As we move through each chapter, we cover background
+why they're useful. As we move through each chapter, we cover background
 concepts needed to solve the problem in the *Concepts* section, the
 specific technical details (usually in the form of Java syntax) required
 in the *Syntax and Semantics* section, and eventually the solution to
-the problem in the *Solution* sections. If you’re not interested in the
-problem, that’s fine! Feel free to skip ahead to the <<Concepts: Hardware and Software>> section
+the problem in the *Solution* sections. If you're not interested in the
+problem, that's fine! Feel free to skip ahead to the <<Concepts: Hardware and Software>> section
 or directly to the <<Syntax: Data Representation>> section, especially if you
-already have some programming experience. Then, if you’d like to see
+already have some programming experience. Then, if you'd like to see
 another detailed example, the <<Solution: Buying a computer>> is
 available as a reference.
 
-We’ll start with a problem that is not about programming and may be
+We'll start with a problem that is not about programming and may be
 familiar to you. Imagine you are just about to start college and need a
 computer. Should you buy a Mac or PC? What kind of computer is going to
 run programs faster? Do some kinds of computers crash more than others?
@@ -67,10 +67,10 @@ from one of the input devices.
 
 In other words, the processor thinks, the memory stores, and the I/O
 devices interact with the outside world. The processor sits between the
-memory and the I/O devices. Let’s examine these categories further.
+memory and the I/O devices. Let's examine these categories further.
 
 .Hardware components in a typical desktop computer categorized into CPU, memory, and I/O devices.
-image::vonNeumann.png[vonNeumann Architecture]
+image::vonNeumann.svg[opts=inline,width=100%]
 
 ===== CPU
 
@@ -111,7 +111,7 @@ different ways of optimizing this process. Because of these
 differences, the frequency of a processor as measured in gigahertz is
 not a good way to compare the effective speed of one processor to
 another, unless the two processors are very closely related. Even
-though it doesn’t really make sense, clock rate is commonly advertised
+though it doesn't really make sense, clock rate is commonly advertised
 as the speed of a computer.
 Word size::
 Perhaps you have heard of a 32-bit or 64-bit computer. As we discuss
@@ -165,7 +165,7 @@ get more performance out of multicore systems is one of the major
 themes of this book. Chapters <<Concurrent Programming>> and <<Synchronization>> as well as
 sections marked *Concurrency* in other chapters are specifically
 tailored for students interested in programming these multicore
-systems to work effectively. If you aren’t interested in concurrent
+systems to work effectively. If you aren't interested in concurrent
 programming, you can skip these chapters and sections and use this
 book as a traditional introductory Java programming textbook. On the
 other hand, if you are interested in the increasingly important area
@@ -185,7 +185,7 @@ CPU can access and control directly. On desktop and laptop computers,
 primary storage usually takes the form of random access memory (RAM). It
 is called random access memory because it takes the same amount of time
 to access any part of RAM. Traditional RAM is volatile, meaning that its
-contents are lost when it’s unpowered. All programs and data must be
+contents are lost when it's unpowered. All programs and data must be
 loaded into RAM to be used by the CPU.
 
 After primary storage comes secondary storage, which is dominated by
@@ -203,7 +203,7 @@ space that can hold either a single 0 or a single 1 is called a _bit_,
 which is short for "`binary digit.`"
 
 .Computer memory contains bits organized as bytes and words. One bit contains either a 0 or a 1.  A byte contains eight bits. A word may contain two or more bytes. Shown here is a word containing four bytes, or 32 bits. Computer scientists often number items starting at zero, as we discuss in <<Arrays>>.
-image::bitsBytesFigure.png[Bits Bytes Figure]
+image::bitsBytesFigure.svg[opts=inline,width=100%]
 
 A bit is a tiny amount of information. For organizational purposes, we
 call a sequence of eight bits a _byte_. The word size of a CPU is two or
@@ -240,7 +240,7 @@ minute of MP3 music
 an hour of DVD video
 
 |terabyte (TB) |1,024 gigabytes |stem:[2^{40} \approx 10^{12}]
-|80% of a human’s memory capacity, estimated by Raymond Kurzweil
+|80% of a human's memory capacity, estimated by Raymond Kurzweil
 |=======================================================================
 
 We called memory a pyramid earlier in this section. At the top there is
@@ -307,7 +307,7 @@ devices is only a model. A PCI Express socket can be considered an I/O
 device, but the graphics card that fits into the socket can be
 considered one as well. And the monitor that connects to the graphics
 card is yet another one. Although the graphics card is an I/O device, it
-has its own processor and memory, too. It’s pointless to get bogged down
+has its own processor and memory, too. It's pointless to get bogged down
 in too many details. One of the most important skills in computer
 science is finding the right level of detail and abstraction to view a
 given problem.
@@ -451,7 +451,7 @@ be included.
 
 [[computerPictures]]
 .(a) Dell Inspiron 560. (b) Apple iPhone 4. (c) Motorola Xoom.
-image::computerPictures.png[]
+image::computerPictures.svg[opts=inline,width=100%]
 
 All mobile phones contain a computer, but a phone that has features like
 a media player, calendar, GPS, or camera is often called a _smartphone_.
@@ -546,7 +546,7 @@ need a compiler to create a program, where did the first compiler come
 from?
 
 .(a) Static compilation. (b) Interpreted execution. (c) Compilation into bytecode with later just-in-time compilation.
-image::compilerFigure.png[]
+image::compilerFigure.svg[opts=inline,width=100%]
 
 ==== Example: Java compilation
 
@@ -558,13 +558,13 @@ _bytecode_. This intermediate version of the high-level program is used
 as input for another program called the Java Virtual Machine (JVM). Most
 popular JVMs translate the bytecode into machine code that is executed
 directly by the CPU. This conversion from bytecode into machine code is
-done with a just-in-time (JIT) compiler. It’s called "`just-in-time`"
+done with a just-in-time (JIT) compiler. It's called "`just-in-time`"
 because sections of bytecode are not compiled until the moment they are
 needed. Because the output is going to be used for this specific
 execution of the program, the JIT can do optimizations to make the final
 machine code run particularly well in the current environment.
 
-Why does Java use the intermediate step of bytecode? One of Java’s
+Why does Java use the intermediate step of bytecode? One of Java's
 design goals is to be platform independent, meaning that it can be
 executed on any kind of computer. This is a difficult goal because every
 combination of OS and CPU will need different low level instructions.
@@ -646,8 +646,11 @@ symbols stem:[s_{n-1},
 s_{n-2}, \ldots, s_1, s_0]. Furthermore, suppose that this numeral
 belongs to the base stem:[b] number system. We can expand the
 value of this numeral to:
-stem:[[s_{n-1} s_{n-2} \ldots s_1 s_0=s_{n-1}\times b^{n-1}+ s_{n-2}\times b^{n-2}+
-\ldots +s_1\times b^1+ s_0\times b^0]]
+[stem]
+++++
+s_{n-1} s_{n-2} \ldots s_1 s_0=s_{n-1}\times b^{n-1}+ s_{n-2}\times b^{n-2}+
+\ldots +s_1\times b^1+ s_0\times b^0
+++++
 
 The leftmost symbol in the numeral is the _highest order digit_ and the
 rightmost symbol is the _lowest order digit_. For example, in the
@@ -658,11 +661,14 @@ Fractions can also be expanded in a similar manner. For example, a
 fraction with stem:[n] symbols
 stem:[s_{1}, s_{2}, \ldots, s_{n-1}, s_{n}] in a number system
 with base stem:[b], can be expanded to:
-stem:[[0.s_{1} s_{2} \ldots s_{n-2} s_{n-1}=s_{1}\times b^{-1}+ s_{2}\times b^{-2}+
-\ldots s_{n-1}\times b^{n-1}+s_{n}\times b^{-n}]]
+[stem]
+++++
+0.s_{1} s_{2} \ldots s_{n-2} s_{n-1}=s_{1}\times b^{-1}+ s_{2}\times b^{-2}+
+\ldots s_{n-1}\times b^{n-1}+s_{n}\times b^{-n}
+++++
 
 To avoid confusion, the base number is always written in base 10. As
-computer scientists, we are interested in base 2 because that’s the base
+computer scientists, we are interested in base 2 because that's the base
 used to express numbers inside of a computer. Base 2 is also called
 _binary_. The only symbols allowed to represent numbers in binary are
 "`0`" and "`1`", the binary digits or _bits_.
@@ -676,8 +682,11 @@ Examples of numbers written in binary are 100, 111, 0111, and 10101.
 Recall that the base of the binary number system is 2. Thus, we can
 write a number in binary as the sum of products of powers of 2. For
 example, the numeral 10011 can be expanded to:
-stem:[[10011 = 1 \times 2^4+0 \times 2^3+0 \times 2^2+1 \times 2^1+1 \times
-2^0=16+0+0+2+1 = 19]]
+[stem]
+++++
+10011 = 1 \times 2^4+0 \times 2^3+0 \times 2^2+1 \times 2^1+1 \times
+2^0=16+0+0+2+1 = 19
+++++
 
 By expanding the number, we have also shown how to convert a binary
 numeral into a decimal numeral. Remember that both 10011 and 19
@@ -702,13 +711,20 @@ with a single hexadecimal digit.
 39A, 32, and AFBC12 are examples of numbers written in hexadecimal. A
 hexadecimal numeral can be expressed as the sum of products of powers of
 16. For example, the hexadecimal numeral A0BF can be expanded to:
-stem:[[\mathrm{A} \times 16^3+0 \times 16^2+ \mathrm{B} \times 16^1+ \mathrm{F} \times
-16^0]]
+[stem]
+++++
+\mathrm{A} \times 16^3+0 \times 16^2+ \mathrm{B} \times 16^1+ \mathrm{F} \times
+16^0
+++++
+
 
 To convert a hexadecimal numeral to decimal, we must substitute the
 values 10 through 15 for the digits A through F. Now we can rewrite the
 sum of products from above as:
-stem:[[10 \times 16^3+0 \times 16^2+11 \times 16^1+15 \times 16^0=40960+0+176+15=41151]]
+[stem]
+++++
+10 \times 16^3+0 \times 16^2+11 \times 16^1+15 \times 16^0=40960+0+176+15=41151
+++++
 
 Thus, we get stem:[\mathrm{A}0\mathrm{BF}_{16} = 41151_{10}].
 
@@ -716,7 +732,10 @@ The base 8 number system is also called _octal_. Like hexadecimal, octal
 is used as a shorthand for binary. A numeral in octal uses the octal
 digits 0, 1, 2, 3, 4, 5, 6, and 7. Otherwise the same rules apply. For
 example, the octal numeral 377 can be expanded to:
-stem:[[377=3 \times 8^2+7 \times 8^1+7 \times 8^0=255]]
+[stem]
+++++
+377=3 \times 8^2+7 \times 8^1+7 \times 8^0=255
+++++
 
 You may have noticed that it is not always clear which base a numeral is
 written in. The digit sequence 337 is a legal numeral in octal, decimal,
@@ -766,7 +785,10 @@ together. But how do you convert a decimal numeral to another base?
 There are at least two different ways to convert a decimal numeral to
 binary. One way is to write the decimal number as a sum of powers of two
 as in the following conversion of the number 23.
-stem:[[23=16+0+4+2+1=1\times 2^4+0\times 2+3+1\times 2+2+1\times 2+1+1\times 2^0= 10111_2]]
+[stem]
+++++
+23=16+0+4+2+1=1\times 2^4+0\times 2+3+1\times 2+2+1\times 2+1+1\times 2^0= 10111_2
+++++
 
 First, find the largest power of two that is greater than or equal to
 the number. In this case, 16 fits the bill because 32 is too large.
@@ -787,7 +809,7 @@ significant bit is the remainder obtained after the first division, and
 the most significant bit is the remainder obtained after the last
 division.
 
-Let’s use this method to convert 23 to its binary equivalent. The
+Let's use this method to convert 23 to its binary equivalent. The
 following table shows the steps need for the conversion. The leftmost
 column lists the step number. The second column contains the number to
 be divided by 2 at each step. The third column contains the quotient for
@@ -835,7 +857,7 @@ hexadecimal digits.
 |7 |0111 | |F |1111
 |==============================================================
 
-With the help of the table above, let’s convert
+With the help of the table above, let's convert
 stem:[3\mathrm{FA}_{16}] to binary. By simple substitution,
 stem:[3\mathrm{FA}_{16} = 0011\mbox{ }1111\mbox{ }1010_2].
 Note that we have grouped the binary digits into clusters of
@@ -884,7 +906,7 @@ over 9 must to be carried. In binary addition, values over 1 must be
 carried. The next example shows a sample binary addition. To simplify
 its presentation, we assume that integers are represented with 8 bits.
 
-Let’s add the numbers 60 and 6 in binary. Using the conversion
+Let's add the numbers 60 and 6 in binary. Using the conversion
 techniques described above, we can find that stem:[60 = 111100_2]
 and stem:[6 = 110_2]. Inside the computer, these numbers would
 already be in binary and padded to fill 8 bits. +
@@ -913,7 +935,7 @@ rules are given in the following table.
 When subtracting a 1 from a 0, a 1 is borrowed from the next left
 position. The next example illustrates binary subtraction.
 
-Again, we’ll use 60 and 6 and their binary equivalents given above.
+Again, we'll use 60 and 6 and their binary equivalents given above.
 
 [cols="^,>,>",]
 |=====================
@@ -926,63 +948,63 @@ Again, we’ll use 60 and 6 and their binary equivalents given above.
 ===== Negative integers in a computer
 
 Negative integers are also represented in computer memory as binary
-numbers, using a system called _two’s complement_. When looking at the
+numbers, using a system called _two's complement_. When looking at the
 binary representation of a signed integer in a computer, the leftmost
 (most significant) bit will be 1 if the number is negative and 0 if it
-is positive. Unfortunately, there’s more to finding the representation
+is positive. Unfortunately, there's more to finding the representation
 of a negative number than flipping this bit.
 
 Suppose that we need to find the binary equivalent of the decimal number
-stem:[-12] using 8-bits in two’s complement form. The first step
+stem:[-12] using 8-bits in two's complement form. The first step
 is to convert 12 to its 8-bit binary equivalent. Doing so we get 12 =
 `0000 1100`. Note that the leftmost bit of the representation is a 0,
-indicating that the number is positive. Next we take the two’s
+indicating that the number is positive. Next we take the two's
 complement of the 8-bit representation in two steps. In the first step,
 we flip every bit, i.e., change every 0 to 1 and every 1 to 0. This
-gives us the _one’s complement_ of the number, `1111 0011`. In the
-second step, we add 1 to the one’s complement to get the two’s
+gives us the _one's complement_ of the number, `1111 0011`. In the
+second step, we add 1 to the one's complement to get the two's
 complement. The result is `1111 0011` + `1` = `1111 0100`.
 
-Thus, the 8-bit, two’s complement binary equivalent of -12 is
+Thus, the 8-bit, two's complement binary equivalent of -12 is
 `1111 0100`. Note that the leftmost bit is a 1, indicating that this is
 a negative number.
 
 Let us convert -29 to its binary equivalent assuming that the number is
-to be stored in 8-bit, two’s complement form. First we convert positive
+to be stored in 8-bit, two's complement form. First we convert positive
 29 to its 8-bit binary equivalent, stem:[29 =] `0001 1101`.
 
-Next we obtain the one’s complement of the binary representation by
+Next we obtain the one's complement of the binary representation by
 flipping 0s to 1s and 1s to 0s. This gives us `1110 0010`. Finally, we
-add 1 to the one’s complement representation to get `1110 0010` + `1` =
+add 1 to the one's complement representation to get `1110 0010` + `1` =
 `1110 0011`, which is the desired binary equivalent of -29.
 
-Let us now convert the 8-bit, two’s complement value `1000 1100` to
+Let us now convert the 8-bit, two's complement value `1000 1100` to
 decimal. We note that the leftmost bit of this number is 1, making it a
-negative number. Therefore, we reverse the process of making a two’s
+negative number. Therefore, we reverse the process of making a two's
 complement. First, we subtract 1 from the representation, yielding
 `1000 1100` - `1` = `1000 1011`. Next, we flip all the bits in this
-one’s complement form, yielding `0111 0100`.
+one's complement form, yielding `0111 0100`.
 
 Now we convert this binary representation to its decimal equivalent,
 yielding 116. Thus, the decimal equivalent of `1000 1100` is -116.
 
-Why do we use two’s complement? First of all, we needed a system that
+Why do we use two's complement? First of all, we needed a system that
 could represent both positive and negative numbers. We could have simply
 used the leftmost bit as a sign bit and represented the rest of the
 number as a positive binary number. Doing so would require a check on
 the bit and some conversion for negative numbers every time a computer
 wanted to perform an addition or subtraction.
 
-Because of the way it’s designed, positive and negative integers stored
-in two’s complement can be added or subtracted *without* any special
+Because of the way it's designed, positive and negative integers stored
+in two's complement can be added or subtracted *without* any special
 conversions. The leftmost bit is added or subtracted just like any other
-bit, and values that carry past the leftmost bit are ignored. Two’s
-complement has an advantage over one’s complement in that there is only
-one representation for zero. The next example shows two’s complement in
+bit, and values that carry past the leftmost bit are ignored. Two's
+complement has an advantage over one's complement in that there is only
+one representation for zero. The next example shows two's complement in
 action.
 
-We’ll add -126 and 126. If you perform the needed conversions, their
-8-bit, two’s complement representations are `1000 0010` and `0111 1110`.
+We'll add -126 and 126. If you perform the needed conversions, their
+8-bit, two's complement representations are `1000 0010` and `0111 1110`.
 
 [cols="^,>,>",]
 |=====================
@@ -994,7 +1016,7 @@ We’ll add -126 and 126. If you perform the needed conversions, their
 
 As expected, the sum is 0.
 
-Now, let’s add the two negative integers -126 and -2, whose 8-bit, two’s
+Now, let's add the two negative integers -126 and -2, whose 8-bit, two's
 complement representations are `1000 0010` and `1111 1110`.
 
 [cols="^,>,>",]
@@ -1006,7 +1028,7 @@ complement representations are `1000 0010` and `1111 1110`.
 |=====================
 
 The result is -128, which is the smallest negative integer that can be
-represented in 8-bit two’s complement.
+represented in 8-bit two's complement.
 
 ===== Overflow and underflow
 
@@ -1021,7 +1043,7 @@ example, adding two positive numbers together can result in a negative
 number or adding two negative numbers together can result in a positive
 number.
 
-Let’s add the numbers 124 and 6. Their 8-bit, two’s complement
+Let's add the numbers 124 and 6. Their 8-bit, two's complement
 representations are `0111 1100` and `0000 0110`.
 
 [cols="^,>,>",]
@@ -1032,12 +1054,12 @@ representations are `0111 1100` and `0000 0110`.
 | |`1000 0010` |-126
 |=====================
 
-This surprising result happens because the largest 8-bit two’s
+This surprising result happens because the largest 8-bit two's
 complement integer is 127. Adding 124 and 6 yields 130, a value larger
 than this maximum, resulting in overflow with a negative answer.
 
 The smallest (most negative) number that can be represented in 8-bit
-two’s complement is -128. A result smaller than this will result in
+two's complement is -128. A result smaller than this will result in
 underflow. For example, -115 - 31 = 110. Try out the conversions needed
 to test this result.
 
@@ -1052,28 +1074,28 @@ to mathematical operations, and some are not.
 [cols="^,<,<",options="header",]
 |=======================================================================
 |*Operator* |*Name* |*Description*
-| |Bitwise AND |Combines two binary representations into a new
+| `&`  |Bitwise AND |Combines two binary representations into a new
 representation which has 1s in every position that both the original
 representations have a 1
 
-| |Bitwise OR |Combines two binary representations into a new
+|`\|` |Bitwise OR |Combines two binary representations into a new
 representation which has 1s in every position that either of the
 original representations have a 1
 
-| |Bitwise XOR |Combines two binary representations into a new
+| `^` |Bitwise XOR |Combines two binary representations into a new
 representation which has 1s in every position that the original
 representations have different values
 
-|`` |Bitwise complement |Takes a representation and creates a new
+|`~` |Bitwise complement |Takes a representation and creates a new
 representation in which every bit is flipped from 0 to 1 and 1 to 0
 
-| |Signed left shift |Moves all the bits the specified number of
+| `<<` |Signed left shift |Moves all the bits the specified number of
 positions to the left, leaving the sign bit unchanged
 
-| |Signed right shift |Moves all the bits the specified number of
+| `>>` |Signed right shift |Moves all the bits the specified number of
 positions to the right, padding the left with copies of the sign bit
 
-| |Unsigned right shift |Moves all the bits the specified number of
+| `>>>` |Unsigned right shift |Moves all the bits the specified number of
 positions to the right, padding with 0s
 |=======================================================================
 
@@ -1108,14 +1130,14 @@ positive but is otherwise similar to a signed right shift. A few
 examples follow.
 
 Here are a few examples of the result of bitwise operations. We will
-assume that the values are represented using 32-bit two’s complement,
+assume that the values are represented using 32-bit two's complement,
 instead of using 8-bit values as before. In Java, bitwise operators
 automatically convert smaller values to 32-bit representations before
 proceeding.
 
-Let’s consider the result of stem:[21 \& 27].
+Let's consider the result of stem:[21 \& 27].
 
-[cols="^,>,>",]
+[cols="^10,>70,>20",]
 |==================================================
 | |*Binary* |*Decimal*
 | |`0000 0000 0000 0000 0000 0000 0001 0101` |21
@@ -1125,32 +1147,32 @@ Let’s consider the result of stem:[21 \& 27].
 
 Note how this result is different from stem:[21 | 27].
 
-[cols="^,>,>",]
+[cols="^10,>70,>20",]
 |==================================================
 | |*Binary* |*Decimal*
 | |`0000 0000 0000 0000 0000 0000 0001 0101` |21
-|`|` |`0000 0000 0000 0000 0000 0000 0001 1011` |27
+|`\|` |`0000 0000 0000 0000 0000 0000 0001 1011` |27
 | |`0001 1111` |31
 |==================================================
 
 And also from stem:[21 \land 27].
 
-[cols="^,>,>",]
+[cols="^10,>70,>20",]
 |=================================================
 | |*Binary* |*Decimal*
 | |`0000 0000 0000 0000 0000 0000 0001 0101` |21
-|`` |`0000 0000 0000 0000 0000 0000 0001 1011` |27
+|`^` |`0000 0000 0000 0000 0000 0000 0001 1011` |27
 | |`0000 1110` |14
 |=================================================
 
 Ignoring overflows, signed left shifting is equivalent to repeated
-multiplications by 2. Consider stem:[11 << 3]. The representation
+multiplications by 2. Consider `11 << 3`. The representation
 `0000 0000 0000 0000 0000 0000 0000 1011` is shifted to the left to make
 `0000 0000 0000 0000 0000 0000 0101 1000`
 stem:[= 88 = 11\times 2^3].
 
 Signed right shifting is equivalent to repeated integer divisions by 2.
-Consider stem:[-104 >> 2]. The representation
+Consider `-104 >> 2`. The representation
 `1111 1111 1111 1111 1111 1111 1001 1000` is shifted to the right to
 make `1111 1111 1111 1111 1111 1111 1110 0110`
 stem:[= -26 = -104\div 2^2].
@@ -1158,14 +1180,14 @@ stem:[= -26 = -104\div 2^2].
 Unsigned right shifting is the same as signed right shifting except when
 it is done on negative numbers. Since their sign bit is replaced by `0`,
 an unsigned right shift produces a (generally large) positive number.
-Consider stem:[-104 >>> 2]. The representation
+Consider `-104 >>> 2`. The representation
 `1111 1111 1111 1111 1111 1111 1001 1000` is shifted to the right to
 make `0011 1111 1111 1111 1111 1111 1110 0110`
 stem:[= 1,073,741,798].
 
-Because of the way two’s complement is designed, bitwise complement is
+Because of the way two's complement is designed, bitwise complement is
 equivalent to negating the sign of the number and then subtracting
-stem:[1]. Consider stem:[\complement(-104)]. The
+stem:[1]. Consider `~(-104)`. The
 representation `1111 1111 1111 1111 1111 1111 1001 1000` is complemented
 to `0000 0000 0000 0000 0000 0000 0110 0111` stem:[=
 103].
@@ -1233,7 +1255,7 @@ precision have been found. The binary equivalent of stem:[f] then
 consists of the bits in the order they have been recorded, as shown in
 the next example.
 
-Let’s convert 0.8125 to binary. The table below shows the steps to do
+Let's convert 0.8125 to binary. The table below shows the steps to do
 so. +
 
 [cols="<,<,<,<,<",options="header",]
@@ -1252,8 +1274,11 @@ so. +
 We then collect all the integer parts and get 0.1101 as the binary
 equivalent of 0.8125. We can convert this binary fraction back into
 decimal to verify that it is correct.
-stem:[[0.1101=1\times 2^{-1}+1\times2^{-2}+0\times 2^{-3}+1\times
-2^{-4}=0.5+0.25+0+0.0625=0.8125]]
+[stem]
+++++
+0.1101=1\times 2^{-1}+1\times2^{-2}+0\times 2^{-3}+1\times
+2^{-4}=0.5+0.25+0+0.0625=0.8125
+++++
 
 In some cases, the process described above will never have a remainder
 of 0. In such cases we can only find an approximate representation of
@@ -1279,9 +1304,12 @@ steps in the conversion process. +
 |=======================================================================
 
 Collecting the integer parts we get 0.01001 as the binary representation
-of 0.3. Let’s convert this back to decimal to see how accurate it is.
-stem:[[0.01001=0\times2^{-1}+1\times 2^{-2}+ 0\times2^{-3}+ 0\times 2^{-4}+ 1\times
-2^{-5}= 0.25+0.03125=0.28125]]
+of 0.3. Let's convert this back to decimal to see how accurate it is.
+[stem]
+++++
+0.01001=0\times2^{-1}+1\times 2^{-2}+ 0\times2^{-3}+ 0\times 2^{-4}+ 1\times
+2^{-5}= 0.25+0.03125=0.28125
+++++
 
 Five bits are not enough to represent 0.3 fully. In this case, we have
 an error of stem:[0.3 - 0.28125=0.01875]. Most computers use many
@@ -1293,7 +1321,7 @@ converted from one number base to another, we can convert any rational
 number from one base to another. The next example demonstrates one such
 conversion.
 
-Let’s convert 14.3 to binary assuming that we will only use six bits to
+Let's convert 14.3 to binary assuming that we will only use six bits to
 represent the fractional part. First we convert 14 to binary using the
 technique described earlier. This gives us stem:[14 = 1110_{2}].
 Taking the method outlined in Example  one step further, our six bit
@@ -1465,8 +1493,8 @@ floating point operations are performed.
 
 Suppose that the price of several products is to be added to determine
 the total price of a purchase at a cash register that uses floating
-point arithmetic. For simplicity, let’s assume that all items have a
-price of $1.99. We don’t know how many items will be purchased ahead of
+point arithmetic. For simplicity, let's assume that all items have a
+price of $1.99. We don't know how many items will be purchased ahead of
 time and simply add the price of each item until all items have been
 scanned at the register. The table below shows the value of the total
 cost for different number of items purchased.
@@ -1513,7 +1541,7 @@ development of technology progresses so rapidly, any advice about
 computer hardware or software has a short shelf-life.
 
 Software is a huge consideration, beginning with the OS. Because the
-choice of OS usually affects choice of hardware, we’ll start there. The
+choice of OS usually affects choice of hardware, we'll start there. The
 three major choices for a desktop or laptop OS are Microsoft Windows,
 Mac OS X, and Linux.
 
@@ -1567,15 +1595,15 @@ Once you have decided on an OS, you can pick hardware and other software
 that is compatible with it. For Mac OS X, most of your hardware choices
 will be computers sold by Apple. For Windows and Linux, you can either
 have a computer built for you or build your own. Although computer
-hardware changes quickly, let’s examine some general guidelines.
+hardware changes quickly, let's examine some general guidelines.
 
 CPU::
 Remember that the speed of a CPU is measured in GHz (billions of clock
-cycles per second). Higher GHz is generally better, but it’s hard to
+cycles per second). Higher GHz is generally better, but it's hard to
 compare performance across different designs of CPU. There is also a
 diminishing returns effect: The very fastest, very newest CPUs are
 often considerably more expensive even if they only provide slightly
-better performance. It’s usually more cost effective to select a CPU
+better performance. It's usually more cost effective to select a CPU
 in the middle of the performance spectrum.
 +
 Cache size also has a huge effect on performance. The larger the
@@ -1605,7 +1633,7 @@ represents a huge amount of storage. Only if you plan to have enormous
 libraries of video or uncompressed audio data will you likely need
 more. Corporate level databases and web servers and some other
 business systems can also require huge amounts of space. Hard drive
-speed is greatly affected by the hard drive’s cache size. As always, a
+speed is greatly affected by the hard drive's cache size. As always, a
 bigger cache means better performance. Using a solid state drive (SSD)
 instead of a traditional hard drive has much better performance but
 higher cost.
@@ -1626,7 +1654,7 @@ Someone interested in video games might want to invest in a powerful
 graphics card. Newer cards with more video RAM are generally better
 than older cards with less, but which card is best at a given price
 point is the subject of continual discussion at sites like AnandTech
-(http://www.anandtech.com/) and Tom’s Hardware
+(http://www.anandtech.com/) and Tom's Hardware
 (http://www.tomshardware.com/).
 +
 Printers are still useful output devices. Graphics tablets can make it
@@ -1640,7 +1668,7 @@ course, there is always more to know, and technology changes quickly.
 
 ==== Concurrency: Multicore processors
 
-In the last decade, the word ``core'' has been splattered all over CPU
+In the last decade, the word "`core`" has been splattered all over CPU
 packaging. Intel in particular has marketed the idea heavily with its
 Core, Core 2, i3 Core, i5 Core, and i7 Core chips. What are all these
 cores?
@@ -1681,7 +1709,7 @@ should be updated around 30 times per second. Computing the color for
 more than 2 million dots based on 3D geometry, lighting, and physics
 effects 30 times a second is no easy feat. Some of the cards used to
 render computer games have hundreds or thousands of cores. These cores
-are not general purpose or completely independent. Instead, they’re
+are not general purpose or completely independent. Instead, they're
 specialized to do certain kinds of matrix transformations and floating
 point computations.
 
@@ -1695,7 +1723,7 @@ the founders of Intel, remarked that the density of silicon
 microprocessors had been doubling every year (though he later revised
 this to every two years), meaning that twice as many transistors
 (computational building blocks) could fit in the same physical space.
-This trend, often called Moore’s Law, has held up reasonably well. For
+This trend, often called Moore's Law, has held up reasonably well. For
 years, clever designs relying on shorter communication times,
 pipelining, and other schemes succeeded in doubling the effective
 performance of processors every two years.
@@ -1709,7 +1737,7 @@ related to the *square* of the clock rate. This relationship means that
 increasing the clock rate of a processor by a factor of 4 will increase
 its energy consumption (and heat generation) by a factor of 16.
 
-The legacy of Moore’s Law lives on. We are still able to fit more and
+The legacy of Moore's Law lives on. We are still able to fit more and
 more transistors into tinier and tinier spaces. After decades of
 increasing clock rate, chip-makers began using the additional silicon
 density to make processors with more than one core instead. Since 2005
@@ -1741,7 +1769,7 @@ trying to put the roof onto unfinished walls, neither will succeed, the
 house might be ruined, and people could get hurt.
 
 On a desktop computer, individual cores generally have their own level 1
-cache but share level 2 cache and RAM. If the programmer isn’t careful,
+cache but share level 2 cache and RAM. If the programmer isn't careful,
 he or she can give instructions to the cores that will make them fight
 with each other, overwriting the memory that other cores are using and
 potentially crashing the program or giving an incorrect answer. Imagine
@@ -1810,9 +1838,9 @@ d.  stem:[1025]
 e.  stem:[567,899]
 
 What is the process for converting the representation of a binary
-integer given in one’s complement into two’s complement?
+integer given in one's complement into two's complement?
 
-Perform the conversion from one’s complement to two’s complement on the
+Perform the conversion from one's complement to two's complement on the
 representation `1011 0111`, which uses 8 bits for storage.
 
 Convert the following decimal numbers to their hexadecimal and octal
@@ -1843,21 +1871,21 @@ a.  stem:[23]
 b.  stem:[333]
 c.  stem:[729]
 
-Convert the following decimal numbers to 8-bit, two’s complement binary
+Convert the following decimal numbers to 8-bit, two's complement binary
 representations.
 
 a.  stem:[-15]
 b.  stem:[-101]
 c.  stem:[-120]
 
-Given the following 8-bit binary representations in two’s complement,
+Given the following 8-bit binary representations in two's complement,
 find their decimal equivalents.
 
 a.  `1100 0000`
 b.  `1111 1111`
 c.  `1000 0001`
 
-Perform the following arithmetic operation on the following 8-bit, two’s
+Perform the following arithmetic operation on the following 8-bit, two's
 complement binary representations of integers. Check your answers by
 performing arithmetic on equivalent decimal numbers.
 
