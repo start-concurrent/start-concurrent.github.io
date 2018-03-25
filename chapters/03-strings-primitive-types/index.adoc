@@ -1,0 +1,2778 @@
+[[chapter:Primitive Types and Strings]]
+== Primitive Types and Strings
+
+=== College cost calculator (problem)
+
+Perhaps you’re a student. Perhaps you aren’t. In either case, you must
+be aware of the rapidly rising cost of a college education. The
+motivating problem for this chapter is to create a Java program that can
+estimate the cost of a college education, including room and board. It
+starts by reading a first name, a last name, the per-semester cost of
+tuition, the monthly cost of rent, and the monthly cost of food as input
+from a user. Many students take out loans for college. In fact, student
+debt has surpassed credit card debt in the United States. We can
+implement a feature to read in an interest rate and the number of years
+expected to pay off the loan.
+
+After taking all this data as input, we want to calculate the yearly
+cost of such an education, the four year cost, the monthly loan payment,
+and the total cost of the loan over time. Furthermore, we want to output
+this information on the command line in an attractive way, customized
+with the user’s name. Below is a sample execution of this program.
+
+`Welcome``to``the``College``Cost``Calculator!` +
+`Enter``your``first``name:``Barry` +
+`Enter``your``last``name:``Wittman` +
+`Enter``tuition``per``semester:``$``17415` +
+`Enter``rent``per``month:``$``350` +
+`Enter``food``cost``per``month:``$``400` +
+`Annual``interest``rate:``.0937` +
+`Years``to``pay``back``your``loan:``10`
+
+`College``costs``for``Barry``Wittman` +
+`***************************************` +
+`Yearly``cost:``$43830.00` +
+`Four``year``cost:``$175320.00` +
+`Monthly``loan``payment:``$2256.14` +
+`Total``loan``cost:``$270736.57`
+
+Samples from a command line interface can be confusing because it is
+difficult to see what is ouput and what is input. In this case, we have
+marked the input in `green` so that it looks similar the way that
+Eclipse marks user input. In this program, the names, the tuition, the
+rent, the food, the interest rate, and the years to pay back the loan
+are taken as input. Note that the dollar signs are *not* part of the
+input and are outputted as a cue to the user and to give visual polish.
+
+If you are following the software development lifecycle, we hope you
+have a good understanding of this problem, but there are a few
+mathematical details worth addressing. First, the yearly cost is twice
+the semester tuition plus 12 times the rent and food costs. The four
+year cost is simply four times the yearly cost. The monthly loan payment
+amount, however, requires a formula from financial mathematics. Let
+latexmath:[$P$] be the amount of the loan (the principal). Let
+latexmath:[$J$] be the monthly interest rate (the annual interest rate
+divided by 12). Let latexmath:[$N$] be the number of months to pay back
+the loan (years of the loan times 12). Let latexmath:[$M$] be the
+monthly payment we want to calculate, then:
+
+latexmath:[\[M = P \times \frac{J}{1 - (1 + J)^{-N}}\]]
+
+If you use the concepts and syntax from the previous chapter carefully,
+you might be able to solve this problem without reading further.
+However, there is a depth to the ideas of types and operations that we
+have not explored fully. Getting a program to work is not enough.
+Programmers must understand every detail and quirk of their tools to
+avoid potential bugs.
+
+=== Types (concepts)
+
+Every operation inside of a Java program manipulates data. Often, this
+data is stored in _variables_, which look similar to variables from
+mathematics. Consider the following mathematical equation.
+
+latexmath:[\[x + 3 = 7\]]
+
+In this equation, latexmath:[$x$] has the value latexmath:[$4$], and it
+always will. You can set up another equation in which latexmath:[$x$]
+has a different value, but it won’t change in this one. Java variables
+are different. They are locations where you can store something. If you
+decide later that you want to change what you stored there, you can put
+something else into the same location, overwriting the old value.
+
+In contrast to a variable is a _literal_. A literal is a concrete value
+that does not change, though it can be stored in a variable. Numbers
+like `4` or `2.71828183` are literals. We need to represent text and
+single characters in Java as well, and there are literals like
+`"grapefruit segment"` and `'X'` that fill these roles.
+
+In Java, both variables and literals have _types_. If you think of a
+variable as a box where you can hold something, its type is the shape of
+the box. The kinds of literals that can be stored in that box must have
+a matching shape. In the last chapter, we introduced the type `int` to
+store integer values and the type `double` to store floating point
+values. Java is a _strongly typed_ language, meaning that, if we declare
+a variable of type `int`, we can only put `int` values into it (with a
+few exceptions).
+
+This idea of a type takes some getting used to. From a mathematical
+perspective latexmath:[$3$] and latexmath:[$3.0$] are identical.
+However, if you have an `int` variable in Java, you can store `3` into
+it, but you can’t store `3.0`. Types never change, but you can convert a
+value from one type to an equivalent value in another type.
+
+== Types as sets and operations
+
+Before we go any further, let’s look deeper at what a type really is. We
+can think of a type as a set of elements. For example, `int` represents
+a set of integer values (specifically, the integers between
+latexmath:[$-2,147,483,648$] and latexmath:[$2,147,483,647$]). Consider
+the following declarations:
+
+....
+int x;
+int y;
+....
+
+These declarations indicate that the variables named `x` and `y` can
+only contain integer values in this range. Furthermore, a type only
+allows specific operations. In Java, the `int` type allows addition,
+subtraction, multiplication, division, and several other operations we
+will talk about in
+Section #syntax:Types in Java[[syntax:Types in Java]], but you cannot
+directly raise an `int` value to a power in Java. Let’s assume that `x`
+is of type `int`. As we discussed in the previous chapter, the
+expression `x + 2` performs addition between the variable represented by
+`x` and the literal `2`. Some languages use the operator `^` to mean
+raising a number to a power. Following this notation, some beginning
+Java programmers are tempted to write `x ^ 2` to compute `x` squared.
+The `^` operator does have a meaning in Java, but it does not raise
+values to a power. Other combinations of operators are simply illegal,
+such as `x \# 2`.
+
+The idea of using types this way gives structure to a program. All
+operations are well-defined. For example, you know that adding two `int`
+values together will give you another `int` value. Java is a _statically
+typed_ language. This means that it can analyze all the types you’re
+using in your program at compile-time and warn you if you’re doing
+something illegal. Consequently, you’ll get a lot of compiler warnings
+and errors, but you can be more confident that your program is correct
+if all the types make sense.
+
+== Primitive and reference types in Java
+
+As shown in Figure link:#typesInJavaFigure[[typesInJavaFigure]](a),
+there are two kinds of types in Java: _primitive types_ and _reference
+types_. Primitive types are like boxes that hold single, concrete
+values. The primitive types in Java are `byte`, `short`, `int`, `long`,
+`float`, `double`, `boolean`, and `char`. These are types provided by
+the designers of Java, and it is not possible to create new ones. Each
+primitive type has a set of _operators_ that are legal for it. For
+example, all the numerical types can be used with `+` and `-`. We’ll
+talk about these types and their operators in great detail in
+Section #syntax:Types in Java[[syntax:Types in Java]].
+
+to
+
+Reference types work differently from primitive types. For one thing, a
+reference variable *points at* an object. This means that when you
+assign one reference variable to another, you are not getting a whole
+new copy of the object. Instead, you’re getting another arrow that
+points at the same object. The result is that performing an operation on
+one reference can effectively change another reference, if they are both
+pointing at the same object.
+
+Another difference is that reference variables (or simply _references_)
+do not have a large set of operators that work on them. Every variable
+can be used with the assignment (`=`) and the comparison (`==`)
+operators. Every variable can also be concatenated with a `String` by
+using the `+` operator, but even if two objects represent numerical
+values, they cannot be added together with the `+` operator.
+
+References should still be thought of as types defining a set of objects
+and operations that can be done with them. Instead of using operators,
+however, references use _methods_. You have seen methods such as
+`System.out.print()` and `JOptionPane.showInputDialog()` in the previous
+chapter. A method generally has a dot (`.`) before it and always has
+parentheses afterwards. These parentheses contain the input _parameters_
+or _arguments_ that you give to a method. Using operators on primitive
+types is convenient, but on the other hand, there is no limit to the
+number, kind, or complexity of methods that can be used on references.
+
+Another important feature of reference types is that anyone can define
+them. So far, you have seen the reference types `String` and
+`JOptionPane`. As we will discuss later, `String` is an unusual
+reference type in that it is built deeply into the language. There are a
+few other types like this (such as `Object`), but most reference types
+could have been written by anyone, even you.
+
+To create a new type, you write a class and define data and methods
+inside of it. If you wanted to define a type to hold airplanes, you
+might create the `Airplane` class and give it methods such as
+`takeOff()`, `fly()`, and `land()` because those are operations that any
+airplane should be able to do.
+
+Once a class has been defined, it is possible to _instantiate_ an
+_object_. An object is a specific instance of the type. For example, the
+type might be `Airplane`, but the object might be referenced by a
+variable called `sr71Blackbird`. Presumably, this object has a weight, a
+maximum speed, and other characteristics that mark it as a Lockheed
+SR-71 ``Blackbird,'' the famous spy plane. To summarize: The object is a
+concrete instance of the data. The reference is the variable that gives
+a name to (points to) the object. The type is the class that both the
+variable and the object have, which defines what kinds of data the
+object has and what operations it can perform. . ]Exercise .
+
+The following table lists some of the differences between primitive
+types and reference types.
+
+[cols="<,<",options="header",]
+|=======================================================================
+|*Primitive Types* |*Reference Types*
+|Created by the designers of Java |Created by any Java programmer
+
+|Use operators to perform operations |Use methods to perform operations
+
+|There are only eight different primitive types |The number of reference
+types is unlimited and grows every time someone creates a new class
+
+|Hold a specific numbers of bytes of data depending on the type |The
+referenced object can hold arbitrary amounts of data
+
+|Assignment copies a value from one place to another |Assignment copies
+an arrow that points at an object
+
+|Declaration creates a box to hold values |Declaration creates an arrow
+that can point at an object, but only instantiation creates a new object
+|=======================================================================
+
+== Type safety
+
+Why do we have types? There are weakly typed languages where you can
+store any value into almost any variable. Why bother with all these
+complicated rules? Most assembly languages have no notion of types and
+allow the programmer to manipulate memory directly.
+
+Because Java is strongly typed, the type of every variable, whether
+primitive or reference, must be declared prior to its use. This
+constraint allows the Java compiler to perform many safety and sanity
+checks during compilation, and the JVM performs a few more during
+execution. These checks avoid errors during program execution that might
+otherwise be hard to find. These errors could lead to catastrophic
+failures of the program.
+
+The Ariane 5 rocket is an example of a catastrophic failure due to a
+type error. On its first flight, the rocket left its flight path and
+eventually exploded. The failure was caused because of errors that
+resulted after converting a 64-bit floating point to 16-bit signed
+integer value. The converted value was larger than the integer could
+hold, resulting in a meaningless value.
+
+Converting from one type to another is called _casting_. The Ariane 5
+failure was due to a problem with casting that was not caught. Even in
+Java, it is possible for a human being to circumvent type safety with
+irresponsible casting.
+
+=== Types in Java (syntax)
+
+In this section we will dig deeper into the type system in Java,
+starting with variables and moving on to the properties of the eight
+primitive types and the properties of `String` and other reference
+types.
+
+== Variables and literals
+
+To use a variable in Java, you must first _declare_ it, which sets aside
+memory to hold the variable and attaches a name to that space.
+Declarations always follows the same pattern. The type is written first
+followed by the identifier, or name, for the variable. Below we declare
+a variable named `value` of type `int`.
+
+....
+int value;
+....
+
+Note how we use the same pattern to declare a reference variable named
+`creature` of type `Wombat`.
+
+....
+Wombat creature;
+....
+
+You are always free to declare a variable and then end the line with a
+semicolon (`;`), but it is common to _initialize_ a variable at the same
+time. The following line simultaneously declares `value` and initializes
+it to `5`.
+
+....
+int value = 5;
+....
+
+=== Pitfall: Multiple declarations
+
+Don’t forget that you are declaring and initializing in a line like the
+above. Beginning Java programmers sometimes try to declare a variable
+more than once, as in the following:
+
+....
+int value = 5;
+int value = 10;
+....
+
+Java will not allow two variables with the same name to exist in the
+same block of code. The programmer probably intended the following,
+which reuses variable `value` and replaces its contents with `10`.
+
+....
+int value = 5;
+value = 10;
+....
+
+This error is more common when several other lines of code are between
+the two assignments.
+
+In some of the examples above, we have stored the value `5` into our
+variable `value`. The symbol `5` is an example of a _literal_. A literal
+is a value represented directly in code. It cannot be changed, but it
+can be stored into variables that have the same type. The values stored
+into variables come from literals, input, or more complicated
+expressions. Just like variables, literals have types. The type of `5`
+is `int` while the type of `5.0` is `double`. Other types have literals
+written in ways we’ll discuss below.
+
+[[subsection:Primitive types]]
+== Primitive types
+
+The building blocks of all Java programs are primitive types. Even
+objects must fundamentally contain primitive types deep down inside.
+There are eight primitive types. Half of them are used to represent
+integer values, and we’ll start by looking at those.
+
+=== Integers: `byte`, `short`, `int`, and `long`
+
+A variable intended to hold integer values can be declared with any of
+the four types `byte`, `short`, `int`, or `long`. All of them are signed
+(holding positive and negative numbers) and represent numbers in two’s
+complement. They only differ by the range of values that each type can
+hold. These ranges and the number of bytes used to represent variables
+from each type are given in
+Table link:#rangePrimitiveTypes[[rangePrimitiveTypes]].
+
+.Ranges for primitive integer types in Java.
+[cols="<,^,>,^,<",options="header",]
+|=======================================================================
+|*Type* |*Bytes* | |*Range* |
+|`byte` |1 |latexmath:[$-128$] |to |latexmath:[$127$]
+|`short` |2 |latexmath:[$-32,768$] |to |latexmath:[$32,767$]
+|`int` |4 |latexmath:[$-2,147,483,648$] |to |latexmath:[$2,147,483,647$]
+|`long` |8 |latexmath:[$-9,223,372,036,854,775,808$] |to |
+| | |latexmath:[$\phantom{-}9,223,372,036,854,775,807$] | |
+|=======================================================================
+
+Note that the range of `byte` is included in that of `short`, of `short`
+in that of `int`, and so on. We say that `short` is _broader_ than
+`byte`, `int` is broader than `short`, and `long` is broader than `int`.
+. ]Exercise .
+
+A variable declared with type `byte` can only represent 256 different
+values, the integers in the range -128 to 127. Why use `byte` at all,
+then? Since a `byte` value only takes up a single byte, it can save
+memory, especially if you have a list of variables called an _array_,
+which we will discuss in Chapter #chapter:Arrays[[chapter:Arrays]].
+However, too narrow of a range will result in underflow and overflow.
+Java programmers are advised to stick with `int` for general use. If you
+need to represents values larger than 2 billion or smaller than -2
+billion, use `long`. Once you are an experienced programmer, you may
+occasionally use `byte` and `short` to save space, but they should be
+used sparingly and for a clear purpose.
+
+Consider the following declarations.
+
+....
+byte age;
+int numberOfRooms;
+long foreverCounter = 0;
+....
+
+The first of these statements declares `age` to be a variable of type
+`byte`. This declaration means that `age` can assume any value from the
+range for `byte`. For a human being, this limitation is reasonable (but
+dangerously close to the limit) since there is no documented case of a
+person living more than 122 years. Similarly, the next declaration
+declares `numberOfRooms` to be of type `int`. The last declaration
+declares `foreverCounter` to be of type `long` and initializes it to
+`0`.
+
+Since `age` is a variable, its value can change during program
+execution. Note that the above declaration of `age` does not assign a
+value to it. When they are declared, all integer variables are set to
+`0` by Java. However, to make sure that the programmer is explicit about
+what he or she wants, the compiler will give an error in most cases if a
+variable is used without first having its value set.
+
+Like any other integer variable, we can assign `age` a value as follows.
+
+....
+age = 32;
+....
+
+Doing so assigns the value `32` to variable `age`. Note that the Java
+compiler would not complain if you were to assign `-10` to the variable
+`age`, even though it is impossible for a human to have a negative age
+(at least, without a time machine). Java attaches no meaning to the name
+you give to a variable.  
+
+'''''
+
+Earlier, we said that variables had to match the type of literals you
+want to store into them. In the example above, we declared `age` with
+type `byte` and then stored `32` into it. What is the type of `32`? Is
+it `byte`, `short`, `int`, or `long`? By default, all integer literals
+have type `int`, but they can be used with `byte` or `short` variables
+provided that they fit within the range. Thus, the following line causes
+an error.
+
+....
+byte fingers = 128;
+....
+
+If you want to specify a literal to have type `long`, you can append `l`
+or `L` to it. Thus, `42` is an `int` literal, but `42L` is a `long`
+literal. You should always use `L` since `l` can be difficult to
+distinguish from `1`.
+
+At the time of this writing, Java 7 is the newest version of Java, but
+it has not yet become popular or widespread. In Java 7, you are allowed
+to put any number of underscores (`\_`) inside of numerical literals to
+break them up for the sake of readability. Thus, `123\_45\_6789` might
+represent a social security number, or you could use underscores instead
+of commas to write three million as `3\_000\_000`. To use this syntax,
+you must have a Java 7 compiler and be sure that your code will never
+need to be compiled in an earlier version of Java. Note that you should
+*never* use a comma in a numerical Java literal, no matter which version
+of Java.
+
+=== Floating point numbers: `float` and `double`
+
+To represent numbers with fractional parts, Java provides two floating
+point types, `double` and `float`. Because of limits on floating point
+precision discussed in
+Chapter #chapter:Computer Basics[[chapter:Computer Basics]], Java cannot
+represent all rational or real numbers, but these types provide good
+approximations. If you have a variable that takes on floating point
+values such as latexmath:[$3.14$], latexmath:[$1.707\times 10^{25}$],
+latexmath:[$9.8$], and so on, it ought to be declared as a `double` or a
+`float`.
+
+Consider the following declarations.
+
+....
+float roomArea;
+double avogadro = 6.02214179E23
+....
+
+The first of the above two statements declares `roomArea` to be of type
+`float`. Note that the declaration does not initialize `roomArea` to any
+value. Similar to integer primitive types, an uninitialized floating
+point variable contains `0.0`, but Java usually forces the programmer to
+assign a value to a variable before using it. The second of the above
+two statements declares `avogadro` to be a variable of type `double` and
+initializes it to the well-known Avogadro constant
+latexmath:[$6.02214179\times 10^{23}$]. Note the use of `E` to mean
+``ten to the power of.'' In Java, you could write
+latexmath:[$0.33\times 10^{-12}$] as `0.33E-12`, or the number
+latexmath:[$-4.325\times 10^{18}$] as `-4.325E18` (or even `-4.325E+18`
+if you would like to write the sign of the exponent explicitly).  
+
+'''''
+
+=== Accuracy in number representation
+
+As discussed in
+Chapter #chapter:Computer Basics[[chapter:Computer Basics]], integer
+types within their specified ranges have their exact representations.
+For example, if you assign `19` to a variable of type `int` and then
+print this value, you always get exactly `19`. Floating point numbers do
+not have this guarantee of exact representation.
+
+Try executing the following statements from within a Java program.
+
+....
+double test = 0.0;
+test += 0.1;
+System.out.println(test);
+test += 0.1;
+System.out.println(test);
+test += 0.1;
+System.out.println(test);
+....
+
+Since we are adding 0.1 each time, one would expect to see outputs of
+`0.1`, `0.2`, and `0.3`. The first two numbers print as expected, but
+the third number prints out as `0.30000000000000004`. It may seem
+counterintuitive, but 0.1 is a repeating decimal in binary, meaning that
+it cannot be represented exactly using the 64-bit IEEE floating point
+standard. The `System.out.println()` method hides this ugliness by
+rounding the output past a certain level of precision, but by the third
+addition, the number has drifted far enough away from 0.3 that an
+unexpected number peeks out.  
+
+'''''
+
+Variables of type `float` give you an accuracy of about 6 decimal digits
+while those of type `double` give about 15 decimal digits. Does the
+accuracy of floating point number representation matter? The answer to
+this question depends on your application. In some applications, 6-digit
+accuracy may be adequate. However, when doing large-scale simulations,
+such as computing the trajectory of a spacecraft on a mission to Mars,
+15-digit accuracy might be a matter of life or death. In fact, even
+double precision may not be enough. There is a special `BigDecimal`
+class which can perform arbitrarily high precision calculations, but due
+to its low speed and high complexity, it should only be used in those
+rare situations when a programmer requires a much higher level of
+precision than what `double` provides.
+
+Java programmers are recommended to use `double` for general purpose
+computing. The `float` type should only be used in special cases where
+storage or speed are critical and accuracy is not. Because of its
+greater accuracy, `double` is considered a broader type than `float`.
+You can store `float` values in a `double` without losing precision, but
+the reverse is not true.
+
+All floating point literals in Java have type `double` unless they have
+an `f` or `F` appended on the end. Thus, `3.14` is a `double` literal,
+but `3.14f` is a `float` literal.
+
+=== Floating point output
+
+Formatting output for floating point numbers has an extra complication
+compared to integers: How many digits after the decimal point should be
+displayed? If you are representing money, it is common to show exactly
+two digits after the decimal point. By default, all of the non-zero
+digits are shown.
+
+Instead of using `System.out.print()`, you can use `System.out.format()`
+to control formatting. When using `System.out.format()`, the first
+argument to the method is a _format string_, a piece of text that gives
+all the text you want to output as well as special format specifiers
+that indicate where other data is to appear and how it should be
+formatted. This method takes an additional argument for each format
+specifier you use. The specifier `\%d` is for integer values, the
+specifier `\%f` is for floating point values (including both `float` and
+`double` types), and the specifier `\%s` is for text. Consider the
+following example:
+
+....
+System.out.format("%s! I broke %d records in %f seconds.\n",
+    "Bob", 3, 2.4985);
+....
+
+The output of this code is
+
+....
+Bob! I broke 3 records in 2.4985 seconds.
+....
+
+This kind of output is based on the `printf()` function used for output
+in the C programming language. It allows the programmer to have a
+holistic picture of what the final output might look like, but it also
+gives control of formatting through the format specifiers. For example,
+you can choose the number of digits for a floating point value to
+display after the decimal point by putting a `.` and the number between
+the `\%` and the `f`.
+
+....
+System.out.format("$%.2f\n", 123.456789 );
+....
+
+The output of this code is
+
+....
+$123.46
+....
+
+rounding the last digit appropriately. To learn about other ways to use
+format strings to manipulate output, read the documentation at
+http://download.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax.
+
+=== Basic arithmetic
+
+The following table lists the arithmetic operators available in Java.
+All of these operators can be used on both the integer primitive types
+and the floating point primitive types.
+
+[cols="^,<",options="header",]
+|=========================
+|*Operator* |*Meaning*
+|`+` |Add
+|`-` |Subtract
+|`*` |Multiply
+|`/` |Divide
+|`\%` |Modulus (remainder)
+|=========================
+
+The first four of these should be familiar to you. Addition,
+subtraction, and multiplication work as you would expect, provided that
+the result is within the range defined for the types you’re using, but
+division is a little confusing. If you divide two integer values in
+Java, you’ll get an integer as a result. If there would have been a
+fractional part, it will be truncated, not rounded. Consider the
+following.
+
+....
+int x = 1999/1000;
+....
+
+In normal mathematics, latexmath:[$1,999 \div 1,000 = 1.999$]. In Java,
+`1999/1000` yields `1`, and that’s what is stored in `x`. For floating
+point numbers, Java works much more like normal mathematics.
+
+....
+double y = 1999.0/1000.0;
+....
+
+In this case, `y` contains `1.999`. The literals `1999.0` and `1000.0`
+have type `double`. The type of `y` does not affect the division, but it
+had to be `double` to be a legal place to store the result.
+
+=== Pitfall: Unexpected integer division
+
+It’s easy to focus on the variable and forget about the types involved
+in the operation. Consider the following.
+
+....
+double z = 1999/1000;
+....
+
+Because `z` has type `double`, it seems that the result of the division
+should be `1.999`. However, the dividend and the divisor have type
+`int`, and the result is `1`. This value is converted into `double` and
+stored in `z` as `1.0`. This mistake is more commonly seen in the
+following scenario.
+
+....
+double half = 1/2;
+....
+
+The code looks fine at first, but `1/2` yields `0`. If the result is to
+be stored in a `double` variable, it is better to multiply by `0.5`
+instead of dividing by `2`. +
+
+You may not have thought about this idea since elementary school, but
+the division operator (`/`) finds the quotient of two numbers. The
+modulus operator (`\%`) finds the remainder. For example, `15 / 6` is
+`2`, but `15 \% 6` is `3` because `6` goes into `15` twice with `3` left
+over. The modulus operator is usually used with integer values, but it
+is also defined to work with floating point values in Java. It’s easy to
+dismiss the modulus operator because we don’t often use it in daily
+life, but it is incredibly useful in programming. On its face, it allows
+us to see the remainder after division. This idea can be applied to see
+if a number is even or odd. It can also be used to compress a large
+range of random integers to a smaller range. Keep an eye out for it.
+We’ll use it many times in this book.
+
+=== Precedence
+
+Although all the previous examples use only one mathematical operator,
+you can combine several operators and operands into a larger expression
+like the following.
+
+....
+((a + b) * (c + d)) % e
+....
+
+Such expressions are evaluated from left to right, using the standard
+order of operations: The `*` and `/` (and also `\%`) operators are given
+precedence over the `+` and `-` operators. Like in mathematics,
+parentheses have the highest precedence and can be used to add clarity.
+Thus, the order of evaluation of `a + b / c` is the same as
+`a + (b / c)` but different from `(a + b) / c`.
+
+Consider the following lines of code.
+
+....
+int a = 31;
+int b = 16;
+int c = 1;
+int d = 2;
+a = b + c * d - a / b / d;
+....
+
+What is the result? The first operation to be evaluated is `c * d`,
+yielding `2`. The next is `a / b`, yielding `1`, which is then divided
+by `d`, yielding `0`. Next `b + 2` gives `18`, and `18 - 0` is still
+`18`. Thus, the value stored in `a` is `18`.
+
+Your inner mathematician might be nervous that `a` is used in the
+expression on the right side of the assignment and is also the variable
+where the result is stored. This situation is very common in
+programming. The value of `a` doesn’t change until after all the math
+has been done. The assignment always happens last.  
+
+'''''
+
+All of the operators we have discussed so far are _binary_ operators.
+This use of the word ``binary'' has nothing to do with base 2. A binary
+operator takes two things and does something, like adding them together.
+A _unary_ operator takes a single operand and does something. The `-`
+operator can be used as a unary operator to negate a literal, variable,
+or expression. A unary negation has a higher precedence than the other
+operators, just like in mathematics. In other words, the variable or
+expression will be negated before it is multiplied or divided. The `+`
+operator can be used anywhere you would use a unary negation, although
+it doesn’t actually do anything. Consider the following statements.
+
+....
+int a = - 4;
+int b = -c + d / -(e * f);
+int s = +t + (-r);
+....
+
+=== Shortcuts
+
+Some operations happen frequently in Java. For example, increasing a
+variable by some amount is a common task. If you want to increase the
+value of variable `value` by 10, you can write the following.
+
+....
+value = value + 10;
+....
+
+Although the statement above is not excessively long, increasing a
+variable is common enough that there’s shorthand for it. To achieve the
+same effect, you can use the `+=` operator.
+
+....
+value += 10;
+....
+
+The `+=` operator gets the value of the variable, in this case `value`,
+adds whatever is on its right side, in this case `10`, and stores the
+result back into the variable. Essentially, it saves you from writing
+the name of the variable twice. And `+=` is not the only shortcut. It is
+only one member of a family of shortcut operators that perform a binary
+operation between the variable on the left side and the expression on
+the right side and then store the value back into the variable. There is
+a `-=` operator that decreases a variable, a `*=` operator that scales a
+variable, and several others, including shortcuts for bitwise operations
+we cover in the next subsection.
+
+[cols="^,<,<",options="header",]
+|===================================
+|*Operator* |*Example* |
+|`+=` |`a += b;` |`a = a + b;`
+|`-=` |`a -= b;` |`a = a - b;`
+|`*=` |`a *= b;` |`a = a * b;`
+|`/=` |`a /= b;` |`a = a / b;`
+|`\%=` |`a \%= b;` |`a = a \% b;`
+|`\&=` |`a \&= b;` |`a = a \& b;`
+|`^=` |`a ^= b;` |`a = a ^ b;`
+|`|=` |`a |= b;` |`a = a | b;`
+|`<<=` |`a <<= b;` |`a = a << b;`
+|`>>=` |`a >>= b;` |`a = a >> b;`
+|`>>>=` |`a >>>= b;` |`a = a >>> b;`
+|===================================
+
+These assignment shortcuts are useful and can make a line shorter and
+easier to read.
+
+=== Pitfall: Weak type checking with assignment shortcuts
+
+Because you can lose precision, it is not allowed to store a `double`
+value into an `int` variable. Thus, the following lines of code are
+illegal and will not compile.
+
+....
+int x = 0;
+x = x + 0.1;
+....
+
+In this case, the check makes a lot of sense. If you were able to add
+`0.1` to `0` and then store that value into an `int` variable, the
+fractional part would be truncated, keeping `0` in the variable.
+However, this safeguard against lost precision is not done with
+assignment shortcuts. Even though we expect the following lines to be
+functionally identical to the previous ones, they will compile (but
+still do nothing).
+
+....
+int x = 0;
+x += 0.1;
+....
+
+This kind of error can cause problems when the program expects the value
+of `x` to grow and eventually reach some level.
+
+There are also two unary shortcuts. Incrementing a value by one and
+decrementing a value by one are such common operations that they get
+their own special operators, `++` and `--`.
+
+[cols="^,<,<",options="header",]
+|==========================
+|*Operator* |*Example* |
+|`++` |`a++;` |`a = a + 1;`
+|`--` |`a--;` |`a = a - 1;`
+|==========================
+
+Using either an increment or decrement changes the value of a variable.
+In all other cases, the use of an assignment operator is required to
+change a variable. Even in the binary shortcuts given before, the
+programmer is reminded that an assignment is occurring because the `=`
+symbol is present.
+
+Both the increment and decrement operators come in prefix and postfix
+flavors. You can write the `++` (or the `--`) in front of the variable
+you are changing or behind it.
+
+....
+int value = 5;
+value++; //now value is 6
+++value; //now value is 7
+value--; //value is 6 again
+....
+
+When used in a line by itself, each flavor works exactly the same.
+However, the incremented (or decremented) variable can also be used as
+part of a larger expression. In a larger expression, the prefix form
+increments (or decrements) the variable *before* the value is used in
+the expression. Conversely, the postfix form gives back a copy of the
+original value, effectively incrementing (or decrementing) the variable
+*after* the value is used in the expression. Consider the following
+example.
+
+....
+int prefix = 7;
+int prefixResult = 5 + ++prefix;
+
+int postfix = 7;
+int postfixResult = 5 + postfix++;
+....
+
+After the code is executed, the values of `prefix` and `postfix` are
+both `8`. However, `prefixResult` is `13` while `postfixResult` is only
+`12`. The original value of `postfix`, which is `7`, is added to `5`,
+and then the increment operation happens afterwards.
+
+=== Pitfall: Increment confusion
+
+Incrementing a variable in Java is a very common operation. Expressions
+like `i++` and `++i` pop up so often that it is easy to forget exactly
+what they mean. Programmers occasionally forget that they are shorthand
+for `i = i + 1` and begin to think of them as a fancy way to write
+`i + 1`.
+
+When confused, a programmer might write something like the following.
+
+....
+int i = 14;
+i = i++;
+....
+
+At first glance, it may appear that the second line of code really means
+`i = i = i + 1`. Assigning `i` an extra time is pointless, but it does
+no harm. However, remember that the postfix version gives back a copy of
+the original value, before it has been incremented. In this case, `i`
+will be incremented, but then its original value will be stored back
+into itself. In the code given above, the final value of `i` is still
+`14`.
+
+In general it is unwise to perform increment or decrement operations in
+the middle of larger expressions, and we advise against doing so. In
+some cases, code can be shortened by cleverly hiding an increment in the
+middle of some other expression. However, when reading back over the
+code, it always takes a moment to be sure that increment or decrement is
+doing exactly what it should. The additional confusion caused by this
+cleverness is not worth the line of code saved. Furthermore, the
+compiler will translate the operations into exactly the same bytecode,
+meaning that the shorter version is no more efficient than the longer
+version.
+
+Nevertheless, many programmers enjoy squeezing their code down to the
+smallest number of lines of code possible. You may have to read code
+that uses increments and decrements in clever (if obscure) ways, but you
+should always strive to make your own code as readable as possible.
+
+=== Bitwise operators
+
+In addition to normal mathematical operators, Java provides a set of
+_bitwise_ operators corresponding to the operations we discussed in
+Chapter #chapter:Computer Basics[[chapter:Computer Basics]]. These
+operators perform bitwise operations on integer values. The bitwise
+operators are `&`, `|`, `^`, and `\~` (which is unary). In addition,
+there are bitwise _shift_ operators: `<<` for signed left shift, `>>`
+for signed right shift, and `>>>` for unsigned right shift. There is no
+unsigned left shift operator in Java.
+
+[cols="^,<,<",options="header",]
+|=======================================================================
+|*Operator* |*Name* |*Description*
+|`\&` |Bitwise AND |Combines two binary representations into a new
+representation that has 1s in every position that both the original
+representations have a 1
+
+|`|` |Bitwise OR |Combines two binary representations into a new
+representation that has 1s in every position that either of the original
+representations have a 1
+
+|`^` |Bitwise XOR |Combines two binary representations into a new
+representation that has 1s in every position that the original
+representations have different values
+
+|`\~` |Bitwise NOT |Takes a representation and creates a new
+representation in which every bit is flipped from 0 to 1 and 1 to 0
+
+|`<<` |Signed left shift |Moves all the bits the specified number of
+positions to the left, shifting 0s into the rightmost bits
+
+|`>>` |Signed right shift |Moves all the bits the specified number of
+positions to the right, padding the left with copies of the sign bit
+
+|`>>>` |Unsigned right shift |Moves all the bits the specified number of
+positions to the right, padding with 0s
+|=======================================================================
+
+When used with `byte` and `short`, all bitwise operators will
+automatically convert their operands to 32-bit `int` values. It is
+crucial to remember this conversion since the number of bits used for
+representation is a fundamental part of bitwise operators.
+
+The following example shows these operators in use. In order to
+understand the output, you need to understand how integers are
+represented in the binary number system, which is discussed in
+Section #syntax:Data representation[[syntax:Data representation]]. .
+]Exercise .
+
+The following code shows a sequence of bitwise operations performed with
+the values `3` and `-7`. To understand the results, remember that, in
+32-bit two’s complement representation, `3` =
+`0000 0000 0000 0000 0000 0000 0000 0011` and `-7` =
+`1111 1111 1111 1111 1111 1111 1111 1001`.
+
+....
+int x = 3;
+int y = -7;
+int z = x & y;
+System.out.println("x & y\t= " + z);
+z = x | y;
+System.out.println("x | y\t= " + z);
+z = x ^ y;
+System.out.println("x ^ y\t= " + z);
+z = x << 2;
+System.out.println("x << 2\t= " + z);
+z = y >> 2;
+System.out.println("y >> 2\t= " + z);
+z = y >>> 2;
+System.out.println("y >>> 2\t= " + z);
+....
+
+The output of this fragment of code is:
+
+....
+x & y   = 1
+x | y   = -5
+x ^ y   = -6
+x << 2  = 12
+y >> 2  = -2
+y >>> 2 = 1073741822
+....
+
+Note how the escape sequence `\\t` is used to put a tab character in the
+output, making the results line up.  
+
+'''''
+
+Why use the bitwise operators at all? Sometimes you may read data as
+individual `byte` values, and you might need to combine four of these
+values into a single `int` value. Although the signed left shift (`<<`)
+and signed right shift (`>>`) are, respectively, equivalent to repeated
+multiplications by 2 or repeated divisions by 2, they are faster than
+doing these operations over and over. Finally, some of these operations
+are used for cryptographic or random number generation purposes.
+
+[[castSection]]
+=== Casting
+
+Sometimes you need to use different types (like integers and floating
+point values) together. Other times, you have a value in one type, but
+you need to store it in another (like when you are rounding a `double`
+to the nearest `int`). Some combinations of operators and types are
+allowed, but others cause compiler errors.
+
+The guiding rule is that Java allows an assignment from one type to
+another, provided that no precision is lost. That is, we can copy a
+value of one type into a variable of another type, provided that the
+destination variable has a broader type than the source value. The next
+few examples illustrate how to convert between different numerical
+types.
+
+Consider the following statements.
+
+....
+short x = 341;
+int y = x;
+....
+
+Because the type of `y` is `int`, which is broader than `short`, the
+type of `x`, it is legal to assign the value in `x` to variable `y`. In
+the assignment, a value with the narrower type `short` is converted to
+an equivalent value with the broader type `int`. Converting from a
+narrower type to a broader type is called an _upcast_ or a _promotion_,
+and Java allows it with no complaint. Most languages allow upcasts
+without any special syntax because it is always safer to move from a
+narrower, more restrictive type to a broader, less restrictive one.  
+
+'''''
+
+Consider these statements that declare variables `a`, `b`, and `c` and
+compute a value for `c`.
+
+....
+int a = 10;
+int b = 2;
+byte c;
+c = a + b;
+....
+
+If you try compiling these statements as part of a Java program, you get
+an error message like the following.
+
+....
+Error: possible loss of precision
+found: int
+required: byte
+....
+
+The compiler generates the error above because the sum of two `int`
+values is another `int` value, which could be greater than the maximum
+value you can store in `c`, of type `byte`. In this example, *you* know
+that the value of `12` does not exceed the maximum of `127`, but the
+Java compiler is inherently cautious. It complains whenever the type of
+the expression to be evaluated is broader than the type of the
+destination variable. 
+
+'''''
+
+. ]Exercise .
+
+Integers are automatically converted to floating point when needed.
+Consider the following statement.
+
+....
+double tolerance = 3;
+....
+
+The literal `3` has type `int`, but it is automatically converted to the
+floating point value `3.0` with type `double`. Again, `double` (and also
+`float`) are considered broader types than any integer types.
+Consequently, this type conversion is an upcast and is completely legal.
+
+Upcasts also occur with arithmetic operations. Whenever you try to do
+arithmetic with two different numerical types, the narrower type is
+automatically upcast to the broader one.
+
+....
+double value = 3 + 7.2;
+....
+
+In this statement, `3` is automatically upcast to its `double` version
+`3.0` because `7.2` has the broader `double` type.  
+
+'''''
+
+In order to perform a downcast, the programmer has to mark that he or
+she intends for the conversion to happen. A downcast is marked by
+putting the result type in parentheses before the expression you want
+converted. The next example illustrates how to cast a `double` value to
+type `int`.
+
+The following statements cause a compiler error because an expression
+with type `double` cannot be stored into a variable with type `int`.
+
+....
+double roomArea = 3.5;
+int houseArea = roomArea * 4.0;
+....
+
+A downcast can lose precision, and that’s why Java doesn’t allow it.
+Sometimes a downcast is necessary, and you can override Java’s type
+system with an explicit cast. To do so, we put the expected (or desired)
+result type in parentheses before the expression. In this case (and many
+others), it is also necessary to surround the expression with
+parentheses so that the entire expression (and not just `roomArea`) is
+converted to type `int`.
+
+....
+double roomArea = 3.5;
+int houseArea = (int) (roomArea * 4.0);
+....
+
+In this case, the expression has value `14.0`. Consequently, the `int`
+version is `14`. In general, the value could have a fractional part.
+When casting from a floating point type to an integer type, the
+fractional part is truncated *not* rounded. Consider the following
+statement:
+
+....
+int count = (int) 15.99999;
+....
+
+Mathematically, it seems obvious that `15.99999` should be rounded to
+the nearest `int` value of `16`, but Java does not do this. Instead, the
+code above stores `15` into `count`. If you want to round the value,
+Java provides a method for rounding in the `Math` class. The rounding
+(instead of truncating) version is given below.
+
+....
+int count = (int) Math.round(15.99999);
+....
+
+The value given back by `Math.round()` has type `long`. The designers of
+the `Math` class did this so that the same method could be used to round
+large `double` values into a `long` value, since the result might not
+fit in an `int` value. Since `long` is a broader type than `int`, we
+have to downcast the result to an `int` so that we can store it in
+`count`. . ]Exercise .  
+
+'''''
+
+Consider the following declaration and assignment of variable
+`roomArea`.
+
+....
+float roomArea;
+roomArea = 2.0;
+....
+
+This assignment is illegal in Java, and the compiler gives an error
+message like the following:
+
+....
+Error: possible loss of precision
+found: double
+required: float
+....
+
+As we mentioned earlier, the literal `2.0` has type `double`. When you
+try to assign a `double` value to a `float` variable, there is always a
+risk that precision will be lost. The best way to avoid the error above
+is to declare `roomArea` with type `double`. Alternatively, we could
+store the `float` literal `2.0f` into `roomArea`. We could also assign
+`2` instead of `2.0` to `roomArea`, since the upcast from `int` is done
+automatically. . ]Exercise .
+
+Remember, you should almost always use the `double` type to represent
+floating point numbers. Only in rare cases when you need to save memory
+should you use `float` values. By making it illegal to store `2.0` into
+a `float` variable, Java is encouraging you to use high precision
+storage.  
+
+'''''
+
+Numerical types and the conversions between them are critical elements
+of programming in Java, which has a strong mathematical foundation. In
+addition to these numerical types, Java also provides two other types
+that represent individual characters and Boolean values. We examine
+these next.
+
+=== Characters: `char`
+
+Sentences are made up of words. Words are made up of letters. Although
+we have discussed many powerful tools for representing numbers in Java,
+we need a way to represent letters and other characters that we might
+find in printed text. Values with the `char` type are used to represent
+individual letters.
+
+In the older languages of C and C++, the `char` type used 8 bits for
+storage. From
+Chapter #chapter:Computer Basics[[chapter:Computer Basics]], you know
+that you can represent up to latexmath:[$2^8 = 256$] values with 8 bits.
+The Latin alphabet, which is used to write English, uses 26 letters. If
+we need to represent upper and lower case letters, the 10 decimal
+digits, punctuation marks, and quite a few other special symbols, 256
+values is plenty. However, people all over the world use computers and
+want to store text from their language written in their script
+digitally. Taking the Chinese character system alone, some Chinese
+dictionaries list over 100,000 characters!
+
+Java uses a standard called the UTF-16 encoding to represent characters.
+UTF-16 is part of a larger international standard called Unicode, which
+is an attempt to represent most of the world’s writing systems as
+numbers that can be stored digitally. Most of the inner workings of
+Unicode aren’t important for day-to-day Java programming, but you can
+visit http://www.unicode.org/ if you want more information.
+
+In Java, each variable of type `char` uses 16 bits of storage.
+Therefore, each character variable could assume any value from among a
+total of latexmath:[$2^{16} = 65,536$] possibilities (although a few of
+these are not legal characters). Here are a few declarations and
+assignments of variables of type `char`.
+
+....
+char letter = 'A';
+char punctuation = '?';
+char digit = '7';
+....
+
+We are storing `char` literals into each of the variables above. Most of
+the `char` literals you will use commonly are made by typing the single
+character you want in *single* quotes (`'`), such a `'z'`. These
+characters can be upper- or lowercase letters, single numerical digits,
+or other symbols.
+
+The space character literal is `' '`, but some characters are harder to
+represent. For example, a new line (the equivalent of pressing
+`<enter>`) is represented as a single character, but we can’t type a
+single quote, hit `<enter>`, and then type the second quote. Instead,
+the character to represent a new line is `'\\n'`, which we will refer to
+simply as a _newline_. Every `char` variable can only hold a single
+character. It appears that `'\\n'` has multiple characters in it, but it
+does not. The use of the backslash (`\\`) marks an _escape sequence_,
+which is a combination of characters used to represent a specific
+difficult to type or represent character. Here is a table of common
+escape sequences.
+
+[cols="^,^",options="header",]
+|==============================
+|*Escape Sequence* |*Character*
+| |
+|n‘ |Newline
+| |
+|t‘ |Tab
+| |
+|’‘ |Single quote
+| |
+| |
+|‘ |Backslash
+|==============================
+
+Remember, everything inside of a computer is represented with numbers,
+and each `char` value has some numerical equivalent. These numbers are
+arbitrary but systematic. For example, the character `'a'` has a
+numerical value of `97`, and `'b'` has a numerical value of `98`. The
+codes for all of the lowercase Latin letters are sequential in
+alphabetical order. (The codes for uppercase letters are sequential too,
+but there is a gap between them and the lowercase codes.)
+
+Some Unicode characters are difficult to type because your keyboard or
+operating system has no easy way to produce the character. Another kind
+of escape sequence allows you to specify any character by its Unicode
+value. There are large tables listing all possible Unicode characters by
+numerical values. If you want to represent a specific literal, you type
+`’\uxxxx’` where `xxxx` is a hexadecimal number representing the value.
+For example, `’\u0064’` converted into decimal is
+latexmath:[$16 \times 6 + 4 = 100$], which is the letter `'d'`.
+
+If you print a `char` variable or literal directly, it prints the
+character representation on the screen. For example, the following
+statement prints `A` not `65`, the Unicode value of `'A'`.
+
+....
+System.out.println('A');
+....
+
+However, the Unicode values *are* numbers. If you try to perform
+arithmetic on them, Java will treat them like numbers. For example, the
+following statement adds the integer equivalents of the characters
+(latexmath:[$65 + 66 = 131$]), concatenates the sum with the `String`
+`"C"`, and concatenates the result with a `String` representation of the
+`int` literal `999`. The final output is `131C999`.
+
+....
+System.out.println('A' + 'B' + "C" + 999);
+....
+
+ 
+
+'''''
+
+=== Booleans: `boolean`
+
+If you are new to programming, it may seem useless to have a type
+designed to hold only true and false values. These values are called
+_Boolean values_, and the logic used to manipulate them turns out to be
+crucial to almost every program. We use them to represent conditions in
+Chapters #chapter:Selection[[chapter:Selection]],
+#chapter:Repetition[[chapter:Repetition]], and beyond.
+
+To store these truth values, Java uses the type `boolean`. There are
+exactly two literals for type `boolean`: `true` and `false`. Here are
+two declarations and assignments of `boolean` variables.
+
+....
+boolean awesome = true;
+boolean testFailed = false;
+....
+
+If we could only store these two literals, `boolean` variables would
+have limited usefulness. However, Java provides a full range of
+_relational_ operators that allow us to compare values. Each of these
+operators generates a `boolean` result. For example, we can test to see
+if two numbers are equal, and the answer is either `true` or `false`.
+All Java relational operators are listed in the table below. Assume that
+all variables used in the *Example* column have a numeric type.
+
+[cols="^,<,<",options="header",]
+|============================================
+|*Symbol* |*Read as* |*Example*
+|`==` |equal to |`x + 3 == y * 2`
+|`!=` |not equal to |`x !=  y / 4`
+|`<` |less than |`x < 3.5`
+|`<=` |less than or equal to |`x <= y`
+|`>` |greater than |`x > y+1`
+|`>=` |greater than or equal to |`x + y >= z`
+|============================================
+
+The following declarations and assignments illustrate some uses of
+`boolean` variables. Note the use of the relational operators `==` and
+`>`.
+
+....
+int x = 3;
+int y = 4;
+boolean same = (x == 3);
+same = (x == y);
+boolean xIsGreater = (x > y);
+....
+
+In the first use of `==` above, the value of `same` is `true` because
+the value of `x` is `3`. In the second comparison, the value of `same`
+is `false` because the values of `x` and `y` are different. The value of
+`xIsGreater` is also `false` since the value of `x` is not greater than
+the value of `y`.  
+
+'''''
+
+In addition to the relational operators, Java also provides _logical_
+operators that can be used to combine or negate `boolean` values. These
+are the logical AND (`\&\&`), logical OR (`||`), logical XOR (`^`), and
+logical NOT (`!`) operators.
+
+[cols="^,^,<",options="header",]
+|=====================================================
+|*Name* |*Operator* |*Description*
+|AND |`\&\&` |Returns `true` if both values are `true`
+|OR |`||` |Returns `true` if either value is `true`
+|XOR |`^` |Returns `true` if values are different
+|NOT |`!` |Returns the opposite of the value
+|=====================================================
+
+All of these operators, except for NOT, are binary operators. Logical
+AND is used when you want your result to be `true` only if both the
+operands being combined evaluate to `true`. Logical OR is used when you
+want your result to be `true` if either operand is `true`. Logical XOR
+is used when you want your result to be `true` if one but not both of
+your operands is `true`. The unary logical NOT operator (`!`) results in
+the opposite value of its operand, switching `true` to `false` or
+`false` to `true`. Both the relational operators and the logical
+operators are described in greater detail in
+Chapter #chapter:Selection[[chapter:Selection]].
+
+== Reference types
+
+Now we will move on to reference types, which vastly outnumber the
+primitive types, with new types created all the time. Nevertheless, the
+primitive types in Java are important, partly because they are the
+building blocks for reference types.
+
+Recall that a variable with a reference type does not contain a concrete
+value like a primitive variable. Instead, the value it holds is a
+reference or arrow pointing to the ``real'' object. It’s like a name for
+an object. When you declare a reference variable in Java, it starts off
+pointing at nothing, represented by the special literal `null`. For
+example, the following code creates a `Wombat` variable called `w`,
+which doesn’t point at anything.
+
+....
+Wombat w;
+....
+
+To create an object in Java, you use the `new` keyword followed by the
+name of the type and parentheses, which can either be empty or contain
+data you want to use to initialize the object. This process is called
+invoking the _constructor_, which creates space for the object and then
+initializes it with the values you specify or with default values if you
+leave the parentheses empty. Below we invoke the default `Wombat`
+constructor and point the variable `w` at the resulting object.
+
+....
+w = new Wombat();
+....
+
+Alternatively, the `Wombat` type might allow you to specify its mass in
+kilograms when creating one, as follows.
+
+....
+w = new Wombat(26.3);
+....
+
+Assignment of reference types points the two references to the same
+object. Thus, we can have two different `Wombat` references pointing at
+the same object.
+
+....
+Wombat w1 = new Wombat(26.3);
+Wombat w2 = w1;
+....
+
+to
+
+Then, anything we do to `w1` will affect `w2` and vice versa. For
+example, we can tell `w1` to eat leaves using the `eatLeaves()` method.
+
+....
+w1.eatLeaves();
+....
+
+Perhaps this will increase the mass of the object that `w1` points at to
+`26.9` kilograms. But the mass of the object that `w2` points at will be
+increased as well, because they are the *same object*. Since primitive
+variables hold values and not references to objects, this kind of code
+works very differently with them. Consider the following.
+
+....
+int a = 10;
+int b = a;
+a = a + 5;
+....
+
+In this code, `a` is initialized to have a value of `10` and `b` is
+initialized to have whatever value `a` has, namely `10`. The third line
+increases the value of `a` to `15`, but `b` is still `10`.
+
+to
+
+Now that we’ve highlighted some of the differences between primitive and
+reference types, we explain the `String` type more deeply. You use it
+frequently, but it has a few unusual features that are not shared by any
+other reference types.
+
+=== `String` basics
+
+The `String` type is used to represent text in Java. A `String` object
+contains a sequence of zero or more `char` values. Unlike every other
+reference type, there is a literal form for `String` objects. These
+literals are written with the text you want to represent inside of
+double quotes (`"`), such as `"Fight the power!"`. You can declare a
+`String` reference and initialize it by setting it equal to another
+`String` reference or a `String` literal. Like any other reference, you
+could leave it uninitialized. . ]Exercise .
+
+There is a difference between an uninitialized `String` (a reference
+that points to `null`) and a `String` of length 0. A `String` of length
+0 is also known as an _empty string_ and is written `""`. The space
+character (`' '`) and escape sequences such as `'\\n'` can be a part of
+a `String` and add to its length. For example, `"ABC"` contains three
+characters, but the `String` `"A B C"` has five, because the spaces on
+each side of `'B'` count. The next example illustrates some ways of
+defining and using the `String` type. . ]Exercise .
+
+The following declarations define two `String` references named
+`greeting` and `title` and initialize each with a literal.
+
+....
+String greeting = "Bonjour!"
+String title = "French Greeting";
+....
+
+As you have seen in Chapter #chapter:Problem Solving and
+Programming[[chapter:Problem Solving and
+Programming]], `String` values can be output using `System.out.print()`
+and `JOptionPane` methods.
+
+....
+System.out.println(greeting);
+JOptionPane.showMessageDialog(null, greeting, title, JOptionPane.INFORMATION_MESSAGE);
+....
+
+The first statement above displays `Bonjour!` on the terminal. The
+second statement creates a dialog box with the title `French Greeting`
+and the message `Bonjour!` 
+
+'''''
+
+=== `String` operations
+
+In
+Chapter #chapter:Problem Solving and Programming[[chapter:Problem Solving and Programming]],
+you saw that we can _concatenate_ two `String` objects into a third
+`String` object using the `+` operator. This operator is unusual for a
+reference type. Almost all other reference types are only able to use
+the assignment operator (`=`) and the comparison operator (`==`). Like
+other reference types, the `String` class provides methods for
+interaction. We introduce a few `String` methods in this section and
+subsequent sections, but the `String` class defines many more.
+
+Here is another example of combining `String` objects using the `+`
+operator.
+
+....
+String argument = "the cannon";
+String phrase = "No argument but " + argument + "!";
+....
+
+In these statements, we initialize `argument` to `"the cannon"`. We then
+compute the value of `phrase` by adding, or concatenating, three
+`String` values: `"No argument but "`, the value of `argument`, and
+`"!"`. The result is `"No argument but the cannon!"`. If `argument` had
+been initialized to `"a pie in the face"`, then `phrase` would point to
+`"No argument but a pie in the face!"`.
+
+Another way of concatenating two `String` objects is by using the
+`String` `concat()` method.
+
+....
+String argument = "the cannon";
+String exclamation = "!";
+String phraseStart = "No argument but ";
+String phrase = phraseStart.concat(argument);
+phrase = phrase.concat(exclamation);
+....
+
+This sequence of statements gives the same result as the one above it
+using the `+` operator. In practice, the `concat()` method is rarely
+used because the `+` operator is so convenient. Note that `String`
+objects in Java are _immutable_, meaning that calling a method on a
+`String` object will never change it. In the code above, calling
+`concat()` creates new `String` objects. The `phrase` reference points
+first at one `String` then it points at a new `String` on the next line.
+In this case the *reference* can be changed, but a `String` *object*
+never changes once it has been created. This distinction is a subtle but
+important one.  
+
+'''''
+
+A host of other methods can be used on a `String` just like `concat()`.
+For example, the length of a `String` can be found using the `length()`
+method. The following statements prints `30` to the terminal.
+
+....
+String motto = "Fight for your right to party!";
+System.out.println(motto.length()):
+....
+
+`String` literals are `String` objects as well, and you can call methods
+on them. The following code stores `11` into `letters`.
+
+....
+int letters = "cellar door".length();
+....
+
+Remember that a `String` is a sequence of `char` values. If you want to
+find out what `char` is at a particular location within a `String`, you
+can use the `charAt()` method.
+
+This method is called with an `int` value giving the index you want to
+know about. Indexes inside of a `String` start at 0, not at 1.
+Zero-based numbering is used extensively in programming, and we discuss
+it further in Chapter #chapter:Arrays[[chapter:Arrays]]. (It may help if
+you think of the index as the number of characters that appear before
+the character at the specified index.) The next example shows how
+`charAt()` can be used.
+
+To see what `char` is at a given location, we call `charAt()` with the
+index in question, as shown below.
+
+....
+String word = "antidisestablishmentarianism";
+char letter = word.charAt(11);
+....
+
+In this case, `letter` is assigned the value `'b'`. Remember, indexes
+for `char` values inside of a `String` start with 0. Thus, the `char` at
+index 0 is `'a'`, the `char` at index 1 is `'n'`, the `char` at index 2
+is `'t'`, and so on. If you count up to the twelfth `char` (which has
+index 11), it should be `'b'`.
+
+Every `char` inside of a `String` counts, whether it is a letter, a
+digit, a space, punctuation, or some other symbol.
+
+....
+String text = "^_^ l337 #haxor# skillz!";
+System.out.println(text.charAt(10));
+....
+
+This code prints out `h` since `'h'` is the eleventh `char` (with index
+10) in `text`.  
+
+'''''
+
+A contiguous sequence of characters inside of a `String` is called a
+_substring_. For example, a few substrings of
+`"Throw your hands in the air!"` are `"T"`, `"Throw"`, `"hands"`, and
+`"ur ha"`. Note that `"Ty"` is not a substring because these characters
+do not appear next to each other.
+
+The `String` class provides the `indexOf()` method to find the position
+of a substring, as shown in the next example.
+
+Suppose we wish to find a `String` inside of another `String`. To do so,
+we call the `indexOf()` method on the `String` we’re searching inside
+of, with the `String` we’re searching for as the argument.
+
+....
+String countries = "USA Mexico China Canada";
+String search = "China";
+System.out.println(countries.indexOf(search));
+....
+
+The `indexOf()` method returns an `int` value that gives the position of
+the `String` we’re searching for. In the code above, the output is `11`
+because `"China"` appears starting at index 11 inside the `countries`
+`String`. (Alternatively, there are 11 characters before `"China"` in
+the `String`.) If the given substring cannot be found, the `indexOf()`
+method returns `-1`. For example, `-1` will be printed to the terminal
+if we replace the print statement above with the following.
+
+....
+System.out.println(countries.indexOf("Honduras"));
+....
+
+ 
+
+'''''
+
+There are several other methods provided by `String` that we introduce
+as the need arises. If you are curious, you should look into the Java
+documentation for `String` at
+http://download.oracle.com/javase/7/docs/api/java/lang/String.html for a
+complete list of available methods.
+
+== Assignment and comparison
+
+Both assigning one variable to another and testing two variables to see
+if they are equal to each other are important operations in Java. These
+operations are used on both primitive and reference types, but there are
+subtle differences between the two that we discuss below.
+
+=== Assignment statements
+
+Assignment is the act of setting one variable to the value of another.
+With a primitive type, the value held inside one variable is copied to
+the other. With a reference type, the arrow that points at the object is
+copied. All types in Java perform assignment with the assignment
+operator (`=`).
+
+As we have discussed, values can be computed and then assigned to
+variables as in the following statement.
+
+....
+int value = Integer.parseInt(response);
+....
+
+In Java, a statement that computes a value and assigns it is called an
+_assignment statement_. The generic form of the assignment statement is
+as follows.
+
+....
+identifier = expression;
+....
+
+Here, `identifier` gives the name of some variable. For example, in the
+statement above, `value` is the name of the variable.
+
+The right-hand side of an assignment statement is an expression that
+returns a value that is assigned to the variable on the left-hand side.
+Even an assignment statement can be considered an expression, allowing
+us to stack multiple assignments into one line, as in the following
+code.
+
+....
+int a, b, c;
+a = b = c = 15;
+....
+
+The Java compiler checks for type compatibility between the left and the
+right sides of an assignment statement. If the right-hand side is a
+broader type than the left-hand side (or is completely mismatched), the
+compiler gives an error, as in the following cases.
+
+....
+int number = 4.9;
+String text = 9;
+....
+
+=== Comparison
+
+Comparing two values to see if they are the same uses the comparison
+operator (`==`) in Java. With primitive types, this kind of check is
+intuitive: The comparison is `true`, if the two values are the same.
+With reference types, the value held by the variable is the arrow
+pointing to the object. Two reference variables could point to different
+objects with identical contents and return `false` when compared to each
+other. The following gives examples of these comparisons.
+
+Consider the following lines of code.
+
+....
+int x = 5;
+int y = 2 + 3;
+boolean z = (x == y);
+....
+
+The value of variable `z` is `true` because `x` and `y` contain the same
+values. If `x` were assigned `6` instead, `z` would be `false`.
+
+Now, consider the following code:
+
+....
+String thing1 = new String("Magical mystery");
+String thing2 = new String("Magical mystery");
+String thing3 = new String("Tragical tapestry");
+....
+
+to
+
+This code declares and initializes three `String` values. Although it is
+possible to store `String` literals directly without invoking a `String`
+constructor, we are using this style of `String` creation to make our
+point because Java can do some confusing optimizations otherwise.
+Variables `thing1` and `thing2` point to `String` values that contain
+identical sequences of characters. Variable `thing3` points to a
+different `String`. Consider the following statement.
+
+....
+boolean same = (thing1 == thing3);
+....
+
+In this case the value of `same` is clearly `false` because the two
+`String` values are not the same. What about the following case?
+
+....
+boolean same = (thing1 == thing2);
+....
+
+Again, `same` contains `false`. Although, `thing1` and `thing2` point at
+identical objects, they point at *different* identical objects. Since
+the value held by a reference is the arrow that points to the object,
+the comparison operator only shows that two references are the same if
+they point at the same object.
+
+To better understand comparison between reference types, consider
+Figure link:#differentObjectsFigure[[differentObjectsFigure]](a), which
+shows three different objects. Note that each reference points at a
+distinct object, even though two objects have the same contents.
+
+Now consider the following assignment.
+
+....
+thing1 = thing2;
+....
+
+As shown in
+Figure link:#differentObjectsFigure[[differentObjectsFigure]](b), this
+assignment points reference `thing1` to the same location as reference
+`thing2`. Then, `(thing1 == thing2)` would be `true`.
+
+The `==` operator is generally not very useful with references, and the
+`equals()` method should be used instead. This method compares the
+contents of objects in whatever way the designer of the type specifies.
+For example,
+
+....
+thing1.equals(thing2)
+....
+
+is `true` when `thing1` and `thing2` are pointing at distinct but
+identical `String` objects. . ]Exercise .  
+
+'''''
+
+== Constants
+
+In addition to normal variables, we can define _named constants_. A
+named constant is similar to a variable of the same type except that its
+value cannot be changed once set. A constant in Java is declared like
+any other variable with the addition of the keyword `final` before the
+declaration.
+
+The convention in Java (and many other languages) is to name constants
+with all capital letters. Because camel case can no longer be used to
+tell where one word starts and another ends, an _underscore_ (`\_`) is
+used to separate words. Here are a few examples of named constant
+declarations.
+
+....
+final int POPULATION = 25000;
+final double PLANCK_CONSTANT = 6.626E-34;
+final boolean FLAG = false;
+final char FIRST_INITIAL = 'A';
+final String MESSAGE = "All your base are belong to us.";
+....
+
+In this code, the value of `POPULATION` is `25000` and cannot be
+changed. For example, if you now write `population = 30000;` on a later
+line, your compiler will give an error. `PLANCK\_CONSTANT`, `FLAG`,
+`FIRST\_INITIAL`, and `MESSAGE` are also defined as named constants.
+Because of the syntax Java uses, these constants are sometimes referred
+to as _final variables_.
+
+In the case of `MESSAGE` and all other reference variables, being
+`final` means that the reference can never point at a different object.
+Even with a `final` reference, the objects themselves can change if
+their methods allow it. (Since they are immutable, `String` objects can
+never change.)
+
+Named constants are useful in two ways. First, a well-named constant can
+make your code more readable than using a literal. Second, if you do
+need to change the value to a different constant, you only have to
+change it in one place. For example, if you have used `25000` in five
+different places in your program, changing it to `30000` requires five
+changes. If you have used `POPULATION` throughout your program instead
+of a literal, you only have to change it in one place.
+
+=== Useful libraries (syntax)
+
+Computer software is difficult to write, but many of the same problems
+come up over and over. If we had to solve these problems every time we
+wrote a program, we’d never get anywhere. Java allows us to use code
+other people have written called _libraries_. One selling point of Java
+is its large standard library that can be used by any Java programmer
+without special downloads. You have already used the `Scanner` class,
+the `Math` class, and perhaps the `JOptionPane` class, which are all
+part of libraries. Below, we’ll go deeper into the `Math` class and a
+few other useful libraries.
+
+== The `Math` library
+
+Basic arithmetic operators are useful, but Java also provides a rich set
+of mathematical methods through the `Math` class.
+Table link:#mathFunctionsTable[[mathFunctionsTable]] lists a few of the
+methods available. For a complete list of methods provided by the `Math`
+class at the time of writing, visit
+http://download.oracle.com/javase/7/docs/api/java/lang/Math.html.
+
+.A sample of methods available in the Java `Math` class. Arguments to
+trigonometric methods are given in radians.
+[cols="<,<,<",options="header",]
+|=======================================================================
+|*Method* |*Sample use* |*Purpose*
+| | |
+
+|`cos()` | |Find the cosine of the argument.
+
+|`sin()` | |Find the sine of the argument.
+
+|`tan()` | |Find the tangent of the argument.
+
+| | |
+
+|`exp()` | |Compute latexmath:[$e^x$], where latexmath:[$x$] is the
+argument.
+
+|`log()` | |Compute the natural logarithm of the argument.
+
+|`pow()` |`double money = principal *``Math.pow(1.0 + rate, time);`
+|Compute latexmath:[$a^b$], where latexmath:[$a$] and latexmath:[$b$]
+are the first and second arguments.
+
+| | |
+
+|`random()` | |Generate a random number latexmath:[$x$] where
+latexmath:[$0.0 \leq x < 1.0$].
+
+|`round()` | |Round to the nearest `long` (or nearest `int` when
+rounding a `float`).
+
+|`sqrt()` |`double hypotenuse =``Math.sqrt(a*a+b*b);` |Compute the
+square root of the argument.
+|=======================================================================
+
+Here is a program that uses the `Math.pow()` method to compute compound
+interest. Unlike `Scanner` and `JOptionPane`, the `Math` class is
+imported by default in Java programs and requires no explicit import
+statement.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+class CompoundInterestCalculator {   
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);    	
+    	System.out.println("Compound Interest Calculator");
+    	System.out.println();
+        System.out.print("Enter starting balance: ");
+        double startingBalance = in.nextDouble();
+        System.out.print("Enter interest rate: ");
+        double rate = in.nextDouble();
+        System.out.print("Enter time in years: ");
+        double years = in.nextDouble();        
+        System.out.print("Enter compounding frequency: ");
+        double frequency = in.nextDouble();
+        double newBalance = startingBalance * 
+        	Math.pow(1.0 + rate/frequency, frequency*years);
+        double interest = newBalance - startingBalance;
+        System.out.println("Interest earned: $" + interest);
+        System.out.println("New balance: $" + newBalance);
+    }
+}
+----
+
+ 
+
+'''''
+
+In addition to methods, the `Math` library contains named constants
+including Euler’s number latexmath:[$e$] and latexmath:[$\pi$]. These
+are written in code as `Math.E` and `Math.PI`, respectively. For
+example, the following assignment statement computes the circumference
+of a circle with radius given by the variable `radius`, using the
+formula latexmath:[$2\pi r$].
+
+....
+double circumference = 2*Math.PI*radius;
+....
+
+== Random numbers
+
+Random numbers are often needed in applications such as games and
+scientific simulations. For example, card games require a random
+distribution of cards. To simulate a deck of 52 cards, we could
+associate an integer from 1 to 52 with each card. If we had a list of
+these values, we could swap each value in the list with a value at a
+random location later in the list. Doing so is equivalent to shuffling
+the deck.
+
+Java provides the `Random` class in package `java.util` to generate
+random values. Before you can generate a random number with this class,
+you need to create a `Random` object as follows.
+
+....
+Random random = new Random();
+....
+
+Here we have created an object named `random` of type `Random`.
+Depending on the kind of random value you need, you can use the
+`nextInt()`, `nextBoolean()`, or `nextDouble()` to generate a random
+value of the corresponding type.
+
+....
+// Random integer with all values possible
+int balance = random.nextInt();
+
+// Random integer between 0 (inclusive) and 130 (exclusive)
+int humanAge = random.nextInt(130);
+
+// Random boolean value
+ boolean gender = random.nextBoolean();
+
+// Random floating point value between 0.0 (inclusive)
+// and 1.0 (exclusive)
+double percent = random.nextDouble();
+....
+
+In these examples, _inclusive_ means that the number could be generated,
+while _exclusive_ means that the number cannot be. Thus, the call
+`random.nextInt(130)` generates the integers 0 through 129, but never
+130. Exclusive upper bounds on ranges of random values are very common
+in programming.
+
+To generate a random `int` between values `a` and `b`, not including
+`b`, use the following code, assuming you have a `Random` object named
+`random`.
+
+....
+int count = random.nextInt(b - a) + a;
+....
+
+The `nextInt()` method call generates a value between latexmath:[$0$]
+and latexmath:[$b - a$], and adding latexmath:[$a$] shifts it into the
+range from latexmath:[$a$] up to (but not including) latexmath:[$b$].
+
+Generating a random `double` between values `a` and `b` is similar
+except that `nextDouble()` always generates a value between `0.0` and
+`1.0`, not including `1.0`. Thus, you must scale the output by `b - a`
+as shown below.
+
+....
+double value = random.nextDouble()*(b - a) + a;
+....
+
+The following example illustrates a potential use of random numbers in a
+video game.
+
+Suppose you are designing a video in which the hero must fight a dragon
+with random attributes.
+Program #program:DragonAttributes[[program:DragonAttributes]] generates
+random values for the age, height, gender, and hit points of the dragon.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class DragonAttributes {    
+    public static void main(String[] args) {
+    	Random random = new Random();/*@\label{createRandomNumberGeneratorLine}@*/
+        int age = random.nextInt(100) + 1;/*@\label{generateAgeLine}@*/
+        double height = random.nextDouble()*30;/*@\label{generateHeightLine}@*/
+        boolean gender = random.nextBoolean();/*@\label{generateStatusLine}@*/
+        int hitPoints = random.nextInt(51) + 25;
+        System.out.println("Dragon Statistics");/*@\label{displayTurtleAttributesLine}@*/
+        System.out.println("Age:\t\t" + age);
+        System.out.format("Height:\t\t%.1f feet\n", height);
+        System.out.println("Female:\t\t" + gender);
+        System.out.println("Hit points:\t" + hitPoints);
+    }
+}
+----
+
+Note that we begin by importing `java.util.*` to include all the classes
+in the `java.util` package, including `Random`. At
+line link:#createRandomNumberGeneratorLine[[createRandomNumberGeneratorLine]],
+we create an object `random` of type `Random`. At
+line link:#generateAgeLine[[generateAgeLine]], we use it to generate a
+random `int` between `0` and `99`, to which we add `1`, making an age
+between `1` and `100`. To generate the height, we multiply a random
+`double` by `75`, yielding a value between `0.0` and `75.0` (exclusive).
+Since there are only two choices for a dragon’s gender, we generate a
+random `boolean` value, interpreting `true` as female and `false` as
+male. Finally, we determine the number of hit points the dragon has by
+generating a random `int` between `0` and `50`, then add `25` to it,
+yielding a value between `25` and `75`. O
+
+latexmath:[$\oslash$][multiblock footnote omitted]
+
+Because we are using random values, the output of
+Program #program:DragonAttributes[[program:DragonAttributes]] changes
+every time we run the program. Sample output is given below.
+
+....
+Dragon Statistics
+Age:            90
+Height:         13.7 feet
+Female:         true
+Hit points:     67
+....
+
+ 
+
+'''''
+
+If you only need a random `double` value, you can generate a number
+between `0.0` and `1.0` (exclusive) using the `Math.random()` method
+from the `Math` class. This method is a quick and dirty way to generate
+random numbers without importing `java.util.Random` or creating a
+`Random` object.
+
+The random numbers generated by the `Random` class and by
+`Math.random()` are _pseudorandom_ numbers, meaning that they are
+generated by a mathematical formula instead of truly random events. Each
+number is computed using the previous one, and the starting number is
+determined using time information from the OS. For most purposes, these
+pseudorandom numbers are good enough. Since each number can be predicted
+from the previous one, pseudorandom numbers are insufficient for some
+security applications. For those cases, Java provides the `SecureRandom`
+class, which is slower than `Random` but produces random numbers that
+are much harder to predict.
+
+== Wrapper classes
+
+Reference types have methods that allow a user to interact with them in
+many useful ways. The primitive types (`byte`, `short`, `int`, `long`,
+`float`, `double`, `char`, and `boolean`) do not have methods, but we
+sometimes need to manipulate them with methods or store them in a place
+that can only take a reference type.
+
+To deal with such situations, Java uses _wrapper classes_, reference
+types that correspond to each primitive type. Following Java conventions
+for class names, the wrapper types all start with an uppercase letter
+but are otherwise similar to the name of the primitive type they
+support: `Byte`, `Short`, `Integer`, `Long`, `Float`, `Double`,
+`Character`, and `Boolean`.
+
+=== `String` to numerical conversions
+
+A common task for a wrapper class is to convert a `String`
+representation of a number such as `"37"` or `"2.097"` to its
+corresponding numeric value. We had such a situation in
+Program #program:GetInputGUI[[program:GetInputGUI]], where we did the
+conversion as follows.
+
+....
+String response = JOptionPane.showInputDialog(null, enterHeight, title, JOptionPane.QUESTION_MESSAGE);
+height = Double.parseDouble(response);
+....
+
+This code uses the `JOptionPane.showInputDialog()` method to get from
+the user the height from which a ball is dropped. This method always
+returns data as a `String`. In order for us to do computation with the
+value, we need to convert it to a numeric type, such as an `int` or a
+`double`. To do so, we use the appropriate `Byte.parseByte()`,
+`Short.parseShort()`, `Integer.parseInt()`, `Long.parseLong()`,
+`Float.parseFloat()`, or `Double.parseDouble()` method.
+
+The following example shows conversions from a `String` to a number
+using three of these methods.
+
+Consider the following statements that show how a string can be
+converted to a numerical value.
+
+....
+String text = "15";
+int count = Integer.parseInt(text);
+float value = Float.parseFloat(text);
+double tolerance = Double.parseDouble(text);
+....
+
+In this example, we declare a `String` object named `text` and
+initialize it to `"15"`. Since `text` is a `String` and not a number,
+arithmetic expressions such as `(text*29)` are illegal.
+
+To use the `String` `"15"` in a numerical computation, we need to
+convert it to a number. We used the `Integer.parseInt()`,
+`Float.parseFloat()`, and `Double.parseDouble()` methods to convert the
+`String` to `int`, `float`, and `double` values, respectively. Each
+method gives us 15 stored as the appropriate type. . ]Exercise .  
+
+'''''
+
+What happens if the `String` `"15.5"` (or even `"cinnamon"`) is given as
+input to the `Integer.parseInt()` method? If the `String` is not
+formatted as the appropriate kind of number, Java throws a
+`NumberFormatException`, probably crashing the program. An _exception_
+is an error that happens in the middle of running a program. We discuss
+how to work with exceptions in
+Chapter #chapter:Exceptions[[chapter:Exceptions]].
+
+=== `Character` methods
+
+When working with `char` values, it can be useful to know whether a
+particular value is a digit, a letter, or has a particular case. It may
+also be useful to convert a `char` to upper or lower case. Here is a
+partial list of the methods provided by the `Character` wrapper class to
+do these tasks. +
+
+[cols="<,<",options="header",]
+|=======================================================================
+|*Method* |*Purpose*
+|`isDigit(char value)` |Returns `true` if `value` is a numerical digit
+and `false` otherwise.
+
+|`isLetter(char value)` |Returns `true` if `value` is a letter and
+`false` otherwise.
+
+|`isLetterOrDigit(char value)` |Returns `true` if `value` is a digit or
+a letter and `false` otherwise.
+
+|`isLowerCase(char value)` |Returns `true` if `value` is a lower case
+letter and `false` otherwise.
+
+|`isUpperCase(char value)` |Returns `true` if `value` is an upper case
+letter and `false` otherwise.
+
+|`isWhitespace(char value)` |Returns `true` if `value` is a whitespace
+character such as space, tab, or newline and `false` otherwise.
+
+|`toLowerCase(char value)` |Returns a lower case version of `value`,
+with no change if it is not a letter.
+
+|`toUpperCase(char value)` |Returns an upper case version of `value`,
+with no change if it is not a letter.
+|=======================================================================
+
+For example, the variable `test` contains `true` after the following
+code is executed.
+
+....
+boolean test = Character.isLetter('x');
+....
+
+And the variable `letter` contains `'M'` after the following code is
+executed.
+
+....
+char letter = Character.toUpperCase('m');
+....
+
+These methods can be especially useful when processing input.
+
+=== Maximum and minimum values
+
+As you recall from
+Chapter #chapter:Computer Basics[[chapter:Computer Basics]], integer
+arithmetic in Java has limitations. If you increase a large positive
+number past its maximum value, it becomes a large magnitude negative
+number, a phenomenon called overflow. Conversely, if you decrease a
+large magnitude negative number past its minimum value, it becomes a
+large positive number, a phenomenon called underflow.
+
+With floating point numbers, increasing their magnitudes past their
+maximum values results in special values that Java reserves to represent
+either positive or negative infinity, as the case may be. If a floating
+point value gets too close to zero, it eventually rounds to zero.
+
+In addition to useful conversion methods, the numerical wrapper classes
+also have constants for the maximum and minimum values for each type.
+Instead of trying to remember that the largest positive `int` value is
+latexmath:[$2,147,483,647$], you can use the equivalent
+`Integer.MAX\_VALUE`.
+
+The `MAX\_VALUE` constants are always the largest positive number that
+can be represented with the corresponding type. The `MIN\_VALUE` is more
+confusing. For integer types, it is the largest magnitude negative
+number. For floating point types, it is the smallest positive non-zero
+value that can be represented. Here is a table listing all these
+constants.
+
+[cols="<,<",options="header",]
+|======================================================================
+|*Constant* |*Meaning*
+|`Byte.MAX\_VALUE` |Most positive value a `byte` value can have
+|`Byte.MIN\_VALUE` |Most negative value a `byte` value can have
+|`Short.MAX\_VALUE` |Most positive value a `short` value can have
+|`Short.MIN\_VALUE` |Most negative value a `short` value
+|`Integer.MAX\_VALUE` |Most positive value an `int` value can have
+|`Integer.MIN\_VALUE` |Most negative value an `int` value can have
+|`Long.MAX\_VALUE` |Most positive value a `long` value can have
+|`Long.MIN\_VALUE` |Most negative value a `long` value can have
+|`Float.MAX\_VALUE` |Largest absolute value a `float` value can have
+|`Float.MIN\_VALUE` |Smallest absolute value a `float` value can have
+|`Double.MAX\_VALUE` |Largest absolute value a `double` value can have
+|`Double.MIN\_VALUE` |Smallest absolute value a `double` value can have
+|======================================================================
+
+The wrap-around nature of integer arithmetic means that adding 1 to +
+`Integer.MAX\_VALUE` results in `Integer.MIN\_VALUE`. Note that all
+integer arithmetic in Java is done assuming type `int`, unless
+explicitly specified otherwise. Thus, `Short.MAX\_VALUE + 1` does not
+overflow to a negative value unless you store the result into a `short`.
+The same rules apply to underflow. . ]Exercise .
+
+Overflow and underflow do not work in the same way with the floating
+point numbers represented by `float` and `double`. The expression
+`Double.MAX\_VALUE + 1` results in `Double.MAX\_VALUE` because `1` is so
+small in comparison that it is lost in rounding error. However,
+`1.5*Double.MAX\_VALUE` results in `Double.POSITIVE\_INFINITY`, a
+constant used to represent any value larger than `Double.MAX\_VALUE`
+Since `Double.MIN\_VALUE` is the smallest non-zero number,
+`Double.MIN\_VALUE - 1` evaluates to `-1.0`. . ]Exercise . . ]Exercise .
+
+=== Using wrapper classes for storage
+
+Wrapper classes in Java have a split personality. On the one hand, the
+classes themselves can be used for the utility methods and constants we
+have described above. However, _objects_ of these same wrapper classes
+can be used in an entirely separate way to store primitive values. Each
+primitive type can be stored in its wrapper type as shown below.
+
+....
+Integer fingers = new Integer(5);
+Double pi = new Double(3.141592);
+Character question = new Character('?');
+....
+
+Why would we want to do this? There are many situations in which a
+library method or data structure requires a reference type, not a
+primitive type. These wrappers were specially designed to handle these
+cases when you have to treat a primitive type as an object.
+
+....
+Object value = new Integer(42);
+....
+
+To make working with wrapper classes easier, Java 5 and higher support
+automatic boxing and unboxing, meaning that primitive types will
+automatically be converted to their wrapper types (and vice versa) when
+appropriate. Thus, the earlier code could be written as follows.
+
+....
+Integer fingers = 5;
+Double pi = 3.141592;
+Character question = '?';
+....
+
+Programmers who do not understand wrapper classes will sometimes use
+primitive types and wrapper classes interchangeably, mixing `double` and
+`Double`, for example. You should avoid using wrapper classes whenever
+possible, since it requires more memory and more computation to perform
+operations with wrapper classes.
+
+Fortunately, automatic boxing and unboxing reduces the need to think
+about wrapper classes, and most programmers will rarely need to declare
+an explicit wrapper reference. We will discuss wrapper classes further
+in
+Chapter #chapter:Dynamic Data Structures[[chapter:Dynamic Data Structures]],
+where they are used to allow generic classes__generic class__ to store
+primitive types as well as reference types.
+
+=== College cost calculator (solution)
+
+In this chapter, we have introduced and more fully explained many
+aspects of manipulating data in Java, including declaring variables,
+assigning values, performing simple arithmetic and more advanced math,
+inputting and outputting data, and using the type system, which has
+small differences for primitive and reference types. Our solution to the
+college cost calculator problem posed at the beginning of the chapter
+uses all of these features at some level.
+
+We present this solution below. The first step in our solution is to
+import `java.util.*` so that we can use the `Scanner` class. Then, we
+start the enclosing `CollegeCosts` class, begin the `main()` method,
+print a welcome message for the user, and create a `Scanner` object.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class CollegeCosts {
+	public static void main(String[] args) {
+		System.out.println(
+			"Welcome to the College Cost Calculator!");
+		Scanner in = new Scanner(System.in);
+----
+
+Next is a sequence of prompts to the user interspersed with input done
+with the `Scanner` object. The program reads the user’s first name as a
+`String`, the user’s last name as a `String`, the per-semester tuition
+cost as a `double`, the monthly cost of rent as a `double`, the monthly
+cost of food as a `double`, the interest rate for the loan as a
+`double`, and the number of years needed to pay back the loan as an
+`int`. O
+
+latexmath:[$\oslash$][multiblock footnote omitted]
+
+[source,numberLines,java]
+----
+		System.out.print("Enter your first name:\t\t");
+		String firstName = in.next();
+		System.out.print("Enter your last name:\t\t");
+		String lastName = in.next();
+		System.out.print("Enter tuition per semester:\t$");
+		double semesterTuition = in.nextDouble();
+		System.out.print("Enter rent per month:\t\t$");
+		double monthlyRent = in.nextDouble();
+		System.out.print("Enter food cost per month:\t$");
+		double monthlyFood = in.nextDouble();
+		System.out.print("Annual interest rate:\t\t");
+		double annualInterest = in.nextDouble();		
+		System.out.print("Years to pay back your loan:\t");
+		int years = in.nextInt();		
+----
+
+The next segment of code completes the computations needed. First, it
+finds the total yearly cost by doubling the semester cost, multiplying
+the monthly rent and food costs by 12, and summing the answers together.
+The four year cost is simply four times the yearly cost. To find the
+monthly payment, we find the monthly interest by dividing the annual
+interest rate by 12 and plugging this value into the formula from the
+beginning of the chapter. Finally, the total cost of the loan is the
+monthly payment times 12 times the number of years.
+
+[source,numberLines,java]
+----
+		double yearlyCost = semesterTuition * 2.0 +
+			(monthlyRent + monthlyFood) * 12.0;
+		double fourYearCost = yearlyCost * 4.0;
+		double monthlyInterest = annualInterest / 12.0;
+		double monthlyPayment = fourYearCost * monthlyInterest /
+			(1.0 - Math.pow(1.0 + monthlyInterest,
+			-years * 12.0));
+		double totalLoanCost = monthlyPayment * 12.0 * years;
+----
+
+All that remains is to print out the output. First, we output a header
+describing the following output as college costs for the user. Using
+`System.out.format()` as described in Subsection #subsection:Primitive
+types[[subsection:Primitive
+types]], we print out the yearly cost, four year cost, monthly loan
+payment, and total cost, all formatted with dollar signs, 2 places after
+the decimal point, and tabs so that the output lines up.
+
+[source,numberLines,java]
+----
+		System.out.println("\nCollege costs for " +
+				firstName + " " + lastName );
+		System.out.println(
+				"***************************************");
+		System.out.print("Yearly cost:\t\t\t$");
+		System.out.format("%.2f\n", yearlyCost);
+		System.out.print("Four year cost:\t\t\t$");
+		System.out.format("%.2f\n", fourYearCost);
+		System.out.print("Monthly loan payment:\t\t$");
+		System.out.format("%.2f\n", monthlyPayment);
+		System.out.print("Total loan cost:\t\t$");
+		System.out.format("%.2f\n", totalLoanCost );
+	}
+}
+----
+
+=== Expressions (concurrency)
+
+In
+Section #concurrency:Solving problems in parallel[[concurrency:Solving problems in parallel]],
+we introduced the ideas of task and domain decomposition that could be
+used to solve a problem in parallel. By splitting up the jobs to be done
+(as in task decomposition) or dividing a large amount of data into
+pieces (as in domain decomposition), we can attack a problem with
+several workers and finish the work more quickly.
+
+== Splitting expressions
+
+Performing arithmetic is some of the only Java syntax we have introduced
+that can be used to solve problems directly, but evaluating a single
+mathematical expression usually does not warrant concurrency. If the
+terms in the expression are themselves complex functions (such as
+numerical integrations or simulations that produce answers), it might be
+reasonable to evaluate these functions concurrently.
+
+In this section, we will give an example of splitting an expression into
+smaller sub-expressions that could be evaluated concurrently. The basic
+steps underlying the concurrent evaluation of expressions are the
+following.
+
+* Identify sub-expressions that are independent of each other.
+* Create a separate thread that evaluates each sub-expression.
+* Combine the results from each thread to obtain a final answer.
+
+While this sequence of steps looks simple, each step can be complex.
+Worse, being careless at any step could result in a concurrent solution
+that runs slower than the sequential solution or even gives the wrong
+answer. The following example illustrates these steps.
+
+Consider the following statement:
+
+....
+double value = f(a,b)*g(c);
+....
+
+This statement evaluates methods `f()` and `g()`, multiplies the
+computed values, and assigns the result to variable `value`. In
+Figure link:#splitExpressionFigure[[splitExpressionFigure]], we show two
+ways of evaluating the expression `f(a,b)*g(c)`.
+Figure link:#splitExpressionFigure[[splitExpressionFigure]](a) shows
+sequential evaluation of the expression, where `f()` is computed, `g()`
+follows, and then the two results are multiplied to get the final value.
+Figure link:#splitExpressionFigure[[splitExpressionFigure]](b) shows
+evaluation of the expression in which `f()` and `g()` are evaluated
+concurrently instead.
+
+to
+
+On a multicore processor, the computation of `f()` and `g()` could be
+carried out on separate cores. We can create one thread for each method
+and wait for the threads to complete. Upon completion, we can retrieve
+the results of each computation and multiply them together as in
+Figure link:#splitExpressionFigure[[splitExpressionFigure]](b).
+Program #program:SplitExpression[[program:SplitExpression]] illustrates
+this concurrent approach.
+
+In Program #program:SplitExpression[[program:SplitExpression]], we
+create two objects named `fThread` and `gThread` at
+lines link:#createFLine[[createFLine]] and
+link:#createGLine[[createGLine]], respectively. Both of these objects
+have types that extend the `Thread` class, which means that they can be
+made to run independently. Object `fThread` needs two arguments (`3.14`
+and `2.99` in this example), and `gThread` needs one (`5.55`).
+
+[source,numberLines,java]
+----
+public class SplitExpression {
+    public static void main(String[] args) {
+        ComputeF fThread = new ComputeF(3.14, 2.99);/*@\label{createFLine}@*/
+        ComputeG gThread = new ComputeG(5.55);/*@\label{createGLine}@*/
+        fThread.start();/*@\label{startFComputationLine}@*/
+        gThread.start();/*@\label{startGComputationLine}@*/
+        try {
+            fThread.join();  /*@\label{waitForFToFiniLinesh}@*/
+            gThread.join(); /*@\label{waitForGToFiniLinesh}@*/
+            double fResult = fThread.getResult();/*@\label{getResultFromFLine}@*/ 
+            double gResult = gThread.getResult();/*@\label{getResultFroLineG}@*/ 
+            double answer = fResult*gResult;/*@\label{computeFinalValueLine}@*/ 
+            System.out.println("Result of f: " + fResult );
+            System.out.println("Result of g: " + gResult );
+            System.out.println("Final answer: " + answer);        
+        }
+        catch(InterruptedException e){
+        	System.out.println("Computation interrupted!");
+        }             
+    }   
+}
+----
+
+Once the thread objects have been created, we start the threads at
+lines link:#startFComputationLine[[startFComputationLine]] and
+link:#startGComputationLine[[startGComputationLine]]. Every object whose
+type is `Thread` (or a child of `Thread`, which we will discuss in
+Chapter #chapter:Inheritance[[chapter:Inheritance]]) has a `start()`
+method which begins its execution as a separate thread.
+
+How do we know when a thread is done executing? Every `Thread` object
+has a `join()` method. If some code calls a thread’s `join()` method,
+the method will not return until the thread is finished. When code is
+waiting for a thread to finish, it is possible for it to be interrupted
+if some other thread has gotten tired of the code waiting around doing
+nothing. If that happens, an `InterruptedException` is thrown.
+Exceptions are the way that Java deals with errors and other unusual
+situations. We will discuss them further in
+Chapter #chapter:Exceptions[[chapter:Exceptions]], but, for now, you
+only need to know that code (like the `join()` method) that can cause
+certain kinds of exceptions (like the `InterruptedException`) needs to
+be enclosed in a `try` block. After the `try` block comes a `catch`
+block that says what to do in the even of that exception. In our case,
+we print out `"Computation interrupted!"`
+
+Once the threads have completed their respective tasks, the execution of
+Program #program:SplitExpression[[program:SplitExpression]] resumes at
+line link:#getResultFromFLine[[getResultFromFLine]], where we obtain the
+result of the computation done by `fThread` by calling its `getResult()`
+method. On the next line, we call the `getResult()` method on `gThread`
+to obtain its result. Note that we could have called these `getResult()`
+methods before the `join()` calls, but the computations might not have
+completed, yielding invalid or incorrect results (or crashing the
+program). Finally, at
+line link:#computeFinalValueLine[[computeFinalValueLine]], these two
+computed values are multiplied to get the final result, which is
+assigned to `value` and printed.  
+
+'''''
+
+We would like to show how classes `ComputeF` and `ComputeG` are written,
+but we will hold off since they use concepts relating to methods, class
+design, and inheritance that we will not cover until Chapters
+#chapter:Methods[[chapter:Methods]],
+#chapter:Classes[[chapter:Classes]], and
+#chapter:Inheritance[[chapter:Inheritance]].
+
+If you don’t understand all the elements of
+Program #program:SplitExpression[[program:SplitExpression]], don’t
+despair. We’re trying to give you an example of what concurrency looks
+like in Java, but you cannot be expected to master all the details at
+this stage. However, concurrency in Java will often follow the steps
+shown:
+
+1.  Creation of `Thread` (or children of `Thread`) objects
+2.  Calling the `start()` method on these objects to start them
+executing
+3.  Calling the `join()` method on them to wait for them to finish
+4.  Retrieving the results (if any) of the computations done by the
+objects
+
+== Care in splitting expressions
+
+The above example illustrates how you could split an expression and
+evaluate it concurrently. Note the following points when deciding
+whether or not to use concurrency. First, your program will run faster
+concurrently only if the work done is complex enough that its
+computation takes significantly longer than the time to create the
+necessary threads. In the example above, the methods `f()` and `g()`
+must be complex enough that it takes a significant amount of time to
+evaluate them. Otherwise, concurrency will not reduce the running time.
+This aspect of speedup is explained in detail in
+Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]].
+
+Second, splitting an expression (or any complex sequence of
+computations) is easy when its individual components are independent. If
+they are interdependent, splitting requires care or subtle programming
+errors can occur. Consider the expression `f(a)+g(b)` and suppose that
+`f()` modifies the value of `b` during execution. Such a modification is
+called a _side effect_. This side effect creates a dependency between
+`f()` and `g()`. Concurrent execution of these two methods must be done
+carefully, if it can be done at all.
+Chapter #chapter:Synchronization[[chapter:Synchronization]] discusses
+concurrency in the presence of dependencies.
+
+=== Summary (unspecified section category)
+
+In a strongly typed language such as Java, types are an important
+concept. Every literal and variable in Java has a type, which specifies
+the possible values items with that type could have and the operations
+that can be done with them. Types are used to catch programming errors
+at compile time.
+
+Java has a small set of primitive types such as `int` and `double`,
+which hold single values and use operators to manipulate them. Java also
+has reference types, which use primitive types as building blocks, can
+be created by any Java programmer, can contain arbitrarily complex data,
+and are manipulated with methods. One of the most commonly used
+reference types is `String`, which is used to store text of any length.
+
+A number of library classes have been provided by the developers of
+Java. Programs performing mathematical operations beyond simple
+arithmetic may need to use methods from the `Math` class. Programs that
+need to generate random numbers can use methods from the `Random` class.
+Conversions and other useful manipulations of primitive types are
+provided by wrapper classes.
+
+We also gave a taste of the syntax for creating, running, and waiting
+for the completion of threads. Such threads could be used to speed up
+the evaluation of mathematical computations on multicore processors, but
+only if the computations are long, complex, and not too interdependent.
+
+= Exercises
+
+.
+
+-0.5in *Conceptual Problems*
+
+What is the difference between the set of integers from mathematics and
+the sets defined by `int` and `long`?
+
+In Example ., the sum of two `int` variables was another `int` value,
+which could not be stored into a `byte` variable. Would this code have
+worked if variables `a` and `b` had been declared with type `byte`? What
+if `a` was assigned `121` and `b` was assigned `98`?
+
+The following three statements are legal Java (if properly included
+inside of a method). However, if we changed `2` to `2.0` or `5` to
+`5.0`, the statements would not be legal. Explain why.
+
+....
+float roomArea = 2;
+float homeArea = 5;
+float area = roomArea * homeArea;
+....
+
+Consider the following variable declarations.
+
+....
+int x = 3, y = 4, z = -9;
+float p = 3.99f, q = -9.89f;
+int population1 = 15000, population2 = 8000;
+final double MAXIMUM_LEVEL = 350;
+double limitPerCapita = 0.03;
+int age = 14;
+final int MAXIMUM_AGE = 23;
+boolean allowed = false;
+....
+
+Now evaluate each of the following expressions to `true` or `false`.
+
+a.  `MAXIMUM_LEVEL/population1 > limitPerCapita &&` +
+`MAXIMUM_LEVEL/population2 < limitPerCapita`
+b.  `MAXIMUM_LEVEL/population1 > limitPerCapita ||` +
+`MAXIMUM_LEVEL/population2 < limitPerCapita`
+c.  `age < MAXIMUM_AGE && allowed`
+d.  `(x < y && y > z) || (p > q && population1 < population2)`
+
+Evaluate the following expressions by hand and then check the results
+with a Java compiler.
+
+a.  `5 & 6`
+b.  `5 | 6`
+c.  `5 ^ 6`
+d.  `\~5`
+e.  `5 >> 2`
+f.  `5 << 2`
+g.  `5 >>> 2`
+
+Evaluate the following expressions by hand and then check the results
+with a Java compiler.
+
+a.  `Byte.MIN_VALUE - 1`
+b.  `Byte.MAX_VALUE + 1`
+c.  `Integer.MIN_VALUE - 1`
+
+Evaluate the following expressions by hand and then check the results
+with a Java compiler.
+
+a.  `Float.MAX_VALUE + 1`
+b.  `Double.MAX_VALUE - 1`
+c.  `-Double.MAX_VALUE - 1`
+d.  `-Double.MIN_VALUE - 1`
+e.  `-Double.MIN_VALUE + 1`
+
+When evaluated in Java, the expression `2*Double.MAX\_VALUE` results in
+`Double.POSITIVE_INFINITY` to indicate that the maximum representable
+value has been exceeded. However, the expression `Double.MAX\_VALUE + 1`
+results in `Double.MAX\_VALUE`. Why doesn’t the second case yield
+`Double.POSITIVE_INFINITY` as well?
+
+Explain what is printed when the following statements are executed.
+
+....
+System.out.println(15 + 20);
+System.out.println("15" + 20);
+System.out.println("" + 15 + 20);
+....
+
+For each of the following Java expressions, indicate the types of each
+value being used and the type of the result when the expression is
+evaluated.
+
+a.  `3 + 4`
+b.  `3 + 4.0`
+c.  `3.0 + 4.0`
+d.  `3.0f + 4.0`
+e.  `(double)(3 + 4)`
+f.  `(double)(3.0 + 4.0)`
+g.  `Math.round(3 * 4.2)`
+h.  `Math.round(3.2 * 4.9)`
+i.  `Math.round(15.5 * 4.0)`
+j.  `(int)(15.5 * 4.0)`
+k.  `Math.round(3.154)`
+
+For Concurrencyeach of the following expressions, determine the maximum
+amount of concurrency that can be achieved. Using a diagram similar to
+Figure link:#splitExpressionFigure[[splitExpressionFigure]](b), show how
+the computation of each expression will proceed. Assume there are no
+side effects. Note that you can create separate threads for multiple
+instances of method `f()`.
+
+a.  `f(a) + f(b) + f(c)`
+b.  `f(a * g(b))`
+c.  `f(g(a)) + f(b) + f(c)`
+
+Answer the following questions about types, values, and references.
+
+a.  What is the difference between a value and the type that the value
+has?
+b.  In Java, the primitive type `int` represents a limited set of
+integers, not the entire set of integers from mathematics. Why is this
+the case? Why didn’t the designers of Java allow `int` to represent all
+integers?
+c.  How are operations defined for reference types?
+d.  Explain the subtle difference between a reference and an object in
+Java.
+
+Consider the following declarations of three `Car` objects.
+
+....
+ Car car1 = new Car("Mercedes", "C300 Sport", 75000);
+ Car car2 = new Car("Pontiac", "Vibe", 17000);
+ Car car3 = new Car("Mercedes", "C300 Sport", 75000);
+....
+
+Let `same` be a variable of type `boolean`. What is the value of
+variable `same` after each of the following statements? Assume that the
+`equals()` method will return `true` if all of the attributes specified
+by the constructors for the two objects are the same.
+
+a.  `same = (car1 == car2);`
+b.  `same = (car1 == car3);`
+c.  `same = car1.equals(car3);`
+d.  `car2 = car3;`
+e.  `same = (car2 == car1);`
+f.  `same = (car2 == car3);`
+g.  `same = car2.equals(car3);`
+
+Characters `'a'` and `'A'` have Unicode values `\u0061` and `\u0041`,
+respectively. Give the representation of these two characters as 16-bit
+unsigned binary integers.
+
+Assuming that each character occupies 16 bits (two bytes) in memory and
+is coded using Unicode, use hexadecimal numbers to show how the word
+`"Java"` will be represented in computer memory. Unicode values for the
+Latin alphabet are the same as the values for the older ASCII standard.
+You can find a listing of these values on many websites such as
+http://www.asciitable.com/.
+
+What is the output from the following sequence of statements?
+
+....
+String p = "Break it";
+String q = "down like this!";
+System.out.println((p + q).length());
+....
+
+What is the output from the following sequence of statements? Note that
+`r` contains a single space character.
+
+....
+String p = "This is not a string.";
+String q = "";
+String r = " ";
+System.out.println((p + q + r).length());
+....
+
+-0.5in *Programming Practice*
+
+Try compiling the following program and observe the error reported by
+the compiler.
+
+Now initialize the `greeting` object and rerun the program. Why does the
+program compile now?
+
+Write a Java program that prompts the user to enter the number of rooms
+in her home, uses a `Scanner` object to read the input into an `int`
+variable named `rooms`, and then outputs the value on the screen. If you
+compile and execute your program and type in the value `3.5`, can you
+explain the output you see?
+
+Convert the college cost calculator solution given in
+Section #solution:College cost calculator[[solution:College cost calculator]]
+to use +
+`JOptionPane` methods for both input and output. Use the header giving
+the user’s first and last name for the title of the output dialog and
+omit the line of asterisks. If you put all the output in a single
+`String` with a newline (`\\n`) separating each line, the output will
+display properly.

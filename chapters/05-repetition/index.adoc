@@ -1,0 +1,1570 @@
+[[chapter:Repetition]]
+== Repetition
+
+=== DNA searching (problem)
+
+The world of bioinformatics is the intersection between biology and
+computer science. Mapping the human genome would have been impossible
+without computers. Sequencing genomes, determining the function of
+specific genes, the analysis and prediction of protein structures, and
+biomedical imaging are just a few of the areas under the umbrella of
+bioinformatics. Much fascinating research is being done in this area as
+biologists become better programmers and computer scientists learn more
+about biology.
+
+Because of its fundamental importance and the incredible amount of
+information involved, with tens or hundreds of millions of base pairs of
+DNA in each human chromosome, DNA is a central focus of bioinformatics.
+As you may know, a DNA strand is made up of a sequence of four
+nucleotide bases: adenine, cytosine, guanine, and thymine. These bases
+are usually abbreviated as A, C, G, and T, respectively.
+
+Searching for a specific DNA subsequence within a larger sequence is a
+common task for biologists to perform. Your goal is to write a program
+that will search for a subsequence and report how many times it was
+found within the sequence. For example, if you are given the sequence
+ATTAGACCATATA and asked to search for CAT, your program should output 1,
+since there is exactly 1 occurrence of CAT within ATTAGACCATATA. One
+feature of this problem that makes it more interesting is that
+occurrences can overlap. For example, given the sequence TATTATTAGATTA
+and asked to search for TATTA, the correct answer is 2. The sequence
+begins with a TATTA, but the third T in the sequence is also the first T
+in a second instance of TATTA.
+
+In Chapter #chapter:Selection[[chapter:Selection]], you learned tools
+that allow you to do comparisons and make choices based on the results.
+These tools will still be useful. For example, when you come across a
+`char` in the sequence, you know how to compare it to a `char` in the
+subsequence you are searching for. The tools you do not yet have are
+those that allow repetition. Because this problem requires the program
+to process a DNA sequence of arbitrary length, we will need some way to
+perform a repetitive action.
+
+=== Repetition (concepts)
+
+You now know how to write choices into a Java program, but, so far, each
+choice can only be made once. So, if you want the computer to do a lot
+of things, you have to type a lot of things. One of the big
+disadvantages of computers is that they have no intelligence: They can
+follow instructions blindly, but they cannot do anything else. One of
+the big advantages of computers is that they are fast. Modern computers
+can perform mathematical operations billions of times faster than human
+beings. So, we need to give it some instructions that allow it to do
+tasks over and over. Such an instruction must have two components to be
+useful: It must have a way to change the task slightly each time so that
+each task is useful. It must also have a way to decide when to stop,
+otherwise it will continue forever.
+
+The first component is the more subtle one. Crafting a set of
+instructions so that each repetition of the task does the appropriate
+thing will be different for every problem. The second component is
+easier to describe: We are going to rely on Boolean logic, just as we
+did for conditional statements. The main tool for repetition in Java and
+many other languages is called a _loop_. The body of a loop contains the
+task to be performed by the loop. The rest of the loop, at the very
+least, contains a condition. Every time we finish the task given in the
+body of the loop, we will check the condition. If the condition is true,
+we will do the task again. If the condition is false, we are done with
+the loop and can move on to the code that comes afterward.
+
+One of the difficulties of programming a computer is that we must be
+very explicit. Even the most obvious tasks must be spelled out
+meticulously. Let’s consider a simple task, one that we perform every
+day. If we are in a room and we want to leave, we simply walk out of the
+nearest door. Assuming there is only one door in the room, how can we
+describe this process by breaking it down into the steps we (literally)
+take? Perhaps we could say the following. +
+
+[cols="<",]
+|==========================================
+|_Walk toward the door until you reach it._
+|==========================================
+
+ +
+This statement is a little more specific than _Leave the room_, but it
+does not conform nicely to the paradigm of a loop, that is, a clearly
+separated task and a condition. The following is better. +
+
+[cols="<",]
+|================================
+|_While you are not at the door,_
+a|
+_Take a step toward the door._
+
+|================================
+
+ +
+Now we have good separation between the work done and the condition for
+repeating. What is the task performed in the body of this loop and what
+is the condition? The task is taking a step towards the door. The
+condition is *not* being at the door. It seems a little awkward to
+include that ``not,'' but, in our definition of loops, the body is
+executed as long as the condition is true.
+
+In a loop, we call each execution of the body of the loop an
+_iteration_. When we say that a program _iterates_ over the statements
+in a loop, we are referring to a single pass through the body of a loop.
+In this case, the loop will iterate however many times there are steps
+to the door from the starting position. It is even possible that the
+loop will iterate zero times: The person following this set of
+instructions might already be at the door.
+
+It’s hard to get away from numbers in a computer program, especially
+since everything is fundamentally stored as numbers inside of a
+computer. So, the most common kind of loop is one that iterates a fixed
+number of times. For example, your morning exercise routine might
+include jumping rope 100 times. We could formulate a loop to do that
+like so. +
+
+[cols="<",]
+|======================================
+|_Set your counter to 0._
+|_While your counter is less than 100,_
+a|
+_Jump rope._
+
+a|
+_Increase your counter by 1._
+
+|======================================
+
+ +
+This loop required some set up to make sure that the counter value
+started at the right place. Then, the work done by the loop is the
+actual rope jumping and the counter increment. The condition is the
+counter being less than 100. Note that this is strictly *less* than 100.
+After the first jump, the counter will be incremented to 1. After the
+100^th^ jump, the counter will be incremented to 100. Since 100 is *not*
+less than 100, the loop will exit. If the condition was the counter
+being less than or equal to 100, the person following the instructions
+would jump 101 times.
+
+Input can also be a factor in loop repetitions. For example, you might
+be a soldier training in the U.S. Marine Corps. Perhaps your drill
+sergeant has commanded you to do push-ups until he says you can stop. We
+might formulate a loop to do this as follows. +
+
+[cols="<",]
+|========================================
+|_Do:_
+a|
+_Push-up._
+
+a|
+_Ask the drill sergeant if you can stop._
+
+|_While the answer is ``no.''_
+|========================================
+
+ +
+As is the case with user input, you must often go into the loop at least
+once to get the input. This loop requires the soldier to do at least one
+push-up before asking to stop. Some systems might use input but have
+other constraints. A more realistic version of this loop might be the
+following. +
+
+[cols="<",]
+|=======================================================
+|_Do:_
+a|
+_Push-up._
+
+a|
+_Ask the drill sergeant if you can stop._
+
+|_While the answer is ``no'' and you haven’t collapsed._
+|=======================================================
+
+ +
+Remember, the condition for a loop should be a Boolean, and the loop
+runs as long as the condition is true. However, there is no reason why
+the Boolean cannot be a complicated expression using all the Boolean
+logic we have come to know and love.
+
+Of course it is possible to _nest_ loops. Nesting loops means putting
+one loop inside of another, similar to the way that conditional
+statements could be nested inside of other conditional statements. Just
+like any other statement, an inner loop will be run as many times as the
+outer loop runs. Of course, the statements inside of the inner loop will
+be run according to the conditions of that loop. So, if an outer loop
+runs 10 times and an inner loop runs 50 times, a statement in the body
+of an inner loop would run 500 times!
+
+As an example, if you are working out, you might do several sets of
+bench presses with a fixed number of reps in each set. If you did 3 sets
+of 15 bench presses each, your workout program might look like this: +
+
+[cols="<",]
+|========================================
+|_Set your set counter to 0._
+|_While your set counter is less than 3,_
+a|
+_Set your rep counter to 0._
+
+a|
+_While your rep counter is less than 15,_
+
+a|
+_Do a bench press._
+
+a|
+_Increase your rep counter by 1._
+
+a|
+_Rest for 2 minutes._
+
+a|
+_Increase your set counter._
+
+|========================================
+
+ +
+This way of describing the work out program seems tedious. Most of the
+description is structural: conditions for the loops and increments for
+the counters. The only ``real'' activities are the bench press and the
+resting. As you can see, the bench press is inside the inner rep loop
+and will be executed 15 times each time for each complete execution of
+the inner rep loop. Since the inner rep loop sits inside the outer set
+loop, it will be executed 3 times, giving a grand total of 45 bench
+presses. Resting, however, is after the inner rep loop but still
+contained in the outer set loop and will be executed 3 times, totaling 6
+minutes of rest.
+
+As with conditionals, writing out loops in English is tedious and
+imprecise. In the next section, we will discuss the tools for writing
+loops in Java. Because Java was designed with loops as a central tool,
+we can write loops much more succinctly than in English, squeezing a lot
+of information into a small space. Because we pack so much information
+into them, loops can look daunting at first. Remember that the syntax we
+will introduce is only the formal Java way of expressing a condition and
+a list of instructions to execute repeatedly.
+
+=== Loops in Java (syntax)
+
+The Java programming language contains three differently named kinds of
+loops: `while` loops, `for` loops, and `do-while` loops. All of them
+allow you to write code that will be executed repeatedly. In fact, any
+program that uses one style of loops to solve a problem could be
+converted to use either of the other two kinds. The three kinds are
+provided in Java partly so that it is easy to code certain typical kinds
+of repetition and partly because the C language, an ancestor of Java,
+contained these three. We will begin by describing `while` loops because
+they have the simplest form and then move on to the other two kinds. We
+will then explain the syntax for nesting together multiple loops and
+finally discuss several of the common pitfalls encountered by
+programmers who are coding loops.
+
+== `while` loops
+
+Superficially, the syntax of a `while` loop resembles an `if` statement.
+It starts with the keyword `while` followed by a `boolean` condition in
+parentheses with a block of code surrounded by braces (`\{\}`)
+afterward. This similarity is not accidental. The only difference
+between the two is that the body of the `if` statement will run a only
+single time, while the body of the `while` loop will run as long as the
+condition remains `true`. Figure #figure:while[[figure:while]] shows the
+pattern of execution for `while` loops.
+
+to
+
+If we assume that the `boolean` value `atDoor` says whether or not we
+have reached the door and the method `walkTowardsDoor()` allows us to
+take one step closer to the door, we could formulate our example from
+the beginning of the previous section as follows.
+
+....
+while( !atDoor ) {
+    atDoor = walkTowardsDoor();
+}
+....
+
+Here we assume that the `walkTowardsDoor()` method gives back a
+`boolean` value that is `true` if we have reached the door and `false`
+otherwise. Unless the `walkTowardsDoor()` method is able to change the
+value of `atDoor`, the loop will repeat forever, a phenomenon known as
+an _infinite loop_.
+
+....
+while( true ) {
+    System.out.println("Help me!");
+}
+....
+
+This loop is an example of an infinite loop. If you run this code inside
+of a program, it will print out an endless succession of `Help me!`
+messages. Be prepared to stop the program by typing `Ctrl-C` (hold down
+the `Control` key and press `C`) because it will not end otherwise. Not
+all infinite loops are this obvious. A programmer will not usually use
+`true` as the condition of a loop, but doing so is not always wrong.
+Some loops are expected to continue for quite some time with no definite
+end. To leave a loop abruptly, you can use the `break` command.
+
+....
+while( true ) {
+    System.out.println("Help me!");
+    break;
+}
+....
+
+This loop will only print out a single `Help me!` before exiting. A
+`break` command can be used with an `if` statement to make a loop that
+repeats more than once.
+
+....
+int counter = 0;
+while( true ) {
+    System.out.print("the loop ");
+    counter++;
+    if( counter >= 3 )
+        break;
+}
+System.out.println("is on fire!");
+....
+
+This loop will print out `the loop the loop the loop is on fire!` Of
+course, the `break` statement unnecessarily complicates the code. We
+could have written equivalent code as follows.
+
+....
+int counter = 0;
+while( counter < 3 ) {
+    System.out.print("the loop ");
+    counter++;
+}
+System.out.println("is on fire!");
+....
+
+Now we move on to a more complicated example that can print out the
+binary equivalent of a number.
+
+As we discussed in
+Chapter #chapter:Computer Basics[[chapter:Computer Basics]], binary
+numbers are the building blocks of every piece of data inside of a
+modern computer’s memory. Integers are stored in binary. The
+representation of floating point numbers is more complicated, but it
+also uses 1s and 0s. Even the `char` data type and the `String` values
+built from them are fundamentally stored as binary numbers. For this
+reason, computer scientists tend to be familiar with the base 2 number
+system and how to convert between it and base 10, our usual number
+system.
+
+In base 10, the number 379 is equal to
+latexmath:[$3 \cdot 100 + 7 \cdot 10 + 9 \cdot 1 = 3 \cdot 10^2 + 7 \cdot 10^1 + 9 \cdot 10^0$].
+Moving from right to left, the value of each place increases by a factor
+of 10. A binary number is the same, except that the increase is by a
+factor of 2 and no single digit is greater than 1. Thus, the number
+latexmath:[$101011_2 = 1 \cdot 2^5 + 0 \cdot 2^4 + 1 \cdot 2^3 + 0 \cdot 2^2 + 1 \cdot 2 + 1 \cdot 2^0 = 1 \cdot 32 + 0 \cdot 16 + 1 \cdot 8 + 0 \cdot 4 + 1 \cdot 2 + 1 \cdot 0 = 43$].
+In binary, the number latexmath:[$379 = 101111011_2$].
+
+To convert a number latexmath:[$n$] to binary, we first find the largest
+power of 2 that is not larger than latexmath:[$n$]. Then, we begin a
+repetitive process that stops when the power of 2 under consideration is
+0. If 2 raised to the current power is bigger than latexmath:[$n$], we
+print out a 0 because that power is too big for latexmath:[$n$].
+Otherwise, we print out a 1, subtract 2 raised to that power from
+latexmath:[$n$], and move on to the next smaller power of 2. This
+process will print a 0 for every power of 2 that is not in
+latexmath:[$n$] and a 1 for every one that is, giving exactly the
+definition of a number written in base 2.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class DecimalToBinary {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );		
+		System.out.print("Please enter a base 10 number: ");
+		int number = in.nextInt();
+		int power = 1;
+		while( power <= number/2 )
+			power *= 2;
+		while( power > 0 ) {
+			if( power > number )
+				System.out.print(0);
+			else {
+				System.out.print(1);
+				number -= power;
+			}
+			power /= 2;
+		}
+	}
+}
+----
+
+The first `while` loop in this program doubles the value of `power`
+until doubling it again would make it larger than `number`. We go up to
+and including `number/2`, otherwise we would stop when `power` was
+larger than `number`. After that loop, we begin repeatedly checking to
+see if a given power of 2 is bigger than the value left in `number`. If
+it is, we know that we do not use that power. If it is not, we do and
+must remove that power from the value of `number`.
+
+You may have been tempted to solve this problem by determining if a
+given number is even or odd. If it is even, then you record a 0, and if
+it is odd, then you record a 1. You could then divide the number by two
+and repeat the process of determining whether it is even or odd. You
+could continue this process until the number became 0. This procedure
+requires only a single `while` loop and would give the digits of the
+number in base 2. Unfortunately, you would get the digits in reverse
+order. Because we write our numbers with the most significant digit on
+the left, we had to use the code given above to first find the largest
+value and work backwards, in order to determine the binary digits in the
+correct sequence. 
+
+'''''
+
+== `for` loops
+
+Let’s return to our code that prints out
+`the loop the loop the loop is on fire!`
+
+....
+int counter = 0;
+while( counter < 3 ) {
+    System.out.print("the loop ");
+    counter++;
+}
+System.out.println("is on fire!");
+....
+
+This code involves some initialization, a condition, and an update, as
+many loops do. The initialization sets `counter` to `0`. The condition
+checks to make sure that `counter` is less than `3`. The update
+increments `counter` by 1 every iteration of the loop. These three
+elements are so common that a special kind of loop called the `for` loop
+was designed with them explicitly in mind. Most `for` loops are
+dependent on a single counting variable. To make the loop easy to read,
+the initialization, condition, and update, all of which relate to this
+variable, are pulled into the header of the loop. We could code the
+previous `while` loop example more cleanly, using a `for` loop, as
+follows.
+
+....
+for( int i = 0; i < 3; i++ ) {
+    System.out.print("the loop ");
+}
+System.out.println("is on fire!");
+....
+
+The header of a `for` loop consists of those three parts: the
+initialization, the condition, and the update, all separated by
+semicolons. Figure #figure:for[[figure:for]] shows the pattern of
+execution for `for` loops.
+
+to
+
+You may have noticed that we have changed the variable name used within
+the loop from `counter` to `i`. Doing so does not change the function of
+the code. We did so because using the variables `i`, `j`, and sometimes
+`k` is a very common practice with `for` loops. By using variables named
+like this, we are indicating that the variable is just a dummy counter
+that we are using to make the loop work, not some variable with a
+grander purpose. Also, with three uses of a single variable in the
+header of a `for` loop, a long variable name will take up a lot of
+space.
+
+`for` loops are used in Java programs more than the other two loops.
+They work well when you know how many times you want to iterate through
+the loop, which you often do. You can think of the first part of the
+`for` loop header as the starting point, the second part as the ending
+point, and the third part as how you get from the start to the end. Many
+beginning programmers get stuck on the idea that every `for` loop starts
+with `int i = 0` and ends with `i++`. While this pattern is often true,
+there are many other ways to use a for loop. For example, we could print
+the powers of 2 that are less than 1000.
+
+....
+for( int i = 1; i < 1000; i *= 2 ) {
+    System.out.println(i);
+}
+....
+
+This segment of code prints out `1`, `2`, `4`, `8`, `16`, `32`, `64`,
+`128`, `256`, and `512` on separate lines, which are the powers of
+latexmath:[$2$] from latexmath:[$2^0$] up to latexmath:[$2^9$]. As you
+know from discussion about binary numbers, powers of two have a special
+interest to computer scientists. Both of the examples of `for` loops we
+have given have only had a single executable line in the body of the
+loop. Like `if` statements, loops only require braces if their bodies
+have more than one executable line. Many of the `while` loops from the
+previous subsection could have been written without braces.
+
+Just because a `for` loop already has a counting mechanism doesn’t mean
+that we will not need other variables to perform useful tasks. For
+example, given a `String`, we could try to find the letter of the
+alphabet in the `String` which is closest to the end of the alphabet.
+For the `String` `"Pluto is no longer a planet"`, the latest letter in
+the alphabet is `'u'`. To write code that will do this job, we must use
+the counting variable from the `for` loop as an _index_ into the
+`String`. Then, we must also have a temporary variable where we keep the
+latest letter found so far. To get the latexmath:[$i$]^th^ `char` from a
+`String`, we can use the `charAt()` method. The index of the first
+`char` in a `String` is 0, and the index of the last `char` is one less
+than the length of the `String`.
+
+....
+String s = "The quick brown fox jumps over the lazy dog.";
+String lower = s.toLowerCase();
+char latest = ' ';
+char c;
+for( int i = 0; i < lower.length(); i++ ) {
+    c = lower.charAt(i);
+    if( c >= 'a' && c <= 'z' && c > latest )
+        latest = c;
+}
+System.out.println("The latest character in the alphabet " +
+    "from your message is: '" + latest + "'.");
+....
+
+The first thing we do in this example is convert `s` to lower case, so
+that we are comparing all `char` values in the same case. Next, we run
+through `lower`, starting at index 0 and going until we reach the end of
+the `String`. For each `char`, we check to see if it is an alphabetic
+character and then if it is later in the alphabet than our current
+latest. If it is, we store it into `latest`. After the loop, we print
+out the value in `latest`. We have chosen the `char` `' '` because it is
+numerically earlier than all the letters in the alphabet. If the output
+is a space, we would know that none of the characters in `s` were
+alphabetic.
+
+For the example given, the latest character in the alphabet is `'z'`
+because of the word `"lazy"`. One weakness in this code is that it will
+always search through the entire `String`, even if the letter `'z'` has
+already been found. For the `String`
+`"The quick brown fox jumps over the lazy dog."`, we are not wasting too
+much time. However, if the `String` were `"Zanzibar!"` followed by the
+full text of _War and Peace_, we would be wasting thousands and
+thousands of operations reading characters when we knew that `'z'` was
+going to be the latest letter, no matter what. So, we can rewrite our
+`for` loop so that it quits early if it reaches a `'z'`.
+
+....
+for( int i = 0; i < lower.length(); i++ ) {
+    c = lower.charAt(i);
+    if( c >= 'a' && c <= 'z' && c > latest )
+        latest = c;
+    if( latest == 'z' )
+        break;
+}
+....
+
+This version of the `for` loop will break out immediately if the latest
+is already a `'z'`. This code will work efficiently, but many
+professional programmers discourage the use of `break` except when
+absolutely necessary (like in a `switch` statement). If a `break` is
+used to exit the loop, this logic can be encoded into the condition of
+the loop. Thus, the same loop written with better style would be the
+following.
+
+....
+for( int i = 0; i < lower.length() && latest != 'z'; i++ ) {
+    c = lower.charAt(i);
+    if( c >= 'a' && c <= 'z' && c > latest )
+        latest = c;
+}
+....
+
+For this final version of the loop, we have made the conditional portion
+of the header more complex. The comparison using `<` gives a `boolean`
+that we combine using `\&\&` with the `boolean` from the comparison
+using `!=`. As always, remember that the loop will continue iterating as
+long as the condition is `true`. Since we need both parts of the
+condition to be `true` to continue executing, we use the `\&\&` operator
+to connect them.
+
+We apologize to international readers for focusing on the Latin alphabet
+used by English and many other Western European languages. It should be
+possible to make a localized version of this example with any alphabet
+by checking the return value of `Character.isLetter(c)`, which is valid
+for all single-character Unicode values, although the idea of
+alphabetical order does not really apply to some character systems like
+the hanzi and kanji of Chinese and Japanese. Regardless, using the
+`Character.isLetter()` method is recommended for almost all
+applications, since it is more general and more readable.
+
+Prime numbers are numbers whose only factors are 1 and themselves. If
+you have encountered prime numbers before, they probably seemed like a
+mathematical curiosity and nothing more. In fact, prime numbers are the
+basis of a very practical application of mathematics: cryptography. With
+the use of some math and very large prime numbers, computer scientists
+have devised techniques that make shopping online safer.
+
+These techniques are beyond the scope of this book, but we can at least
+write some code to determine if a number latexmath:[$n$] is prime. To do
+so, we can simply divide latexmath:[$n$] by all the numbers between 2
+and latexmath:[$n - 1$]. If none of the numbers divide it evenly, it
+must be prime. Here is this basic solution.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class PrimalityTester0 {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );		
+		System.out.print("Please enter a number: ");
+		long number = in.nextLong();		
+		boolean prime = true;
+		for( long i = 2; i < number && prime; i++ )
+			if( number % i  ==  0 )
+				prime = false;
+		if( prime )
+			System.out.println("" + number + " is prime.");
+		else
+			System.out.println("" + number + " is not prime.");
+	}
+}
+----
+
+This program has a `for` loop that runs from `2` up to `number - 1`,
+provided that we don’t find a number that evenly divides `number`. This
+optimization means that the program will output the moment that it knows
+that the number is not prime, but we will still have to wait for it to
+check all the other possibilities before it is sure that the number is
+prime.
+
+One insight that we can use to make the program more efficient is that,
+after checking 2, we don’t have to divide it by any even numbers. So, we
+can do half the checking with a few simple modifications.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class PrimalityTester1 {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );		
+		System.out.print("Please enter a number: ");
+		long number = in.nextLong();		
+		boolean prime = (number % 2 != 0);		
+		for( long i = 3; i < number && prime; i += 2  )
+			if( number % i  ==  0 )
+				prime = false;
+		if( prime )
+			System.out.println("" + number + " is prime.");
+		else
+			System.out.println("" + number + " is not prime.");
+	}
+}
+----
+
+This version of the program sets the `boolean` variable `prime` to
+`false` if `number` is divisible by 2 and `true` otherwise. Then, it
+starts the search at 3 and continues in jumps of 2. Although we are
+saving half the time, we can still do better. Note that if a number
+latexmath:[$n$] is divisible by 2, then it is also divisible by
+latexmath:[$\frac{n}{2}$]. So, if a number is *not* divisible by 2, it
+is not divisible by any number larger than latexmath:[$\frac{n}{2}$]. If
+it is not divisible by 2 or 3, then it is not divisible by any number
+larger than latexmath:[$\frac{n}{3}$]. If it is not divisible by 2 or 3
+or 4, it is not divisible by any number larger than
+latexmath:[$\frac{n}{4}$], and so on. Thus, we do not have to check all
+the way up to latexmath:[$n - 1$]. If we are checking to see if
+latexmath:[$n$] is divisible by latexmath:[$x$] and learning that
+latexmath:[$n$] is not divisible by anything larger than
+latexmath:[$\frac{n}{x}$], the point where latexmath:[$x = \frac{n}{x}$]
+is when latexmath:[$x = \sqrt{n}$]. Thus, we only need to search up to
+latexmath:[$\sqrt{n}$], which will save even more time.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class PrimalityTester2 {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );		
+		System.out.print("Please enter a number: ");
+		long number = in.nextLong();		
+		boolean prime = (number % 2 != 0);		
+		long root = (long)Math.sqrt(number);
+		for( long i = 3; i <= root && prime; i += 2  )
+			if( number % i  ==  0 )
+				prime = false;
+		if( prime )
+			System.out.println("" + number + " is prime.");
+		else
+			System.out.println("" + number + " is not prime.");
+	}
+}
+----
+
+Note in this version of the program we do go up to and including `root`,
+because there is the possibility that `number` is a perfect square. .
+]Exercise .  
+
+'''''
+
+DNA is usually double stranded, with each base paired to another
+specific base, called its complementary base. The following table shows
+the association between each base and its complementary base.
+
+[cols="^,^,^",options="header",]
+|============================================
+|*Base* |*Abbreviation* |*Complementary Base*
+|Adenine |A |T
+|Cytosine |C |G
+|Guanine |G |C
+|Thymine |T |A
+|============================================
+
+A simple but common task is finding the reverse complement of a DNA
+sequence. The reverse complement of a DNA sequence is its sequence of
+complementary bases given in reverse order. For example, the reverse
+complement of ACATGAG is CTCATGT. This sequence is found by first
+finding the complement of ACATGAG, which is TGTACTC, and then reversing
+its order.
+
+We will write a program that finds the reverse complement of a DNA
+sequence entered by a user. This sequence will be entered as a sequence
+of characters made up of the four abbreviations for the bases: A, C, G,
+and T. We will store this sequence as a `String` and perform some
+manipulations on it to get the reverse complement.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class ReverseComplement {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );		
+		System.out.print("Please enter a DNA sequence: ");
+		String sequence = in.next().toUpperCase();				
+		String complement = "";
+		for( int i = 0; i < sequence.length(); i++ )
+			switch( sequence.charAt(i) ) { //get complements
+				case 'A': complement += "T"; break;
+				case 'C': complement += "G"; break;
+				case 'G': complement += "C"; break;
+				case 'T': complement += "A"; break;
+			}		
+		String reverseComplement = "";
+		//reverse the complement
+		for( int i = complement.length() - 1; i >= 0; i-- ) 
+			reverseComplement += complement.charAt(i);
+		System.out.println("Reverse complement: " +
+			reverseComplement);
+	}
+}
+----
+
+This example first creates a `String` filled with the complement of the
+base pairs from the input `String`. Then, in a second step, it creates a
+new `String` that is the reverse of the complement sequence. Note how
+`complement` is created by appending the `char` corresponding to the
+complementary base at the *end* of `complement`. If we inserted each
+`char` at the beginning of `complement`, we would not need to reverse in
+a separate step.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class CleverReverseComplement {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );		
+		System.out.print("Please enter a DNA sequence: ");
+		String sequence = in.next().toUpperCase();				
+		String reverseComplement = "";
+		for( int i = 0; i < sequence.length(); i++ )
+			switch( sequence.charAt(i) ) { //get complements
+				case 'A': reverseComplement = "T" +
+					reverseComplement; break;
+				case 'C': reverseComplement = "G" +
+					reverseComplement; break;
+				case 'G': reverseComplement = "C" +
+					reverseComplement; break;
+				case 'T': reverseComplement = "A" +
+					reverseComplement; break;
+			}				
+		System.out.println("Reverse complement: " +
+			reverseComplement);
+	}
+}
+----
+
+ 
+
+'''''
+
+== `do-while` loops
+
+Use this rule of thumb for deciding which kind of loop to use: If you
+know how many times you want the loop to execute, use a `for` loop. If
+you don’t know how many times you want it to execute, use a `while`
+loop. Clearly, this rule is not iron-clad. In the previous example, we
+used a `for` loop even though it would stop executing as soon as a `'z'`
+was encountered. Nevertheless, it seems like we have covered all of the
+possible situations with `while` and `for` loops. When should we use
+`do-while` loops? The simple answer is: never.
+
+You never *have* to use a `do-while` loop. With a little bit of effort,
+you use a single kind of loop for every job. The key difference between
+a `do-while` loop and a regular `while` loop is that a `do-while` loop
+will always run at least once. Neither of the other two loops give you
+that guarantee. The syntax for a `do-while` loop is a `do` at the top of
+a loop body enclosed in braces, with a normal `while` header at the end,
+including a condition in parentheses, followed by a semicolon.
+Figure #figure:do-while[[figure:do-while]] shows the pattern of
+execution for `do-while` loops.
+
+to
+
+We can use a `do-while` loop to print out the first 10 perfect squares
+as follows.
+
+....
+int x = 1;
+do {
+    System.out.println(x*x);
+    x++;
+} while( x <= 10 );
+....
+
+This loop behaves exactly the same as the following loop.
+
+....
+int x = 1;
+while( x <= 10 ) {
+    System.out.println(x*x);
+    x++;
+}
+....
+
+The time when a `do-while` loop is really going to shine is when your
+program will work incorrectly if the loop doesn’t run at least once.
+This situation often occurs with input, when the loop must run at least
+once before checking the condition. For example, imagine that you want
+to write a program that picks a random number between 1 and 100 and lets
+the user guess what it is until the user gets it right. You need a loop
+because it is a repetitive activity, but you need to let the user guess
+at least once so that you can check to see if he or she was right. The
+following program fragment does exactly that.
+
+....
+Scanner in = new Scanner( System.in );
+Random random = new Random();
+int guess = 0;
+int number = random.nextInt(100) + 1;
+do {
+    System.out.print("What is your guess? ");
+    guess = in.nextInt();
+} while( guess != number );
+System.out.println("You got it! The number was " + number + ".");
+....
+
+You could perform the same function with a `while` loop, but you will
+need to get some input from the user before the loop starts. Using the
+`do-while` loop is a little more elegant.
+
+== Nested loops
+
+As with `if` statements, it is possible to nest loops inside of other
+loops. In the simplest case, you may have some repetitive activity that
+itself needs to be performed several times. For example, when you were
+younger, you probably had to learn your multiplication tables. For each
+number, a multiplication table gave the value of the product of that
+number by every integer between 1 and 12. We can write code to print out
+out the multiplication table for every number from 1 to 10 by simply
+repeating the process.
+
+....
+for( int number = 1; number <= 10; number++ ) {
+    for( int factor = 1; factor <= 12; factor++ ) {
+        System.out.println( number + " x " + factor +
+            " = " + (number*factor));
+    }
+    System.out.println();
+}
+....
+
+The outer loop incrementing `number` will run 10 times. The inner loop
+incrementing `factor` runs 12 times for each iteration of the outer
+loop. So, the code in the inner loop will run a total of 120 times.
+Every 12 iterations, the inner loop will stop, and an extra blank line
+will be added by the `System.out.println()` method in the outer loop.
+
+The sequence consisting of 1, 3, 6, 10, 15, and so on is known as the
+triangular numbers. The latexmath:[$i$]^th^ triangular number is the sum
+of the first latexmath:[$i$] integers. They are called triangular
+numbers because they can be drawn as equilateral triangles in a very
+natural way, if you use a number of dots equal to the number.
+
+We can use nested loops to print out the first latexmath:[$n$]
+triangular numbers, where latexmath:[$n$] is specified by the user.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class TriangularNumbers {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );		
+		System.out.print("How many triangular numbers? ");
+		int n = in.nextInt();
+		int sum;						
+		for( int i = 1; i <= n; i++ ) {
+			sum = 0;			
+			for( int j = 1; j <= i; j++ )
+				sum += j;
+			System.out.println(sum);
+		}
+	}
+}
+----
+
+As you can see, the outer loop iterates through each of the `n`
+different triangular numbers. Then, the inner loop does the summation
+needed to compute the given triangular number. Producing a sequence of
+triangular numbers this way is, unfortunately, not the most efficient
+way to do it. Nested loops are an effective way to solve many problems,
+particularly certain types of problems using arrays, but we can generate
+triangular numbers using only a single `for` loop. The key insight is
+that we can keep track of the previous triangular number and add
+latexmath:[$i$] to it, as latexmath:[$i$] increases.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class CleverTriangularNumbers {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );		
+		System.out.print("How many triangular numbers? ");
+		int n = in.nextInt();
+		int triangular = 0;						
+		for( int i = 1; i <= n; i++ ) {			
+			triangular += i;
+			System.out.println(triangular);
+		}
+	}
+}
+----
+
+By removing the inner `for` loop, the total amount of work needed is
+greatly reduced. 
+
+'''''
+
+[[subsection:common pitfalls]]
+== Common pitfalls
+
+With great power comes great responsibility. The power to repeat things
+a large number of times means that we can also repeat our mistakes a
+large number of times. Many classic bugs occur as a result of logical or
+typographical errors in loops. Below we will list a few of the most
+common.
+
+=== Pitfall: Infinite loops
+
+It is possible to create a loop that never terminates. Your program may
+be taking a long time to finish, but if it takes much longer than you
+expect, an infinite loop might be the culprit. Infinite loops might
+occur because you forgot to include an appropriate statement to advance
+a counter.
+
+....
+int number = 1;
+while( number <= 100 )
+    System.out.println(number);
+}
+....
+
+This code is presumably intended to print out the first 100 integers,
+but there is no code that increases the value of `number`. As a
+consequence, the number `1` will be printed out over and over until the
+user stops the program from executing. Usually, the cause is more
+subtle, as in the following code.
+
+....
+for( int i = 0; i < 10; i += 0.5 )
+    System.out.println("Half a step forward, half a step back...");
+....
+
+One might expect this code to print out 20 lines of output. However,
+remember that `i` is an `int`. Adding `0.5` to `0` and then casting it
+to an `int` gives `0` again. What is particularly insidious about this
+loop is that it compiles without even a warning in Java. Usually
+conversion from a `double` to an `int` requires an explicit cast, but
+the `+=` operator (and other similar operators) behave a little
+differently for technical reasons.
+
+=== Pitfall: Almost infinite loops
+
+Many loops are truly infinite; others take a really long time. For
+example, if you intended to run a loop down from 10 to 0, but increment
+your counter instead of decrementing it, overflow means that you will
+eventually get to a number less than 0, but it will take more than 2
+billion increments instead of the expected 10 decrements.
+
+....
+for( int i = 10; i > 0; i++ )
+    System.out.println(i);
+System.out.println("Blast off!");
+....
+
+This loop will significantly slow your code. Everyone will be so tired
+of waiting that they might leave the space shuttle launch. Of course,
+another problem with almost infinite loops is that you are dealing with
+the wrong values. No one expects to hear the number `2147483647` in a
+countdown.
+
+=== Pitfall: Fencepost errors
+
+Perhaps the most common loop errors are fencepost errors, often known as
+off-by-one errors. The name ``fencepost'' comes from a related mistake
+that someone might make when putting up a fence. Imagine that you want
+to erect a 10 meter long chain link fence and you need to have a support
+post every meter, how many posts do you need? In fact, we have not given
+you enough information to answer the question correctly. If your fence
+is built in a straight line, then you will need 11 posts so that you
+have a post at each end. However, if your fence is a rectangular
+enclosure, say 3 meters by 2 meters, you will only need 10 posts.
+
+In loops, fencepost errors are often due to zero-based counting. A `for`
+loop that iterates 10 times is below.
+
+....
+for( int i = 0; i < 10; i++ )
+    System.out.println(i);
+....
+
+Of course, sometimes we need one-based counting instead. After being
+used to zero-based counting, a programmer might make the following loop
+that incorrectly iterates 9 times.
+
+....
+for( int i = 1; i < 10; i++ )
+    System.out.println(i);
+....
+
+The correct version that iterates 10 times is below.
+
+....
+for( int i = 1; i <= 10; i++ )
+    System.out.println(i);
+....
+
+If you want to iterate latexmath:[$n$] times, start at 0 and go up to
+but not including latexmath:[$n$] or start at 1 and go up to and
+including latexmath:[$n$]. To keep loop headers consistent, some
+programmers always start at 0 and then adjust the values inside the
+loop, printing out `i + 1` in this case.
+
+=== Pitfall: Skipped loops
+
+A loop runs as long as its condition is `true`. For `for` loops and
+`while` loops, this could mean that the loop is never even entered.
+Sometimes, that behavior is intended by the programmer. Sometimes, the
+programmer made a mistake.
+
+For example, we can write a program that will add any number of positive
+values. When the user is finished using the adder, he or she enters a
+negative number. This negative number, called a _sentinel value_, tells
+the program to stop executing the loop. Below is an incorrect
+implementation of such a program.
+
+....
+Scanner in = new Scanner( System.in );
+int number = 0;
+int sum = 0;
+while( number > 0 ) {
+    sum += number;
+    System.out.print("Enter the next number to add: ");
+    number = in.nextInt();
+}
+System.out.println("The total sum is " + sum);
+....
+
+This loop will never be executed because `0` is not greater than `0`.
+The program could be changed by making the condition of the `while` loop
+`number >= 0`. Doing so will allow the user to enter `0` as input, which
+is fine since it does not change the value of the `sum`. If you want to
+force the user to enter only numbers greater than zero, you could change
+the loop into a `do-while` loop.
+
+=== Pitfall: Misplaced semicolons
+
+The idea of a statement in Java is often amorphous in the minds of
+beginning programmers. An entire loop (with any number of loops nested
+inside of it) is just one statement. An executable statement ending with
+a semicolon is one statement as well, even when that executable
+statement is empty. Thus, the following is a legal (but infinite) loop.
+
+....
+int i = 100;
+while( i > 0 ); {
+    System.out.println(i);
+    i--;
+}
+System.out.println("Ready or not, here I come!");
+....
+
+This code was supposed to count down from 100, just like in the game of
+Hide and Seek; however, there is a semicolon after the condition of the
+`while` loop. This semicolon is treated like an executable statement
+that does nothing. As a consequence, the `while` loop does the single
+statement, checks if the condition is `true` (which it is), and
+continues to do the empty statement and check the condition, forever.
+The extra braces enclose two statements unnecessarily, but Java allows
+extra braces, as long as they are evenly matched.
+
+This error is common especially for those new to loops and conditional
+statements and are in the habit of putting semicolons after everything.
+A misplaced semicolon does not always result in an infinite loop. Here
+is the `for` loop version of the same code, also with a semicolon
+inserted after the loop header.
+
+....
+for( int i = 100; i > 0; i-- ); {
+    System.out.println(i);
+}
+System.out.println("Ready or not, here I come!");
+....
+
+This version of the code will execute similarly, except the decrement is
+built into the header of the loop. So, the loop will execute the empty
+statement, but it will also decrement `i`. This code will decrement `i`
+100 times, then print out `0` exactly once, then print
+`Ready or not, here I come!`.
+
+There are some cases when an empty statement for a loop body is actually
+useful, although it is never necessary. In future chapters, we will
+point out situations in which you may wish to use an empty statement
+this way.
+
+=== DNA searching (solution)
+
+Below we give a solution to the DNA searching problem posed at the
+beginning of the second half of this chapter. Our solution prints out
+the index within the main `String` when it finds a match with the
+pattern it is looking for. Afterwards, it prints out the total number of
+matches. Our code also does error checking to make sure that the user
+only enters valid DNA sequences containing the letters A, C, G, and T.
+We begin our code with the standard `import` statement and class
+definition.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class DNASearch {
+	public static void main(String[] args) {				
+		Scanner in = new Scanner( System.in );	
+		String sequence, subsequence;
+		boolean valid;
+		char c;
+----
+
+The `main()` method instantiates a `Scanner` object and declares both of
+the `String` variables we’ll need to store the DNA sequences. The method
+also declares a `boolean` and a `char` we will use for input checking.
+
+[source,numberLines,java]
+----
+		do {
+			System.out.print(
+				"Enter the DNA sequence you wish to search in: ");
+			sequence = in.next().toUpperCase();
+			valid = true;
+			for(int i = 0; i < sequence.length() && valid; i++) {				
+				c = sequence.charAt(i);
+				if( c != 'A' && c != 'C' && c != 'G' && c != 'T') {
+					System.out.println("Invalid DNA sequence!");
+					valid = false;
+				}
+			}
+		} while( !valid );
+----
+
+Next, the user is prompted for a DNA sequence to search in. This
+`String` stored in `sequence` is converted to upper case just in case
+the user is not being consistent. The inner `for` loop in this code is
+checking each `char` inside of `sequence`. If any `char` is not an
+`'A'`, `'C'`, `'G'`, or `'T'`, then `valid` is set to `false`. As a
+result, the `for` loop terminates. Also, the `do-while` loop repeats the
+prompt and gets a new `String` for `sequence` from the user. This outer
+`do-while` loop continues as long as the user keeps entering invalid DNA
+sequences.
+
+[source,numberLines,java]
+----
+		do {		
+			System.out.print(
+				"Enter the subsequence you wish to search for: ");
+			subsequence  = in.next().toUpperCase();
+			valid = true;
+			for(int i = 0; i < subsequence.length() && valid; i++) {				
+				c = subsequence.charAt(i);
+				if( c != 'A' && c != 'C' && c != 'G' && c != 'T') {
+					System.out.println("Invalid DNA sequence!");
+					valid = false;
+				}
+			}
+		} while( !valid );
+----
+
+The code used to input `subsequence` while doing error checking is
+virtually identical to the code to input `sequence`.
+
+[source,numberLines,java]
+----
+		int found = 0;
+		for( int i = 0; i < sequence.length() -
+			subsequence.length() + 1; i++ ) {			
+			for( int j = 0; j < subsequence.length(); j++ ) {
+				if(subsequence.charAt(j) != sequence.charAt(i + j))
+					break;
+				if( j == subsequence.length() - 1 ) { //matches
+					System.out.println("Match found at index " + i);
+					found++;
+				}
+			}
+		}
+----
+
+The actual workhorse of the search is found in these nested `for` loops.
+The outer loop iterates through every index in `sequence`, until it
+comes to an index that is too late to be the start of a new subsequence
+(since the subsequence would be too long to fit anymore). This happens
+to be when the value of `i` is greater than or equal to
+`sequence.length() - subsequence.length() + 1`. It may take some thought
+to verify that this condition is the correct one. One way to think about
+this problem is by noting that, when `sequence` and `subsequence` have
+the same length, you need to check starting at index `0` of `sequence`
+but not any later indexes. Also, if `subsequence` is one `char` longer
+than `sequence`, there can never be a match. In that case, the value of
+`sequence.length() - subsequence.length() + 1` would be `0`. Since `0`
+is not less than `0`, the outer `for` loop would never execute.
+
+The inner `for` loop iterates through the length of `subsequence`,
+making sure that every `char` in `sequence`, starting at the appropriate
+offset, exactly matches a `char` in `subsequence`. If, at any point, the
+two `char` values do not match, the inner `for` loop will immediately
+exit, using the `break` command. However, on the last iteration of the
+inner `for` loop, when `j` is one less than the length of `subsequence`,
+we know that all of `subsequence` matched a part of `sequence`. As a
+result, we print out the index of `sequence` where `subsequence` started
+and increment the `found` counter.
+
+If you know the `String` class well, you can use the `indexOf()` method
+to replace the inner `for` loop. We leave that approach as an exercise.
+. ]Exercise .
+
+[source,numberLines,java]
+----
+		if( found == 1 )
+			System.out.println("One match found.");
+		else
+			System.out.println(found + " matches found.");
+	}
+}
+----
+
+Finally, we print out the total number of matches found. In order to
+avoid awkward output like `1 matches found.`, we used an `if`-`else` to
+customize the output based on the value of `found`.
+
+The ideas needed to correctly implement the solution are not difficult,
+but catching all the off-by-one errors and getting every detail right
+takes care. There is also more than one way to code this solution. For
+example, we could have written the nested loops that do the searching as
+follows.
+
+....
+int found = 0;
+for( int i = 0; i < sequence.length() -
+    subsequence.length() + 1; i++ ) {
+    for( int j = 0; j < subsequence.length() &&
+        subsequence.charAt(j) == sequence.charAt(i + j); j++ )
+        if( j == subsequence.length() - 1 ) { //matches
+            System.out.println("Match found at index " + i);
+            found++;
+        }
+    }
+}
+....
+
+This design is preferred by many since it removes the `break`. By using
+an empty statement, it is possible to move the check to see if the
+matching process is done outside of the inner `for` loop.
+
+....
+int found = 0;
+int j;
+for( int i = 0; i < sequence.length() -
+    subsequence.length() + 1; i++ ) {
+    for( j = 0; j < subsequence.length() &&
+        subsequence.charAt(j) == sequence.charAt(i + j); j++ );
+    if( j == subsequence.length() ) { //matches
+        System.out.println("Match found at index " + i);
+        found++;
+    }
+}
+....
+
+In this case, note that we must declare `j` outside of the inner `for`
+loop, since it will be used outside. This approach is more efficient
+because we only need to perform the check once. Notice also that the
+condition of the `if` statement has changed. Now, we know that all of
+`subsequence` matches because the loop ran to completion. If the loop
+did not run to completion, then `j` would be smaller than
+`subsequence.length()` and the loop must have terminated because the two
+`char` values did not match. Although more efficient, some programmers
+would avoid this approach because it uses the confusing syntax in which
+the body of the `for` loop is a single empty statement followed by a
+semicolon. Likewise, the logic about exiting the loop and the condition
+of the `if` statement is murkier.
+
+=== Loops (concurrency)
+
+Many programmers use concurrency for speedup. They want their programs
+to run faster. Most programs that run for a long time use loops to do
+repetitive tasks. If these loops are doing the same operation to many
+different pieces of data, we may be able to speed up the process by
+splitting up the data and letting different threads operate on their own
+segment of the data. Splitting up data this way is called _domain
+decomposition_ which allows us to achieve _data parallelism_. These
+topics are discussed further in
+Section #concepts:Splitting up work[[concepts:Splitting up work]].
+
+Performing repetitive tasks is one of the great strengths of computers.
+For most programs that run a long time, incredible amounts of
+computation are being done inside of (usually nested) loops. Domain
+decomposition will not work for all of these programs. Some cannot be
+parallelized at all, but this book is about finding problems that can
+have parallel and concurrent solutions.
+
+In
+Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]],
+we will introduce tools for writing a concurrent program with different
+threads of execution running at the exactly the same time and
+potentially interacting. Using only the power of loops, you can see
+parallelism in action now.
+
+Consider the problem of computing the sum of the sines of a range of
+integers. At its heart is a loop from the start of the range to the end.
+
+....
+for( int i = start; i <= end; i++ )
+    sum += Math.sin(start);
+....
+
+If we want to allow the user to specify the start and the end and print
+out the sum, we need to make a program with a little bit of input and
+output around this loop.
+
+[source,numberLines,java]
+----
+import java.util.Scanner;
+
+public class SumSines {
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		System.out.print("Enter starting value: ");
+		int start = in.nextInt();
+		System.out.print("Enter ending value: ");
+		int end = in.nextInt();
+		
+		double sum = 0;
+		for( int i = start; i <= end; i++ )		
+			sum += Math.sin(start);
+		
+		System.out.println("Sum of sines: " + sum );
+	}
+}
+----
+
+If you compile and run this program with `1` as the start value and
+`100000000` as the end, the answer should be `1.7136493465700542`. One
+hundred million values is a lot to find the sine for. Depending on your
+machine, this task should take between 10 seconds and over a minute. Try
+to time how long this takes as accurately as possible.
+
+Now, open a total of four console windows and navigate them all to the
+directory with `SumSines.class` in it. Run `SumSines` in each one. For
+the first console, enter `1` as the start and `25000000` as the end. For
+the second, enter `25000001` and `50000000`. For the third, enter
+`50000001` and `75000000`. For the last, enter `75000000` and
+`100000000`. Once they have run, you should get, respectively,
+`1.4912473269134603`, `-0.6795491754132104`, `-0.2893142602684644`, and
+`1.1912654553381272`. If you add these together using a calculator, you
+should get `1.7136493465699127`, which is almost exactly the same answer
+we got before. (Floating point rounding errors cause the slight
+difference.)
+
+If you try to start them computing at about the same time, you can try
+to see how long it takes for all of them to complete. SDid it take less
+time than before? If you have a single core processor, it might have
+taken just as long or longer. If you have a dual-core processor, it
+should have taken less time, and if you have a quad core processor, even
+less. Since we are dividing the problem into four pieces, we will not
+expect to see any improvement with more than four cores.
+
+Most operating systems provide a graphical way of viewing the load on
+each processor. If you examine your CPU usage while running those
+programs, you should see it spike up when the programs start and then
+come down when they finish. For multiple cores, how did we say which
+core we wanted each program to run on? We didn’t. In general, it is
+difficult to specify which core we want to run a program, process, or
+thread on. The OS does the job of scheduling and picks a free processor
+when it needs to run a program. It is even possible for programs and
+threads to change from one core to another while running if the OS needs
+to balance out the workload.
+
+This sines example is similar to Example . which we will cover in in
+Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]].
+As you may have noticed, running four programs is not convenient. You
+have to open several windows, you have to type starting and ending
+points very carefully, and you have to combine the answers at the end
+since your programs cannot interact directly with each other. Features
+of Java will make this job easier, allowing us to run more than one
+thread of execution at a time without the need to run multiple programs
+by hand. . ]Exercise .  
+
+'''''
+
+= Exercises
+
+.
+
+-0.5in *Conceptual Problems*
+
+If you have a `String` containing a long text and you want to count the
+number of words in the text that begin with the letter `'m'`, which of
+the three kinds of loops would you use, and why?
+
+In Example ., our last version of the primality tester
+`PrimalityTester2` computes the square root of the number being tested.
+Instead of computing this value before the loop, how would performance
+be affected by changing the head of the `for` loop to the following?
+
+....
+for(long i = 3; i <= Math.sqrt(number) && prime; i += 2)
+....
+
+How many different DNA sequences of length latexmath:[$n$] are there?
+
+There are three different errors in the following loop intended to print
+out the numbers 1 through 10. What are they?
+
+....
+for( int i = 1; i < 10; i-- );
+{
+    System.out.println(i);
+}
+....
+
+Consider the following code containing nested `for` loops.
+
+....
+Scanner in = new Scanner(System.in);
+int n = in.nextInt();
+int count = 0;
+for( int i = 1; i <= n; i++ )
+    for( int j = 1; j <= i; j++ )
+        count++;
+....
+
+In terms of the value of `n`, how many times is `count` incremented? If
+it is not immediately obvious, trace through the execution of the
+program by hand or run the code for several different values of `n` and
+try to detect a pattern.
+
+-0.5in *Programming Practice*
+
+Write a program that converts base 10 numbers into base 3 numbers. If
+you find that task too easy, write a program that will convert base 10
+numbers to any base in the range 2 to 16. Hint: Use letters A through F,
+in order, to represent digits larger than 9.
+
+The greatest common divisor (GCD) of two integers is the largest integer
+that divides both of them evenly. The GCD for any two positive integers
+is at least 1 and at most the smaller of the two numbers. Write a
+program that prompts a user for two `int` values and finds their GCD.
+Although there are more efficient methods, you can count down from
+either number. If the counter ever divides *both* numbers evenly, it is
+the GCD. The counter is guaranteed to divide them both if it reaches 1.
+
+In the solution to the DNA searching problem given in
+Section #solution:DNA searching[[solution:DNA searching]], we used two
+`for` loops to find occurrences of a DNA subsequence inside of a larger
+sequence. Professional Java developers would have used a single `for`
+loop and the `indexOf()` method in the `String` class. One version of
+this method returns the index of a substring within a `String` object,
+starting from a particular offset, as shown below.
+
+....
+String text = "fun dysfunction";
+String search = "fun";
+System.out.println("Location: " + text.indexOf(search, 4));
+....
+
+This code will output `Location: 7` since the first occurrence of
+`"fun"` from index `4` or later starts at index `7`. If there are no
+more occurrences of the substring beyond the starting index, the method
+will return `-1`. Rewrite the solution to the DNA searching problem,
+replacing the inner searching `for` loop with the `indexOf()` method.
+
+Write a program that reads a number latexmath:[$n$] from a user and then
+prints all possible DNA sequences of length latexmath:[$n$]. Be careful
+not to supply too large of a value when you run this program. Hint:
+Represent the sequence as a `String`. On each iteration, focus on the
+last `char` in the `String`. If it is an `'A'`, change it to a `'C'`. If
+it is a `'C'`, change it to a `'G'`. If it is a `'G'`, change it to a
+`'T'`. If it is a `'T'`, change it back to an `'A'`, but ``carry'' the
+increment over to the next `char`, like a rolling odometer. You will
+have to design loops that can deal with carries that cascade across
+multiple indexes.
+
+Re-implement GUIthe solution to the DNA searching program given in
+Section #solution:DNA searching[[solution:DNA searching]] using
+`JOptionPane` to generate GUIs for input and output.
+
+-0.5in *Experiments*
+
+Using a `for` loop, record the Monty Hall simulation so that you can run
+it 100 times, always choosing to switch doors. Keep a record of how many
+times you win. Change your code again to run the Monty Hall simulation
+100 more times, always choosing to keep your initial choice. Again, keep
+a record of how many times you win. Compare the two records. Choosing to
+switch should perform roughly twice as well as keeping the first door.
+Increase the number of iterations to 1,000 and then 10,000 times. Does
+the performance of switching get closer to twice the performance of not
+switching?
+
+Write three nested `for` loops, each of which run 1,000 times. Increment
+a counter in the innermost `for` loop. If that counter starts at 0, its
+final value should be 1,000,000,000. Time how long your program takes to
+run to completion using either a stopwatch or, if you are on a Unix or
+Linux system, the `time` command. Feel free to increase and decrease the
+amount that each loop runs to see the effect on the time. However, if
+you increase the values of all three loops too much, you may have to
+wait longer than you want.
+
+In Section #subsection:common pitfalls[0.6], one of the common loop
+mistakes we discuss is an almost infinite loop. Create your own almost
+infinite loop that runs from `10` to `0`, incrementing instead of
+decrementing. Time the execution of your program. Unlike our example, do
+not use an output statement or your code will take too long to run. How
+much longer would your code take to run if you used a `long` instead of
+an `int`?
+
+In Example ., we gave three programs to test a number for primality. Run
+each of these prime testers on a large prime such as 982,451,653 and
+time them. Is there a significant difference in the running time of
+`PrimalityTester0` and `PrimalityTester1`? What about `PrimalityTester1`
+and `PrimalityTester2`?
+
+ConcurrencyIn Example ., we ran four programs at the same time to solve
+a problem in parallel. Use the same framework (combined with your
+knowledge of primes from Example .) to write a program that can see how
+many prime numbers are in a user specified range of integers. Then, use
+it to find the total number of primes between 2 and 500,000,000. Now,
+run two copies of the program with one starting at 2 and going up to
+250,000,000 and the other starting at 250,000,001 and going up to
+500,000,000. If you add the numbers together, do you get the same
+answer? (If not, there is a bug in your program.) Now, divide the work
+into four pieces. How much quicker, if at all, is running all four
+programs instead of one? Does one of the four pieces run significantly
+faster or slower than the others?
