@@ -1,14 +1,12 @@
-[[chapter:Synchronization]]
 == Synchronization
 
 === Introduction (unspecified section category)
 
 Concurrent programs allow multiple threads to be scheduled and executed,
 but the programmer does not have a great deal of control over when
-threads execute. As explained in
-Section #concepts:Thread scheduling[[concepts:Thread scheduling]], the
-JVM and the underlying OS are responsible for scheduling threads onto
-processor cores.
+threads execute. As explained in Section REF=concepts:Thread scheduling,
+the JVM and the underlying OS are responsible for scheduling threads
+onto processor cores.
 
 While writing a concurrent program, you have to ensure that the program
 will work correctly even though different executions of the same program
@@ -32,9 +30,8 @@ that are periodically filled with rice. Between adjacent philosophers
 are single chopsticks so that there are exactly the same number of
 chopsticks as there are philosophers. These philosophers only think and
 eat. In order to eat, a philosopher must pick up both the chopstick on
-her left and the chopstick on her right.
-Figure #figure:dining[[figure:dining]] shows an example of the
-situation.
+her left and the chopstick on her right. Figure REF=figure:dining shows
+an example of the situation.
 
 to
 
@@ -64,35 +61,9 @@ or more threads can be interleaved in any possible way. When the
 execution, it is called a _race condition_. Below is a simple example of
 a race condition in Java. . ]Exercise . . ]Exercise .
 
-[source,numberLines,java]
-----
-public class RaceCondition extends Thread {		
-	private static int counter = 0;	
-	public static final int THREADS = 4;	
-	public static final int COUNT = 1000000;		
-	
-	public static void main( String[] args ) {								
-		RaceCondition[] threads = new RaceCondition[THREADS];			
-		for( int i = 0; i < THREADS; i++ ) {
-			threads[i] = new RaceCondition();
-			threads[i].start();			
-		}			
-		try {
-			for( int i = 0; i < THREADS; i++ )
-				threads[i].join();
-		}
-		catch( InterruptedException e ) {
-			e.printStackTrace();
-		}			
-		System.out.println("Counter:\t" + counter );			
-	}	
-	
-	public void run() {	
-		for( int i = 0; i < COUNT / THREADS; i++ )
-			counter++;
-	}
-}
-----
+[[program:RaceCondition]][program:RaceCondition]
+PROGRAM=SynchronizationChapter/programs/RaceCondition.java, CAPTION=A
+short example of a race condition.
 
 This short (and pointless) class attempts to increment the variable
 `counter` until it reaches `1000000`. To illustrate the race condition,
@@ -156,7 +127,7 @@ language. . ]Exercise .
 
 === Thread synchronization (syntax)
 
-== The `synchronized` keyword
+=== The `synchronized` keyword
 
 In Java, the language feature which allows you to enforce mutual
 exclusion is the `synchronized` keyword. There are two ways to use this
@@ -268,7 +239,7 @@ methods inside the class will use as a lock. For example, a synchronized
 static method inside of the `Eggplant` class will lock on the object
 `Eggplant.class`.
 
-== The `wait()` and `notify()` methods
+=== The `wait()` and `notify()` methods
 
 Protecting critical sections with the `synchronized` keyword is a
 powerful technique, and many other synchronization tools can be built
@@ -305,11 +276,10 @@ is executing synchronized code, it can call `wait()`. Instead of busy
 waiting, a thread which has called `wait()` will be removed from the
 list of running threads. It will wait in a dormant state until someone
 comes along and notifies the thread that its waiting is done. If you
-recall the threadstate diagram from
-Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]],
-there is a Not Runnable state which threads enter by calling `sleep()`,
-calling `wait()`, or performing blocking I/O. Using `wait()`, we can
-rewrite the vote counting thread.
+recall the threadstate diagram from Chapter REF=chapter:Concurrent
+Programming, there is a Not Runnable state which threads enter by
+calling `sleep()`, calling `wait()`, or performing blocking I/O. Using
+`wait()`, we can rewrite the vote counting thread.
 
 ....
 synchronized( this ) {
@@ -367,33 +337,9 @@ producer until the consumer can take them away. Our solution does all
 synchronization on the buffer. Many different threads can share this
 buffer, but all accesses will be controlled.
 
-[source,numberLines,java]
-----
-public class Buffer {
-	public final static int SIZE = 10;
-	private Object[] objects = new Object[SIZE];	
-	private int count = 0;
-	
-	public synchronized void addItem( Object object )
-		throws InterruptedException {
-		while( count == SIZE )
-			wait();		
-		objects[count] = object;
-		count++;
-		notifyAll();		
-	}
-	
-	public synchronized Object removeItem()
-		throws InterruptedException {
-		while( count == 0 )
-			wait();
-		count--;
-		Object object = objects[count];		
-		notifyAll();
-		return object;
-	}
-}
-----
+[[program:Buffer]][program:Buffer]
+PROGRAM=SynchronizationChapter/programs/Buffer.java, CAPTION=An example
+of a synchronized buffer.
 
 When adding an item, producers enter the synchronized `addItem()`
 method. If `count` shows that the buffer is full, the producer must wait
@@ -529,7 +475,7 @@ As you can see from the dining philosophers problem, synchronization
 tools help us get the right answer but also create other difficulties.
 
 [[subsection:deadlock]]
-== Deadlock
+=== Deadlock
 
 _Deadlock_ is the situation when two or more threads are both waiting
 for the others to complete, forever. Some combination of locks or other
@@ -753,7 +699,7 @@ elegantly avoids this problem. . ]Exercise .  
 '''''
 
 [[section:starvation and livelock]]
-== Starvation and livelock
+=== Starvation and livelock
 
 _Starvation_ is another problem which can occur with careless use of
 synchronization tools. Starvation is a general term which covers any
@@ -901,7 +847,7 @@ very difficult to predict.  
 
 '''''
 
-== Sequential execution
+=== Sequential execution
 
 When designing a parallel program, you may notice that synchronization
 tools are necessary to get a correct answer. Then, when you run this
@@ -937,16 +883,15 @@ and which are not if you hope to get the maximum amount of speedup. The
 `synchronized` keyword should be used whenever it is needed, but no
 more.
 
-== Priority inversion
+=== Priority inversion
 
-In
-Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]]
-we suggest that you use thread priorities rarely. Even good reasons to
-use priorities can be thwarted by _priority inversion_. In priority
-inversion, a lower priority thread holds a lock needed by a higher
-priority thread, potentially for a long time. Because the high priority
-thread cannot continue, the lower priority thread gets more CPU time, as
-if it were a high priority thread.
+In Chapter REF=chapter:Concurrent Programming we suggest that you use
+thread priorities rarely. Even good reasons to use priorities can be
+thwarted by _priority inversion_. In priority inversion, a lower
+priority thread holds a lock needed by a higher priority thread,
+potentially for a long time. Because the high priority thread cannot
+continue, the lower priority thread gets more CPU time, as if it were a
+high priority thread.
 
 Worse, if there are some medium priority threads in the system, the low
 priority thread may hold the lock needed by the high priority thread for
@@ -984,7 +929,7 @@ public class DiningPhilosopher extends Thread {
 ----
 
 We begin with the same setup as the deadlocking version given in
-Section #subsection:deadlock[0.4]. Unlike that example, we include a
+Section REF=subsection:deadlock. Unlike that example, we include a
 `main()` method here for completeness. In `main()`, we set all the
 chopsticks to `false` (unused), create and start a thread for each
 philosopher, and then wait for them to finish.
@@ -1123,7 +1068,7 @@ It is very difficult to come up with a perfect answer to some
 synchronization problems. Such problems have been studied for many
 years, and research continues to find better solutions.
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -1156,9 +1101,8 @@ waiter? How would you synchronize the process?
 What is a race condition? Give a real life example of one.
 
 Let’s reexamine the code that increments a variable with several threads
-from
-Section #concepts:Thread interaction[[concepts:Thread interaction]]. We
-can rewrite the `run()` method as follows.
+from Section REF=concepts:Thread interaction. We can rewrite the `run()`
+method as follows.
 
 ....
 public synchronized void run() {
@@ -1188,27 +1132,27 @@ up consumers and a consumer removing an item from a full buffer only
 wakes up producers.
 
 In Example . we used the class `SynchronizedAccount` to solve a bank
-account problem. As we mention in
-Section #section:starvation and livelock[0.5], depositing and
-withdrawing threads can be starved out by a steady supply of balance
-checking threads. Add additional synchronization tools to
-`SynchronizedAccount` so that balance checking threads will take turns
-with depositing and withdrawing threads. If there are no depositing or
-withdrawing threads, make your implementation continue to allow an
-unlimited number of balance checking threads to read concurrently.
+account problem. As we mention in Section REF=section:starvation and
+livelock, depositing and withdrawing threads can be starved out by a
+steady supply of balance checking threads. Add additional
+synchronization tools to `SynchronizedAccount` so that balance checking
+threads will take turns with depositing and withdrawing threads. If
+there are no depositing or withdrawing threads, make your implementation
+continue to allow an unlimited number of balance checking threads to
+read concurrently.
 
 The solution to the dining philosophers problem given in
-Section #solution:dining philosophers[0.7.1] suffers from the problem
-that a philosopher could be starved by the two philosophers on either
-side of her, if she happened to get unlucky. Add variables to each
-philosopher which indicate hunger and the last time a philosopher has
-eaten. If a given philosopher is hungry and has not eaten for longer
-than her neighbor, her neighbor should not pick up the chopstick they
-share. Add synchronization tools to enforce this principle of fairness.
-Note that this solution should not cause deadlock. Although one
-philosopher may be waiting on another who is waiting on another and so
-on, *some* philosopher in the circle must have gone hungry the longest,
-breaking circular wait.
+Section REF=solution:dining philosophers suffers from the problem that a
+philosopher could be starved by the two philosophers on either side of
+her, if she happened to get unlucky. Add variables to each philosopher
+which indicate hunger and the last time a philosopher has eaten. If a
+given philosopher is hungry and has not eaten for longer than her
+neighbor, her neighbor should not pick up the chopstick they share. Add
+synchronization tools to enforce this principle of fairness. Note that
+this solution should not cause deadlock. Although one philosopher may be
+waiting on another who is waiting on another and so on, *some*
+philosopher in the circle must have gone hungry the longest, breaking
+circular wait.
 
 -0.5in *Experiments*
 

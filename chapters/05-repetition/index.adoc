@@ -1,4 +1,3 @@
-[[chapter:Repetition]]
 == Repetition
 
 === DNA searching (problem)
@@ -31,14 +30,14 @@ and asked to search for TATTA, the correct answer is 2. The sequence
 begins with a TATTA, but the third T in the sequence is also the first T
 in a second instance of TATTA.
 
-In Chapter #chapter:Selection[[chapter:Selection]], you learned tools
-that allow you to do comparisons and make choices based on the results.
-These tools will still be useful. For example, when you come across a
-`char` in the sequence, you know how to compare it to a `char` in the
-subsequence you are searching for. The tools you do not yet have are
-those that allow repetition. Because this problem requires the program
-to process a DNA sequence of arbitrary length, we will need some way to
-perform a repetitive action.
+In Chapter REF=chapter:Selection, you learned tools that allow you to do
+comparisons and make choices based on the results. These tools will
+still be useful. For example, when you come across a `char` in the
+sequence, you know how to compare it to a `char` in the subsequence you
+are searching for. The tools you do not yet have are those that allow
+repetition. Because this problem requires the program to process a DNA
+sequence of arbitrary length, we will need some way to perform a
+repetitive action.
 
 === Repetition (concepts)
 
@@ -254,7 +253,7 @@ will then explain the syntax for nesting together multiple loops and
 finally discuss several of the common pitfalls encountered by
 programmers who are coding loops.
 
-== `while` loops
+=== `while` loops
 
 Superficially, the syntax of a `while` loop resembles an `if` statement.
 It starts with the keyword `while` followed by a `boolean` condition in
@@ -262,8 +261,8 @@ parentheses with a block of code surrounded by braces (`\{\}`)
 afterward. This similarity is not accidental. The only difference
 between the two is that the body of the `if` statement will run a only
 single time, while the body of the `while` loop will run as long as the
-condition remains `true`. Figure #figure:while[[figure:while]] shows the
-pattern of execution for `while` loops.
+condition remains `true`. Figure REF=figure:while shows the pattern of
+execution for `while` loops.
 
 to
 
@@ -337,16 +336,14 @@ System.out.println("is on fire!");
 Now we move on to a more complicated example that can print out the
 binary equivalent of a number.
 
-As we discussed in
-Chapter #chapter:Computer Basics[[chapter:Computer Basics]], binary
-numbers are the building blocks of every piece of data inside of a
-modern computer’s memory. Integers are stored in binary. The
-representation of floating point numbers is more complicated, but it
-also uses 1s and 0s. Even the `char` data type and the `String` values
-built from them are fundamentally stored as binary numbers. For this
-reason, computer scientists tend to be familiar with the base 2 number
-system and how to convert between it and base 10, our usual number
-system.
+As we discussed in Chapter REF=chapter:Computer Basics, binary numbers
+are the building blocks of every piece of data inside of a modern
+computer’s memory. Integers are stored in binary. The representation of
+floating point numbers is more complicated, but it also uses 1s and 0s.
+Even the `char` data type and the `String` values built from them are
+fundamentally stored as binary numbers. For this reason, computer
+scientists tend to be familiar with the base 2 number system and how to
+convert between it and base 10, our usual number system.
 
 In base 10, the number 379 is equal to
 latexmath:[$3 \cdot 100 + 7 \cdot 10 + 9 \cdot 1 = 3 \cdot 10^2 + 7 \cdot 10^1 + 9 \cdot 10^0$].
@@ -367,30 +364,9 @@ process will print a 0 for every power of 2 that is not in
 latexmath:[$n$] and a 1 for every one that is, giving exactly the
 definition of a number written in base 2.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class DecimalToBinary {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a base 10 number: ");
-		int number = in.nextInt();
-		int power = 1;
-		while( power <= number/2 )
-			power *= 2;
-		while( power > 0 ) {
-			if( power > number )
-				System.out.print(0);
-			else {
-				System.out.print(1);
-				number -= power;
-			}
-			power /= 2;
-		}
-	}
-}
-----
+[[program:DecimalToBinary]][program:DecimalToBinary]
+PROGRAM=RepetitionChapter/programs/DecimalToBinary.java, CAPTION=This
+program outputs a binary representation of a decimal number.
 
 The first `while` loop in this program doubles the value of `power`
 until doubling it again would make it larger than `number`. We go up to
@@ -414,7 +390,7 @@ correct sequence. 
 
 '''''
 
-== `for` loops
+=== `for` loops
 
 Let’s return to our code that prints out
 `the loop the loop the loop is on fire!`
@@ -449,8 +425,8 @@ System.out.println("is on fire!");
 
 The header of a `for` loop consists of those three parts: the
 initialization, the condition, and the update, all separated by
-semicolons. Figure #figure:for[[figure:for]] shows the pattern of
-execution for `for` loops.
+semicolons. Figure REF=figure:for shows the pattern of execution for
+`for` loops.
 
 to
 
@@ -596,26 +572,9 @@ so, we can simply divide latexmath:[$n$] by all the numbers between 2
 and latexmath:[$n - 1$]. If none of the numbers divide it evenly, it
 must be prime. Here is this basic solution.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class PrimalityTester0 {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a number: ");
-		long number = in.nextLong();		
-		boolean prime = true;
-		for( long i = 2; i < number && prime; i++ )
-			if( number % i  ==  0 )
-				prime = false;
-		if( prime )
-			System.out.println("" + number + " is prime.");
-		else
-			System.out.println("" + number + " is not prime.");
-	}
-}
-----
+[[program:PrimalityTester0]][program:PrimalityTester0]
+PROGRAM=RepetitionChapter/programs/PrimalityTester0.java, CAPTION=This
+program gives a naive approach for testing if a number is prime.
 
 This program has a `for` loop that runs from `2` up to `number - 1`,
 provided that we don’t find a number that evenly divides `number`. This
@@ -628,26 +587,10 @@ One insight that we can use to make the program more efficient is that,
 after checking 2, we don’t have to divide it by any even numbers. So, we
 can do half the checking with a few simple modifications.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class PrimalityTester1 {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a number: ");
-		long number = in.nextLong();		
-		boolean prime = (number % 2 != 0);		
-		for( long i = 3; i < number && prime; i += 2  )
-			if( number % i  ==  0 )
-				prime = false;
-		if( prime )
-			System.out.println("" + number + " is prime.");
-		else
-			System.out.println("" + number + " is not prime.");
-	}
-}
-----
+[[program:PrimalityTester1]][program:PrimalityTester1]
+PROGRAM=RepetitionChapter/programs/PrimalityTester1.java, CAPTION=This
+program gives a slightly cleverer approach for testing if a number is
+prime.
 
 This version of the program sets the `boolean` variable `prime` to
 `false` if `number` is divisible by 2 and `true` otherwise. Then, it
@@ -667,27 +610,9 @@ latexmath:[$\frac{n}{x}$], the point where latexmath:[$x = \frac{n}{x}$]
 is when latexmath:[$x = \sqrt{n}$]. Thus, we only need to search up to
 latexmath:[$\sqrt{n}$], which will save even more time.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class PrimalityTester2 {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a number: ");
-		long number = in.nextLong();		
-		boolean prime = (number % 2 != 0);		
-		long root = (long)Math.sqrt(number);
-		for( long i = 3; i <= root && prime; i += 2  )
-			if( number % i  ==  0 )
-				prime = false;
-		if( prime )
-			System.out.println("" + number + " is prime.");
-		else
-			System.out.println("" + number + " is not prime.");
-	}
-}
-----
+[[program:PrimalityTester2]][program:PrimalityTester2]
+PROGRAM=RepetitionChapter/programs/PrimalityTester2.java, CAPTION=This
+program gives a much faster approach for testing if a number is prime.
 
 Note in this version of the program we do go up to and including `root`,
 because there is the possibility that `number` is a perfect square. .
@@ -721,32 +646,9 @@ of characters made up of the four abbreviations for the bases: A, C, G,
 and T. We will store this sequence as a `String` and perform some
 manipulations on it to get the reverse complement.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class ReverseComplement {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a DNA sequence: ");
-		String sequence = in.next().toUpperCase();				
-		String complement = "";
-		for( int i = 0; i < sequence.length(); i++ )
-			switch( sequence.charAt(i) ) { //get complements
-				case 'A': complement += "T"; break;
-				case 'C': complement += "G"; break;
-				case 'G': complement += "C"; break;
-				case 'T': complement += "A"; break;
-			}		
-		String reverseComplement = "";
-		//reverse the complement
-		for( int i = complement.length() - 1; i >= 0; i-- ) 
-			reverseComplement += complement.charAt(i);
-		System.out.println("Reverse complement: " +
-			reverseComplement);
-	}
-}
-----
+[[program:ReverseComplement]][program:ReverseComplement]
+PROGRAM=RepetitionChapter/programs/ReverseComplement.java, CAPTION=This
+program finds the reverse complement of a DNA sequence.
 
 This example first creates a `String` filled with the complement of the
 base pairs from the input `String`. Then, in a second step, it creates a
@@ -756,38 +658,14 @@ complementary base at the *end* of `complement`. If we inserted each
 `char` at the beginning of `complement`, we would not need to reverse in
 a separate step.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class CleverReverseComplement {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a DNA sequence: ");
-		String sequence = in.next().toUpperCase();				
-		String reverseComplement = "";
-		for( int i = 0; i < sequence.length(); i++ )
-			switch( sequence.charAt(i) ) { //get complements
-				case 'A': reverseComplement = "T" +
-					reverseComplement; break;
-				case 'C': reverseComplement = "G" +
-					reverseComplement; break;
-				case 'G': reverseComplement = "C" +
-					reverseComplement; break;
-				case 'T': reverseComplement = "A" +
-					reverseComplement; break;
-			}				
-		System.out.println("Reverse complement: " +
-			reverseComplement);
-	}
-}
-----
-
- 
+[[program:CleverReverseComplement]][program:CleverReverseComplement]
+PROGRAM=RepetitionChapter/programs/CleverReverseComplement.java,
+CAPTION=This program more cleverly finds the reverse complement of a DNA
+sequence.  
 
 '''''
 
-== `do-while` loops
+=== `do-while` loops
 
 Use this rule of thumb for deciding which kind of loop to use: If you
 know how many times you want the loop to execute, use a `for` loop. If
@@ -805,8 +683,8 @@ will always run at least once. Neither of the other two loops give you
 that guarantee. The syntax for a `do-while` loop is a `do` at the top of
 a loop body enclosed in braces, with a normal `while` header at the end,
 including a condition in parentheses, followed by a semicolon.
-Figure #figure:do-while[[figure:do-while]] shows the pattern of
-execution for `do-while` loops.
+Figure REF=figure:do-while shows the pattern of execution for `do-while`
+loops.
 
 to
 
@@ -857,7 +735,7 @@ You could perform the same function with a `while` loop, but you will
 need to get some input from the user before the loop starts. Using the
 `do-while` loop is a little more elegant.
 
-== Nested loops
+=== Nested loops
 
 As with `if` statements, it is possible to nest loops inside of other
 loops. In the simplest case, you may have some repetitive activity that
@@ -893,25 +771,9 @@ natural way, if you use a number of dots equal to the number.
 We can use nested loops to print out the first latexmath:[$n$]
 triangular numbers, where latexmath:[$n$] is specified by the user.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class TriangularNumbers {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("How many triangular numbers? ");
-		int n = in.nextInt();
-		int sum;						
-		for( int i = 1; i <= n; i++ ) {
-			sum = 0;			
-			for( int j = 1; j <= i; j++ )
-				sum += j;
-			System.out.println(sum);
-		}
-	}
-}
-----
+[[program:TriangularNumbers]][program:TriangularNumbers]
+PROGRAM=RepetitionChapter/programs/TriangularNumbers.java, CAPTION=This
+program prints out triangular numbers.
 
 As you can see, the outer loop iterates through each of the `n`
 different triangular numbers. Then, the inner loop does the summation
@@ -923,23 +785,9 @@ triangular numbers using only a single `for` loop. The key insight is
 that we can keep track of the previous triangular number and add
 latexmath:[$i$] to it, as latexmath:[$i$] increases.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class CleverTriangularNumbers {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("How many triangular numbers? ");
-		int n = in.nextInt();
-		int triangular = 0;						
-		for( int i = 1; i <= n; i++ ) {			
-			triangular += i;
-			System.out.println(triangular);
-		}
-	}
-}
-----
+[[program:CleverTriangularNumbers]][program:CleverTriangularNumbers]
+PROGRAM=RepetitionChapter/programs/CleverTriangularNumbers.java,
+CAPTION=This program prints out triangular numbers more cleverly.
 
 By removing the inner `for` loop, the total amount of work needed is
 greatly reduced. 
@@ -947,7 +795,7 @@ greatly reduced. 
 '''''
 
 [[subsection:common pitfalls]]
-== Common pitfalls
+=== Common pitfalls
 
 With great power comes great responsibility. The power to repeat things
 a large number of times means that we can also repeat our mistakes a
@@ -955,7 +803,7 @@ large number of times. Many classic bugs occur as a result of logical or
 typographical errors in loops. Below we will list a few of the most
 common.
 
-=== Pitfall: Infinite loops
+==== Pitfall: Infinite loops
 
 It is possible to create a loop that never terminates. Your program may
 be taking a long time to finish, but if it takes much longer than you
@@ -989,7 +837,7 @@ conversion from a `double` to an `int` requires an explicit cast, but
 the `+=` operator (and other similar operators) behave a little
 differently for technical reasons.
 
-=== Pitfall: Almost infinite loops
+==== Pitfall: Almost infinite loops
 
 Many loops are truly infinite; others take a really long time. For
 example, if you intended to run a loop down from 10 to 0, but increment
@@ -1009,7 +857,7 @@ another problem with almost infinite loops is that you are dealing with
 the wrong values. No one expects to hear the number `2147483647` in a
 countdown.
 
-=== Pitfall: Fencepost errors
+==== Pitfall: Fencepost errors
 
 Perhaps the most common loop errors are fencepost errors, often known as
 off-by-one errors. The name ``fencepost'' comes from a related mistake
@@ -1051,7 +899,7 @@ including latexmath:[$n$]. To keep loop headers consistent, some
 programmers always start at 0 and then adjust the values inside the
 loop, printing out `i + 1` in this case.
 
-=== Pitfall: Skipped loops
+==== Pitfall: Skipped loops
 
 A loop runs as long as its condition is `true`. For `for` loops and
 `while` loops, this could mean that the loop is never even entered.
@@ -1083,7 +931,7 @@ is fine since it does not change the value of the `sum`. If you want to
 force the user to enter only numbers greater than zero, you could change
 the loop into a `do-while` loop.
 
-=== Pitfall: Misplaced semicolons
+==== Pitfall: Misplaced semicolons
 
 The idea of a statement in Java is often amorphous in the minds of
 beginning programmers. An entire loop (with any number of loops nested
@@ -1325,8 +1173,7 @@ different pieces of data, we may be able to speed up the process by
 splitting up the data and letting different threads operate on their own
 segment of the data. Splitting up data this way is called _domain
 decomposition_ which allows us to achieve _data parallelism_. These
-topics are discussed further in
-Section #concepts:Splitting up work[[concepts:Splitting up work]].
+topics are discussed further in Section REF=concepts:Splitting up work.
 
 Performing repetitive tasks is one of the great strengths of computers.
 For most programs that run a long time, incredible amounts of
@@ -1335,12 +1182,10 @@ decomposition will not work for all of these programs. Some cannot be
 parallelized at all, but this book is about finding problems that can
 have parallel and concurrent solutions.
 
-In
-Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]],
-we will introduce tools for writing a concurrent program with different
-threads of execution running at the exactly the same time and
-potentially interacting. Using only the power of loops, you can see
-parallelism in action now.
+In Chapter REF=chapter:Concurrent Programming, we will introduce tools
+for writing a concurrent program with different threads of execution
+running at the exactly the same time and potentially interacting. Using
+only the power of loops, you can see parallelism in action now.
 
 Consider the problem of computing the sum of the sines of a range of
 integers. At its heart is a loop from the start of the range to the end.
@@ -1354,26 +1199,9 @@ If we want to allow the user to specify the start and the end and print
 out the sum, we need to make a program with a little bit of input and
 output around this loop.
 
-[source,numberLines,java]
-----
-import java.util.Scanner;
-
-public class SumSines {
-	public static void main(String[] args) {
-		Scanner in = new Scanner(System.in);
-		System.out.print("Enter starting value: ");
-		int start = in.nextInt();
-		System.out.print("Enter ending value: ");
-		int end = in.nextInt();
-		
-		double sum = 0;
-		for( int i = start; i <= end; i++ )		
-			sum += Math.sin(start);
-		
-		System.out.println("Sum of sines: " + sum );
-	}
-}
-----
+[[program:SumSines]][program:SumSines]
+PROGRAM=RepetitionChapter/programs/SumSines.java, CAPTION=Program to add
+the sines of all integers in a range specified by the user.
 
 If you compile and run this program with `1` as the start value and
 `100000000` as the end, the answer should be `1.7136493465700542`. One
@@ -1413,18 +1241,17 @@ threads to change from one core to another while running if the OS needs
 to balance out the workload.
 
 This sines example is similar to Example . which we will cover in in
-Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]].
-As you may have noticed, running four programs is not convenient. You
-have to open several windows, you have to type starting and ending
-points very carefully, and you have to combine the answers at the end
-since your programs cannot interact directly with each other. Features
-of Java will make this job easier, allowing us to run more than one
-thread of execution at a time without the need to run multiple programs
-by hand. . ]Exercise .  
+Chapter REF=chapter:Concurrent Programming. As you may have noticed,
+running four programs is not convenient. You have to open several
+windows, you have to type starting and ending points very carefully, and
+you have to combine the answers at the end since your programs cannot
+interact directly with each other. Features of Java will make this job
+easier, allowing us to run more than one thread of execution at a time
+without the need to run multiple programs by hand. . ]Exercise .  
 
 '''''
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -1487,12 +1314,12 @@ either number. If the counter ever divides *both* numbers evenly, it is
 the GCD. The counter is guaranteed to divide them both if it reaches 1.
 
 In the solution to the DNA searching problem given in
-Section #solution:DNA searching[[solution:DNA searching]], we used two
-`for` loops to find occurrences of a DNA subsequence inside of a larger
-sequence. Professional Java developers would have used a single `for`
-loop and the `indexOf()` method in the `String` class. One version of
-this method returns the index of a substring within a `String` object,
-starting from a particular offset, as shown below.
+Section REF=solution:DNA searching, we used two `for` loops to find
+occurrences of a DNA subsequence inside of a larger sequence.
+Professional Java developers would have used a single `for` loop and the
+`indexOf()` method in the `String` class. One version of this method
+returns the index of a substring within a `String` object, starting from
+a particular offset, as shown below.
 
 ....
 String text = "fun dysfunction";
@@ -1518,8 +1345,8 @@ have to design loops that can deal with carries that cascade across
 multiple indexes.
 
 Re-implement GUIthe solution to the DNA searching program given in
-Section #solution:DNA searching[[solution:DNA searching]] using
-`JOptionPane` to generate GUIs for input and output.
+Section REF=solution:DNA searching using `JOptionPane` to generate GUIs
+for input and output.
 
 -0.5in *Experiments*
 
@@ -1542,7 +1369,7 @@ amount that each loop runs to see the effect on the time. However, if
 you increase the values of all three loops too much, you may have to
 wait longer than you want.
 
-In Section #subsection:common pitfalls[0.6], one of the common loop
+In Section REF=subsection:common pitfalls, one of the common loop
 mistakes we discuss is an almost infinite loop. Create your own almost
 infinite loop that runs from `10` to `0`, incrementing instead of
 decrementing. Time the execution of your program. Unlike our example, do

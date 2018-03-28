@@ -1,12 +1,11 @@
-[[chapter:Simple Graphical User Interfaces]]
 == Simple Graphical User Interfaces
 
 === Codon extractor (problem)
 
-Recall from Chapter #chapter:Repetition[[chapter:Repetition]] that we
-can record DNA as a sequence of nucleotide bases A, C, G, and T. Using
-this idea, we can represent any sequence of DNA using a `String` made up
-of those four letters, such as `"ATGGAAGTATTTAAATAG"`.
+Recall from Chapter REF=chapter:Repetition that we can record DNA as a
+sequence of nucleotide bases A, C, G, and T. Using this idea, we can
+represent any sequence of DNA using a `String` made up of those four
+letters, such as `"ATGGAAGTATTTAAATAG"`.
 
 This particular sequence contains 18 bases and six _codons_. A codon is
 a three-base subsequence in DNA. Biologists are interested in dividing
@@ -54,24 +53,23 @@ using a combination of the keyboard and the mouse to respond to the
 program. While command line interfaces were dominant until the mid-70s,
 GUIs have become the prime mode of communication between a program and a
 human user. This chapter focuses on the design of simple GUIs using a
-few built-in Java classes.
-Chapter #chapter:Constructing Graphical User Interfaces[[chapter:Constructing Graphical User Interfaces]]
-introduces more advanced tools for constructing complex GUIs.
+few built-in Java classes. Chapter REF=chapter:Constructing Graphical
+User Interfaces introduces more advanced tools for constructing complex
+GUIs.
 
 to
 
-Figure link:#applicationInterfaceFigure[[applicationInterfaceFigure]](a)
-shows a Java application interacting with a user through a command line
-interface. The application asks the user for a temperature value in
-degrees Fahrenheit, converts it to the equivalent Celsius, displays it,
-and prompts the user to enter another value.
-Figure link:#applicationInterfaceFigure[[applicationInterfaceFigure]](b)
-shows a similar application interacting with the user through a GUI. In
-this case, the application creates a window with five widgets (two text
-boxes and three buttons). The user enters a temperature value in the
-text box below either the Centigrade label or the Fahrenheit label and
-presses the appropriate Convert button. In turn the application displays
-the equivalent temperature in the other text box. 
+Figure REF=applicationInterfaceFigure(a) shows a Java application
+interacting with a user through a command line interface. The
+application asks the user for a temperature value in degrees Fahrenheit,
+converts it to the equivalent Celsius, displays it, and prompts the user
+to enter another value. Figure REF=applicationInterfaceFigure(b) shows a
+similar application interacting with the user through a GUI. In this
+case, the application creates a window with five widgets (two text boxes
+and three buttons). The user enters a temperature value in the text box
+below either the Centigrade label or the Fahrenheit label and presses
+the appropriate Convert button. In turn the application displays the
+equivalent temperature in the other text box. 
 
 '''''
 
@@ -81,9 +79,9 @@ For example, these GUIs do not require the programmer to handle the
 details of events such as a user pressing an ``OK'' button or typing
 text into a text box and pressing the `<enter>` key. These events will
 be handled automatically by the tools we will introduce in this chapter.
-Chapter #chapter:Constructing Graphical User Interfaces[[chapter:Constructing Graphical User Interfaces]]
-discusses the creation of more complex GUIs that require the programmer
-to program event handling explicitly.
+Chapter REF=chapter:Constructing Graphical User Interfaces discusses the
+creation of more complex GUIs that require the programmer to program
+event handling explicitly.
 
 [[syntax:Dialogs and the JOptionPane class]]
 === Syntax: Dialogs and the `JOptionPane` class (unspecified section
@@ -99,26 +97,23 @@ you will learn how to construct the following four types of dialogs.
 Information:::
   An information, or message, dialog displays a message to the user.
   Static method `showMessageDialog()` creates such a dialog. See
-  Figure link:#simpleMessageFigure[[simpleMessageFigure]] for an example
-  of a message dialog.
+  Figure REF=simpleMessageFigure for an example of a message dialog.
 Confirm:::
   A confirm dialog asks a user to confirm a statement. Static method +
   `showConfirmDialog()` creates such a dialog. This dialog may return
   user input as `YES\_OPTION`, `NO\_OPTION`, `OK\_OPTION`, or
-  `CANCEL\_OPTION`. See
-  Figure link:#yes-noDialogFigure[[yes-noDialogFigure]] for an example
-  of a Yes-No dialog.
+  `CANCEL\_OPTION`. See Figure REF=yes-noDialogFigure for an example of
+  a Yes-No dialog.
 Option:::
   An option dialog asks the user to select one from an arbitrary set of
   options. Static method `showOptionDialog()` creates such a dialog. See
-  Figure link:#CapitalDialogFigure[[CapitalDialogFigure]] for an
-  example.
+  Figure REF=CapitalDialogFigure for an example.
 Input:::
   An input dialog is useful for obtaining data provided by the user.
   Static method `showInputDialog()` creates such a dialog. The user can
   input a `String` that might represent a number, a name, or any
-  arbitrary piece of text. See
-  Figure link:#inputDialogFigure[[inputDialogFigure]] for an example.
+  arbitrary piece of text. See Figure REF=inputDialogFigure for an
+  example.
 
 The `JOptionPane` class can be used to create both _modal_ and
 _non-modal_ dialogs. A modal dialog is one that forces the user to
@@ -136,7 +131,7 @@ remainder of this chapter we show how to use `JOptionPane` to create
 various types of modal dialogs. . ]Exercise .
 
 [[informationMessageDialog]]
-== Generating an information dialog
+=== Generating an information dialog
 
 Often programs need to generate a message for the user and request a
 response. The message might be a short piece of information, and the
@@ -146,39 +141,27 @@ Java utility class `JOptionPane` can generate a simple dialog whose sole
 purpose is to inform the user that a task has been completed. The next
 example shows how to generate such a dialog.
 
-Program #program:SimpleDialog[[program:SimpleDialog]] creates a dialog
-to inform the user that the task it was assigned to perform is now
-complete. Figure link:#simpleMessageFigure[[simpleMessageFigure]] shows
-the dialog generated by this program.
+Program REF=program:SimpleDialog creates a dialog to inform the user
+that the task it was assigned to perform is now complete.
+Figure REF=simpleMessageFigure shows the dialog generated by this
+program.
 
-[source,numberLines,java]
-----
-import javax.swing.*;/*@\label{importSwing}@*/
+[[program:SimpleDialog]][program:SimpleDialog]
+PROGRAM=GUIBasicsChapter/programs/SimpleDialog.java, CAPTION=Program to
+generate a simple dialog.
 
-public class SimpleDialog {    
-    public static void main(String [] args) {     
-        JOptionPane.showMessageDialog( null,/*@\label{showMessageDialogLine}@*/
-        	"Task completed. Click OK to exit",			
-            "Simple Dialog", JOptionPane.INFORMATION_MESSAGE);
-        System.out.println("Done."); /*@\label{displayMessageLine}@*/
-    }
-}
-----
-
-Let’s dissect Program #program:SimpleDialog[[program:SimpleDialog]].
-Line link:#importSwing[[importSwing]] is needed to import classes used
-in this program. The `swing` package contains a number of classes needed
-to create a GUI, and `JOptionPane` is one such class. If you try to
-compile the program without line link:#importSwing[[importSwing]], it
-will fail.
+Let’s dissect Program REF=program:SimpleDialog. Line REF=importSwing is
+needed to import classes used in this program. The `swing` package
+contains a number of classes needed to create a GUI, and `JOptionPane`
+is one such class. If you try to compile the program without
+line REF=importSwing, it will fail.
 
 -0.2into
 
-In Figure link:#simpleMessageFigure[[simpleMessageFigure]] the dialog
-titled ``Simple Dialog'' includes an icon, a message and a button
-labeled ``OK.'' This dialog is actually a _frame_, which is what windows
-are called in Java. We will discuss frames in greater detail in
-Section #syntax:GUIs in Java[[syntax:GUIs in Java]].
+In Figure REF=simpleMessageFigure the dialog titled ``Simple Dialog''
+includes an icon, a message and a button labeled ``OK.'' This dialog is
+actually a _frame_, which is what windows are called in Java. We will
+discuss frames in greater detail in Section REF=syntax:GUIs in Java.
 
 Note that the appearance of the dialog may be different on your
 computer. Even though Java is platform independent, GUIs are customized
@@ -187,15 +170,14 @@ based on the OS you are running. Each OS has a default _look and feel_
 program. You can change the L&F manager, but not all managers are
 available on all operating systems.
 
-Line link:#showMessageDialogLine[[showMessageDialogLine]] and the next
-two lines use a static method to create a modal dialog. `JOptionPane` is
-a utility class and `showMessageDialog()` is a static method in this
-class. This method, along with the other three `JOptionPane` methods we
-discuss in this chapter is a _factory method_, meaning that it creates a
-new object (in this case some kind of dialog object) on the fly with
-specific attributes. In this example, the program is informing the user
-that a task has been completed. The method has the following four
-parameters.
+Line REF=showMessageDialogLine and the next two lines use a static
+method to create a modal dialog. `JOptionPane` is a utility class and
+`showMessageDialog()` is a static method in this class. This method,
+along with the other three `JOptionPane` methods we discuss in this
+chapter is a _factory method_, meaning that it creates a new object (in
+this case some kind of dialog object) on the fly with specific
+attributes. In this example, the program is informing the user that a
+task has been completed. The method has the following four parameters.
 
 Component:::
   The parent component in which the dialog is displayed. We use `null`
@@ -217,13 +199,12 @@ Icon:::
   different sets of parameters. In this example, we used a version of
   the method that does not specify an icon.
 
-Line link:#displayMessageLine[[displayMessageLine]] displays a message
-on the console which is not needed in this program but illustrates an
-interesting point. When you run `SimpleDialog`, you will notice that the
-`“Done.”` message displays on the console only after you have clicked
-the ``OK'' button in the dialog box. This is the modal behavior we
-mentioned earlier. The dialog blocks execution of the thread that
-generated it. 
+Line REF=displayMessageLine displays a message on the console which is
+not needed in this program but illustrates an interesting point. When
+you run `SimpleDialog`, you will notice that the `“Done.”` message
+displays on the console only after you have clicked the ``OK'' button in
+the dialog box. This is the modal behavior we mentioned earlier. The
+dialog blocks execution of the thread that generated it. 
 
 '''''
 
@@ -238,16 +219,15 @@ used.
 
 When used as parameters in `showMessageDialog()`, the constants above
 cause different default icons to be displayed in the dialog box.
-Figure link:#iconsInMessageDialogsFigure[[iconsInMessageDialogsFigure]]
-shows dialogs generated by `showMessageDialog()` when using
-`JOptionPane.ERROR\_MESSAGE`, (left) and `JOptionPane.WARNING\_MESSAGE`
-(right). Note the difference in the icons displayed towards the top left
-of the two dialogs.
+Figure REF=iconsInMessageDialogsFigure shows dialogs generated by
+`showMessageDialog()` when using `JOptionPane.ERROR\_MESSAGE`, (left)
+and `JOptionPane.WARNING\_MESSAGE` (right). Note the difference in the
+icons displayed towards the top left of the two dialogs.
 
 to
 
 [[yes-noDialog]]
-== Generating a Yes-No confirm dialog
+=== Generating a Yes-No confirm dialog
 
 There are situations when a program needs to obtain a binary answer from
 the user, a ``yes'' or a ``no.'' The next example shows how to generate
@@ -258,48 +238,23 @@ difference between odd and even integers. The program generates a random
 integer latexmath:[$x$], presents it to the user, and asks the question,
 ``Is latexmath:[$x$] an odd integer?'' The answer given by the user is
 checked for correctness, and the user is informed accordingly.
-Program #program:OddEvenTest[[program:OddEvenTest]] shows how to use the
-`JOptionPane` class to generate a dialog for such an interaction.
+Program REF=program:OddEvenTest shows how to use the `JOptionPane` class
+to generate a dialog for such an interaction.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.util.*;
+[[program:OddEvenTest]][program:OddEvenTest]
+PROGRAM=GUIBasicsChapter/programs/OddEvenTest.java, CAPTION=Program that
+tests knowledge of odd and even integers with a Yes-No dialog.
 
-public class OddEvenTest {
-    public static void main(String [] args) { 
-        Random random = new Random(); 
-		String title = "Odd Even Test";
-        int x = random.nextInt(10); //Random int from 0 to 9
-        String question = "Is " + x + " an odd integer?";
-        int response = JOptionPane.showConfirmDialog(null,/*@\label{yes-noDialogLine}@*/
-        		question, title, JOptionPane.YES_NO_OPTION);
-		String message;		
-        // Response is YES_OPTION for Yes, NO_OPTION for No.
-        if((response==JOptionPane.YES_OPTION && x%2 != 0) ||
-        	(response==JOptionPane.NO_OPTION && x%2 == 0))
-			message = "You're right!"; /*@\label{correctAnswerLine}@*/
-        else
-			message = "Sorry, that's incorrect."; /*@\label{incorrectAnswerLine}@*/
-        JOptionPane.showMessageDialog(null, message, title,
-        	JOptionPane.INFORMATION_MESSAGE);
-    }   
-}
-----
-
-Program #program:OddEvenTest[[program:OddEvenTest]] begins by declaring
-a random number generator named `random`. It then generates a random
-number and presents it to the user in a dialog created at
-line link:#yes-noDialogLine[[yes-noDialogLine]]. Note the use of
-`JOptionPane.YES\_NO\_OPTION` as the last parameter in the
-`showConfirmDialog()` method at
-line link:#yes-noDialogLine[[yes-noDialogLine]]. The generated dialog is
-shown in Figure link:#yes-noDialogFigure[[yes-noDialogFigure]](a). A
-second dialog is shown with a message dependent on whether the user
-gives the correct answer. The two different versions of this dialog are
-shown in Figure link:#yes-noDialogFigure[[yes-noDialogFigure]](b) and
-(c). Note that a call to `showConfirmDialog()` at
-line link:#yes-noDialogLine[[yes-noDialogLine]] returns the
+Program REF=program:OddEvenTest begins by declaring a random number
+generator named `random`. It then generates a random number and presents
+it to the user in a dialog created at line REF=yes-noDialogLine. Note
+the use of `JOptionPane.YES\_NO\_OPTION` as the last parameter in the
+`showConfirmDialog()` method at line REF=yes-noDialogLine. The generated
+dialog is shown in Figure REF=yes-noDialogFigure(a). A second dialog is
+shown with a message dependent on whether the user gives the correct
+answer. The two different versions of this dialog are shown in
+Figure REF=yes-noDialogFigure(b) and (c). Note that a call to
+`showConfirmDialog()` at line REF=yes-noDialogLine returns the
 `JOptionPane.YES\_OPTION` or the `JOptionPane.NO\_OPTION` value
 depending on whether the user clicked the ``Yes'' or ``No'' button. 
 
@@ -314,7 +269,7 @@ and ``Cancel'' options. The return value from `showConfirmDialog()` is
 `CANCEL\_OPTION` if the user presses the ``Cancel'' button. . ]Exercise
 . .
 
-== Generating a dialog with a list of options
+=== Generating a dialog with a list of options
 
 The `JOptionPane` class can also be used to generate an arbitrary set of
 options as shown in the next example.
@@ -323,40 +278,16 @@ Consider a program that asks the user to select the correct capital of a
 country from a given list of capitals. It shows three options and asks
 the user to select one from among the three. It then checks the user
 response for correctness and displays a suitable message.
-Program #program:CapitalQuiz[[program:CapitalQuiz]] performs these
-tasks. In this program, we call the `showOptionDialog()` method at
-line link:#multipleOptionsLine[[multipleOptionsLine]] to create a dialog
-with multiple options. In our case, the options are three names of
-capitals, and only one of them is correct.
-Figure link:#CapitalDialogFigure[[CapitalDialogFigure]] shows the dialog
-created. . ]Exercise . . ]Exercise . . ]Exercise .
+Program REF=program:CapitalQuiz performs these tasks. In this program,
+we call the `showOptionDialog()` method at line REF=multipleOptionsLine
+to create a dialog with multiple options. In our case, the options are
+three names of capitals, and only one of them is correct.
+Figure REF=CapitalDialogFigure shows the dialog created. . ]Exercise . .
+]Exercise . . ]Exercise .
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-
-public class CapitalQuiz {    
-	public static void main(String[] args) {     
-        String title = "Capital Quiz";
-        String country = "Azerbaijan";
-        String[] capitals = {"Bujumbura","Baku", "Moroni"};
-		int correct = 1; //Baku is the correct answer        
-        String question = "Select the capital of " + country;
-        int response = JOptionPane.showOptionDialog(null, /*@\label{multipleOptionsLine}@*/
-        	question, title, JOptionPane.PLAIN_MESSAGE,
-        	JOptionPane.QUESTION_MESSAGE, null, capitals, null);
-        // Response is 0, 1, or 2 for the three options
-		String message;		
-        if(response == correct) 
-			message = "You're right!";
-		else
-			message = "Sorry, the capital of " + country +
-			" is " + capitals[correct];		
-        JOptionPane.showMessageDialog(null, message, title,
-        	JOptionPane.INFORMATION_MESSAGE);        
-    }   
-}
-----
+[[program:CapitalQuiz]][program:CapitalQuiz]
+PROGRAM=GUIBasicsChapter/programs/CapitalQuiz.java, CAPTION=Program to
+generate a dialog with programmer-defined options.
 
 to
 
@@ -366,52 +297,38 @@ array of `String` values provided as the second to last parameter to
 `showOptionDialog()` gives the labels for the buttons.
 
 There are three `null` values passed into the method on
-line link:#multipleOptionsLine[[multipleOptionsLine]] in
-Program #program:CapitalQuiz[[program:CapitalQuiz]]. The first one
-functions like the `null` used in
-Program #program:OddEvenTest[[program:OddEvenTest]], specifying that the
-default frame should be used. The second specifies that the default icon
-should be used. In the next section, we will show how to specify a
-custom icon. The last parameter indicates the default button, which will
-have focus when the dialog is created. If the user hits `<enter>`
-instead of clicking, the button with focus is the button that will be
-pressed. . ]Exercise .  
+line REF=multipleOptionsLine in Program REF=program:CapitalQuiz. The
+first one functions like the `null` used in
+Program REF=program:OddEvenTest, specifying that the default frame
+should be used. The second specifies that the default icon should be
+used. In the next section, we will show how to specify a custom icon.
+The last parameter indicates the default button, which will have focus
+when the dialog is created. If the user hits `<enter>` instead of
+clicking, the button with focus is the button that will be pressed. .
+]Exercise .  
 
 '''''
 
 [[customIconDialog]]
-== Generating a dialog with a custom icon
+=== Generating a dialog with a custom icon
 
 A custom icon can be included in any dialog. Each of the methods in
 `JOptionPane` introduced earlier can take an icon as a parameter. The
 next example illustrates how to do so.
 
-Program #program:CustomIconDialog[[program:CustomIconDialog]] shows how
-to use `showMessageDialog()` to generate a message dialog with a custom
-icon. Note the last parameter at
-line link:#customIconLine[[customIconLine]]. This parameter creates a
-new `ImageIcon` object from the `file` `String` (`"bat.png"` in this
-case). The resulting dialog appears in
-Figure link:#customIconDialogFigure[[customIconDialogFigure]]. Dialogs
-illustrated in earlier examples can also use an icon parameter to
-include a custom icon.
+Program REF=program:CustomIconDialog shows how to use
+`showMessageDialog()` to generate a message dialog with a custom icon.
+Note the last parameter at line REF=customIconLine. This parameter
+creates a new `ImageIcon` object from the `file` `String` (`"bat.png"`
+in this case). The resulting dialog appears in
+Figure REF=customIconDialogFigure. Dialogs illustrated in earlier
+examples can also use an icon parameter to include a custom icon.
 
 to
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-
-public class CustomIconDialog{
-    public static void main(String [] args){     
-		String file = "bat.png";
-		String title = "Custom Icon";
-		String message = "Some bats eat 3,000 mosquitoes a night.";
-		JOptionPane.showMessageDialog(null, message, title,
-			JOptionPane.INFORMATION_MESSAGE, new ImageIcon(file));/*@\label{customIconLine}@*/ 
-    }
-}
-----
+[[program:CustomIconDialog]][program:CustomIconDialog]
+PROGRAM=GUIBasicsChapter/programs/CustomIconDialog.java, CAPTION=Program
+to generate a dialog with a custom icon.
 
 Note that the icon shown above will not appear when you run this code
 unless you have a copy of `bat.png` in the same directory.  
@@ -419,61 +336,39 @@ unless you have a copy of `bat.png` in the same directory.  
 '''''
 
 [[inputDialog]]
-== Generating an input dialog
+=== Generating an input dialog
 
 An input dialog can read text data from the user. The
 `showInputDialog()` method in the `JOptionPane` class allows us to
 create such a dialog. We introduced the `showInputDialog()` method in
-Section #syntax:Java basics[[syntax:Java basics]], but we give two more
-examples here to emphasize its similarity to the other `JOptionPane`
-factory methods and to show off some of its additional features.
+Section REF=syntax:Java basics, but we give two more examples here to
+emphasize its similarity to the other `JOptionPane` factory methods and
+to show off some of its additional features.
 
 We want to write a program that asks a question about basic chemistry.
-Program #program:ChemistryQuizOne[[program:ChemistryQuizOne]] shows how
-to display a question, obtain an answer from the user, check for the
-correctness of the answer, and report back to the user. At
-line link:#chemistryInputDialogLineOne[[chemistryInputDialogLineOne]],
+Program REF=program:ChemistryQuizOne shows how to display a question,
+obtain an answer from the user, check for the correctness of the answer,
+and report back to the user. At line REF=chemistryInputDialogLineOne,
 the `showInputDialog()` method is used to generate the dialog shown in
-Figure link:#chemistryQuizFigure[[chemistryQuizFigure]](a). This method
-returns a `String` named `response` containing the text entered by the
-user in the dialog box. At
-line link:#chemistryConvertToIntegerLineOne[[chemistryConvertToIntegerLineOne]],
-this `String` is converted to an `int` and saved into variable `answer`.
-This value is checked against the correct answer, and the
-`showMessageDialog()` method informs the user whether or not the answer
-is correct.
+Figure REF=chemistryQuizFigure(a). This method returns a `String` named
+`response` containing the text entered by the user in the dialog box. At
+line REF=chemistryConvertToIntegerLineOne, this `String` is converted to
+an `int` and saved into variable `answer`. This value is checked against
+the correct answer, and the `showMessageDialog()` method informs the
+user whether or not the answer is correct.
 
 It is important to note that the user could type any sequence of
 characters in the dialog box. Try running
-Program #program:ChemistryQuizOne[[program:ChemistryQuizOne]] and see
-what happens when you type ``two,'' instead of the number ``2,'' into
-the dialog box and press the ``OK'' button. The program will generate an
-exception indicating that the input `String` cannot be converted to an
-integer. Exercise . asks you to modify
-Program #program:ChemistryQuizOne[[program:ChemistryQuizOne]] so it
-gracefully handles such exceptions. . ]Exercise . . ]Exercise .
+Program REF=program:ChemistryQuizOne and see what happens when you type
+``two,'' instead of the number ``2,'' into the dialog box and press the
+``OK'' button. The program will generate an exception indicating that
+the input `String` cannot be converted to an integer. Exercise . asks
+you to modify Program REF=program:ChemistryQuizOne so it gracefully
+handles such exceptions. . ]Exercise . . ]Exercise .
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-
-public class ChemistryQuizOne {
-    public static void main(String [] args) {
-        String title = "Atoms in Water";
-        String query = "How many atoms are in a molecule of water?";        
-        String response = JOptionPane.showInputDialog(null,/*@\label{chemistryInputDialogLineOne}@*/
-        	query, title, JOptionPane.QUESTION_MESSAGE);
-        int answer = Integer.parseInt(response);/*@\label{chemistryConvertToIntegerLineOne}@*/
-		String message;         
-        if(answer == 3)
-			message = "Good! That's correct!";
-		else
-			message = "Sorry, that's incorrect.";
-        JOptionPane.showMessageDialog(null, message, title,
-        	JOptionPane.INFORMATION_MESSAGE);
-    }   
-}
-----
+[[program:ChemistryQuizOne]][program:ChemistryQuizOne]
+PROGRAM=GUIBasicsChapter/programs/ChemistryQuizOne.java, CAPTION=Program
+to generate a dialog to input data as text.
 
 to
 
@@ -488,51 +383,29 @@ input errors, we can restrict the user to picking from a predefined
 list. We can create this list by generating an array and supplying it as
 a parameter to the `showInputDialog()` method.
 
-Program #program:ChemistryQuizTwo[[program:ChemistryQuizTwo]] displays a
-list of chemical elements and asks the user to select the heaviest.
-Line link:#chemistryInputDialogListLineTwo[[chemistryInputDialogListLineTwo]]
-passes an array of four `String` values to the `showInputDialog()`
-method. Note that the last parameter to this method is `null` indicating
-that no specific item on the list should be selected by default. (In
-this case, the first item in the list is initially selected.) The
-generated dialog is shown in
-Figure link:#chemistryQuizFigure[[chemistryQuizFigure]](b). The four
-elements are contained in a drop down list.
+Program REF=program:ChemistryQuizTwo displays a list of chemical
+elements and asks the user to select the heaviest.
+Line REF=chemistryInputDialogListLineTwo passes an array of four
+`String` values to the `showInputDialog()` method. Note that the last
+parameter to this method is `null` indicating that no specific item on
+the list should be selected by default. (In this case, the first item in
+the list is initially selected.) The generated dialog is shown in
+Figure REF=chemistryQuizFigure(b). The four elements are contained in a
+drop down list.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-
-public class ChemistryQuizTwo {
-    public static void main(String [] args) {     
-		String title = "Heaviest Element";
-        String query = "Which is the heaviest element?";
-		String[] elements = {"Iron", "Uranium",	"Copernicium",
-			"Nitrogen"};
-        String response = (String)JOptionPane.showInputDialog(null, /*@\label{chemistryInputDialogListLineTwo}@*/
-        	query, title, JOptionPane.QUESTION_MESSAGE, null,
-        	elements, null);
-		String message;
-        if(response.equals("Copernicium"))
-			message = "You're right!";
-        else
-			message = "Sorry, correct answer: Copernicium.";               
-		JOptionPane.showMessageDialog(null, message, title,
-			JOptionPane.INFORMATION_MESSAGE);
-    }   
-}
-----
+[[program:ChemistryQuizTwo]][program:ChemistryQuizTwo]
+PROGRAM=GUIBasicsChapter/programs/ChemistryQuizTwo.java, CAPTION=Program
+to generate a dialog to input a choice from a list.
 
 Unlike Example ., the return value from `showInputDialog()` is now of
 type `Object`, not of type `String`. The type of the list required by
 the method is `Object` array. (You can pass a `String` array to a method
 that wants an `Object` array due to inheritance, which is further
-discussed in Chapters #chapter:Inheritance[[chapter:Inheritance]] and
-#chapter:Polymorphism[[chapter:Polymorphism]].) The return value is the
-specific object from the array that was passed in. In our case, it *has*
-to be a `String`, but Java is not smart enough to figure that out. For
-this reason, we cast the object to a `String` before using the
-`equals()` method.  
+discussed in Chapters REF=chapter:Inheritance and
+REF=chapter:Polymorphism.) The return value is the specific object from
+the array that was passed in. In our case, it *has* to be a `String`,
+but Java is not smart enough to figure that out. For this reason, we
+cast the object to a `String` before using the `equals()` method.  
 
 '''''
 
@@ -541,7 +414,7 @@ to
 When the number of elements in the list supplied to the
 `showInputDialog()` is 20 or more, a `JList` object is automatically
 used to display the items as shown in
-Figure link:#inputDialogListManyItemsFigure[[inputDialogListManyItemsFigure]].
+Figure REF=inputDialogListManyItemsFigure.
 
 Other than a longer list, the code in this example is virtually
 identical to the code for Example ..
@@ -668,11 +541,10 @@ clicking on a button) are running at the same time as the thread that
 created the dialog. Since many threads are running, it is possible for
 them to write to the same data at the same time. Doing so can lead to
 inconsistencies such as the ones we will describe in
-Chapter #chapter:Synchronization[[chapter:Synchronization]].
+Chapter REF=chapter:Synchronization.
 
-The GUIs we will create in Chapter #chapter:Constructing Graphical User
-Interfaces[[chapter:Constructing Graphical User
-Interfaces]], however, will be more than dialogs. They will be fully
+The GUIs we will create in Chapter REF=chapter:Constructing Graphical
+User Interfaces, however, will be more than dialogs. They will be fully
 functional windows, known as frames in Java. Like a non-modal dialog,
 the creation of a frame does not block the thread that created it.
 
@@ -687,9 +559,9 @@ the latest operating systems should hint at the difficulty of managing
 GUI threads.
 
 When we describe how to create fully featured GUIs in
-Chapter #chapter:Constructing Graphical User Interfaces[[chapter:Constructing Graphical User Interfaces]],
-we will also give some techniques to help with avoiding unresponsive
-GUIs in a multi-threaded environment.
+Chapter REF=chapter:Constructing Graphical User Interfaces, we will also
+give some techniques to help with avoiding unresponsive GUIs in a
+multi-threaded environment.
 
 === Summary (unspecified section category)
 
@@ -698,11 +570,9 @@ GUIs are created using various methods available in the `JOptionPane`
 class. While the interfaces created this way are simple in nature, they
 are often adequate for input and output in short Java programs.
 Construction of more complex GUIs is the subject of
-Chapter #chapter:Constructing Graphical User
-Interfaces[[chapter:Constructing Graphical User
-Interfaces]].
+Chapter REF=chapter:Constructing Graphical User Interfaces.
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -720,9 +590,9 @@ Give one example each when you would use the five different message type
 constants in `showMessageDialog()` method (see page  for a listing of
 the five constants).
 
-In Program #program:OddEvenTest[[program:OddEvenTest]], we could have
-coded line link:#yes-noDialogLine[[yes-noDialogLine]] as follows without
-changing the program behavior.
+In Program REF=program:OddEvenTest, we could have coded
+line REF=yes-noDialogLine as follows without changing the program
+behavior.
 
 ....
 if( (response == 0 && x % 2 != 0) ||
@@ -750,42 +620,37 @@ the user ``Do you wish to continue?'' and offers options ``Yes'' and
 ``No.'' The program exits the loop when the ``No'' option is selected
 and displays the score using a suitable dialog.
 
-Rewrite Program #program:OddEvenTest[[program:OddEvenTest]] so that the
-confirmatory dialog generated offers the ``Yes,'' ``No,'' and ``Cancel''
-options to the user. The program exits with a message dialog saying
-``Thank You'' when the user selects the ``Cancel'' option.
+Rewrite Program REF=program:OddEvenTest so that the confirmatory dialog
+generated offers the ``Yes,'' ``No,'' and ``Cancel'' options to the
+user. The program exits with a message dialog saying ``Thank You'' when
+the user selects the ``Cancel'' option.
 
-Modify Program #program:CapitalQuiz[[program:CapitalQuiz]] to create and
-administer a test wherein the user is asked capitals of 10 countries in
-a sequence. The program must keep count of the score, i.e., the number
-of correct answers. Inform the user of the score at the end of the test
-using a suitable dialog.
+Modify Program REF=program:CapitalQuiz to create and administer a test
+wherein the user is asked capitals of 10 countries in a sequence. The
+program must keep count of the score, i.e., the number of correct
+answers. Inform the user of the score at the end of the test using a
+suitable dialog.
 
-Modify line link:#multipleOptionsLine[[multipleOptionsLine]] in
-Program #program:CapitalQuiz[[program:CapitalQuiz]] so that the button
-labeled ``Baku'' has focus.
+Modify line REF=multipleOptionsLine in Program REF=program:CapitalQuiz
+so that the button labeled ``Baku'' has focus.
 
-Section #solution:Three card
-poker[[solution:Three card
-poker]] gives a method called `shuffle()` that is used to randomize an
-array representing a deck of cards. Adapt this code and modify
-Program #program:CapitalQuiz[[program:CapitalQuiz]] so that the order of
-the capitals is randomized. Note that you will have to record which
+Section REF=solution:Three card poker gives a method called `shuffle()`
+that is used to randomize an array representing a deck of cards. Adapt
+this code and modify Program REF=program:CapitalQuiz so that the order
+of the capitals is randomized. Note that you will have to record which
 index contains the correct answer.
 
 Re-implement the solution to the college cost calculator problem given
-in
-Section #solution:College cost calculator[[solution:College cost calculator]]
-so that it uses GUIs constructed with `JOptionPane` for input and
-output.
-
-Re-implement the solution to the Monty Hall problem given in
-Section #solution:Monty Hall[[solution:Monty Hall]] so that it uses GUIs
+in Section REF=solution:College cost calculator so that it uses GUIs
 constructed with `JOptionPane` for input and output.
 
+Re-implement the solution to the Monty Hall problem given in
+Section REF=solution:Monty Hall so that it uses GUIs constructed with
+`JOptionPane` for input and output.
+
 Re-implement the solution to the DNA searching problem given in
-Section #solution:DNA searching[[solution:DNA searching]] so that it
-uses GUIs constructed with `JOptionPane` for input and output.
+Section REF=solution:DNA searching so that it uses GUIs constructed with
+`JOptionPane` for input and output.
 
 Write a program that creates an input dialog that prompts and reads a
 file name of an image from the user. Then, create an information dialog
@@ -794,17 +659,17 @@ a simple image viewer.
 
 *Note: You should attempt this exercise only if you are familiar with
 exceptions in Java. Exceptions are covered in
-Chapter #chapter:Exceptions[[chapter:Exceptions]].* +
+Chapter REF=chapter:Exceptions.* +
 Use the `try-catch` block and modify
-Program #program:ChemistryQuizOne[[program:ChemistryQuizOne]] so that it
-handles an exception generated when the user enters a string that cannot
-be converted to an integer. In the event such an exception is raised,
-pop up a message dialog box informing the user to try again and type an
-integer value. When the user responds by clicking the ``OK'' button on
-this message box, the input dialog box should appear once again and
-offer the user another chance at the answer. Write two versions of the
-modified program. In one version, your program should give only one
-chance for input after an incorrect string has been typed. In another
-version, your program should remain in a loop until the user enters a
-valid integer (note that a valid integer might not be the correct answer
-to the question asked).
+Program REF=program:ChemistryQuizOne so that it handles an exception
+generated when the user enters a string that cannot be converted to an
+integer. In the event such an exception is raised, pop up a message
+dialog box informing the user to try again and type an integer value.
+When the user responds by clicking the ``OK'' button on this message
+box, the input dialog box should appear once again and offer the user
+another chance at the answer. Write two versions of the modified
+program. In one version, your program should give only one chance for
+input after an incorrect string has been typed. In another version, your
+program should remain in a loop until the user enters a valid integer
+(note that a valid integer might not be the correct answer to the
+question asked).

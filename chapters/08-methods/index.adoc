@@ -1,4 +1,3 @@
-[[chapter:Methods]]
 == Methods
 
 === Three card poker (problem)
@@ -81,7 +80,7 @@ of Life. Instead of solving those problems as a single monolithic
 segment of code, we can break our solutions into units called _static
 methods_.
 
-== Reasons for `static` methods
+=== Reasons for `static` methods
 
 A static method is a short, named segment of code that has been packaged
 up so that it can be _called_ from other parts of the program. Whenever
@@ -125,7 +124,7 @@ Reusability:::
   one place if you discover errors or want to increase its
   functionality.
 
-== Parallel to mathematical functions
+=== Parallel to mathematical functions
 
 We have been discussing the usefulness of static methods without saying
 exactly what they are. One way to get insight into methods is by
@@ -160,7 +159,7 @@ mathematical function is to map some input value(s) to some output
 value. Java methods do not necessarily even have output values. They may
 just *do* something.
 
-== Control flow
+=== Control flow
 
 We have discussed selection statements such as `if` and `switch` as well
 as three different looping structures, `for`, `while`, and `do-while`.
@@ -195,7 +194,7 @@ methods, then discuss the finer points of calling static methods, and
 finally explain how _class variables_ can be used from many different
 methods.
 
-== Defining methods
+=== Defining methods
 
 A very simple method that the `Math` class provides is the `Math.max()`
 method. This method selects the larger of two values that you give it as
@@ -207,9 +206,8 @@ int maximum = Math.max(5, 10);
 
 In this case, the value stored into `maximum` is `10`. Despite its
 simplicity, we demonstrated how useful this method could be in our
-solution to Conway’s Game of Life from
-Chapter #chapter:Arrays[[chapter:Arrays]]. If we wanted to write this
-method ourselves, the code would be as follows.
+solution to Conway’s Game of Life from Chapter REF=chapter:Arrays. If we
+wanted to write this method ourselves, the code would be as follows.
 
 ....
 public static int max( int a, int b ) {
@@ -286,7 +284,7 @@ public static int max( int a, int b ) {
 The only way that the line `return b;` can be reached is if `a` had not
 already been returned.
 
-=== The `main()` method
+==== The `main()` method
 
 If some of this syntax seems eerily familiar, remember that you have
 been coding static methods since your very first Java program. The
@@ -321,7 +319,7 @@ returning method without reaching a `return` statement, it causes a
 compiler error.
 
 [[subsubsection:Overloaded methods]]
-=== Overloaded methods
+==== Overloaded methods
 
 Since this declaration is in another class, it is OK to create a `max()`
 method even though there is already one in the `Math` class. However, it
@@ -351,7 +349,7 @@ compiler must be able to determine which method you intend to use. Thus,
 the signatures have to vary by type or number of parameters. A different
 return type is not enough.
 
-== Calling methods
+=== Calling methods
 
 After a method has been defined, it must be called before it does
 anything. You have plenty of experience calling static methods like
@@ -387,7 +385,7 @@ int maximum = max(5, 10);
 Whenever you call a static method from code that is inside the same
 class, you can leave out the class name.
 
-=== Binding
+==== Binding
 
 Many new programmers are confused about the relationship between
 arguments and parameters. The process of supplying an argument to be
@@ -530,7 +528,7 @@ array in reverse order, but it is less efficient to create the extra
 array and perform two copies.
 
 [[subsection:class variables]]
-== Class variables
+=== Class variables
 
 According to the rules we have given so far, the only legal variables in
 the scope of a static method are the parameters and any other _local_
@@ -544,24 +542,9 @@ access modifier such as `public` or `private`, and the keyword `static`.
 For example, the following class includes a method called `record()`
 that increases the class variable `counter` every time it is called.
 
-[source,numberLines,java]
-----
-public class Bookkeeper {
-	public static int counter = 0;
-
-	public static void main(String[] args ) {
-		while( Math.random() > 0.001 )
-			record();
-
-		System.out.println("Record was called " + counter +
-			" times.");
-	}
-
-	public static void record() {	
-		counter++;	
-	}
-}
-----
+[[program:Bookkeeper]][program:Bookkeeper]
+PROGRAM=MethodsChapter/programs/Bookkeeper.java, CAPTION=A program that
+keeps track of the number of times the `record()` method is called.
 
 When run, this program calls the `record()` method some random number of
 times, and the variable `counter` keeps track of the number. Because
@@ -597,29 +580,9 @@ distance between their centers, and latexmath:[$G$] is the gravitational
 constant,
 latexmath:[$6.673 \times 10^{-11}\mbox{ N}\cdot\mbox{m}^2\cdot\mbox{kg}^{-2}$].
 
-[source,numberLines,java]
-----
-public class Gravity {
-	public static final double G = 6.673e-11;
-
-	public static void main(String[] args ) {
-		double m1, m2, r;
-		Scanner in = new Scanner( System.in );
-		System.out.println("What is the first mass?");
-		m1 = in.nextDouble();
-		System.out.println("What is the second mass?");
-		m2 = in.nextDouble();
-		System.out.println("What is the distance between them?");
-		r = in.nextDouble();
-		System.out.println("The force of gravity is " +
-			force( m1, m2, r ) + " N");
-	}
-
-	public static double force(double m1, double m2, double r) {	
-		return G*m1*m2/(r*r);
-	}
-}
-----
+[[program:Gravity]][program:Gravity]
+PROGRAM=MethodsChapter/programs/Gravity.java, CAPTION=A program that
+calculates the attraction due to gravity between two masses.
 
 Use named constants this way whenever you can. You can use the `public`
 modifier if you want all classes to have access to your constant
@@ -987,38 +950,27 @@ arrow that then executes the corresponding `run()` method and any
 methods it calls. Note that we are talking about a method called on a
 `Thread` object, not a static method called on the class as a whole.
 Calling `start()` is an instance method, which we discuss in
-Chapter #chapter:Classes[[chapter:Classes]]. Unlike the static methods
-we have discussed in this chapter, an instance method is tied to a
-particular object, but most of what you have learned about methods still
-applies.
+Chapter REF=chapter:Classes. Unlike the static methods we have discussed
+in this chapter, an instance method is tied to a particular object, but
+most of what you have learned about methods still applies.
 
 Methods are supposed to make programming easier by breaking programs
 into chunks small enough to think about. One of the only real dangers of
 methods is using class variables, as discussed in
-Section #subsection:class variables[0.7]. This problem becomes worse
-with multiple threads. With a single thread, two or more different
-methods can all affect the same class variable, perhaps in conflicting
-ways. With multiple threads, even the *same* method can interfere with
-itself.
+Section REF=subsection:class variables. This problem becomes worse with
+multiple threads. With a single thread, two or more different methods
+can all affect the same class variable, perhaps in conflicting ways.
+With multiple threads, even the *same* method can interfere with itself.
 
 A linear congruential generator (LCG) allows you to create a sequence of
 pseudorandom numbers using the equation
 latexmath:[$x_i=(ax_{i-1}+b)\mod m$], deriving the next number from the
 previous one, and so on.
 
-[source,numberLines,java]
-----
-public class UnsafeRandom {
-	private static int next = 1;
-	private final static int A = 1103515245;
-	private final static int B = 12345;
-	private final static int M = 32768;
-	
-	public static int nextInt() {
-		return next = (A*next + B) % M;
-	}
-}
-----
+[[program:UnsafeRandom]][program:UnsafeRandom]
+PROGRAM=MethodsChapter/programs/UnsafeRandom.java, CAPTION=This program
+implements an LCG similar to one sometimes used in the function `rand()`
+used in the C language.
 
 The `UnsafeRandom` program listed above always generates the same
 sequence of pseudorandom numbers, which can be very useful for debugging
@@ -1031,44 +983,23 @@ sequence. In that way, there is no shared state. Remember that using a
 (non-final) static field (class variable) should be avoided whenever
 possible.
 
-[source,numberLines,java]
-----
-public class SafeRandom {	
-	private final static int A = 1103515245;
-	private final static int B = 12345;
-	private final static int M = 32768;
-	
-	public static int nextInt( int previous ) {
-		return (A*previous + B) % M;
-	}
-}
-----
-
- 
+[[program:SafeRandom]][program:SafeRandom]
+PROGRAM=MethodsChapter/programs/SafeRandom.java, CAPTION=This program
+implements the same LCG safely by requiring the caller to supply the
+previous random number.  
 
 '''''
 
 By forcing each thread to carry its own state, we fixed the previous
-problem. In Chapter #chapter:Synchronization[[chapter:Synchronization]]
-we talk about the much nastier problem of two threads executing a method
-at exactly the same time. When that happens, very curious effects are
-possible. Consider the following program:
+problem. In Chapter REF=chapter:Synchronization we talk about the much
+nastier problem of two threads executing a method at exactly the same
+time. When that happens, very curious effects are possible. Consider the
+following program:
 
-[source,numberLines,java]
-----
-public class AlwaysEven {
-	private static int value = 1;
-
-	public static void print() {		
-		value++;
-		if( value % 2 == 0 )
-			System.out.println("Even");
-		else
-			System.out.println("Odd");
-		value++;
-	}
-}
-----
+[[program:AlwaysEven]][program:AlwaysEven]
+PROGRAM=MethodsChapter/programs/AlwaysEven.java, CAPTION=The `print()`
+method always prints `"Even"` when run with a single thread but can
+sometimes print `"Odd"` if called repeatedly with multiple threads.
 
 With a single thread running, `value` always goes up to an even number
 before printing and then increments to the next odd number afterwards.
@@ -1077,7 +1008,7 @@ be changed by one right before the other executes the `if` statements.  
 
 '''''
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -1201,14 +1132,12 @@ also ignores punctuation and spaces. Thus,
 `"A man, a plan, a canal: Panama"` should be counted as a palindrome by
 this new method.
 
-GUIRe-implement the solution from
-Section #solution:Three card poker[[solution:Three card poker]] so that
-it uses a GUI constructed with `JOptionPane` to display the hand and the
-winnings.
+GUIRe-implement the solution from Section REF=solution:Three card poker
+so that it uses a GUI constructed with `JOptionPane` to display the hand
+and the winnings.
 
 Five card poker is a much more common version of poker than the three
-card version we discussed in
-Section #problem:Three card poker[[problem:Three card poker]]. Using
+card version we discussed in Section REF=problem:Three card poker. Using
 static methods, implement a two-player game of poker in which the deck
 is shuffled and then dealt into two hands of five cards each. Then,
 state which player’s hand wins. With five cards, determining which hand

@@ -1,4 +1,3 @@
-[[chapter:Testing and Debugging]]
 == Testing and Debugging
 
 [[section:Fixing bugs]]
@@ -13,7 +12,7 @@ half of this chapter will focus on common bugs and how to fix them. The
 second half will focus on design techniques for preventing bugs and
 testing to see if any hidden bugs remain in your code.
 
-== Common sequential bugs
+=== Common sequential bugs
 
 We will begin with bugs commonly found in sequential programs, some of
 which have already been mentioned as common mistakes in previous
@@ -94,7 +93,7 @@ When you have discovered the existence of a bug, pinning down its cause
 can be difficult. There are a number of different techniques that are
 useful for narrowing down the possible problems.
 
-== Assertions
+=== Assertions
 
 A common cause of program errors is an incorrect assumption by a
 programmer. A programmer can assume that the user will only enter
@@ -114,7 +113,7 @@ Java supports assertions natively, as we will discuss in the next
 section. However, virtually every language allows you to create your own
 assertions should they not be present as a language construct.
 
-== Print statements
+=== Print statements
 
 Computer programs execute quickly. Even if they executed a million times
 more slowly no human is sensitive enough to decipher the flow of
@@ -138,7 +137,7 @@ option. Others send their output to `stderr` so that it doesn’t
 interfere with the legitimate output of the program. Much depends upon
 the system, the language, and the individual tastes of the programmer.
 
-== Step-through execution
+=== Step-through execution
 
 With the rise of modern debugging environments, using print statements
 has lost some of its appeal. Most languages allow the programmer to run
@@ -172,7 +171,7 @@ debugger. Likewise, the bug or the source of the unexplained behavior
 could be buried in library code. The debugger does not always have
 access to library code for stepping through.
 
-== Breakpoints
+=== Breakpoints
 
 Breakpoints are a feature of step-through debuggers designed to make
 them easier to use. A user can specify a particular line of code (with
@@ -190,7 +189,7 @@ breakpoint will only pause if a certain condition is met.
 
 === Java debugging tools (syntax)
 
-== Assertions
+=== Assertions
 
 As we mentioned before, many languages have assertions as a built-in
 language construct. In Java, there are two forms this feature takes. The
@@ -300,7 +299,7 @@ As stated above, checking for bad input coming into `public` methods
 should not be done with assertions because turning off assertions will
 remove your error checking.
 
-== Print statements
+=== Print statements
 
 Print statements are one of the most time-honored methods of debugging
 and remain a quick, dirty, yet effective means of finding errors. Java
@@ -342,7 +341,7 @@ which thread is printing which characters. By displaying the output of
 each thread in separate `JTextArea` or `JLabel` widgets on a simple GUI,
 you can disentangle the output of each thread.
 
-== Step-through debugging in Java
+=== Step-through debugging in Java
 
 Since DrJava is a great educational tool and Eclipse is so widely used,
 we are going to review the step-through debugging features of each
@@ -404,8 +403,8 @@ The difference between a good programmer and a bad programmer is often
 just experience. Having seen a bug before means you know to expect it in
 the future. There is no substitute for pulling your hair out over a bug
 for hours before finally squashing it, but we will give a few examples
-corresponding to the common bugs listed in Section
-#section:Fixing bugs[0.1.1].
+corresponding to the common bugs listed in Section REF=section:Fixing
+bugs.
 
 Precision can cause some subtle errors, especially with `float` types.
 Here is an example of a program attributed to Cleve Moler that gives
@@ -546,9 +545,8 @@ This assignment will always store `2` into `three`. The `Math.round()`
 method or some other additional step is needed to perform rounding.
 
 Casting errors are not limited to primitive data types. Object casting
-will be discussed at length in
-Chapter #chapter:Polymorphism[[chapter:Polymorphism]]. The biggest
-danger there is an incorrect explicit upcast.
+will be discussed at length in Chapter REF=chapter:Polymorphism. The
+biggest danger there is an incorrect explicit upcast.
 
 ....
 Fruit snack = new ChiliPepper();
@@ -566,13 +564,11 @@ superclass of the item you generally expect to be in there. If a large
 team is working on a body of code which such a list in it, half of the
 team might expect the list to contain only `Apple` objects while the
 other expected only `ChiliPepper` objects. The use of generics,
-discussed in
-Chapter #chapter:Dynamic Data Structures[[chapter:Dynamic Data Structures]],
-can reduce the number of casting errors of this kind, but some
-applications require a list to hold many different types with a common
-superclass. In those cases, some amount of explicit (and therefore
-dangerous) casting will usually be necessary when retrieving the objects
-from the list. 
+discussed in Chapter REF=chapter:Dynamic Data Structures, can reduce the
+number of casting errors of this kind, but some applications require a
+list to hold many different types with a common superclass. In those
+cases, some amount of explicit (and therefore dangerous) casting will
+usually be necessary when retrieving the objects from the list. 
 
 '''''
 
@@ -839,7 +835,7 @@ tables. 
 
 '''''
 
-== Array errors
+=== Array errors
 
 Any time you have a large collection of data, there are always
 opportunities for bugs. With catastrophic array bugs, Java usually gives
@@ -918,7 +914,7 @@ for( int i = 0; i < hippos.length; i++ )
 hippos[3].feed();
 ....
 
-== Scope errors
+=== Scope errors
 
 We don’t have variables in real life, and, as a consequence, out
 intuition about them is sometimes wrong. Which variable you are
@@ -981,11 +977,10 @@ Dynamic and static binding complicate this scope problem further. This
 fragment of code using the class definitions above highlights these
 complications. Because fields are statically bound to the class of the
 object, the `strength` field for `Bodybuilder` will be set to 15 on line
-#line:strength=15[[line:strength=15]], and the `strength` field for
-`BraggingBodybuilder` will be set to 20 on line
-#line:strength=20[[line:strength=20]]. Thus, the first call to `brag()`
-will print out `My strength is 10!`, but the second call will print out
-`My strength is 20!`. 
+REF=line:strength=15, and the `strength` field for `BraggingBodybuilder`
+will be set to 20 on line REF=line:strength=20. Thus, the first call to
+`brag()` will print out `My strength is 10!`, but the second call will
+print out `My strength is 20!`. 
 
 '''''
 
@@ -1026,7 +1021,7 @@ objects whose references are passed into a method. 
 
 '''''
 
-== Null pointer errors
+=== Null pointer errors
 
 Null pointer errors usually raise a `NullPointerException` in Java. This
 category of errors is something of a catch-all that could happen for
@@ -1055,12 +1050,11 @@ blindly use a null reference without checking it first, causing a
 
 We will only briefly discuss parallel bugs here because we have already
 gone into depth about the dangers of parallel programming in
-Chapter #chapter:Synchronization[[chapter:Synchronization]]. Except in
-the case of deadlocks and livelocks, the real trouble with parallel bugs
-is that they make the appearance of ordinary sequential bugs become
-nondeterministic.
+Chapter REF=chapter:Synchronization. Except in the case of deadlocks and
+livelocks, the real trouble with parallel bugs is that they make the
+appearance of ordinary sequential bugs become nondeterministic.
 
-== Race conditions
+=== Race conditions
 
 A race condition describes the situation when the output of a program is
 dependent on the timing of the execution of two or more threads. Because
@@ -1083,7 +1077,7 @@ cause errors only a tiny percentage of the time. Thus, rigorous testing
 such as we will discuss in the second half of this chapter is necessary
 to even be aware that a race condition is occurring.
 
-== Deadlocks and livelocks
+=== Deadlocks and livelocks
 
 Both deadlocks and livelocks describe situations in which some part of
 your program will stop making progress because of thread interaction. In
@@ -1102,7 +1096,7 @@ duplicate. In fact, `Thread.stop()`, `Thread.suspend()`, and
 were originally part of the Java `Thread` class, have been deprecated
 because they are deadlock prone.
 
-== Sequential execution
+=== Sequential execution
 
 One bug which is impossible to achieve in non-parallel code is
 sequential execution. This situation arises when, usually due to overuse
@@ -1207,7 +1201,7 @@ reduced almost to nothingness. In the following subsections, we will
 discuss these three aspects of programming and how you can apply them to
 writing better programs.
 
-== Design
+=== Design
 
 We have remarked in the past that good design pays off ten-fold in
 implementation, and that payoff continues to increase by factors of ten
@@ -1264,7 +1258,7 @@ exactly what it is supposed to do. Nevertheless, Donald Knuth, a giant
 in computer science, is famous for having said, "Beware of bugs in the
 above code; I have only proved it correct, not tried it."
 
-== Implementation
+=== Implementation
 
 When the time comes to actually implement your design, there are a
 number of other techniques you can use to minimize errors in this phase.
@@ -1315,7 +1309,7 @@ assertions to catch errors since they must be turned on in the JVM to
 have effect. Assertions are great for debugging code before it is
 released but have little or no value in the field.
 
-== Testing
+=== Testing
 
 Once you have designed and implemented your program (or perhaps even
 during the process of implementation), you should test it to see if it
@@ -1334,7 +1328,7 @@ of software meets its specification. We will briefly cover three broad
 areas of testing: black box testing, white box testing, and regression
 testing.
 
-=== Black-box testing
+==== Black-box testing
 
 Black box testing assumes that the tester knows nothing about the
 internal mechanisms of the software he or she is testing. The software
@@ -1396,7 +1390,7 @@ Fuzz Testing:::
   program behavior, catching errors that might never occur to a human
   being.
 
-=== White-box testing
+==== White-box testing
 
 The philosophy of white box is the opposite of black box testing. When
 using white box testing techniques, the tester has access to the program
@@ -1425,7 +1419,7 @@ methods can be used to reduce the total number of test cases. Also, it
 is important to test those parts of your programs reached only in error
 conditions in addition to normal operation.
 
-=== Regression testing
+==== Regression testing
 
 Regression testing is a form of testing that is not often necessary for
 student code because they are small projects. The motivating idea behind
@@ -1455,7 +1449,7 @@ because it is open-source. First, we’ll explain how to use JUnit, and
 then we’ll discuss some of the tools available to help test concurrent
 software.
 
-== JUnit testing
+=== JUnit testing
 
 JUnit testing is used for unit testing Java. Unit testing is the process
 testing of separate software components that will eventually work
@@ -1465,7 +1459,7 @@ the underlying bug. After unit testing comes integration testing to test
 how the components work together. Finally, system testing is the testing
 of the complete, integrated system against its specifications.
 
-=== Annotations
+==== Annotations
 
 Our coverage of JUnit testing is based on JUnit 4. This version of JUnit
 simplifies the syntax of creating JUnit tests, but it also relies on
@@ -1498,7 +1492,7 @@ not correctly overriding some superclass method. The `@SuppressWarnings`
 annotation allows certain warning messages to be suppressed, like using
 deprecated code if you really have to.
 
-=== Basic JUnit syntax
+==== Basic JUnit syntax
 
 First of all, JUnit is not a part of the standard Java API. To use it,
 you should download the latest jar file from http://www.junit.org and
@@ -1589,33 +1583,9 @@ including an epsilon threshold in case the values don’t match exactly.
 Using these methods, we can finally write a complete (though very
 simple) implementation of `MathTest.java`.
 
-[source,numberLines,java]
-----
-import org.junit.*;
-import static org.junit.Assert.*;
-
-public class MathTest {  
-  private static double sqrt2;  
-  
-  @BeforeClass
-  public static void setUp() { sqrt2 = Math.sqrt(2);}
-  
-  @Test
-  public void ceil() { 
-    assertTrue( 4 == Math.ceil(3.1) );
-  }
-  
-  @Test
-  public void pow() { 
-    assertEquals( 2, Math.pow( sqrt2, 2 ), 0.000001 );
-  }
-  
-  @Test
-  public void sin() { 
-    assertEquals( sqrt2/2.0, Math.sin(Math.PI / 4.0), 0.000001 );
-  } 
-}
-----
+[[program:MathTest]][program:MathTest]
+PROGRAM=TestingAndDebuggingChapter/programs/MathTest.java, CAPTION=A
+simple testing suite.
 
 Note that the `setUp()` method is extremely trivial here, and no clean
 up is needed. JUnit has many other powerful features that allow you to
@@ -1635,7 +1605,7 @@ temporarily. To do this, you add the annotation `@Ignore` before the
 should ideally put in parentheses a `String` giving the reason why the
 test is being ignored.
 
-=== Running JUnit
+==== Running JUnit
 
 Once you have created your JUnit test classes, you will want to run
 them. There are tools built into IDE’s like Eclipse to make this easier,
@@ -1691,7 +1661,7 @@ approach is not practical for large programs because the number of
 interleavings grows exponentially. Nevertheless, some research has
 focused on attacking the problem from this direction.
 
-== ConTest
+=== ConTest
 
 One tool that uses this idea is ConTest from IBM. The way the JVM
 normally works makes some interleavings more likely than others. If the
@@ -1717,7 +1687,7 @@ bugs may not manifest even after thousands of runs with ConTest
 instrumented code. For more information about ConTest, visit
 `http://www.ibm.com/developerworks/java/library/j-contest.html`.
 
-== Concutest
+=== Concutest
 
 We hope we have convinced you of the value of using JUnit testing to
 unit test your programs. Of course, JUnit has several limitations when
@@ -1739,7 +1709,7 @@ test thread invariants. The Concutest project is also developing a
 Schedule-Based Execution environment to allow programmers to test
 programs using specific sets of concurrent interleavings.
 
-== Intel tools
+=== Intel tools
 
 There are many other industry tools for debugging and optimizing
 threaded programs. Intel produces software such as the Intel Thread
@@ -1764,48 +1734,10 @@ We are going to rely on an example from physics and create a
 Because the class is so simple, the errors should be obvious.
 Nevertheless, we have picked errors that are reasonable to make.
 
-[source,numberLines,java]
-----
-public class PointCharge {  
-	private double charge;  // C
-	private double x;       // m
-	private double y;       // m
-	private double z;       // m
-	public static final double K = 8.9875517873681764e9; //N m^2 C^-2  
-	  
-	public PointCharge( double charge, double x, double y, double z ) {
-		this.charge = charge;    
-		this.x = x;
-		this.y = y;
-		this.z = y;
-	}
-  
-	public double getCharge() { return charge; }
-  
-	public double distance( PointCharge p ) {
-		return distance( p.x, p.y, p.z );
-	} 
-  
-	private double distance( double x, double y, double z ) {
-		double deltaX = this.x - x;
-		double deltaY = this.y - y;
-		double deltaZ = this.z - z;    
-		return Math.sqrt( deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ );      
-	}
-  
-	public double scalarForce( PointCharge p ) {
-		double r = distance( p );
-		return K*charge*p.charge/r*r;
-	}
-  
-	public double fieldMagnitude( double x, double y, double z ) {
-		double r = distance( x, y, z );
-		return charge/(r*r);
-	}
-}
-----
-
-*FIX: PointCharge listing not available.*
+[[program:PointCharge]][program:PointCharge]
+PROGRAM=TestingAndDebuggingChapter/programs/PointCharge.java,
+CAPTION=Example physics class with errors. *FIX: PointCharge listing not
+available.*
 
 The `PointCharge` class has the expected constructor and then a method
 to determine distance to another `PointCharge`. This method in turn
@@ -1928,97 +1860,20 @@ JUnit test method stops once a failure has happened.  
 Here is the fully corrected version of `PointCharge` renamed
 `FixedPointCharge`.
 
-[source,numberLines,java]
-----
-public class FixedPointCharge {  
-  private double charge;  // C
-  private double x;       // m
-  private double y;       // m
-  private double z;       // m
-  public static final double K = 8.9875517873681764e9; //N m^2 C^-2  
-  
-  public FixedPointCharge( double charge, double x, double y, double z ) {
-    this.charge = charge;    
-    this.x = x;
-    this.y = y;
-    this.z = z;
-  }
-  
-  public double getCharge() { return charge; }
-  
-  public double distance( FixedPointCharge p ) {
-    return distance( p.x, p.y, p.z );
-  } 
-  
-  private double distance( double x, double y, double z ) {
-    double deltaX = this.x - x;
-    double deltaY = this.y - y;
-    double deltaZ = this.z - z;    
-    return Math.sqrt( deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ );      
-  }
-  
-  public double scalarForce( PointCharge p ) {
-    double r = distance( p );
-    return K*charge*p.charge/(r*r);
-  }
-  
-  public double fieldMagnitude( double x, double y, double z ) {
-    double r = distance( x, y, z );
-    return K*charge/(r*r);
-  }
-}
-----
+[[program:FixedPointCharge]][program:FixedPointCharge]
+PROGRAM=TestingAndDebuggingChapter/programs/FixedPointCharge.java,
+CAPTION=Corrected version of `PointCharge`.
 
 And, for easy readability, here is the full JUnit test class
 `TestPointCharge`. Note that you will have to change the name
 `PointCharge` to `FixedPointCharge` if you want to test the corrected
 class.
 
-[source,numberLines,java]
-----
-import org.junit.*;
-import static org.junit.Assert.*;
- 
-public class TestPointCharge {  
-  private PointCharge charge1;
-  private PointCharge charge2;
-  private PointCharge charge3;
-  private PointCharge charge4;
-  
-  @Before
-  public void setUp() {
-    charge1 = new PointCharge( 1, 0, 0, 0 );    
-    charge2 = new PointCharge( 2, 1, 0, 0 );
-    charge3 = new PointCharge( -1, 0, 1, 0 );
-    charge4 = new PointCharge( 0, 0, 0, 1 );
-  }
-  
-  @Test
-  public void distance() {
-    assertEquals( 1.0, charge1.distance(charge2), 0.001 );
-    assertEquals( 1.0, charge1.distance(charge3), 0.001 );
-    assertEquals( 1.0, charge1.distance(charge4), 0.001 );
-    assertEquals( Math.sqrt(2.0), charge2.distance(charge3), 0.001 );
-  } 
-  
-  @Test
-  public void scalarForce() {
-    assertEquals( 2*PointCharge.K, charge1.scalarForce(charge2), 0.001 );
-    assertEquals( -PointCharge.K, charge1.scalarForce(charge3), 0.001 );
-    assertEquals( 0.0, charge1.scalarForce(charge4), 0.001 );
-    assertEquals( (double)-PointCharge.K, (double)charge2.scalarForce(charge3), 0.001 );
-  }   
-    
-  @Test
-  public void fieldMagnitude() {
-    assertEquals( 2*PointCharge.K, charge2.fieldMagnitude(0, 0, 0), 0.001 );
-    assertEquals( PointCharge.K, charge2.fieldMagnitude(0, 1, 0), 0.001 );
-    assertEquals( PointCharge.K, charge2.fieldMagnitude(0, 0, 1), 0.001 );    
-  }   
-}
-----
+[[program:TestPointCharge]][program:TestPointCharge]
+PROGRAM=TestingAndDebuggingChapter/programs/TestPointCharge.java,
+CAPTION=Class for testing `PointCharge`.
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -2096,11 +1951,11 @@ be thrown?
 
 This question sometimes comes up in job interviews. Imagine that you
 have a simple singly linked list such as the one described in
-Chapter #chapter:Dynamic Data Structures[[chapter:Dynamic Data Structures]].
-What if there is a loop in the list such that the last element in the
-list points to an earlier element in the list? For this reason, a simple
-traversal of the list will go on forever. How could you detect such a
-problem during program execution?
+Chapter REF=chapter:Dynamic Data Structures. What if there is a loop in
+the list such that the last element in the list points to an earlier
+element in the list? For this reason, a simple traversal of the list
+will go on forever. How could you detect such a problem during program
+execution?
 
 What is the difference between black box testing and white box testing?
 What kinds of bugs are more likely to be caught by black box testing? By

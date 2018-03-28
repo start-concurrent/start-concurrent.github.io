@@ -1,17 +1,16 @@
-[[chapter:Inheritance]]
 == Inheritance
 
 === Boolean circuits (problem)
 
-In Chapter #chapter:Selection[[chapter:Selection]], we talked
-extensively about Boolean algebra and how it can be applied to `if`
-statements in order to control the flow of execution in your program.
-The commands that we give in software must be executed by hardware in
-order to have an effect. It should not be surprising that computer
-hardware is built out of digital circuits that behave according to the
-same rules as Boolean logic. Each component of these circuits is called
-a _logic gate_. There are logic gates corresponding to all the Boolean
-operations you are used to: AND, OR, XOR, NOT, and others.
+In Chapter REF=chapter:Selection, we talked extensively about Boolean
+algebra and how it can be applied to `if` statements in order to control
+the flow of execution in your program. The commands that we give in
+software must be executed by hardware in order to have an effect. It
+should not be surprising that computer hardware is built out of digital
+circuits that behave according to the same rules as Boolean logic. Each
+component of these circuits is called a _logic gate_. There are logic
+gates corresponding to all the Boolean operations you are used to: AND,
+OR, XOR, NOT, and others.
 
 The output of an AND gate is the result of performing a logical AND on
 its inputs. That is, the output is true if and only if both of the
@@ -105,9 +104,9 @@ sections.
 
 Here we give a brief overview of inheritance that will give us enough
 information to continue onward. We cover some of the deeper areas of the
-subject in Chapter #chapter:Polymorphism[[chapter:Polymorphism]].
+subject in Chapter REF=chapter:Polymorphism.
 
-== Basic inheritance
+=== Basic inheritance
 
 The process of creating an inherited class out of an existing class is
 called _inheriting_ a class, _deriving_ a class, or simply
@@ -128,7 +127,7 @@ From that perspective, the child class has a superset of the fields and
 methods of its parent class. To avoid confusion, we favor the
 terminology of parent and child classes.
 
-== Adding functionality
+=== Adding functionality
 
 When creating a child class, a programmer will normally add
 functionality above and beyond the original parent class. Otherwise,
@@ -142,7 +141,7 @@ By adding a few methods, we can create a new class with special
 abilities without interfering with the basic functionality of the
 underlying class.
 
-== Code reuse
+=== Code reuse
 
 Of course, a programmer who wished to program a `Shark` class could
 simply copy and paste in all the code from the `Fish` class and then
@@ -172,7 +171,7 @@ Java using the `extends` keyword. Then, we discuss access restriction
 and visibility, constructor issues, the `Object` class, and overriding
 methods.
 
-== The `extends` keyword
+=== The `extends` keyword
 
 In order to make a child class in Java, we use the `extends` keyword.
 Let’s give an example using the `Fish` class defined below. This class
@@ -212,7 +211,7 @@ that the `Shark` object is able to call the `feed()` method even though
 it isn’t defined inside of `Shark`. Because it inherits from `Fish`, it
 has a version of `feed()`.
 
-=== Single inheritance only
+==== Single inheritance only
 
 Particularly if you have programmed in C++, you might be wondering if it
 is possible to have one class inherit from *multiple* classes in Java.
@@ -220,10 +219,9 @@ In multiple inheritance, a single class can have many different parents.
 Since C++ supports multiple inheritance, you can have a
 `SharkAlligatorMan` class in that language that inherits from the
 `Shark`, `Alligator`, and `Human` classes. If you go back to the sorting
-problem from Chapter #chapter:Interfaces[[chapter:Interfaces]], multiple
-inheritance would allow us to solve the problem with an `Age` class and
-a `Weight` class from which `Dog`, `Cat`, `Person`, and `Cheese` all
-inherit.
+problem from Chapter REF=chapter:Interfaces, multiple inheritance would
+allow us to solve the problem with an `Age` class and a `Weight` class
+from which `Dog`, `Cat`, `Person`, and `Cheese` all inherit.
 
 However, the designers of Java decided not to allow multiple
 inheritance, perhaps for this reason: Imagine a `River` class with a
@@ -243,7 +241,7 @@ interfaces *can* be implemented by a single class in Java, and like
 multiple inheritance, this practice allows a single class to be used in
 wildly different contexts.
 
-=== Interfaces using `extends`
+==== Interfaces using `extends`
 
 The `extends` keyword is not limited to classes. It is possible for an
 interface to extend another interface. In fact, an interface can extend
@@ -254,10 +252,10 @@ When an interface extends other interfaces, it includes all the methods
 (and constants) they define. If a class implements an interface that
 extends other interfaces, it must contain versions of all the methods
 specified by *all* the interfaces. Recall the `Ageable` and `Weighable`
-interfaces from Chapter #chapter:Interfaces[[chapter:Interfaces]], which
-specified the `getAge()` and `getWeight()` methods, respectively. We
-could create an interface that required both of these methods by
-extending `Ageable` and `Weighable`.
+interfaces from Chapter REF=chapter:Interfaces, which specified the
+`getAge()` and `getWeight()` methods, respectively. We could create an
+interface that required both of these methods by extending `Ageable` and
+`Weighable`.
 
 ....
 public interface AgeableAndWeighable extends Ageable, Weighable {
@@ -275,7 +273,7 @@ abilities.
 Note that a class can never extend an interface. Likewise, an interface
 cannot extend a class or implement another interface.
 
-== Access restriction and visibility
+=== Access restriction and visibility
 
 The `Shark` example above gives an example of inheritance in which the
 child class only calls methods of the parent class and does not
@@ -291,13 +289,13 @@ so it might be good design to prevent outside code from changing the
 `color` field with such a mutator. There are no absolute rules for
 making these kinds of decisions.
 
-We introduced access modifiers in
-Section #subsection:Access modifiers[[subsection:Access modifiers]], but
-inheritance gives them new meaning. Recall that the access modifier for
-the `color` field of `Fish` was `protected`. A field or method with the
-`protected` modifier can be accessed by all child classes (as well as
-classes in the same package). If the modifier for `color` was `private`,
-the `Flounder` class would not be able to change it directly.
+We introduced access modifiers in Section REF=subsection:Access
+modifiers, but inheritance gives them new meaning. Recall that the
+access modifier for the `color` field of `Fish` was `protected`. A field
+or method with the `protected` modifier can be accessed by all child
+classes (as well as classes in the same package). If the modifier for
+`color` was `private`, the `Flounder` class would not be able to change
+it directly.
 
 In the `Shark` class, it *must* use mutators to change the value of its
 own `energy` and the `alive` field of `fish` since they are both marked
@@ -305,20 +303,20 @@ own `energy` and the `alive` field of `fish` since they are both marked
 methods whenever possible, even within the same class, so that fields
 are not inadvertently corrupted.
 
-== Constructors
+=== Constructors
 
 When you create a child class, you can think of it as if a copy of the
 parent class exists inside of the child. When you create an object from
 a child class, how do you properly initialize the fields inside the
 parent class?
 
-As we discussed in Chapter #chapter:Classes[[chapter:Classes]], every
-class has a constructor, even if it is a default one created for you.
-Whenever the constructor for a child class is invoked, the constructor
-for the parent class is invoked as well. If the parent class is also the
-child of some other class, that grandparent class will have its
-constructor invoked as well. This chain of constructors will continue,
-reaching all the way back to the ultimate ancestor, `Object`.
+As we discussed in Chapter REF=chapter:Classes, every class has a
+constructor, even if it is a default one created for you. Whenever the
+constructor for a child class is invoked, the constructor for the parent
+class is invoked as well. If the parent class is also the child of some
+other class, that grandparent class will have its constructor invoked as
+well. This chain of constructors will continue, reaching all the way
+back to the ultimate ancestor, `Object`.
 
 When writing the constructor for a child class, the first line of it
 should be the call to the parent constructor. If you don’t explicitly
@@ -348,7 +346,7 @@ instantiated without any arguments. It will supply the `String`
 `"Unknown"` to the other constructor, which will add `"Baby"` and pass
 it on to the `Parent` class.
 
-== Overriding methods and hiding fields
+=== Overriding methods and hiding fields
 
 Sometimes a parent method does not provide all the power you want in the
 child class. It is possible to _override_ a parent method in the child
@@ -415,7 +413,7 @@ still has the default value of `0`. Both `a` fields exist inside of `B`,
 but the methods are poorly designed, leaving one field capable only of
 being set and the other capable only of being retrieved.
 
-== The `Object` class
+=== The `Object` class
 
 You may not have realized it, but every class you created in Java used
 inheritance. To provide uniformity, the designers of Java made every
@@ -443,7 +441,7 @@ following methods.
 tables of objects.
 
 |`notify()` |Used for synchronization with threaded programs. More in
-Chapter #chapter:Synchronization[[chapter:Synchronization]].
+Chapter REF=chapter:Synchronization.
 
 |`notifyAll()` |Same as previous.
 
@@ -462,83 +460,34 @@ methods. Aside from making a few useful methods available, having a
 common ancestor for all classes means that you can store any object in
 an `Object` reference. An array of type `Object` can hold anything,
 provided that you know how to retrieve it. We discuss the finer points
-of inheritance and polymorphism in
-Chapter #chapter:Polymorphism[[chapter:Polymorphism]] and how to build
-lists and other data structures using `Object` references in
-Chapter #chapter:Dynamic Data Structures[[chapter:Dynamic Data Structures]].
+of inheritance and polymorphism in Chapter REF=chapter:Polymorphism and
+how to build lists and other data structures using `Object` references
+in Chapter REF=chapter:Dynamic Data Structures.
 
 === Problem solving with inheritance (examples)
 
 Here are two extended examples showing how we can use inheritance to
 solve problems. First, we revisit the student roster example from
-Chapter #chapter:Classes[[chapter:Classes]] and then move onto an
-inheritance hierarchy of polygons.
+Chapter REF=chapter:Classes and then move onto an inheritance hierarchy
+of polygons.
 
-The `Student` class we create in
-Chapter #chapter:Classes[[chapter:Classes]] is useful but works only for
-undergraduate students. With only a few additions, we can make it
-suitable for graduate students as well. First, lets take another look at
-the `Student` class.
+The `Student` class we create in Chapter REF=chapter:Classes is useful
+but works only for undergraduate students. With only a few additions, we
+can make it suitable for graduate students as well. First, lets take
+another look at the `Student` class.
 
-[source,numberLines,java]
-----
-public class Student {
-	public static final String[] YEARS =
-	{"Freshman", "Sophomore", "Junior", "Senior"};
-	private String name;
-	private int year;
-	private double GPA;
-
-	public Student(String name, int year, double GPA) {
-		setName( name );
-		setYear( year );
-		setGPA( GPA );
-	}	
-
-	public void setName(String name) { this.name = name; }	
-	public void setYear(int year) { this.year = year; }
-
-	public void setGPA(double GPA) {
-		if( GPA >= 0 && GPA <= 4.0 )
-			this.GPA = GPA;
-		else
-			System.out.println("Invalid GPA: " + GPA);		
-	}
-
-	public String getName() { return name; };
-	public int getYear() { return year; };
-	public double getGPA() { return GPA; };
-
-	public String toString() {
-		return name + "\t" + YEARS[year] +
-			"\t" + GPA;
-	}	
-}
-----
+[[program:Student]][program:Student]
+PROGRAM=InheritanceChapter/programs/Student.java, CAPTION=Basic student
+class, designed for undergraduates.
 
 We want to create a `GraduateStudent` class that inherits from
 `Student`. We need to add a thesis topic for each graduate student.
 Likewise, we need to update the `toString()` method so that outputs the
 appropriate data. We use `4` as the year value for graduate students.
 
-[source,numberLines,java]
-----
-public class GraduateStudent extends Student {
-	private String topic;
-
-	public GraduateStudent(String name, double GPA, String topic ) {
-		super( name, 4, GPA );
-		setTopic( topic );
-	}	
-
-	public void setTopic(String topic) { this.topic = topic; }	
-
-	public String toString() {
-		return getName() + "\t" + "Graduate" +
-			"\t" + getGPA() + "\tTopic: " + topic;
-	}	
-}
-----
+[[program:GraduateStudent]][program:GraduateStudent]
+PROGRAM=InheritanceChapter/programs/GraduateStudent.java, CAPTION=Class
+extending `Student` to add graduate student capabilities.
 
 Because we are inheriting most of the fields we need, we only need to
 declare the `topic` field. Then, in the `GraduateStudent` constructor,
@@ -606,12 +555,11 @@ of the perimeter by adding the lengths of the segments connecting the
 vertices. It is possible to determine the area enclosed by a list of
 vertices, but the algorithm is complex. The `draw()` method draws the
 polygon by drawing each line segment that connects adjacent vertices. We
-discuss the `Graphics` class in
-Chapter #chapter:Constructing Graphical User Interfaces[[chapter:Constructing Graphical User Interfaces]].
-If you compile and run this code, please note that in Java graphics,
-like many computer graphics environments, the upper left hand corner of
-the screen or window is considered (0,0), and latexmath:[$y$] values
-*increase* going downward, not upward.
+discuss the `Graphics` class in Chapter REF=chapter:Constructing
+Graphical User Interfaces. If you compile and run this code, please note
+that in Java graphics, like many computer graphics environments, the
+upper left hand corner of the screen or window is considered (0,0), and
+latexmath:[$y$] values *increase* going downward, not upward.
 
 With this basic parent class defined, we can design a `Triangle` class
 as a child of it.
@@ -836,12 +784,11 @@ The first is the `Thread` class. Each thread of execution in Java
 whose type inherits from `Thread`. Creating such types is done by
 extending `Thread`, just as you would extend any other class. Further
 information about extending `Thread` for concurrency is given in
-Section #syntax:Threads in Java[[syntax:Threads in Java]]. Extending the
-`Thread` class to make your own customized threads of execution is an
-alternative to implementing the `Runnable` interface mentioned in
-Section #concurrency:Interfaces[[concurrency:Interfaces]] and is
-discussed in greater detail in
-Section #subsection:runnable[[subsection:runnable]].
+Section REF=syntax:Threads in Java. Extending the `Thread` class to make
+your own customized threads of execution is an alternative to
+implementing the `Runnable` interface mentioned in
+Section REF=concurrency:Interfaces and is discussed in greater detail in
+Section REF=subsection:runnable.
 
 The second interaction between inheritance and concurrency is again very
 similar to the problem with interfaces and concurrency: There is no way
@@ -854,8 +801,7 @@ The rules for overriding methods in Java guarantee that an object of a
 child class is usable anywhere that an object of the parent class is
 usable. Thus, you cannot override a public method with a private one,
 reducing the visibility of a method. We discuss a similar restriction
-with exceptions in
-Section #subsection:Inheritance and exceptions[[subsection:Inheritance and exceptions]].
+with exceptions in Section REF=subsection:Inheritance and exceptions.
 
 If it has these restrictions, why doesn’t Java prevent a synchronized
 method from being overridden by a non-synchronized method? In the first
@@ -868,7 +814,7 @@ others (even child classes) do not. However, if you override a class
 with a synchronized method, it is safest to mark your method
 synchronized as well.
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -958,15 +904,14 @@ trigonometry to determine their locations. As a result, the final
 pentagons and hexagons stored and displayed will be slightly irregular.
 
 The inheritance design of our solution to the Boolean circuits problem
-given in Section #solution:Boolean circuits[[solution:Boolean circuits]]
-makes adding new gates easy. Add classes that implement a NAND gate and
-a NOR gate. Then, rewrite the `main()` method of `BooleanCircuit` to
-accommodate these two extra classes.
+given in Section REF=solution:Boolean circuits makes adding new gates
+easy. Add classes that implement a NAND gate and a NOR gate. Then,
+rewrite the `main()` method of `BooleanCircuit` to accommodate these two
+extra classes.
 
 Re-implement the object hierarchy in the solution to the sort it out
-problem from Chapter #chapter:Interfaces[[chapter:Interfaces]]. This
-time, let the `Cat`, `Dog`, and `Person` classes extend the `Creature`
-class defined below.
+problem from Chapter REF=chapter:Interfaces. This time, let the `Cat`,
+`Dog`, and `Person` classes extend the `Creature` class defined below.
 
 Refactor your code so that the `Cat`, `Dog`, and `Person` classes are as
 short as possible. How many lines of code do you save?
@@ -1015,8 +960,8 @@ you create an object of type `Z`, it will contain, through inheritance,
 26 `int` fields named `a` through `z`. But, for a single `Z` object to
 be created, it must call 27 (`Z` back through `A` plus `Object`)
 constructors. You may wish to use the file I/O material in
-Chapter #chapter:File I/O[[chapter:File I/O]] to write a program to
-create all these classes so that you do not have to do so by hand.
+Chapter REF=chapter:File I/O to write a program to create all these
+classes so that you do not have to do so by hand.
 
 Finally, create a new class called `All` which contains 26 `protected`
 fields of `int` type named `a` through `z`. Now, the purpose of doing
@@ -1028,6 +973,5 @@ Create an array of 100,000 elements of type `Z` and then populate it
 with 100,000 `Z` objects. Time this process. Create an array of 100,000
 elements of type `All` and then populate that array with 100,000 `All`
 objects. You may wish to use the `System.nanoTime()` method described in
-Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]]
-to accurately time these processes. Is there a significant difference in
-the times you found?
+Chapter REF=chapter:Concurrent Programming to accurately time these
+processes. Is there a significant difference in the times you found?

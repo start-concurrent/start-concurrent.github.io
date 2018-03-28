@@ -1,4 +1,3 @@
-[[chapter:Constructing Graphical User Interfaces]]
 == Constructing Graphical User Interfaces
 
 === Math applet (problem)
@@ -25,10 +24,10 @@ be able to enter an answer in the text field and hit a button to submit
 it. The applet should check the answer and display the updated number of
 correct and incorrect answers.
 
-Figure link:#elementaryArithPracticeFigure[[elementaryArithPracticeFigure]]
-shows the final applet in two different states. The screen to the left
-appears when the applet is first initialized. The applet is set in basic
-mode, and the Submit button is disabled until a problem is generated.
+Figure REF=elementaryArithPracticeFigure shows the final applet in two
+different states. The screen to the left appears when the applet is
+first initialized. The applet is set in basic mode, and the Submit
+button is disabled until a problem is generated.
 
 === Graphical user interfaces (concepts)
 
@@ -47,14 +46,13 @@ interaction are possible.
 This chapter will teach you how to write programs with GUIs. Although
 GUIs can make input and output easier for the user, the programmer has
 to shoulder the burden of arranging the layout and appearance of the GUI
-and making it function properly.
-Chapter #chapter:Simple Graphical User Interfaces[[chapter:Simple Graphical User Interfaces]]
-introduced a way to make simple GUIs, but those GUIs came in preset
-flavors designed for displaying a message, getting a range of responses
-in the form of buttons, or reading a short piece of text as input. In
-this chapter we will explore ways to make GUIs of arbitrary complexity
-with no limitations on the size or shape of the GUI or the components it
-contains.
+and making it function properly. Chapter REF=chapter:Simple Graphical
+User Interfaces introduced a way to make simple GUIs, but those GUIs
+came in preset flavors designed for displaying a message, getting a
+range of responses in the form of buttons, or reading a short piece of
+text as input. In this chapter we will explore ways to make GUIs of
+arbitrary complexity with no limitations on the size or shape of the GUI
+or the components it contains.
 
 A typical GUI consists of a _frame_ (also known as a window) on which
 are displayed one or more components (known as widgets), such as panels,
@@ -78,7 +76,7 @@ generate the GUI code for you. We focus on how to write this code
 yourself because doing so gives you more control and helps you
 understand Java GUIs better.
 
-== Swing and AWT
+=== Swing and AWT
 
 Most of the components you will use to create GUIs are defined in
 classes that belong to the Java Swing library. This library contains
@@ -114,7 +112,7 @@ screen.
 
 === GUIs in Java (syntax)
 
-== Creating a frame
+=== Creating a frame
 
 A frame is the Java terminology for a window. Except when programming an
 applet, GUI components in Java will usually be found on a frame. In
@@ -165,7 +163,7 @@ window.
 soundCheck.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 ....
 
-=== Pitfall: Closing frames
+==== Pitfall: Closing frames
 
 Some books and online tutorials suggest setting `JFrame.EXIT\_ON\_CLOSE`
 as the default close operation for a `JFrame` instead of
@@ -192,31 +190,18 @@ the only way you have of interacting with your application, you can no
 longer use it! At that point, you may have to use a process or task
 manager to shut down the JVM by hand.
 
-Program #program:EmptyFrame[[program:EmptyFrame]] creates and displays
-an empty frame with the title ``Sound Check.'' Note that we have used
-the `import` statement to let the compiler know that we are using the
-Swing library. The first line inside the `main()` method declares and
-creates a `JFrame` object and assigns a title to it. The following line
-sets its size. The third line sets the default close operation and the
-following line makes the frame visible. The frame so created is shown in
-Figure link:#emptyFrameFigure[[emptyFrameFigure]]. Note that the frame
-is resizable.
+Program REF=program:EmptyFrame creates and displays an empty frame with
+the title ``Sound Check.'' Note that we have used the `import` statement
+to let the compiler know that we are using the Swing library. The first
+line inside the `main()` method declares and creates a `JFrame` object
+and assigns a title to it. The following line sets its size. The third
+line sets the default close operation and the following line makes the
+frame visible. The frame so created is shown in
+Figure REF=emptyFrameFigure. Note that the frame is resizable.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-
-public class EmptyFrame {
-    public static void main(String[] args){
-    	//Create frame
-        JFrame soundCheck = new JFrame("Sound Check");
-        soundCheck.setSize(350,150); //Set size in pixels
-        soundCheck.setDefaultCloseOperation(
-        		JFrame.DISPOSE_ON_CLOSE);
-        soundCheck.setVisible(true); //Display it       
-    }  
-}
-----
+[[program:EmptyFrame]][program:EmptyFrame]
+PROGRAM=GUIChapter/programs/EmptyFrame.java, CAPTION=Program to create
+an empty frame.
 
 to
 
@@ -227,7 +212,7 @@ be set, and reset, at any point in the program. 
 
 '''''
 
-== Widgets
+=== Widgets
 
 A widget is a component of a GUI. Java provides a large variety of
 widgets including panels, buttons, text boxes, check boxes, and menus.
@@ -307,62 +292,36 @@ field will not be changed by the program after it is initialized. In the
 next subsection we add actions to each button and make the program more
 useful.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-
-public class FrameWithPanel {
-    public static void main(String[] args){
-    	//Create frame
-        JFrame soundCheck = new JFrame("Sound Check");
-        JPanel soundPanel = new JPanel();
-        //Create three buttons
-        JButton chirp = new JButton("Chirp");
-        JButton bark = new JButton("Bark");
-        JButton exit = new JButton("Exit");
-        JTextField message = new JTextField("Listen to nature!");
-        soundPanel.add(chirp); // Add chirp to panel /*@\label{addBirdChirp}@*/
-        soundPanel.add(bark); //Add bark to panel
-        soundPanel.add(message); //Add message box
-        soundPanel.add(exit); //Add exit button/*@\label{addExit}@*/
-        soundCheck.add(soundPanel); //Add the panel to the frame/*@\label{addPanelToFrame}@*/
-        soundCheck.setSize(350,150); //Set size in pixels
-        soundCheck.setDefaultCloseOperation(
-        	JFrame.DISPOSE_ON_CLOSE);
-        soundCheck.setVisible(true); //Display frame       
-    }  
-}
-----
+[[program:FrameWithPanel]][program:FrameWithPanel]
+PROGRAM=GUIChapter/programs/FrameWithPanel.java, CAPTION=Program to
+create a frame with a panel containing three buttons.
 
 to
 
-In the `main()` method in
-Program link:#frameWithAPanelFigure[[frameWithAPanelFigure]], we first
+In the `main()` method in Program REF=frameWithAPanelFigure, we first
 create a frame named `soundCheck` and a panel named `soundPanel`. Next,
 we create three buttons named `chirp`, `bark`, and `exit`, labeled
-``Chirp,'' ``Bark,'' and ``Exit,'' respectively.
-Lines link:#addBirdChirp[[addBirdChirp]] until link:#addExit[[addExit]]
-add the three buttons and the text field to `soundPanel`. At
-line link:#addPanelToFrame[[addPanelToFrame]], `soundPanel` is added to
+``Chirp,'' ``Bark,'' and ``Exit,'' respectively. Lines REF=addBirdChirp
+until REF=addExit add the three buttons and the text field to
+`soundPanel`. At line REF=addPanelToFrame, `soundPanel` is added to
 `soundCheck`. After setting the closing operation, the frame is made
-visible. The final GUI is shown in
-Figure link:#frameWithAPanelFigure[[frameWithAPanelFigure]]. Note that
-the same GUI may look different on different platforms. Later we will
-see how to add multiple panels to a frame. . ]Exercise .  
+visible. The final GUI is shown in Figure REF=frameWithAPanelFigure.
+Note that the same GUI may look different on different platforms. Later
+we will see how to add multiple panels to a frame. . ]Exercise .  
 
 '''''
 
-== Adding actions to widgets
+=== Adding actions to widgets
 
 Many widgets in Java can be used to cause an action. For example, a user
 could click a button labeled ``Chirp,'' causing the program to play a
 bird chirp sound. Clicking a button generates an _event_. In Java, an
 event is processed by one or more _listeners_. Java provides various
 types of listeners, some of which are introduced here and a few others
-in Section #subsection:Applets[0.9]. Next we show you how to handle
-action events generated by a few different kinds of widgets.
+in Section REF=subsection:Applets. Next we show you how to handle action
+events generated by a few different kinds of widgets.
 
-=== The `ActionListener` interface
+==== The `ActionListener` interface
 
 Java provides an `ActionListener` interface. This interface has a single
 method named `actionPerformed()`. This method takes an `ActionEvent` as
@@ -372,13 +331,12 @@ implements the `ActionListener` interface can be registered as an action
 listener on a `JButton` or any other widget that generates an
 `ActionEvent`.
 
-As discussed in Chapter #chapter:Interfaces[[chapter:Interfaces]], an
-interface is a set of method signatures. If you implement an interface,
-you promise to have all of the methods in the interface. If a class
-implements `ActionListener`, it’s saying that it knows what to do when
-an action is performed. The following statements show how to add an
-`ActionListener` to a button and implement its `actionPerformed()`
-method.
+As discussed in Chapter REF=chapter:Interfaces, an interface is a set of
+method signatures. If you implement an interface, you promise to have
+all of the methods in the interface. If a class implements
+`ActionListener`, it’s saying that it knows what to do when an action is
+performed. The following statements show how to add an `ActionListener`
+to a button and implement its `actionPerformed()` method.
 
 ....
 JButton chirp = new JButton("Chirp");
@@ -417,67 +375,24 @@ exist yet, we have to create it. Of course, it is possible to supply any
 object that implements the `ActionListener` interface, not just
 instances of anonymous classes. For more information about nested
 classes, inner classes, and anonymous classes, refer to
-Sections #advanced:Nested classes[[advanced:Nested classes]] and
-#advanced:Local and anonymous classes[[advanced:Local and anonymous classes]].
+Sections REF=advanced:Nested classes and REF=advanced:Local and
+anonymous classes.
 
-We now modify Program #program:FrameWithPanel[[program:FrameWithPanel]]
-to respond to button clicks. When the `chirp` button is clicked, the
-program will display the message ``Chirp requested.'' in the text field.
-Similarly, when the `bark` button is clicked, the program will display
-``Bark requested.''
+We now modify Program REF=program:FrameWithPanel to respond to button
+clicks. When the `chirp` button is clicked, the program will display the
+message ``Chirp requested.'' in the text field. Similarly, when the
+`bark` button is clicked, the program will display ``Bark requested.''
 
-Program #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]]
-is largely the same as
-Program #program:FrameWithPanel[[program:FrameWithPanel]]. It adds the
-same buttons and text field but then adds an action listener to each
-button. The action performed when the `chirp` and `bark` buttons are
-clicked is to display a message in the text box. When the `exit` button
-is clicked, the listener displays a message on the console and exits the
-program.
+Program REF=program:FrameWithPanelAndActions is largely the same as
+Program REF=program:FrameWithPanel. It adds the same buttons and text
+field but then adds an action listener to each button. The action
+performed when the `chirp` and `bark` buttons are clicked is to display
+a message in the text box. When the `exit` button is clicked, the
+listener displays a message on the console and exits the program.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.event.*;
-
-public class FrameWithPanelAndActions {
-    public static void main(String[] args){
-        final JFrame soundCheck = new JFrame("Sound Check"); 
-        JPanel soundPanel = new JPanel();
-        JButton chirp = new JButton("Chirp"); 
-        JButton bark = new JButton("Bark"); 
-        JButton exit = new JButton("Exit"); 
-        final JTextField message = new JTextField(
-        	"Listen to nature!");
-        soundPanel.add(chirp); 
-        soundPanel.add(bark);
-        soundPanel.add(message);
-        soundPanel.add(exit);
-		// Add action listeners to various buttons
-        chirp.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e){
-            	message.setText("Chirp requested."); /*@\label{chirpRequestedLine}@*/   
-            }
-        });
-        bark.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-            	message.setText("Bark requested.");
-            }
-        });
-        exit.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                System.out.println("Exit");
-                soundCheck.dispose();
-            }
-        });
-        soundCheck.add(soundPanel);
-        soundCheck.setSize(350,150);
-        soundCheck.setDefaultCloseOperation(
-        	JFrame.DISPOSE_ON_CLOSE);
-        soundCheck.setVisible(true);       
-    }  
-}
-----
+[[program:FrameWithPanelAndActions]][program:FrameWithPanelAndActions]
+PROGRAM=GUIChapter/programs/FrameWithPanelAndActions.java,
+CAPTION=Program to demonstrate handling of action events.
 
 Note that the sequence in which you add the buttons to the panel
 determines the appearance of the GUI. The action listeners can be added
@@ -502,84 +417,37 @@ inner classes. An alternate way to use `ActionListener` is to implement
 `actionPerformed()` method exactly once instead of creating several
 individual anonymous inner classes which each handle an event. Let’s
 examine one such implementation in
-Program #program:AlternateActionListener[[program:AlternateActionListener]]
-and contrast it with
-Program #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]].
-Note that both programs generate exactly the same GUI and exhibit
-identical behavior.
+Program REF=program:AlternateActionListener and contrast it with
+Program REF=program:FrameWithPanelAndActions. Note that both programs
+generate exactly the same GUI and exhibit identical behavior.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.event.*;
+[[program:AlternateActionListener]][program:AlternateActionListener]
+PROGRAM=GUIChapter/programs/AlternateActionListener.java,
+CAPTION=Program to demonstrate handling of action events by implementing
+`ActionListener` at the class level.
 
-public class AlternateActionListener implements ActionListener {
-  JFrame soundCheck = new JFrame("Sound Check"); 
-  JPanel soundPanel = new JPanel();
-  JButton chirpButton = new JButton("Bird"); 
-  JButton barkButton = new JButton("Dog"); 
-  JButton exitButton = new JButton("Exit"); 
-  JTextField message = new JTextField("Listen to nature!");
-  
-  public AlternateActionListener (){/*@\label{alternateActionListenerLine}@*/
-    chirpButton.addActionListener(this); 
-    barkButton.addActionListener(this);
-    exitButton.addActionListener(this);
-    soundPanel.add(chirpButton);
-	soundPanel.add(barkButton);
-    soundPanel.add(message);
-	soundPanel.add(exitButton);    
-    soundCheck.add(soundPanel);
-    soundCheck.setSize(200,125);
-    soundCheck.setDefaultCloseOperation(
-    	JFrame.DISPOSE_ON_CLOSE);
-    soundCheck.setVisible(true);       
-  }     
-  
-  public void actionPerformed(ActionEvent e){/*@\label{actionPerformedLine}@*/
-    Object button = e.getSource(); /*@\label{identifyObjectLine}@*/
-    if(button == chirpButton) 
-      message.setText("Chirp requested."); 
-    else if(button == barkButton) 
-      message.setText("Bark requested.");
-    else {
-      System.out.println("Exit");
-      soundCheck.dispose();
-    }
-  }
-  
-  public static void main(String[] args){
-    new AlternateActionListener(); 
-  }   
-}
-----
-
-In
-Program #program:AlternateActionListener[[program:AlternateActionListener]]
-class `AlternateActionListener` implements `ActionListener`. Doing so
-requires the class to include `actionPerformed()`. The constructor,
-starting at
-line link:#alternateActionListenerLine[[alternateActionListenerLine]],
-adds an `ActionListener` to each button. The listener added is `this`,
-specifying that the `AlternateActionListener` object is the one that
-will process any action event generated by the buttons. The remainder of
-the code for the constructor is essentially the same as that from the
-`main()` method in
-Program #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]].
+In Program REF=program:AlternateActionListener class
+`AlternateActionListener` implements `ActionListener`. Doing so requires
+the class to include `actionPerformed()`. The constructor, starting at
+line REF=alternateActionListenerLine, adds an `ActionListener` to each
+button. The listener added is `this`, specifying that the
+`AlternateActionListener` object is the one that will process any action
+event generated by the buttons. The remainder of the code for the
+constructor is essentially the same as that from the `main()` method in
+Program REF=program:FrameWithPanelAndActions.
 
 The `actionPerformed()` method, starting at
-line link:#actionPerformedLine[[actionPerformedLine]], has exactly one
-parameter, an `ActionEvent` object. Whenever an action event occurs, its
-attributes are bundled into an `ActionEvent` object and passed into the
-`actionPerformed()` method. At
-line link:#identifyObjectLine[[identifyObjectLine]] the `getSource()`
-method is used to determine which object is responsible for the event.
-Variable `button` holds the object returned by `getSource()`. The next
-`if` statement compares `button` with `chirp` and `bark` to determine if
-either of these generated the event. Then a suitable message is
-displayed in the `message` box. If neither button generated the event,
-it must have been `exit`, and the frame disposes itself after displaying
-``Exit'' on the console.
+line REF=actionPerformedLine, has exactly one parameter, an
+`ActionEvent` object. Whenever an action event occurs, its attributes
+are bundled into an `ActionEvent` object and passed into the
+`actionPerformed()` method. At line REF=identifyObjectLine the
+`getSource()` method is used to determine which object is responsible
+for the event. Variable `button` holds the object returned by
+`getSource()`. The next `if` statement compares `button` with `chirp`
+and `bark` to determine if either of these generated the event. Then a
+suitable message is displayed in the `message` box. If neither button
+generated the event, it must have been `exit`, and the frame disposes
+itself after displaying ``Exit'' on the console.
 
 The `main()` method simply creates an instance of
 `AlternateActionListener` and terminates. The program does not end
@@ -588,15 +456,14 @@ because the threads for the GUI are still running. 
 '''''
 
 It is instructive to note the differences between
-Programs #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]]
-and #program:AlternateActionListener[[program:AlternateActionListener]].
-In
-Program #program:AlternateActionListener[[program:AlternateActionListener]],
-most of the code has been moved from the ` main()` method to the
-constructor. Various objects, namely the `soundCheck` frame, the
-`soundPanel` panel, all three buttons, and the text box are now fields
-of the object instead of local variables in the `main()` method. This
-removes the need to mark `soundCheck` and `message` as `final`.
+Programs REF=program:FrameWithPanelAndActions and
+REF=program:AlternateActionListener. In
+Program REF=program:AlternateActionListener, most of the code has been
+moved from the ` main()` method to the constructor. Various objects,
+namely the `soundCheck` frame, the `soundPanel` panel, all three
+buttons, and the text box are now fields of the object instead of local
+variables in the `main()` method. This removes the need to mark
+`soundCheck` and `message` as `final`.
 
 We have examined two ways of adding an `ActionListener` to a Java
 program. The choice of which style to use depends on your needs. Adding
@@ -608,7 +475,7 @@ events in a centralized location. It can be easier to find errors when
 all events are handled in one `actionPerformed()` method, but the method
 can become long and complex as well. . ]Exercise .
 
-=== The `MouseListener` interface
+==== The `MouseListener` interface
 
 Clicking a button is great, but a mouse can be used to generate other
 events too. For example, in a screen full of pictures, you might want to
@@ -650,73 +517,19 @@ when the cursor enters a button. When a button is clicked, the status
 box should display the total number of times that button has been
 clicked so far.
 
-Program #program:SimpleMouseEvents[[program:SimpleMouseEvents]]
-generates the GUI shown in
-Figure link:#simpleMouseEventsFigure[[simpleMouseEventsFigure]]. At
-line link:#simpleMouseEventsClassDefLine[[simpleMouseEventsClassDefLine]]
-class `SimpleMouseEvents` is declared, implementing the `MouseListener`
-interface. The following few lines declare frame `frame`, buttons `one`
-and `two`, and a text box `status`. Two integers `oneClicks` and
-`twoClicks` are initialized to 0 and are used to keep track of the
-number of times each button has been clicked.
+Program REF=program:SimpleMouseEvents generates the GUI shown in
+Figure REF=simpleMouseEventsFigure. At
+line REF=simpleMouseEventsClassDefLine class `SimpleMouseEvents` is
+declared, implementing the `MouseListener` interface. The following few
+lines declare frame `frame`, buttons `one` and `two`, and a text box
+`status`. Two integers `oneClicks` and `twoClicks` are initialized to 0
+and are used to keep track of the number of times each button has been
+clicked.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class SimpleMouseEvents implements MouseListener {/*@\label{simpleMouseEventsClassDefLine}@*/
-	JFrame frame = new JFrame("Mouse Events");
-	JTextField status = new JTextField(
-		"Mouse status comes here.");
-	JButton one = new JButton("One");
-	JButton two = new JButton("Two");
-	int oneClicks = 0, twoClicks = 0; //Number of clicks
-    
-    public SimpleMouseEvents() {/*@\label{simpleMouseEventsConstructorLine}@*/
-        JPanel panel = new JPanel();    	
-        one.addMouseListener(this);
-        two.addMouseListener(this);
-        panel.add(one);
-        panel.add(two);
-        panel.add(status); 
-        frame.add(panel);
-        frame.setSize(200,100);
-        frame.setDefaultCloseOperation(
-        	JFrame.DISPOSE_ON_CLOSE);
-        frame.setVisible(true); 
-    }
-
-    // Implement all abstract methods in MouseListener
-    public void mouseEntered(MouseEvent e) { /*@\label{mouseEnteredEventLine}@*/	    
-	    if (e.getSource() == one) /*@\label{getObjectEnteredLine}@*/
-	        status.setText("Mouse enters One.");
-	    else
-	        status.setText("Mouse enters Two.");      
-    }
-    
-	public void mouseClicked(MouseEvent e) {		
-		if (e.getSource() == one) {/*@\label{getObjectClickedLine}@*/
-			oneClicks++;
-			status.setText("One clicked "+ oneClicks +
-				" times.");
-		}			
-		else {
-			twoClicks++;
-			status.setText("Two clicked "+ twoClicks  +
-				" times.");
-		}
-	}
-
-	public void mouseExited(MouseEvent e) {} /*@\label{exitedNotImplementedLine}@*/
-	public void mousePressed(MouseEvent e) {}
-	public void mouseReleased(MouseEvent e) {} 
-	public static void main(String[] args){
-		  new SimpleMouseEvents();
-	}  
-}
-----
+[[program:SimpleMouseEvents]][program:SimpleMouseEvents]
+PROGRAM=GUIChapter/programs/SimpleMouseEvents.java, CAPTION=Program to
+demonstrate the handling of mouse generated events using the
+`MouseListener` interface.
 
 to
 
@@ -730,12 +543,11 @@ frame. Finally the frame size and its default close operations are set,
 and the frame is made visible.
 
 Implementation of the methods in the `MouseListener` interface begins at
-line link:#mouseEnteredEventLine[[mouseEnteredEventLine]]. The
-`mouseEntered()` method is invoked when the cursor enters either of the
-two buttons. First we retrieve the source of the event using the
-`getSource()` method and identify which object generated the event. A
-suitable message is displayed in the status box using the `setText()`
-method.
+line REF=mouseEnteredEventLine. The `mouseEntered()` method is invoked
+when the cursor enters either of the two buttons. First we retrieve the
+source of the event using the `getSource()` method and identify which
+object generated the event. A suitable message is displayed in the
+status box using the `setText()` method.
 
 The `mouseClicked()` method is invoked when the mouse cursor is placed
 over a button and clicked. As before, we retrieve the source of the
@@ -749,7 +561,7 @@ test whether or not the program behaves as described. . ]Exercise .  
 
 '''''
 
-=== Mouse adapter
+==== Mouse adapter
 
 Creating a `MouseListener` requires all five methods in the interface to
 be implemented. In some cases, as in Example ., there is no need to
@@ -766,77 +578,24 @@ provides a skeletal implementation of each method needed to process
 mouse events. We can override these implementations as needed, and we do
 not need to provide an implementation of a method that is not used.
 
-Program #program:SimpleMouseAdapter[[program:SimpleMouseAdapter]] is a
-revised version of
-Program #program:SimpleMouseEvents[[program:SimpleMouseEvents]]. At
-line link:#simpleMouseAdapterClassDefLine[[simpleMouseAdapterClassDefLine]]
-class `SimpleMouseAdapter` extends the abstract class `MouseAdapter`.
-Thus, it inherits all the empty methods defined in `MouseAdapter`. We
-then override only the implementations of the methods we want to use,
-`mouseEntered()` and `mouseClicked()` in this example. Remember that an
-abstract class is *extended* whereas an interface is *implemented*. .
-]Exercise .
+Program REF=program:SimpleMouseAdapter is a revised version of
+Program REF=program:SimpleMouseEvents. At
+line REF=simpleMouseAdapterClassDefLine class `SimpleMouseAdapter`
+extends the abstract class `MouseAdapter`. Thus, it inherits all the
+empty methods defined in `MouseAdapter`. We then override only the
+implementations of the methods we want to use, `mouseEntered()` and
+`mouseClicked()` in this example. Remember that an abstract class is
+*extended* whereas an interface is *implemented*. . ]Exercise .
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class SimpleMouseAdapter extends MouseAdapter {/*@\label{simpleMouseAdapterClassDefLine}@*/
-    JFrame frame = new JFrame("Mouse Events");    
-    JTextField status = new JTextField(
-    	"Mouse status comes here.");
-    JButton one = new JButton("One");
-    JButton two = new JButton("Two");
-    int oneClicks = 0, twoClicks = 0; 
-    
-    public SimpleMouseAdapter () {
-    	JPanel panel = new JPanel();
-        one.addMouseListener(this);
-        two.addMouseListener(this);
-        panel.add(one);
-        panel.add(two);
-        panel.add(status); 
-        frame.add(panel);
-        frame.setSize(200,100);
-        frame.setDefaultCloseOperation(
-        	JFrame.DISPOSE_ON_CLOSE);
-        frame.setVisible(true); 
-    }
-    
-    // Override only those methods we wants
-    public void mouseEntered(MouseEvent e) { /*@\label{implementMouseEnteredLine}@*/	    
-	    if (e.getSource() == one)
-	        status.setText("Mouse enters One.");
-	    else
-	        status.setText("Mouse enters Two.");      
-    }
-    
-    public void mouseClicked(MouseEvent e) {/*@\label{implementMouseClickedLine}@*/    	
-    	if (e.getSource() == one) {
-			oneClicks++;
-			status.setText("One clicked "+ oneClicks +
-				" times.");
-		}			
-		else {
-			twoClicks++;
-			status.setText("Two clicked "+ twoClicks  +
-				" times.");
-		}
-    }
-    
-    public static void main(String[] args){
-      new SimpleMouseAdapter ();
-    }  
-}
-----
+[[program:SimpleMouseAdapter]][program:SimpleMouseAdapter]
+PROGRAM=GUIChapter/programs/SimpleMouseAdapter.java, CAPTION=Program to
+handle mouse generated events using the `MouseAdapter` abstract class.
 
  
 
 '''''
 
-=== Other event listeners
+==== Other event listeners
 
 In this chapter we describe two types of listeners in Java,
 `ActionListener` and `MouseListener`. You may have noticed that none of
@@ -850,7 +609,7 @@ handle mouse movement with or without the button pressed.
 
 An `ItemListener` can be attached to a widget such as a check box or a
 radio button to listen for a check box to be selected. This listener is
-illustrated in Section #subsection:Applets[0.9].
+illustrated in Section REF=subsection:Applets.
 
 Java provides several other listeners to handle a variety of events. For
 example, the `DocumentListener` can be attached to a `JTextField` or a
@@ -867,7 +626,7 @@ information, you may wish to follow the Java tutorial on writing event
 listeners provided by Oracle at
 http://download.oracle.com/javase/tutorial/uiswing/events/index.html.
 
-== Adding sounds and images
+=== Adding sounds and images
 
 Sounds and images can also be added to a Java GUI application. While
 Java offers a rich set of sound APIs, we restrict our examples to
@@ -875,7 +634,7 @@ playing sound clips from audio files that come in `au` or `wav` formats.
 We also introduce the `ImageIcon` class to create icons from image
 files.
 
-=== Sounds
+==== Sounds
 
 First, let’s see how to define an audio clip.
 
@@ -926,103 +685,36 @@ chirpClip.stop();
 
 Now that we have seen how to declare, load, play, and stop an audio
 clip, we are ready to write a more interesting version of
-Program #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]].
+Program REF=program:FrameWithPanelAndActions.
 
-We can rewrite
-Program #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]]
-so that the new program plays the sound clips in a loop when the
-corresponding button is clicked. Think of the new program as a Java
-version of the pull-string toys that children use to play animal sounds.
-Our program only has two sounds, but more could be added. . ]Exercise .
+We can rewrite Program REF=program:FrameWithPanelAndActions so that the
+new program plays the sound clips in a loop when the corresponding
+button is clicked. Think of the new program as a Java version of the
+pull-string toys that children use to play animal sounds. Our program
+only has two sounds, but more could be added. . ]Exercise .
 
 to
 
 We will add a new button labeled ``Stop Sound'' that stops the playback
 of sounds when clicked. Let’s assume that this program is only allowed
 to play one sound at a time. When it starts, the GUI will look like
-Figure link:#SoundGameFigures[[SoundGameFigures]](a). Note that the
-`stop` button is gray, indicating that it is disabled.
+Figure REF=SoundGameFigures(a). Note that the `stop` button is gray,
+indicating that it is disabled.
 
 The complete program for the game is shown in
-Program #program:SoundGame[[program:SoundGame]]. Because most of this
-program is similar to
-Program #program:FrameWithPanel[[program:FrameWithPanel]], we will only
-look at the differences. The action listeners for the `chirp` and `bark`
-buttons are called when these two buttons are clicked. On
-line link:#buttonDisableLine[[buttonDisableLine]] we disable the `bark`
-button when the bird chirp sound is playing. Also, on
-line link:#buttonEnableLine[[buttonEnableLine]] we enable the `stop`
-button so that the user can stop the chirp sound. Note that the `stop`
-button begins disabled and remains that way until a sound is played. The
-GUI now looks like Figure link:#SoundGameFigures[[SoundGameFigures]](b).
+Program REF=program:SoundGame. Because most of this program is similar
+to Program REF=program:FrameWithPanel, we will only look at the
+differences. The action listeners for the `chirp` and `bark` buttons are
+called when these two buttons are clicked. On line REF=buttonDisableLine
+we disable the `bark` button when the bird chirp sound is playing. Also,
+on line REF=buttonEnableLine we enable the `stop` button so that the
+user can stop the chirp sound. Note that the `stop` button begins
+disabled and remains that way until a sound is played. The GUI now looks
+like Figure REF=SoundGameFigures(b).
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.event.*;
-import java.applet.*;
-import java.net.URL;
-
-public class SoundGame { 
-  public static void main (String[] args) throws Exception {
-    final JFrame soundGame = new JFrame("Sound Game");
-    JPanel soundPanel = new JPanel();
-    final JButton chirp = new JButton("Chirp");
-    final JButton bark = new JButton("Bark");
-    final JButton stop = new JButton("Stop Sound");
-    final JButton exit = new JButton("Exit");
-    final JTextField message =
-    	new JTextField("Click Chirp or Bark.   ");
-    URL chirpURL = new URL("file:sounds/chirp.wav");
-    URL barkURL = new URL("file:sounds/bark.wav");
-    final AudioClip chirpClip = Applet.newAudioClip(chirpURL);
-    final AudioClip barkClip = Applet.newAudioClip(barkURL);
-    soundPanel.add(chirp);
-    soundPanel.add(bark);
-    soundPanel.add(stop);
-    soundPanel.add(exit);
-    soundPanel.add(message);
-    soundGame.add(soundPanel);
-    stop.setEnabled(false); /*@\label{stopButtonDisableLine}@*/
-    chirp.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e){
-        message.setText("Chirp sound playing.");
-        bark.setEnabled(false);  /*@\label{buttonDisableLine}@*/
-        chirpClip.loop(); /*@\label{soundPlayLine}@*/
-        stop.setEnabled(true); /*@\label{buttonEnableLine}@*/
-      }
-    });
-    bark.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent e){
-        message.setText("Bark sound playing.");
-        chirp.setEnabled(false);
-        barkClip.loop(); 
-        stop.setEnabled(true);
-      }
-    });
-    stop.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent e){
-        message.setText("Click Chirp or Bark.");
-        chirpClip.stop();
-        bark.setEnabled(true);
-        barkClip.stop();
-        chirp.setEnabled(true);
-        stop.setEnabled(false);
-      }
-    });
-    exit.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent e){
-        System.out.println("Exit");
-        soundGame.dispose();
-      }
-    });
-    soundGame.setSize(175,175); //Set size in pixels
-    soundGame.setDefaultCloseOperation(
-    	JFrame.DISPOSE_ON_CLOSE);
-    soundGame.setVisible(true); //Display it      
-  }
-}
-----
+[[program:SoundGame]][program:SoundGame]
+PROGRAM=GUIChapter/programs/SoundGame.java, CAPTION=An animal sound
+game.
 
 The actions for the `bark` button are very similar to the actions for
 the `chirp` button, but the actions for `stop` are different. When
@@ -1034,7 +726,7 @@ playing. . ]Exercise .  
 
 '''''
 
-=== Images and icons
+==== Images and icons
 
 Images are often useful when creating GUIs. In this section we show you
 how to use images to create icons and then use the icon to decorate
@@ -1060,49 +752,31 @@ smile.add(smileIcon);
 Similarly you can add an image icon to a label. . ]Exercise . The next
 example gives a simple program that creates a button with an image.
 
-Figure link:#IconExampleFigure[[IconExampleFigure]] shows a GUI with a
-button decorated with a picture.
-Program #program:IconExample[[program:IconExample]] gives the code to
-create this GUI using the `ImageIcon` class.
+Figure REF=IconExampleFigure shows a GUI with a button decorated with a
+picture. Program REF=program:IconExample gives the code to create this
+GUI using the `ImageIcon` class.
 
 to
 
 As explained earlier, an image icon is created at
-line link:#iconCreationLine[[iconCreationLine]] from a JPEG file named
-`smile.jpg` located in the `pictures` directory. The following line
-creates a button named `smile` and decorates it with the icon by
-supplying it as an argument to the `JButton` constructor. Note that, if
-the file cannot be found, the program will fail _quietly_. This means
-that no exception is thrown. Instead, the button will appear with no
-image. Subsequent lines add the button to the frame, set the frame size
-and its default close operation, and make the frame visible. . ]Exercise
-.
+line REF=iconCreationLine from a JPEG file named `smile.jpg` located in
+the `pictures` directory. The following line creates a button named
+`smile` and decorates it with the icon by supplying it as an argument to
+the `JButton` constructor. Note that, if the file cannot be found, the
+program will fail _quietly_. This means that no exception is thrown.
+Instead, the button will appear with no image. Subsequent lines add the
+button to the frame, set the frame size and its default close operation,
+and make the frame visible. . ]Exercise .
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-
-public class IconExample {   
-  public static void main(String[] args) {
-	JFrame iconFrame = new JFrame("Icon Example");	   
-	ImageIcon smileIcon = new ImageIcon(/*@\label{iconCreationLine}@*/
-		"pictures/smile.jpg");
-	JButton  smile = new JButton(smileIcon);/*@\label{adIconToButtonLine}@*/
-	iconFrame.add(smile);
-	iconFrame.setSize(325,250);
-	iconFrame.setDefaultCloseOperation(
-		JFrame.DISPOSE_ON_CLOSE);
-	iconFrame.setVisible(true);
-  }  
-}
-----
+[[program:IconExample]][program:IconExample]
+PROGRAM=GUIChapter/programs/IconExample.java, CAPTION=A program to
+create a GUI with a button decorated by a picture.
 
  
 
 '''''
 
-=== Labels, icons, and text
+==== Labels, icons, and text
 
 In some applications you might want to show a picture with an attached
 text label. For example, in a shopping cart for an online clothing
@@ -1140,45 +814,21 @@ flower.setVerticalTextPosition(JLabel.BOTTOM);
 flower.setHorizontalTextPosition(JLabel.CENTER);
 ....
 
-Figure link:#labelExampleFigure[[labelExampleFigure]](a) is generated by
-executing Program  #program:LabelExample[[program:LabelExample]]. You
-will see the GUI shown in
-Figure link:#labelExampleFigure[[labelExampleFigure]](b) if the
-alignment instructions at
-lines link:#verticalTextPositioningLine[[verticalTextPositioningLine]]
-and link:#horizontalTextPositioningLine[[horizontalTextPositioningLine]]
-are omitted.
+Figure REF=labelExampleFigure(a) is generated by executing Program 
+REF=program:LabelExample. You will see the GUI shown in
+Figure REF=labelExampleFigure(b) if the alignment instructions at
+lines REF=verticalTextPositioningLine and
+REF=horizontalTextPositioningLine are omitted.
 
 to
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-
-public class LabelExample {
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("Label Example");
-		ImageIcon hibiscus = new ImageIcon(
-			"pictures/hibiscus.jpg");
-		JLabel flower = new JLabel("Red Hibiscus",
-			hibiscus, JLabel.CENTER);
-		flower.setVerticalTextPosition(JLabel.BOTTOM); /*@\label{verticalTextPositioningLine}@*/
-		flower.setHorizontalTextPosition(JLabel.CENTER);/*@\label{horizontalTextPositioningLine}@*/
-		frame.add(flower);
-		frame.setSize(300,250);
-		frame.setDefaultCloseOperation(
-			JFrame.DISPOSE_ON_CLOSE);
-		frame.setVisible(true);
-  }  
-}
-----
-
- 
+[[program:LabelExample]][program:LabelExample]
+PROGRAM=GUIChapter/programs/LabelExample.java, CAPTION=A program to
+create a GUI with a label decorated by a picture and text.  
 
 '''''
 
-== Layout managers
+=== Layout managers
 
 Java provides a number of _layout managers_ to assist with the design of
 GUIs. A layout manager is an object that controls the placement of
@@ -1188,7 +838,7 @@ will introduce the three layout managers `FlowLayout`, `GridLayout`, and
 `BorderLayout`. Java also provides several other layout managers, each
 designed for different layouts.
 
-=== `FlowLayout`
+==== `FlowLayout`
 
 The `FlowLayout` manager is one of simplest layout managers. When a
 container is using the `FlowLayout` manager, widgets will be added in
@@ -1209,39 +859,21 @@ done so is because `FlowLayout` is the default layout manager for
 the `BorderLayout` manager by default, which would have complicated our
 examples. The next example illustrates `FlowLayout` further.
 
-Program #program:FlowLayoutExample[[program:FlowLayoutExample]] creates
-a GUI with several buttons. It first creates a frame. At
-line link:#setLayoutManagerLine[[setLayoutManagerLine]] it creates a
-panel and set its layout manager to `FlowLayout`. Then, it uses a `for`
-loop to create a new button, label it appropriately, and add it to the
-panel.
+Program REF=program:FlowLayoutExample creates a GUI with several
+buttons. It first creates a frame. At line REF=setLayoutManagerLine it
+creates a panel and set its layout manager to `FlowLayout`. Then, it
+uses a `for` loop to create a new button, label it appropriately, and
+add it to the panel.
 
 The `Flowlayout` manager neatly places the buttons along a number of
 rows depending on the width of the frame. The GUI created is shown in
-Figure #figure:FlowLayoutExampleFigure[[figure:FlowLayoutExampleFigure]].
-Run the program and resize the frame to see the effect on the layout of
-the buttons. . ]Exercise . . ]Exercise .
+Figure REF=figure:FlowLayoutExampleFigure. Run the program and resize
+the frame to see the effect on the layout of the buttons. . ]Exercise .
+. ]Exercise .
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-
-public class FlowLayoutExample {
-  public static void main(String[] args) {
-    JFrame frame = new JFrame("FlowLayout Example"); 
-    JPanel panel = new JPanel(new FlowLayout());  /*@\label{setLayoutManagerLine}@*/
-    final int MAX_BUTTONS = 6;    
-    for(int i = 0; i < MAX_BUTTONS; i++)
-    	panel.add(new JButton("   " + i + "   "));/*@\label{createAButtonLine}@*/
-    frame.add(panel);
-    frame.setSize(250,100);
-    frame.setResizable(false);/*@\label{disableResizableLine}@*/
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);    
-    frame.setVisible(true);       
-  }  
-}
-----
+[[program:FlowLayoutExample]][program:FlowLayoutExample]
+PROGRAM=GUIChapter/programs/FlowLayoutExample.java, CAPTION=Adding
+several buttons using `FlowLayout`.
 
 to
 
@@ -1249,7 +881,7 @@ to
 
 '''''
 
-=== `GridLayout`
+==== `GridLayout`
 
 The `GridLayout` manager lays out components in a grid with a set number
 of rows and columns. As with other layout managers, `GridLayout` can be
@@ -1269,131 +901,61 @@ into three rows with two columns.
 
 to
 
-Figure link:#gridLayoutLToRFigure[[gridLayoutLToRFigure]] shows how
-`frame` will look after six buttons, labeled 0 through 5, have been
-added to it in that order. A key feature of using a `GridLayout` is that
-all cells in the grid will be the same size and will stretch to fill the
-entire container. Also note the equal spacing between the neighboring
-cells. It is possible to add more or fewer cells than specified in the
-`GridLayout` constructor, but the layout manager will be forced to guess
-at your intentions. . ]Exercise .
+Figure REF=gridLayoutLToRFigure shows how `frame` will look after six
+buttons, labeled 0 through 5, have been added to it in that order. A key
+feature of using a `GridLayout` is that all cells in the grid will be
+the same size and will stretch to fill the entire container. Also note
+the equal spacing between the neighboring cells. It is possible to add
+more or fewer cells than specified in the `GridLayout` constructor, but
+the layout manager will be forced to guess at your intentions. .
+]Exercise .
 
 We can write a program to displays pictures of animals and identify
 which animal the mouse is current hovering over. The animal’s name will
 be displayed in the title of the frame.
-Figure link:#animalIdentifierFigure[[animalIdentifierFigure]] shows this
-GUI.
+Figure REF=animalIdentifierFigure shows this GUI.
 
 to
 
-Program #program:AnimalIdentifier[[program:AnimalIdentifier]] creates
-the GUI shown in
-Figure link:#animalIdentifierFigure[[animalIdentifierFigure]]. Class
-`AnimalIdentifier` declares four labels and a frame as fields. The
-labels are named `bison`, `dove`, `gecko`, and `spider`.
+Program REF=program:AnimalIdentifier creates the GUI shown in
+Figure REF=animalIdentifierFigure. Class `AnimalIdentifier` declares
+four labels and a frame as fields. The labels are named `bison`, `dove`,
+`gecko`, and `spider`.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class AnimalIdentifier implements MouseListener {  
-  JLabel bison, dove, gecko, spider;
-  JFrame frame = new JFrame("Animal Identifier: Bison");
-
-  public AnimalIdentifier() {/*@\label{PicIdentifierConstructorLine}@*/	
-	JPanel panel = new JPanel(new GridLayout(2,2,5,5));
-    ImageIcon bisonIcon = new ImageIcon("pictures/bison.jpg");
-    ImageIcon doveIcon = new ImageIcon("pictures/dove.jpg");
-    ImageIcon geckoIcon = new ImageIcon("pictures/gecko.jpg");
-    ImageIcon spiderIcon = new ImageIcon("pictures/spider.jpg");
-    bison = new JLabel(bisonIcon);
-    bison.addMouseListener(this); /*@\label{buttonDecoratorLine}@*/
-    dove = new JLabel(doveIcon);
-    dove.addMouseListener(this);
-    gecko = new JLabel(geckoIcon);
-    gecko.addMouseListener(this);
-    spider = new JLabel(spiderIcon);
-    spider.addMouseListener(this);
-    // Add labels
-    panel.add(bison); /*@\label{prepareButtonPanelLine}@*/
-    panel.add(dove); 
-    panel.add(gecko);
-    panel.add(spider);
-    frame.add(panel);
-    frame.setSize(400,400);
-    frame.pack();
-    frame.setDefaultCloseOperation(
-    	JFrame.DISPOSE_ON_CLOSE);
-    frame.setVisible(true); 
-  }
-  // Implement all abstract methods in MouseListener
-  public void mouseEntered(MouseEvent e) { /*@\label{mouseEventEnteredLine}@*/
-    Object label = e.getSource();/*@\label{getPicMouseEventLine}@*/
-    if (label == bison)
-      frame.setTitle("Animal Identifier: Bison");
-    else if(label == dove)
-      frame.setTitle("Animal Identifier: Dove");
-    else if (label == gecko)
-      frame.setTitle("Animal Identifier: Gecko");    
-    else if (label == spider)
-      frame.setTitle("Animal Identifier: Spider");
-  }
-    
-  public void mouseExited(MouseEvent e) {
-	  System.out.println("Mouse exited."); /*@\label{mouseEventsLine}@*/
-  }
-  
-  public void mousePressed(MouseEvent e) {
-	  System.out.println("Mouse pressed.");
-  }
-  
-  public void mouseReleased(MouseEvent e) {
-	  System.out.println("Mouse released");
-  }    
-  
-  public void mouseClicked(MouseEvent e) {
-	  System.out.println("Mouse clicked.");
-  }
-  
-  public static void main(String[] args) {
-    new AnimalIdentifier();
-  }
-}
-----
+[[program:AnimalIdentifier]][program:AnimalIdentifier]
+PROGRAM=GUIChapter/programs/AnimalIdentifier.java, CAPTION=A program
+that identifies which animal is in various images when the mouse hovers
+over the image. Images are laid out using a `GridLayout` manager.
 
 Inside the constructor, we create a panel with a
 latexmath:[$2 \times 2$] `GridLayout`. Then, we create four image icons,
 one to decorate each label. Next, starting at
-line link:#buttonDecoratorLine[[buttonDecoratorLine]], each of the four
-labels is created with its respective icon. We also add a
-`MouseListener` to each label. Starting at
-line link:#prepareButtonPanelLine[[prepareButtonPanelLine]], the buttons
-are added to the panel, and the panel is added to the frame. The last
-few lines set the size of the frame, pack it, set its close operation,
-and make it visible.
+line REF=buttonDecoratorLine, each of the four labels is created with
+its respective icon. We also add a `MouseListener` to each label.
+Starting at line REF=prepareButtonPanelLine, the buttons are added to
+the panel, and the panel is added to the frame. The last few lines set
+the size of the frame, pack it, set its close operation, and make it
+visible.
 
 Since `AnimalIdentifier` implements `MouseListener`, we need to define
 all the methods in the `MouseListener` interface. These are implemented
-starting at line link:#mouseEventEnteredLine[[mouseEventEnteredLine]].
-As we are only interested in displaying the name of a picture when the
-mouse moves over it, the `mouseEntered()` method is where most of our
-even handling code will be. At
-line link:#getPicMouseEventLine[[getPicMouseEventLine]] we get the label
-the mouse entered. We compare this label to the four labels and change
-the frame title correspondingly.
+starting at line REF=mouseEventEnteredLine. As we are only interested in
+displaying the name of a picture when the mouse moves over it, the
+`mouseEntered()` method is where most of our even handling code will be.
+At line REF=getPicMouseEventLine we get the label the mouse entered. We
+compare this label to the four labels and change the frame title
+correspondingly.
 
 We implement the remaining methods from `MouseListener` to report the
 event on the console. The `main()` method creates a new instance of
 class `AnimalIdentifier`, launching the GUI.
 
-Play with Program #program:AnimalIdentifier[[program:AnimalIdentifier]].
-What happens when you resize the window? . ]Exercise .  
+Play with Program REF=program:AnimalIdentifier. What happens when you
+resize the window? . ]Exercise .  
 
 '''''
 
-=== `BorderLayout`
+==== `BorderLayout`
 
 The `BorderLayout` manager is the default one for a `JFrame`. It allows
 components to be laid out spatially in regions of a container. These
@@ -1414,27 +976,10 @@ stretch as big as it needs to fill the container.
 Here is an example of a frame using `BorderLayout`. Five buttons have
 been added, one to each region, using the program shown below.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-
-public class BorderLayoutExample {
-  public static void main(String[] args) {
-    JFrame frame = new JFrame("BorderLayout Example"); 
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(new JButton("North"), BorderLayout.NORTH);
-    panel.add(new JButton("South"), BorderLayout.SOUTH);
-    panel.add(new JButton("East"), BorderLayout.EAST);
-    panel.add(new JButton("West"), BorderLayout.WEST);
-    panel.add(new JButton("Center"), BorderLayout.CENTER);
-    frame.add(panel);
-    frame.setSize(300,200);
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);    
-    frame.setVisible(true);       
-  }  
-}
-----
+[[program:BorderLayoutExample]][program:BorderLayoutExample]
+PROGRAM=GUIChapter/programs/BorderLayoutExample.java, CAPTION=Program
+showing buttons laid out in each of the five regions of a
+`BorderLayout`.
 
 to
 
@@ -1467,40 +1012,9 @@ We create ten `JButton` objects for the digits and three more `JButton`
 objects for plus, minus, and enter. The display is a `JLabel`. The code
 is given below.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-
-public class CalculatorLayout {
-  public static void main(String[] args) {
-    JFrame frame = new JFrame("Calculator Layout"); 
-    JPanel panel = new JPanel(new BorderLayout());
-    JPanel numbers = new JPanel(new GridLayout(4,3));
-    numbers.add(new JButton("7"));
-    numbers.add(new JButton("8"));
-    numbers.add(new JButton("9"));
-    numbers.add(new JButton("4"));
-    numbers.add(new JButton("5"));
-    numbers.add(new JButton("6"));
-    numbers.add(new JButton("1"));
-    numbers.add(new JButton("2"));
-    numbers.add(new JButton("3"));
-    numbers.add(new JButton("0"));
-    numbers.add(new JButton("+"));
-    numbers.add(new JButton("-"));
-    panel.add(numbers, BorderLayout.CENTER);
-    JButton enter = new JButton("Enter");
-    panel.add(enter, BorderLayout.SOUTH);
-    JLabel display = new JLabel("0");
-    panel.add(display, BorderLayout.NORTH);
-    frame.add(panel);
-    frame.setSize(250,300);
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);    
-    frame.setVisible(true);       
-  }  
-}
-----
+[[program:CalculatorLayout]][program:CalculatorLayout]
+PROGRAM=GUIChapter/programs/CalculatorLayout.java, CAPTION=Program to
+layout a simple calculator.
 
 to
 
@@ -1527,7 +1041,7 @@ using a grid-based framework that is much more flexible than
 significant. The `SpringLayout` and `GroupLayout` managers are also
 powerful, but they are designed for use with a GUI builder utility.
 
-== Menus
+=== Menus
 
 Menus provide a useful form of interface that is expected from most GUI
 applications. In this section we show how to create menus and respond to
@@ -1537,7 +1051,7 @@ user. In addition to simple text, a menu item can be a button, a radio
 button, check box, or an icon. A menu can have one or more sub-menus
 opening out of a menu item.
 
-=== Creating menus
+==== Creating menus
 
 First we have to create a menu bar.
 
@@ -1597,7 +1111,7 @@ A disabled menu item shows as a gray item and does not respond to
 attempts to select it. Note that `JButton` objects and many other
 widgets can be disabled in the same way.
 
-=== Adding events to menus
+==== Adding events to menus
 
 An action listener can be added to each menu item, just like a
 `JButton`. Then, when a menu item is clicked by the user, an action
@@ -1629,64 +1143,30 @@ between them because an `ItemEvent` has more information: By using the
 that fired the `ItemEvent` is now selected or deselected.
 
 Here we give the code to generate the GUI shown in
-Figure link:#MathTutorFigure[[MathTutorFigure]] which displays basic
-(addition and subtraction) as well as advanced (multiplication and
-division) problems. In Section #subsection:Applets[0.9] we transform
-this GUI into an applet like the one described in
-Section #problem:Math applet[[problem:Math applet]].
+Figure REF=MathTutorFigure which displays basic (addition and
+subtraction) as well as advanced (multiplication and division) problems.
+In Section REF=subsection:Applets we transform this GUI into an applet
+like the one described in Section REF=problem:Math applet.
 
 to
 
-As shown in Figure link:#MathTutorFigure[[MathTutorFigure]], this GUI
-has a menu bar consisting of two menus labeled ``Type'' and
-``Operations.'' The ``Type'' menu contains a check box labeled
-``Advanced'' while the ``Operations'' menu contains four menu items
-labeled ``Add,'' ``Subtract,'' ``Multiply,'' and ``Divide.'' Note that
-the ``Multiply'' and ``Divide'' menu items are disabled. They will be
-enabled when the user selects the ``Advanced'' check box.
+As shown in Figure REF=MathTutorFigure, this GUI has a menu bar
+consisting of two menus labeled ``Type'' and ``Operations.'' The
+``Type'' menu contains a check box labeled ``Advanced'' while the
+``Operations'' menu contains four menu items labeled ``Add,''
+``Subtract,'' ``Multiply,'' and ``Divide.'' Note that the ``Multiply''
+and ``Divide'' menu items are disabled. They will be enabled when the
+user selects the ``Advanced'' check box.
 
 Before we introduce the program that creates this GUI, we need a helper
 class called `ProblemGenerator` that can randomly generate arithmetic
 problems. The class is designed so that the answers are always positive
 integers.
 
-[source,numberLines,java]
-----
-import java.util.Random;
-import javax.swing.*;
-
-public class ProblemGenerator {
-	public static Random random = new Random();
-	
-	public static int addPractice( JLabel label ) {
-		int a = random.nextInt(12) + 1;
-		int b = random.nextInt(12) + 1;
-		label.setText( a + " + " + b + " = ");
-		return a + b;		
-	}
-	
-	public static int subtractPractice( JLabel label ) {
-		int a = random.nextInt(12) + 1;
-		int b = a + random.nextInt(12) + 1;
-		label.setText( b + " - " + a + " = ");
-		return b - a;		
-	}
-	
-	public static int multiplyPractice( JLabel label ) {
-		int a = random.nextInt(12) + 1;
-		int b = random.nextInt(12) + 1;
-		label.setText( a + " \u00D7 " + b + " = ");
-		return a * b;		
-	}
-	
-	public static int dividePractice( JLabel label ) {
-		int a = random.nextInt(12) + 1;
-		int b = a*(random.nextInt(12) + 1);
-		label.setText( b + " \u00F7 " + a + " = ");
-		return b / a;		
-	}
-}
-----
+[[program:ProblemGenerator]][program:ProblemGenerator]
+PROGRAM=GUIChapter/programs/ProblemGenerator.java, CAPTION=Utility class
+to generate random addition, subtraction, multiplication, and division
+problems.
 
 The code listed above has four static methods `addPractice()`,
 `subtractPractice()`, `multiplyPractice()`, and `dividePractice()`. Each
@@ -1695,99 +1175,14 @@ display the problem, and returns the solution. Note that `\\u00D7` and
 `\\u00F7` are the Unicode values for the multiplication and division
 symbols.
 
-Program #program:MathTutor[[program:MathTutor]] generates the GUI in
-Figure link:#MathTutorFigure[[MathTutorFigure]]. Class `MathTutor`
-begins by creating only the objects that need to interact with event
-handlers: four menu items, a label, and a text field.
+Program REF=program:MathTutor generates the GUI in
+Figure REF=MathTutorFigure. Class `MathTutor` begins by creating only
+the objects that need to interact with event handlers: four menu items,
+a label, and a text field.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class MathTutor implements ActionListener, ItemListener {
-	private JMenuItem add = new JMenuItem("Addition");
-	private JMenuItem subtract = new JMenuItem("Subtraction");
-	private JMenuItem multiply = new JMenuItem("Multiply");
-	private JMenuItem divide = new JMenuItem ("Divide");
-    private JLabel score =
-    	new JLabel("Score: 0 Correct 0 Incorrect");
-    private JLabel label = new JLabel();
-    private JTextField field = new JTextField(10);
-    private JButton submit = new JButton("Submit");
-
-    public MathTutor() {
-        JFrame frame = new JFrame("Math Tutor");
-        JMenuBar menuBar = new JMenuBar();
-        JMenu type = new JMenu("Type");
-        JMenu operations = new JMenu("Operations");    
-        JCheckBoxMenuItem advanced =
-        	new JCheckBoxMenuItem("Advanced");
-    	// Add ActionListeners to menu items        
-    	add.addActionListener(this);/*@\label{addActionsToMenuItemsLine}@*/
-        subtract.addActionListener(this);
-        multiply.addActionListener(this);
-        divide.addActionListener(this);    	        
-        // Add ItemListener to checkbox menu item    	
-        advanced.addItemListener(this);
-        // Fill menu for problem type         
-        type.add(advanced); /*@\label{createMenuLine}@*/
-        // Fill menu for operations
-        operations.add(add);
-        operations.add(subtract);
-        operations.add(multiply);
-        operations.add(divide);  
-        // Disable advanced operations 
-        multiply.setEnabled(false); /*@\label{defaultDisableLine}@*/
-        divide.setEnabled(false);
-        // Fill menu bar set on frame
-        menuBar.add(type);
-        menuBar.add(operations);        
-        frame.setJMenuBar(menuBar);
-		// Add widgets to frame and display GUI
-        frame.add( score, BorderLayout.NORTH );
-        frame.add( label, BorderLayout.WEST );
-        frame.add( field, BorderLayout.EAST );
-        frame.add( submit, BorderLayout.SOUTH );         
-        frame.setSize(250, 125);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setVisible(true); 
-    }
-    
-    public void itemStateChanged(ItemEvent e) {
-    	if(e.getStateChange() == ItemEvent.SELECTED ) {
-            add.setEnabled(false); /*@\label{enableDisableAdvancedLine}@*/
-            subtract.setEnabled(false);
-            multiply.setEnabled(true); 
-            divide.setEnabled(true);
-    	}
-    	else {
-			add.setEnabled(true); /*@\label{enableDisableBasicLine}@*/
-			subtract.setEnabled(true); 
-			multiply.setEnabled(false); 
-			divide.setEnabled(false);
-    	}
-    }
-    
-    public void actionPerformed(ActionEvent e){
-    	Object menuItem = e.getSource();        
-    	if( menuItem == add )
-    		ProblemGenerator.addPractice( label );
-        else if( menuItem == subtract )
-        	ProblemGenerator.subtractPractice( label );
-        else if( menuItem == multiply )
-        	ProblemGenerator.multiplyPractice( label );
-        else if( menuItem == divide )
-        	ProblemGenerator.dividePractice( label ); 
-    	field.setText("");
-    }
-
-    public static void main(String[] args){        
-        new MathTutor();
-    }  
-}
-----
+[[program:MathTutor]][program:MathTutor]
+PROGRAM=GUIChapter/programs/MathTutor.java, CAPTION=Program that uses
+menus to generate math problems.
 
 Inside the `MathTutor` constructor, the frame and remaining widgets are
 created. Action listeners are added to the four operations menu items.
@@ -1796,16 +1191,15 @@ because it requires a different kind of event handler. Note that
 `MathTutor` implements both the `ActionListener` and `ItemListener`
 interfaces, allowing it to handle both kinds of events.
 
-Starting at line link:#createMenuLine[[createMenuLine]], the two menus
-are populated with their respective menu items. At
-line link:#defaultDisableLine[[defaultDisableLine]] the `multiply` and
-`divide` menu items are disabled because the application starts in basic
-mode. The menus are then added to the menu bar, and the menu bar is set
-on the frame. Finally, the label and text field are added to the frame,
-which is made visible. Note that these two widgets are added directly to
-the frame with the parameters `BorderLayout.NORTH` and
-`BorderLayout.SOUTH`. `JFrame` objects use the `BorderLayout` manager by
-default.
+Starting at line REF=createMenuLine, the two menus are populated with
+their respective menu items. At line REF=defaultDisableLine the
+`multiply` and `divide` menu items are disabled because the application
+starts in basic mode. The menus are then added to the menu bar, and the
+menu bar is set on the frame. Finally, the label and text field are
+added to the frame, which is made visible. Note that these two widgets
+are added directly to the frame with the parameters `BorderLayout.NORTH`
+and `BorderLayout.SOUTH`. `JFrame` objects use the `BorderLayout`
+manager by default.
 
 The `itemStateChanged()` method enables the `multiply` and `divide`
 menus and disables the `add` and `subtract` menus if the `advanced`
@@ -1822,7 +1216,7 @@ construction.  
 '''''
 
 [[subsection:Applets]]
-== Applets
+=== Applets
 
 An applet is a Java program that is written to run inside a web browser.
 A normal Java application is stored on disk and runs on the command line
@@ -1861,33 +1255,14 @@ set up the applet GUI by adding various widgets and event listeners.
 We can create a simple applet with a button and a label. Clicking this
 button sets the text on the label to contain some information about the
 colors in a rainbow. This applet is shown in
-Figure link:#rainbowAppletFigure[[rainbowAppletFigure]].
-Program #program:RainbowApplet[[program:RainbowApplet]] defines the
-applet.
+Figure REF=rainbowAppletFigure. Program REF=program:RainbowApplet
+defines the applet.
 
 to
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class RainbowApplet extends JApplet{
-	private JLabel label = new JLabel();
-	
-    public void init(){
-        JButton button = new JButton("Rainbows");
-        add(button, BorderLayout.NORTH);
-        add(label, BorderLayout.SOUTH);
-        button.addActionListener(new ActionListener(){
-        	public void actionPerformed ( ActionEvent e){
-        		label.setText("Have the colors ROYGBIV.");
-        	}
-        });
-    }
-}
-----
+[[program:RainbowApplet]][program:RainbowApplet]
+PROGRAM=GUIChapter/programs/RainbowApplet.java, CAPTION=An applet with a
+button and a label.
 
 Note that class `RainbowApplet` extends `JApplet`, as will most applets
 you write. The label is declared as a field, so that the event handler
@@ -1977,12 +1352,12 @@ fully functional GUI designed to be an arithmetic tutor.
 === Math applet (solution)
 
 The applet that meets the specification given at the beginning of the
-chapter is similar to Program #program:MathTutor[[program:MathTutor]].
-Modifications must be made to convert that program into an applet and
-add full functionality to the event handlers. We now go through this
-rather long Java program step by step. GUI programs in Java tend to be
-longer than their command line versions because of the code needed to
-set up all the widgets.
+chapter is similar to Program REF=program:MathTutor. Modifications must
+be made to convert that program into an applet and add full
+functionality to the event handlers. We now go through this rather long
+Java program step by step. GUI programs in Java tend to be longer than
+their command line versions because of the code needed to set up all the
+widgets.
 
 to
 
@@ -2192,12 +1567,12 @@ actually execute the code inside.
 
 If you are writing a complex program, the EDT may interact with many
 other threads, and the synchronization issues discussed in
-Chapter #chapter:Synchronization[[chapter:Synchronization]] will become
-important. However, only the EDT is allowed to change the state of
-widgets in a GUI. Using other threads to do so will work some of the
-time, but it is not thread-safe and violates the design of Swing.
+Chapter REF=chapter:Synchronization will become important. However, only
+the EDT is allowed to change the state of widgets in a GUI. Using other
+threads to do so will work some of the time, but it is not thread-safe
+and violates the design of Swing.
 
-== Worker threads
+=== Worker threads
 
 Thread safety is not the most common multi-threaded GUI problem,
 however. Unresponsive GUIs can be found on almost every platform, as you
@@ -2218,53 +1593,9 @@ displaying an answer on the first label (in this case, approximately
 latexmath:[$\sqrt{2}$]). When the other button is pressed, it increments
 a counter and displays the value in the second label.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class UnresponsiveGUI extends JFrame
-	implements ActionListener {
-	JLabel label = new JLabel("Answer:");
-	JButton compute = new JButton("Compute");
-	JLabel counter = new JLabel("0");
-	JButton increment = new JButton("Increment");
-	int count = 0;
-	
-	public static void main(String args[]) {
-		UnresponsiveGUI frame = new UnresponsiveGUI();		
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setSize(250,150);
-		frame.setVisible(true);
-	}
-	
-	public UnresponsiveGUI() {
-		setLayout(new GridLayout(4,1));
-		setTitle("Unresponsive GUI");				
-		add(label);		
-		compute.addActionListener(this);
-		add(compute);		
-		add(counter);
-		increment.addActionListener(this);
-		add(increment);		
-	}	
-	
-	public void actionPerformed(ActionEvent e) {
-		if( e.getSource() == compute ) {			
-			label.setText("Computing...");
-	    	try {
-	            Thread.sleep(5000);/*@\label{unresponsive sleep}@*/
-	        } catch( Exception ignore ) { }
-	        label.setText("Answer: " + Math.sqrt(2.0));
-		}
-		else {
-			count++;
-			counter.setText("" + count);
-		}
-	}
-}
-----
+[[program:UnresponsiveGUI]][program:UnresponsiveGUI]
+PROGRAM=GUIChapter/programs/UnresponsiveGUI.java, CAPTION=A GUI that
+becomes unresponsive when the ``Compute'' button is pressed.
 
 to
 
@@ -2282,76 +1613,19 @@ _generic_, meaning that it has type parameters (given in angle brackets)
 which specify what type of objects it interacts with. Generic classes
 are often containers like `LinkedList` where the type parameter says
 what kind of objects will be kept in the list.
-Chapter #chapter:Dynamic Data
-Structures[[chapter:Dynamic Data
-Structures]] covers generics in some depth. The reason we need generics
-for `SwingWorker` is so that it can specify what kind of object it will
-return when it finishes its work. The first type parameter specifies the
-type that the worker will return when it completes its work. The second
-specifies the type that the worker will return periodically in the
-process of doing work (which can be useful for updating progress bars).
-Examine the following program which has added a `SwingWorker` to its
-`actionPerformed()` method but is otherwise the same as
-Program #program:UnresponsiveGUI[[program:UnresponsiveGUI]].
+Chapter REF=chapter:Dynamic Data Structures covers generics in some
+depth. The reason we need generics for `SwingWorker` is so that it can
+specify what kind of object it will return when it finishes its work.
+The first type parameter specifies the type that the worker will return
+when it completes its work. The second specifies the type that the
+worker will return periodically in the process of doing work (which can
+be useful for updating progress bars). Examine the following program
+which has added a `SwingWorker` to its `actionPerformed()` method but is
+otherwise the same as Program REF=program:UnresponsiveGUI.
 
-[source,numberLines,java]
-----
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class WorkerGUI extends JFrame implements ActionListener {
-	JLabel label = new JLabel("Answer:");
-	JButton compute = new JButton("Compute");
-	JLabel counter = new JLabel("0");
-	JButton increment = new JButton("Increment");
-	int count = 0;	
-	
-	public static void main(String args[]) {
-		WorkerGUI frame = new WorkerGUI();		
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setSize(250,150);
-		frame.setVisible(true);
-	}
-	
-	public WorkerGUI() {
-		setLayout(new GridLayout(4,1));
-		setTitle("Worker GUI");				
-		add(label);		
-		compute.addActionListener(this);
-		add(compute);		
-		add(counter);
-		increment.addActionListener(this);
-		add(increment);		
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		if( e.getSource() == compute ) {
-			SwingWorker worker = new SwingWorker<String, Void>() {		    
-			    public String doInBackground() {
-			    	try {
-			            Thread.sleep(5000);/*@\label{responsive sleep}@*/
-			        } catch( Exception ignore ) {}
-			        return "Answer: " + Math.sqrt(2.0);
-			    }
-			    
-			    public void done() {
-			        try {
-			        	label.setText(get());
-			        } catch (Exception ignore) {}		       
-			    }
-			};
-			
-			worker.execute();
-			label.setText("Computing...");
-		}
-		else {
-			count++;
-			counter.setText("" + count);
-		}
-	}
-}
-----
+[[program:WorkerGUI]][program:WorkerGUI]
+PROGRAM=GUIChapter/programs/WorkerGUI.java, CAPTION=A GUI that uses
+`SwingWorker` to avoid becoming unresponsive.
 
 In this program, the first type parameter for the `SwingWorker` is
 `String` because we are going to set the text in a `JLabel` with its
@@ -2391,15 +1665,14 @@ it should be easy to understand the extensive Java tutorial at
 http://download.oracle.com/javase/tutorial/uiswing/components/ or other
 reference sources.
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
 -0.5in *Conceptual Problems*
 
-In
-Program #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]],
-why have we declared the buttons and the text box to be `final`?
+In Program REF=program:FrameWithPanelAndActions, why have we declared
+the buttons and the text box to be `final`?
 
 Note that both `ActionListener` and `MouseListener` interfaces can be
 used to process button clicks. Under which circumstances is
@@ -2417,30 +1690,28 @@ for: `ActionListener`, `MouseListener`, `ItemListener`, and
 -0.5in *Programming Practice*
 
 Remove the two instances of the keyword `final` from
-Program #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]]
-and try to compile it. Why does the compiler complain? What do you
-conclude regarding the use of `final` with respect to local variables
-used in the `actionPerformed()` method of an anonymous inner class? Why
-is this not a concern for top-level, named classes used as an
-`ActionListener`?
+Program REF=program:FrameWithPanelAndActions and try to compile it. Why
+does the compiler complain? What do you conclude regarding the use of
+`final` with respect to local variables used in the `actionPerformed()`
+method of an anonymous inner class? Why is this not a concern for
+top-level, named classes used as an `ActionListener`?
 
 Write a program that creates a GUI containing two buttons labeled
 ``Start'' and ``Done.'' The GUI frame should be labeled ``Start and
 Done.''
 
-Modify Program #program:SimpleMouseEvents[[program:SimpleMouseEvents]]
-by implementing the `mouseExited()`, `mousePressed()`, and
-`mouseReleased()` methods. Each method must display a suitable message
-in the text box when the corresponding event occurs. For example, when
-the mouse exits button `one`, the text box should display ``Mouse exits
-One.''
+Modify Program REF=program:SimpleMouseEvents by implementing the
+`mouseExited()`, `mousePressed()`, and `mouseReleased()` methods. Each
+method must display a suitable message in the text box when the
+corresponding event occurs. For example, when the mouse exits button
+`one`, the text box should display ``Mouse exits One.''
 
-Modify Program #program:IconExample[[program:IconExample]] such that
-clicking the icon-decorated button generates a roaring sound. Note that
-this will require you to add an `ActionListener` to the button, create
-an audio clip for the desired sound, and then play this click when the
-button is clicked. Consider visiting http://www.freesound.org/ for free
-sound files.
+Modify Program REF=program:IconExample such that clicking the
+icon-decorated button generates a roaring sound. Note that this will
+require you to add an `ActionListener` to the button, create an audio
+clip for the desired sound, and then play this click when the button is
+clicked. Consider visiting http://www.freesound.org/ for free sound
+files.
 
 Write a Java program that creates a GUI containing a label with a
 picture of yourself.
@@ -2456,20 +1727,18 @@ local directory and load it from there into your application.
 
 In Example . we stopped both the chirp and the bark sounds because the
 action listener corresponding to the ``Stop Playing'' button does not
-know which sound is playing. Modify
-Program #program:SoundGame[[program:SoundGame]] so that only the sound
-that is playing is stopped. You may need to declare another variable to
-keep track of which is playing.
+know which sound is playing. Modify Program REF=program:SoundGame so
+that only the sound that is playing is stopped. You may need to declare
+another variable to keep track of which is playing.
 
-Modify Program #program:AnimalIdentifier[[program:AnimalIdentifier]] so
-that it plays a sound associated with an animal when the mouse is
-clicked over its label. Note that this is an example of a situation
-where a `MouseListener` can be used to listen for mouse click events
-though an `ActionListener` cannot. As in Exercises . and ., you may need
-to download sounds from the Internet.
+Modify Program REF=program:AnimalIdentifier so that it plays a sound
+associated with an animal when the mouse is clicked over its label. Note
+that this is an example of a situation where a `MouseListener` can be
+used to listen for mouse click events though an `ActionListener` cannot.
+As in Exercises . and ., you may need to download sounds from the
+Internet.
 
-Modify the applet from
-Section #solution:Math applet[[solution:Math applet]] to display the
+Modify the applet from Section REF=solution:Math applet to display the
 problem number the user is working on. The first problem is numbered
 ``Problem 1'' with subsequent problems 2, 3, and so on. The number
 should increase each time the user hits the Submit button. Find a
@@ -2477,38 +1746,35 @@ suitable place on the GUI to display this information. You may need to
 add a panel to reorganize the GUI.
 
 Remove the `actionPerformed()` and `itemStateChanged()` methods from the
-`MathTutorApplet` class given in
-Section #solution:Math applet[[solution:Math applet]]. Move the code
-from these methods into individual anonymous inner classes added to the
-`add`, `subtract`, `multiply`, `divide`, `submit`, and `advanced`
-objects.
+`MathTutorApplet` class given in Section REF=solution:Math applet. Move
+the code from these methods into individual anonymous inner classes
+added to the `add`, `subtract`, `multiply`, `divide`, `submit`, and
+`advanced` objects.
 
 Note that you are now able to remove `ActionListener` and `ItemListener`
 from the list of implemented interfaces for the `MathTutorApplet` class.
 Reorganizing the code this way should have no impact on the
 functionality of the applet. Is doing so a good idea or not? Why?
 
-In
-Program #program:FrameWithPanelAndActions[[program:FrameWithPanelAndActions]]
-exchange the first two `add()` method calls on the `soundPanel` so that
-`bark` is added to the panel before the `chirp`. Explain how the
-appearance of the GUI is changed.
+In Program REF=program:FrameWithPanelAndActions exchange the first two
+`add()` method calls on the `soundPanel` so that `bark` is added to the
+panel before the `chirp`. Explain how the appearance of the GUI is
+changed.
 
-Modify Program #program:FrameWithPanel[[program:FrameWithPanel]] by
-adding a second panel named `secondPanel`. Create a new button named
-`train` with the label ``Train.'' Add `train` to `secondPanel`. Now add
-`secondPanel` to `soundCheck` and look at the GUI generated. Can you
-explain why only one panel is visible?
+Modify Program REF=program:FrameWithPanel by adding a second panel named
+`secondPanel`. Create a new button named `train` with the label
+``Train.'' Add `train` to `secondPanel`. Now add `secondPanel` to
+`soundCheck` and look at the GUI generated. Can you explain why only one
+panel is visible?
 
-Remove line link:#disableResizableLine[[disableResizableLine]] from
-Program #program:FlowLayoutExample[[program:FlowLayoutExample]]. Run the
-modified program and resize the frame to various sizes. How does the
-placement of the buttons change?
+Remove line REF=disableResizableLine from
+Program REF=program:FlowLayoutExample. Run the modified program and
+resize the frame to various sizes. How does the placement of the buttons
+change?
 
-Modify Program #program:FlowLayoutExample[[program:FlowLayoutExample]]
-by deleting the lines that set the frame size. What does the resulting
-GUI look like? Now add the following code just before
-line link:#disableResizableLine[[disableResizableLine]]:
+Modify Program REF=program:FlowLayoutExample by deleting the lines that
+set the frame size. What does the resulting GUI look like? Now add the
+following code just before line REF=disableResizableLine:
 
 ....
 demo.pack();
@@ -2541,28 +1807,24 @@ that it works.
 
 -0.5in *Experiments*
 
-ConcurrencyRecall that
-Program #program:UnresponsiveGUI[[program:UnresponsiveGUI]] is
+ConcurrencyRecall that Program REF=program:UnresponsiveGUI is
 unresponsive because the event dispatch thread goes to sleep for 5
-seconds (5,000 milliseconds) on
-line link:#unresponsive sleep[[unresponsive sleep]]. Experiment with
-this value to determine what is a reasonable amount of time for the EDT
-to be blocked before the GUI feels unresponsive.
+seconds (5,000 milliseconds) on line REF=unresponsive sleep. Experiment
+with this value to determine what is a reasonable amount of time for the
+EDT to be blocked before the GUI feels unresponsive.
 
-Concurrency Program #program:UnresponsiveGUI[[program:UnresponsiveGUI]]
-is unrealistic because the EDT simply goes to sleep. Normally, a GUI
-becomes unresponsive because the EDT is performing extensive
-calculations or doing slow I/O operations. Replace
-line link:#unresponsive sleep[[unresponsive sleep]] with a short loop
-that performs significant calculations. One simple way to spend a lot of
+Concurrency Program REF=program:UnresponsiveGUI is unrealistic because
+the EDT simply goes to sleep. Normally, a GUI becomes unresponsive
+because the EDT is performing extensive calculations or doing slow I/O
+operations. Replace line REF=unresponsive sleep with a short loop that
+performs significant calculations. One simple way to spend a lot of
 computational time is by summing the sines of random numbers, similar to
 the work done in Example .. How many sines do you need to compute to
 make the GUI unresponsive for 5 seconds?
 
 Concurrency Take the computationally expensive loop from Exercise . and
-use it to replace line link:#responsive sleep[[responsive sleep]] in
-Program #program:WorkerGUI[[program:WorkerGUI]], the `SwingWorker`
-version of the program. Does the program become unresponsive if you run
-it? If possible, run the program on Windows, Mac, and Linux
-environments. If it is unresponsive in some environments but not others,
-why do you think that might be?
+use it to replace line REF=responsive sleep in
+Program REF=program:WorkerGUI, the `SwingWorker` version of the program.
+Does the program become unresponsive if you run it? If possible, run the
+program on Windows, Mac, and Linux environments. If it is unresponsive
+in some environments but not others, why do you think that might be?

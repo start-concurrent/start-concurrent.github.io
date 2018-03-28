@@ -1,4 +1,3 @@
-[[chapter:Classes]]
 == Classes
 
 === Nested expressions (problem)
@@ -22,9 +21,9 @@ left and right square brackets must be balanced, and left and right
 curly braces must be balanced. Furthermore, a correctly balanced set of
 parentheses can be nested inside of a correctly balanced set of square
 brackets or curly braces (and vice versa), but they cannot intersect as
-they do at the end of the previous paragraph.
-Table #table:nested expressions[[table:nested expressions]] shows more
-examples of correctly and incorrectly nested expressions.
+they do at the end of the previous paragraph. Table REF=table:nested
+expressions shows more examples of correctly and incorrectly nested
+expressions.
 
 .Correctly and incorrectly nested expressions.
 [cols="<,^,<",options="header",]
@@ -97,7 +96,7 @@ inheritance and polymorphism. Below, we are going to focus on the
 basics, including the fundamentals of objects, encapsulation of data,
 and instance (non-static) methods.
 
-== Objects
+=== Objects
 
 You have already used objects, perhaps without realizing it. Every time
 you use a `String`, you are using an object. So far, we have created a
@@ -124,7 +123,7 @@ stack objects, we should be able to use this library countless times for
 countless different stack objects without changing the code. This kind
 of code reuse is one of the main goals of OOP.
 
-== Encapsulation
+=== Encapsulation
 
 In order to guarantee that objects can be used in many different
 contexts safely, the data inside of the object must be protected. Java
@@ -140,7 +139,7 @@ actions that the object can do. Each action has a certain specified
 input and a certain specified output, but the internal functioning of
 the object is hidden.
 
-== Instance methods
+=== Instance methods
 
 These ``actions'' are methods, but not static ones. Static methods did
 not need an object in order to be called. Regular (instance) methods
@@ -167,7 +166,7 @@ First, we’ll describe how to declare fields, then explain how to write
 instance methods to manipulate that data, and finally give more details
 about protecting its privacy.
 
-== Fields
+=== Fields
 
 Fields in an object must be declared like any other data in Java. The
 type of a piece of data can be a primitive or reference type. Fields are
@@ -210,21 +209,9 @@ any particular object. When we tell the `main()` method to change the
 fields, it does not know what object we are talking about. If we
 actually want to use an object, we’ll have to create one.
 
-[source,numberLines,java]
-----
-public class Human {	
-	private String name;
-	private String DOB;
-	private int height; //in cm	
-
-	public static void main(String[] args) {
-		Human einstein = new Human();
-		einstein.name = "Albert Einstein";
-		einstein.DOB = "March 14, 1879";
-		einstein.height = 175;		
-	}
-}
-----
+[[program:Human]][program:Human]
+PROGRAM=ClassesChapter/programs/Human.java, CAPTION=Example of a class
+encapsulating the attributes of a human being.
 
 The above code compiles because we have used the `new` keyword to create
 an object of type `Human` saved in a reference variable called
@@ -244,13 +231,12 @@ template for objects but it is also a place to house other related code,
 such as static methods, including `main()`.
 
 Although the practice is discouraged, we mentioned in
-Section #subsection:class variables[[subsection:class variables]] that
-class variables can be stored in the class itself. Every object has a
-distinct copy of each field, but there is only a single copy of each
-class variable that they all share. By using the keyword `static`, we
-could add a class variable called `population` to our `Human` class,
-since that is information connected to humans as a whole, not to any
-individual human being.
+Section REF=subsection:class variables that class variables can be
+stored in the class itself. Every object has a distinct copy of each
+field, but there is only a single copy of each class variable that they
+all share. By using the keyword `static`, we could add a class variable
+called `population` to our `Human` class, since that is information
+connected to humans as a whole, not to any individual human being.
 
 ....
 public class Human {
@@ -269,7 +255,7 @@ have their own `name`, `DOB`, and `height` values, but the value for
 
 to
 
-== Constructors
+=== Constructors
 
 To create a new object, you have to invoke a _constructor_, a special
 kind of method that can initialize the object. A constructor allows sets
@@ -308,7 +294,7 @@ constructor does not have a return type. A constructors is the only kind
 of method that does not have a return type. It is possible to have more
 than one constructor as well, just as other methods can be overloaded.
 For more information about overloaded methods, refer back to
-Section #subsubsection:Overloaded methods[[subsubsection:Overloaded methods]].
+Section REF=subsubsection:Overloaded methods.
 
 ....
     public Rectangle( int value ) {
@@ -365,7 +351,7 @@ This version of the code functions correctly, since we have explicitly
 told Java to store the argument `length` into the field `length` inside
 the object pointed at by `this` and to do similarly for `width`.
 
-== Methods
+=== Methods
 
 Objects do not really come to life until you add instance methods. With
 the `Rectangle` class described above, any `Rectangle` objects created
@@ -376,7 +362,7 @@ the fields and the methods.
 There are many different kinds of methods, but two of the most important
 are accessors and mutators.
 
-=== Accessors
+==== Accessors
 
 We often want to read the data inside of various the objects. With our
 current definition of `Rectangle`, no code from an outside class can
@@ -423,7 +409,7 @@ These accessors compute the area and perimeter, respectively, of the
 rectangle in question, even though that data is not stored directly in
 the `Rectangle` object.
 
-=== Mutators
+==== Mutators
 
 Some objects, such as `String` values, are _immutable_ objects, meaning
 that the data stored inside them cannot be changed after they have been
@@ -482,14 +468,14 @@ objects, it becomes even more important to protect the values of the
 fields from malicious or mistaken users.
 
 [[subsection:Access modifiers]]
-== Access modifiers
+=== Access modifiers
 
 Hiding data is at the heart of the Java OOP model. There are four
 different levels of access that can be applied to fields and methods,
 whether static or not. They are `public`, `private`, `protected`, and
 package-private.
 
-=== `public` modifier
+==== `public` modifier
 
 ___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 The `public` access modifier states that a variable or method can be
@@ -504,7 +490,7 @@ you have a field that can be changed at any time by any code to any
 value, you can leave that field `public`.
 ___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-=== `private` modifier
+==== `private` modifier
 
 _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 This modifier states that a variable or method cannot be accessed by any
@@ -517,18 +503,18 @@ inside of any other `Rectangle` object or class. Most fields should be
 inside the class or object to divide up work.
 _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-=== `protected` modifier
+==== `protected` modifier
 
-_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 This modifier states that a variable or method cannot be accessed by any
 code unless the code is contained in the same class, a subclass, or is
 in the same package. This level of access is more restrictive than
 `public` but less restrictive than `private` or default access. We
 discuss it further in the context of subclasses and inheritance in
-Chapter #chapter:Inheritance[[chapter:Inheritance]].
-_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Chapter REF=chapter:Inheritance.
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-=== Package-private (no explicit modifier)
+==== Package-private (no explicit modifier)
 
 __________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 If you do not type an access modifier when you declare a field or
@@ -714,7 +700,7 @@ different ways to define a nested class. They are all useful, but each
 is subtly different. Some nested classes are tied to a specific object
 of the outer class while others are not.
 
-== Static nested classes
+=== Static nested classes
 
 If you mark a nested class with the `static` keyword, you are creating a
 class whose objects are independent of any particular outer class
@@ -829,7 +815,7 @@ show that it is allowed by Java. A better test would create a second
 
 '''''
 
-== Inner classes
+=== Inner classes
 
 Another kind of nested class is an _inner class_. Unlike static nested
 classes, the objects of inner classes are associated with a particular
@@ -882,8 +868,8 @@ is only referred to in the method. Such a class is called a _local
 class_. It is possible to create an unnamed local class on the fly as
 well. Such a class is called an _anonymous class_. Both local and
 anonymous classes are special kinds of inner classes. Because of the way
-they are created and used, we discuss them in
-Section #advanced:Local and anonymous classes[[advanced:Local and anonymous classes]]
+they are created and used, we discuss them in Section REF=advanced:Local
+and anonymous classes
 
 If you create a data structure for other programmers to use, a useful
 feature is the ability to retrieve each item from the data structure in
@@ -917,8 +903,7 @@ public class SafeArray {
 We could add an inner class called `Iterator` to `SafeArray` that allows
 us to process all the array values without knowing how many there are.
 This kind of behavior is useful for many dynamic data structures, as
-discussed in
-Chapter #chapter:Dynamic Data Structures[[chapter:Dynamic Data Structures]].
+discussed in Chapter REF=chapter:Dynamic Data Structures.
 
 ....
 public class SafeArray {
@@ -976,23 +961,9 @@ from the beginning of the chapter. Classes help us divide up the work of
 solving the problem. First, we need a stack class that can hold `char`
 values.
 
-[source,numberLines,java]
-----
-public class SymbolStack {
-	private char[] symbols;
-	private int size;
-	
-	public SymbolStack( int maxSize ) {
-		symbols = new char[maxSize];
-		size = 0;
-	}
-	
-	public void push( char symbol ) { symbols[size++] = symbol; }		
-	public void pop() { size--; }	
-	public char top() { return symbols[size - 1]; }
-	public boolean isEmpty() { return size == 0; }
-}
-----
+[[program:SymbolStack]][program:SymbolStack]
+PROGRAM=ClassesChapter/programs/SymbolStack.java, CAPTION=Simple stack
+class to hold symbols from an input expression.
 
 The `SymbolStack` class allows us to perform the push, pop, and top
 stack operations with methods of the same names. Its constructor takes a
@@ -1095,14 +1066,12 @@ nested based on the value of `correct`.
 
 Nearly everything in Java is an object: arrays, lists, `String` values,
 colors, and even exceptions, which form Java’s error-handling system and
-is discussed in Chapter #chapter:Exceptions[[chapter:Exceptions]]. Some
-critics of Java point out that `int`, `double`, and the other primitive
-types are not objects, forcing the programmer to adopt two different
-programming models. Regardless, threads are stored as objects as well.
-In
-Chapter #chapter:Concurrent Programming[[chapter:Concurrent Programming]],
-we discuss how to create threads and the various methods that can be
-used to interact with them.
+is discussed in Chapter REF=chapter:Exceptions. Some critics of Java
+point out that `int`, `double`, and the other primitive types are not
+objects, forcing the programmer to adopt two different programming
+models. Regardless, threads are stored as objects as well. In
+Chapter REF=chapter:Concurrent Programming, we discuss how to create
+threads and the various methods that can be used to interact with them.
 
 However, objects of type `Thread` are not the only ones you deal with
 when writing concurrent programs. As we have just noted, most data in
@@ -1114,24 +1083,10 @@ their inquisitive nature, another tradition holds that curiosity killed
 the cat. Consider the class below that keeps track of the lives a cat
 has, losing one every time it becomes curious.
 
-[source,numberLines,java]
-----
-public class Cat {
-	private int lives = 9;
-	
-	public boolean useCuriosity() {			
-		if( lives > 1 ) { /*@\label{life check}@*/
-			lives--;
-			System.out.println("Down to life " + lives);
-			return true;
-		}
-		else {
-			System.out.println("No more lives left!");
-			return false;
-		}
-	}	
-}
-----
+[[program:Cat]][program:Cat] PROGRAM=ClassesChapter/programs/Cat.java,
+CAPTION=Program to record the number of lives a cat has left. Each `Cat`
+object starts with 9, but loses one each time it uses its curiosity. If
+no more lives remain, an error message is output.
 
 If the relationship between curiosity and mortality is the only feature
 of a cat you are trying to model, this class appears to function well.
@@ -1143,18 +1098,17 @@ lose more than 9 lives.
 In a multi-threaded situation, there is no telling when a thread might
 pause in executing the `useCuriosity()` method. If 100 threads all
 called `useCuriosity()`, each one might successfully pass the `if`
-statement on line link:#life check[[life check]] before any had
-decremented `lives`. Once past the check, nothing would prevent them
-from continuing on and decrementing `lives`, resulting in a cat who lost
-100 lives, resulting in a total of -91 lives. Such a scenario makes no
-sense.
+statement on line REF=life check before any had decremented `lives`.
+Once past the check, nothing would prevent them from continuing on and
+decrementing `lives`, resulting in a cat who lost 100 lives, resulting
+in a total of -91 lives. Such a scenario makes no sense.
 
-In Chapter #chapter:Synchronization[[chapter:Synchronization]], we
-discuss how to prevent this problem, using the `synchronized` keyword to
-allow only a single thread at a time to execute the body of a method.
-The goal is to make `useCuriosity()` _thread-safe_, meaning that its
-behavior is consistent and correct no matter how many threads try to
-execute it at the same time.  
+In Chapter REF=chapter:Synchronization, we discuss how to prevent this
+problem, using the `synchronized` keyword to allow only a single thread
+at a time to execute the body of a method. The goal is to make
+`useCuriosity()` _thread-safe_, meaning that its behavior is consistent
+and correct no matter how many threads try to execute it at the same
+time.  
 
 '''''
 
@@ -1163,14 +1117,13 @@ programs, we discuss ways to make them thread-safe. However, you are
 also a consumer of code written by other people. In multi-threaded
 environments, you may need to use library classes that are thread-safe.
 For example, `AtomicInteger` is a thread-safe class designed to store
-and manipulate `int` values. In
-Chapter #chapter:Dynamic Data Structures[[chapter:Dynamic Data Structures]],
-we talk about the `ArrayList` and `Vector` classes, which are both used
-to hold variable length lists of objects. One of the few differences
-between them is that `ArrayList` is not thread-safe while `Vector` is.
-There is even the `Collections.synchronizedCollection()` method (and
-other similar methods), which takes a collection that is not thread-safe
-and returns a version of it that is.
+and manipulate `int` values. In Chapter REF=chapter:Dynamic Data
+Structures, we talk about the `ArrayList` and `Vector` classes, which
+are both used to hold variable length lists of objects. One of the few
+differences between them is that `ArrayList` is not thread-safe while
+`Vector` is. There is even the `Collections.synchronizedCollection()`
+method (and other similar methods), which takes a collection that is not
+thread-safe and returns a version of it that is.
 
 Java was intended to be multi-threaded from the very beginning, but
 concurrency was never the most important feature in the language. For
@@ -1187,7 +1140,7 @@ with the `synchronized` keyword. The JVM is relatively efficient about
 how it enforces that keyword, but the computational expense is not zero.
 Learn the libraries well, and use the right tools for the right job.
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -1245,9 +1198,9 @@ public class B {
 The field `a` is used three times in the previous code. Which of these
 uses cause a compiler error and why?
 
-In Section #solution:Nested expressions[[solution:Nested expressions]],
-we gave a definition of `SymbolStack` that implements a simple stack
-using two fields, defined as followed:
+In Section REF=solution:Nested expressions, we gave a definition of
+`SymbolStack` that implements a simple stack using two fields, defined
+as followed:
 
 ....
 private char[] symbols;
@@ -1333,10 +1286,9 @@ as an argument.
 Write client code that allows you to create two `Point` objects and test
 if the `distance()` method gives the right answer.
 
-GUIRe-implement the solution from
-Section #solution:Nested expressions[[solution:Nested expressions]] so
-that it performs its input and output with GUIs created using
-`JOptionPane`.
+GUIRe-implement the solution from Section REF=solution:Nested
+expressions so that it performs its input and output with GUIs created
+using `JOptionPane`.
 
 -0.5in *Experiments*
 

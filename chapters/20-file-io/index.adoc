@@ -1,4 +1,3 @@
-[[chapter:File I/O]]
 == File I/O
 
 === A picture is worth 1,000 bytes (problem)
@@ -66,7 +65,7 @@ order to reach these files, you probably had to look through some
 directories, which are a special kind of file as well. But, what is a
 file?
 
-== Non-volatile storage
+=== Non-volatile storage
 
 A computer program is like a living thing, always moving and restless.
 The variables in a program are stored in RAM, which is volatile storage.
@@ -85,7 +84,7 @@ file operations. Nevertheless, the characteristics of non-volatile
 memory are often associated with file I/O: slow access times and the
 possibility of errors in the event of hardware problems.
 
-== Stream model
+=== Stream model
 
 While discussing RLE encoding, we described a file as a stream of bytes,
 and that is a good definition for a file, especially in Java. Since Java
@@ -108,7 +107,7 @@ cannot ask the user to try again if there is a mistake in input. To deal
 with all these possible errors, exception handling will accompany many
 different file I/O operations in Java.
 
-== Text files and binary files
+=== Text files and binary files
 
 When talking about files, many people divide files into two categories:
 _text files_ and _binary files_. A text file can be read by humans. That
@@ -142,7 +141,7 @@ process will be similar in either case.
 
 === File operations in Java (syntax)
 
-== The `File` class
+=== The `File` class
 
 The most basic object for interacting with a file in Java are objects of
 the `File` class. A `File` object allows you to interact with a file at
@@ -213,7 +212,7 @@ http://docs.oracle.com/javase/, you can choose the edition of Java you
 are using and get detailed documentation for all of the standard
 library, including file I/O classes.
 
-== Reading and writing text files
+=== Reading and writing text files
 
 Once you have a `File` object, its true usefulness comes from combining
 it with other classes. You are already familiar with the `Scanner`
@@ -291,7 +290,7 @@ new FileOutputStream( "/homes/owilde/programs/file.txt" ) );
 Be sure to import `java.io.*` in order to have access to the
 `FileOutputStream` and `PrintWriter` classes.
 
-== Reading and writing binary files
+=== Reading and writing binary files
 
 We covered text files first because the input and output is similar to
 console I/O. When reading and writing text files, it’s easy to verify
@@ -422,26 +421,9 @@ too difficult, but it seems cumbersome. The objects provide methods
 which elegantly allow you to read and write a whole object at a time. To
 do so, we need to define a new class.
 
-[source,numberLines,java]
-----
-import java.io.Serializable;
-
-public class BaseballPlayer implements Serializable {
-	private int homeRuns;
-	private int RBI;
-	private float battingAverage;
-	
-	public BaseballPlayer( int homeRuns, int RBI, float battingAverage ) {
-		this.homeRuns = homeRuns;
-		this.RBI = RBI;
-		this.battingAverage = battingAverage;
-	}
-	
-	public int getHomeRuns() { return homeRuns; } 
-	public int getRBI() { return RBI; }
-	public float getBattingAverage() { return battingAverage; }
-}
-----
+[[program:BaseballPlayer]][program:BaseballPlayer]
+PROGRAM=FileIOChapter/programs/BaseballPlayer.java, CAPTION=Serializable
+BaseballPlayer class.
 
 The new class `BaseballPlayer` encapsulates the three pieces of
 information we want. Note that it also implements the interface
@@ -548,28 +530,9 @@ code, we can write a directory listing tool which lists all the files in
 a directory, the dates each was last modified, and whether or not a file
 is a directory.
 
-[source,numberLines,java]
-----
-import java.io.*;
-import java.text.*;
-import java.util.*;
-
-public class Directory {	
-	public static void main(String[] args) {
-		File directory = new File(".");		
-		File[] files = directory.listFiles();
-		for( File file : files ) {
-			System.out.print( DateFormat.getDateInstance().format( 
-				new Date( file.lastModified()) ) + "\t");
-			if( file.isDirectory() )
-				System.out.print( "directory" );
-			else
-				System.out.print( "\t" );
-			System.out.println( "\t" +  file.getName() );
-		}				
-	}
-}
-----
+[[program:Directory]][program:Directory]
+PROGRAM=FileIOChapter/programs/Directory.java, CAPTION=Directory listing
+tool.
 
 As you can see, the code first creates a `File` object using `"."` to
 specify the current working directory. The `listFiles()` method returns
@@ -586,73 +549,19 @@ our job to read each radius, compute the area of the circle, and write
 those areas to a file called `areas.txt`, using the formula
 latexmath:[$A = \pi r^2$].
 
-[source,numberLines,java]
-----
-import java.io.*;
-import java.util.*;
-
-public class AreaFromRadiusText {
-	public static void main(String[] args) {
-		File inFile = new File( "radiuses.txt" );
-		File outFile = new File( "areas.txt" );
-		Scanner in = null;
-		PrintWriter out = null;		
-		double radius;
-		try {
-			in = new Scanner( inFile );
-			out = new PrintWriter( outFile );			
-			while( in.hasNextDouble() ) {
-				radius = in.nextDouble();
-				out.println( Math.PI*radius*radius );
-			}
-		}
-		catch( Exception e ) { 
-			System.out.println( e.getMessage() );
-		}
-		finally { 
-			if( in != null ) in.close();
-			if( out != null ) out.close();
-		}
-	}
-}
-----
+[[program:AreaFromRadiusText]][program:AreaFromRadiusText]
+PROGRAM=FileIOChapter/programs/AreaFromRadiusText.java, CAPTION=Program
+to read a list of radiuses from a text file and output their areas to
+another file.
 
 The previous class did all of its input and output with text files. We
 will also implement this program to read from a binary file called
 `radiuses.bin` and write to a binary file called `areas.bin`.
 
-[source,numberLines,java]
-----
-import java.io.*;
-
-public class AreaFromRadiusBinary {
-	public static void main(String[] args) {
-		File inFile = new File( "radiuses.bin" );
-		File outFile = new File( "areas.bin" );
-		ObjectInputStream in = null;
-		ObjectOutputStream out = null;
-		double radius;
-		try {
-			in = new ObjectInputStream( 
-				new FileInputStream( inFile ));
-			out = new ObjectOutputStream( 
-				new FileOutputStream( outFile ));			
-			while( true ) {
-				radius = in.readDouble();
-				out.writeDouble(  Math.PI*radius*radius );				
-			}			
-		}
-		catch( EOFException e ) {}
-		catch(Exception e) {
-			System.out.println( e.getMessage() );
-		}
-		finally { 
-			try { in.close(); } catch( Exception e ){}
-			try { out.close(); } catch( Exception e ){}
-		}
-	}
-}
-----
+[[program:AreaFromRadiusBinary]][program:AreaFromRadiusBinary]
+PROGRAM=FileIOChapter/programs/AreaFromRadiusBinary.java,
+CAPTION=Program to read a list of radiuses from a binary file and output
+their areas to another file.
 
 There should be few surprises in this piece of code as only a few
 changes have been made so that `ObjectInputStream` and
@@ -788,9 +697,8 @@ access a file at the same time? If both threads are reading from the
 file, everything should work fine. If the threads are both writing or
 doing a combination of reading and writing, there can be problems.
 
-As we mentioned in
-Section #syntax:File operations in Java[[syntax:File operations in Java]],
-file operations are OS dependent. Although Java tries to give a uniform
+As we mentioned in Section REF=syntax:File operations in Java, file
+operations are OS dependent. Although Java tries to give a uniform
 interface, different system calls are happening at a low level.
 Consequently, the results may be different as well.
 
@@ -799,47 +707,10 @@ series of numbers to a file called `concurrent.out`. The first thread
 prints the even numbers between 0 and 9,999 while the second thread
 prints the odd ones.
 
-[source,numberLines,java]
-----
-import java.io.*;
-
-public class ConcurrentFileAccess implements Runnable {
-	private boolean even;
-	
-	public static void main(String args[]) {
-		Thread writer1 =
-			new Thread( new ConcurrentFileAccess(true) );
-		Thread writer2 =
-			new Thread( new ConcurrentFileAccess(false) );		
-		writer1.start();
-		writer2.start();
-	}
-	
-	public ConcurrentFileAccess( boolean even ) {
-		this.even = even;
-	}
-	
-	public void run() {
-		PrintWriter out = null;
-		int start = 0;
-		if( !even )
-			start = 1;		
-		try {
-			out = new PrintWriter (
-					new FileOutputStream ( "concurrent.out", true ) ); /*@\label{open concurrent file}@*/
-			for( int i = start; i < 10000; i += 2 ) {
-				out.println ( i ); /*@\label{output data concurrently}@*/
-				out.flush();
-			}
-				
-		}
-		catch ( FileNotFoundException e ) {
-			System.out.println("concurrent.out not found!");
-		}
-		finally { if( out != null ) out.close (); }	
-	}	
-}
-----
+[[program:ConcurrentFileAccess]][program:ConcurrentFileAccess]
+PROGRAM=FileIOChapter/programs/ConcurrentFileAccess.java,
+CAPTION=Program that spawns threads that print odd and even numbers to a
+file concurrently.
 
 The code in this program should have no surprises. The `main()` method
 creates two `Thread` objects based on `ConcurrentFileAccess` objects,
@@ -885,11 +756,10 @@ the other.
 For performance reasons, file operations are usually done in batches.
 Instead of writing each number to the file as the thread produces it,
 output is usually stored in a buffer which is written as a whole. If we
-call `out.flush()` after
-line link:#output data concurrently[[output data concurrently]], we can
-flush the buffer to the file after each number is generated. Doing so
-will not be as efficient, but it may give us some insight into how
-concurrent writes on files work.
+call `out.flush()` after line REF=output data concurrently, we can flush
+the buffer to the file after each number is generated. Doing so will not
+be as efficient, but it may give us some insight into how concurrent
+writes on files work.
 
 Using flushes, the output from the two threads should be thoroughly
 intermixed. On a Windows machine, if you copy the data from the file and
@@ -911,7 +781,7 @@ interact with the same files that your program will use, Java provides a
 with everything file-related, `FileLock` is dependent on the underlying
 OS and may behave differently on different systems.
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -939,10 +809,8 @@ What kinds of objects cannot be serialized?
 Implement the RLE bitmap compression program using only
 `FileInputStream` and `FileOutputStream` for file input and output.
 
-Re-implement the maze solving program from Section #solution:Maze of
-doom[[solution:Maze of
-doom]] to ask the user for a file instead of reading from standard
-input.
+Re-implement the maze solving program from Section REF=solution:Maze of
+doom to ask the user for a file instead of reading from standard input.
 
 An HTML file contains many tags such as `<p>`, which marks the beginning
 of a paragraph, and `</p>`, which marks the end of a paragraph. A lesser

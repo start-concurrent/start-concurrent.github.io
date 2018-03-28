@@ -1,17 +1,16 @@
-[[chapter:Polymorphism]]
 == Polymorphism
 
 === Banking account with a vengeance (problem)
 
-In Chapter #chapter:Synchronization[[chapter:Synchronization]], we
-introduced the `SynchronizedAccount` class that guarantees that checking
-the balance, making deposits, and making withdrawals will all be safe
-even in a multi-threaded environment. Unfortunately,
-`SynchronizedAccount` gives very few of the options a full bank account
-should have. The problem we present to you now is to create an entire
-line of bank accounts which all inherit from `SynchronizedAccount`.
-Because of inheritance, all accounts will at least have `getBalance()`,
-`deposit()`, and `withdraw()` methods.
+In Chapter REF=chapter:Synchronization, we introduced the
+`SynchronizedAccount` class that guarantees that checking the balance,
+making deposits, and making withdrawals will all be safe even in a
+multi-threaded environment. Unfortunately, `SynchronizedAccount` gives
+very few of the options a full bank account should have. The problem we
+present to you now is to create an entire line of bank accounts which
+all inherit from `SynchronizedAccount`. Because of inheritance, all
+accounts will at least have `getBalance()`, `deposit()`, and
+`withdraw()` methods.
 
 You must create three new account classes. The constructor for each
 class must take a `String` which gives the name of the person opening
@@ -34,14 +33,13 @@ latexmath:[$\frac{1}{12}$] of the annual rate. However, if the balance
 is below $1000, a $25 service fee is charged each month, regardless of
 how low the balance becomes.
 
-In Chapter #chapter:Inheritance[[chapter:Inheritance]] you were exposed
-to concepts in inheritance. We are now returning to these concepts and
-exploring them further. In the first place, concurrency is on the table
-now, and you must be careful to keep your derived classes thread-safe.
-In the second, we will discuss the full breadth of inheritance. The
-tools we discuss are intended to allow you to solve this extended bank
-account problem and indeed many other problems with as little code as
-possible.
+In Chapter REF=chapter:Inheritance you were exposed to concepts in
+inheritance. We are now returning to these concepts and exploring them
+further. In the first place, concurrency is on the table now, and you
+must be careful to keep your derived classes thread-safe. In the second,
+we will discuss the full breadth of inheritance. The tools we discuss
+are intended to allow you to solve this extended bank account problem
+and indeed many other problems with as little code as possible.
 
 === Polymorphism (concepts)
 
@@ -63,7 +61,7 @@ different types of objects without being rewritten. In Java,
 polymorphism works by allowing the programmer to use a derived class in
 any place where a base class could have been used.
 
-== The is-a relationship
+=== The is-a relationship
 
 Consider the two following class definitions:
 
@@ -80,7 +78,7 @@ classes in Java, `TurboRacecar` has all the methods and fields that
 because every `TurboRacecar` is a `Racecar` in the sense that you can
 use a `TurboRacecar` whenever a `Racecar` is required.
 
-== Dynamic binding
+=== Dynamic binding
 
 There is a little bit of magic that makes polymorphism work. When you
 compile your code, the `RaceTrack` doesn’t know which `getHorsePower()`
@@ -108,7 +106,7 @@ Even if you pass an object of type `StaticTurboRacecar`, the value 700
 will be printed out every time. In Java, all fields, whether normal,
 `static`, or `final` are statically bound.
 
-== General vs. specific
+=== General vs. specific
 
 Another way to look at inheritance is as a statement of a specialization
 and generalization. A `TurboRacecar` is a specific kind of `Racecar`
@@ -168,7 +166,7 @@ polymorphism was the `extends` keyword which you are well familiar with
 by now. There are a number of other tools designed to help you structure
 class hierarchies and enforce design decisions.
 
-== Abstract classes and methods
+=== Abstract classes and methods
 
 One such tool is abstract classes. An abstract class is one which can
 never be instantiated. In order to use an abstract class, it is
@@ -317,7 +315,7 @@ before, but issues like earning interest or paying monthly service
 charges will make them necessary. This method is synchronized so that
 the two fields associated with the last access are updated atomically.
 
-== Final classes and methods
+=== Final classes and methods
 
 If you look at the previous example carefully, you will notice that the
 methods `getBalance()`, `deposit()`, and `withdraw()` were each declared
@@ -349,7 +347,7 @@ your code arbitrarily, but use of the `final` keyword for classes,
 methods, and especially to specify constants allows the compiler to do
 some performance optimizations that would otherwise be impossible.
 
-== Casting
+=== Casting
 
 If we shift the focus back to polymorphism, we have to admit that we
 have avoided one of the messier issues. It’s true that polymorphism
@@ -461,7 +459,7 @@ class `RocketShip` and not for objects of a subclass like
 `FusionPoweredRocketShip`.
 
 [[subsection:Inheritance and exceptions]]
-== Inheritance and exceptions
+=== Inheritance and exceptions
 
 Beyond `ClassCastException`s, there are a few other issues that come up
 when combining exceptions with inheritance. As you already know, an
@@ -568,25 +566,9 @@ chapter and give its solution. We have already given you the
 
 to
 
-[source,numberLines,java]
-----
-public class CheckingAccount extends BankAccount {
-	public static final double FEE = 10;
-	
-	public CheckingAccount( String name, double balance )
-		throws InterruptedException {
-		super( name, balance );				
-	}
-	
-	protected synchronized void update()
-		throws InterruptedException {
-		super.update();
-		changeBalance( -getFee()*getMonthsPassed() );
-	}
-	
-	protected double getFee() {	return FEE;	}
-}
-----
+[[program:CheckingAccount]][program:CheckingAccount]
+PROGRAM=PolymorphismChapter/programs/CheckingAccount.java,
+CAPTION=Subclass of `BankAccount` that models a normal checking account.
 
 The most basic account is the `CheckingAccount`. As you recall from the
 `BankingAccount` class, the `getBalance()`, `deposit()`, and
@@ -613,37 +595,10 @@ Note that we do not use the constant `FEE` directly in `update()`.
 Instead, we call the `getFee()` method. The reason for this decision is
 due to the next class.
 
-[source,numberLines,java]
-----
-import java.util.Calendar;
-public class DirectDepositAccount extends CheckingAccount {
-	protected Calendar lastDirectDeposit;
-	
-	public DirectDepositAccount( String name, double balance )
-		throws InterruptedException {
-		super( name, balance );
-		lastDirectDeposit = Calendar.getInstance();
-	}
-	
-	public double getFee() {		
-		Calendar current = Calendar.getInstance();
-		int months = 12*(current.get(Calendar.YEAR) -
-		lastDirectDeposit.get(Calendar.YEAR)) +
-		(current.get(Calendar.MONTH) -
-		lastDirectDeposit.get(Calendar.MONTH));
-		if( months <= 1 )
-			return 0;
-		else
-			return super.getFee();
-	}
-	
-	public void directDeposit( double amount )
-		throws InterruptedException {
-		deposit( amount );
-		lastDirectDeposit = Calendar.getInstance();
-	}
-}
-----
+[[program:DirectDepositAccount]][program:DirectDepositAccount]
+PROGRAM=PolymorphismChapter/programs/DirectDepositAccount.java,
+CAPTION=Subclass of `CheckingAccount` that models the behavior of
+accounts with direct deposits.
 
 The `DirectDepositAccount` class extends the `CheckingAccount` class.
 Note that the `update()` method hasn’t been overridden. We have added
@@ -654,36 +609,10 @@ returns the fee from the `CheckingAccount`. Because of dynamic binding,
 the `update()` method defined in `CheckingAccount` will call this
 overridden `getFee()` method for `DirectDepositAccount` objects.
 
-[source,numberLines,java]
-----
-public class SavingsAccount extends BankAccount {
-	public static final double MINIMUM = 1000;
-	public static final double FEE = 25;
-	protected final double RATE;
-
-	public SavingsAccount( String name, double balance, double rate )
-		throws InterruptedException {
-		super( name, balance );
-		RATE = rate;		
-	}
-	
-	protected double getFee() { return FEE;	}
-	
-	protected double getMinimum() {	return MINIMUM;	}
-	
-	protected synchronized void update()
-		throws InterruptedException {
-		super.update();	
-		int months = getMonthsPassed();
-		for( int i = 0; i < months; i++ ) {
-			if( getBalance() > 0 )
-				changeBalance( getBalance() * (1 + RATE/12) );
-			if( getBalance() < getMinimum() )
-				changeBalance( -getFee() );
-		}				
-	}
-}
-----
+[[program:SavingsAccount]][program:SavingsAccount]
+PROGRAM=PolymorphismChapter/programs/SavingsAccount.java,
+CAPTION=Subclass of `BankAccount` that models the behavior of a savings
+account.
 
 There should be few surprises in the last class, `SavingsAccount`. The
 biggest difference is that, in the `update()` method, we use a loop to
@@ -720,54 +649,25 @@ operations that are guaranteed to execute atomically. For example, the
 variable with atomic accesses. One of its methods is
 `incrementAndGet()`, which will atomically increment its internal value
 by 1 and return the result. Recall from
-Program #program:RaceCondition[[program:RaceCondition]] that even an
-operation as simple as `++` is not atomic. If many different threads try
-to increment a single variable, some of those increments can get lost,
-causing the final value to be less than it should be.
+Program REF=program:RaceCondition that even an operation as simple as
+`++` is not atomic. If many different threads try to increment a single
+variable, some of those increments can get lost, causing the final value
+to be less than it should be.
 
 We can use the `AtomicInteger` class to rewrite
-Program #program:RaceCondition[[program:RaceCondition]] so that no race
-condition occurs.
+Program REF=program:RaceCondition so that no race condition occurs.
 
-[source,numberLines,java]
-----
-import java.util.concurrent.atomic.*;
+[[program:NoRaceCondition]][program:NoRaceCondition]
+PROGRAM=PolymorphismChapter/programs/NoRaceCondition.java,
+CAPTION=Program to demonstrate the use of `AtomicInteger`.
 
-public class NoRaceCondition extends Thread {		
-	private static AtomicInteger counter = new AtomicInteger();	
-	public static final int THREADS = 4;	
-	public static final int COUNT = 1000000;		
-	
-	public static void main( String[] args ) {								
-		NoRaceCondition[] threads = new NoRaceCondition[THREADS];			
-		for( int i = 0; i < THREADS; i++ ) {
-			threads[i] = new NoRaceCondition();
-			threads[i].start();			
-		}			
-		try {
-			for( int i = 0; i < THREADS; i++ )
-				threads[i].join();
-		}
-		catch( InterruptedException e ) {
-			e.printStackTrace();
-		}			
-		System.out.println("Counter:\t" + counter.get() );			
-	}	
-	
-	public void run() {	
-		for( int i = 0; i < COUNT / THREADS; i++ )
-			counter.incrementAndGet();
-	}
-}
-----
-
-This program is identical to
-Program #program:RaceCondition[[program:RaceCondition]], except that the
-type of `counter` has been changed from `int` to `AtomicInteger` (and an
-appropriate `import` has been added). Consequently, the `++` operation
-was changed to an `incrementAndGet()` method call, and a `get()` method
-call was needed to get the final value. If you run this program, the
-final answer should always be 1000000, no matter what. . ]Exercise .  
+This program is identical to Program REF=program:RaceCondition, except
+that the type of `counter` has been changed from `int` to
+`AtomicInteger` (and an appropriate `import` has been added).
+Consequently, the `++` operation was changed to an `incrementAndGet()`
+method call, and a `get()` method call was needed to get the final
+value. If you run this program, the final answer should always be
+1000000, no matter what. . ]Exercise .  
 
 '''''
 
@@ -777,8 +677,7 @@ The `java.util.concurrent.atomic` package includes `AtomicBoolean` and
 perform atomic array accesses. For general purposes, the
 `AtomicReference<V>` class provides an atomic way to store a reference
 to any object. (The `<V>` is a generic type parameter, which will be
-discussed in
-Chapter #chapter:Dynamic Data Structures[[chapter:Dynamic Data Structures]].)
+discussed in Chapter REF=chapter:Dynamic Data Structures.)
 
 Although you could use the `synchronized` keyword to create each one of
 these classes yourself, the result would not be as efficient. The atomic
@@ -792,7 +691,7 @@ fighting over which thread has the lock, the operation is very fast.
 Many high performance concurrent applications depends on CAS
 implementations. . ]Exercise .
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -880,22 +779,21 @@ of her income and 15% on the remaining $2,175. The exception is
 international students whose country has a treaty with the U.S. so that
 they do not have to pay tax on the first $50,000 of income.
 
-Refer to the sort given in
-Section #solution:Sort it out[[solution:Sort it out]] as the solution to
-the Sort It Out problem. Add another `boolean` to the parameters of the
-sort which specifies whether the sort is ascending or descending. Make
-the needed changes throughout the code to add this functionality.
+Refer to the sort given in Section REF=solution:Sort it out as the
+solution to the Sort It Out problem. Add another `boolean` to the
+parameters of the sort which specifies whether the sort is ascending or
+descending. Make the needed changes throughout the code to add this
+functionality.
 
-Concurrency Again refer to the sort from
-Section #solution:Sort it out[[solution:Sort it out]]. The goal now is
-to parallelize the sort. Change the sort to work with `int` values then
-write some code which will generate an array of random `int` values.
-Design your code so that you can spawn latexmath:[$n$] threads.
-Partition the single array into latexmath:[$n$] arrays and map one
-partition to each thread. Use your bubble sort implementation to sort
-each partition. Finally, merge the arrays back together, in sorted
-order, into one final array. For now, just use one thread (ideally the
-main thread) to do the merge.
+Concurrency Again refer to the sort from Section REF=solution:Sort it
+out. The goal now is to parallelize the sort. Change the sort to work
+with `int` values then write some code which will generate an array of
+random `int` values. Design your code so that you can spawn
+latexmath:[$n$] threads. Partition the single array into latexmath:[$n$]
+arrays and map one partition to each thread. Use your bubble sort
+implementation to sort each partition. Finally, merge the arrays back
+together, in sorted order, into one final array. For now, just use one
+thread (ideally the main thread) to do the merge.
 
 The merge operation is a simple idea, but it is easy to make mistakes in
 implementation. The idea is to have three indexes, one for each of the
@@ -921,19 +819,19 @@ use the same array for both the parallel and sequential versions. Try
 array sizes of 1000, 100000, and 1000000. Did the performance increase
 as much as you expect? Concurrency
 
-Take Program #program:NoRaceCondition[[program:NoRaceCondition]] and
-increase `COUNT` to `100000000`. Run it several times and time how long
-it takes to run to completion. Concurrency
+Take Program REF=program:NoRaceCondition and increase `COUNT` to
+`100000000`. Run it several times and time how long it takes to run to
+completion. Concurrency
 
-Then, take Program #program:RaceCondition[[program:RaceCondition]] and
-increase its `COUNT` to `100000000` as well. Change the body of the
-`for` loop inside the `run()` method so that `count++;` is inside of a
-`synchronized` block that uses `RaceCondition.class` as the lock. (The
-choice of `RaceCondition.class` is arbitrary, but it is an object that
-all the threads can see.) In this way, the increment will occur
-atomically, since only the thread that has acquired the
-`RaceCondition.class` lock will be able to do the operation. Now, run
-this modified program several times and time it.
+Then, take Program REF=program:RaceCondition and increase its `COUNT` to
+`100000000` as well. Change the body of the `for` loop inside the
+`run()` method so that `count++;` is inside of a `synchronized` block
+that uses `RaceCondition.class` as the lock. (The choice of
+`RaceCondition.class` is arbitrary, but it is an object that all the
+threads can see.) In this way, the increment will occur atomically,
+since only the thread that has acquired the `RaceCondition.class` lock
+will be able to do the operation. Now, run this modified program several
+times and time it.
 
 How different are the running times? They may be similar, depending on
 the implementation of locks and CAS on your OS and hardware platform.

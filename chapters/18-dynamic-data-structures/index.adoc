@@ -1,4 +1,3 @@
-[[chapter:Dynamic Data Structures]]
 == Dynamic Data Structures
 
 === Infix conversion (problem)
@@ -19,9 +18,9 @@ that is easy. The normal style of writing mathematical expressions is
 called _infix notation_, because the operators are written in between
 the operands they are used on. A much easier notation for automatic
 evaluation is called _postfix notation_, because an operator is placed
-after the operands it works on.
-Table #table:infix and postfix[[table:infix and postfix]] gives a few
-examples of expressions written in both infix and postfix notation.
+after the operands it works on. Table REF=table:infix and postfix gives
+a few examples of expressions written in both infix and postfix
+notation.
 
 .Examples of expressions in infix and equivalent postfix forms.
 [cols="<,^,<",options="header",]
@@ -38,8 +37,7 @@ notation has the benefit of exactly specifying the order of operations
 without using any precedence rules and without needing parentheses to
 clarify. To understand how to compute an expression in postfix notation,
 we rely on the idea of a stack, which we first introduces in
-Chapter #chapter:Classes[[chapter:Classes]] and examine in much greater
-depth here.
+Chapter REF=chapter:Classes and examine in much greater depth here.
 
 Recall that a stack has three operations: _push_, _pop_, and _top_. It
 works like a stack of physical objects. The push operation places an
@@ -100,10 +98,9 @@ makes spaces unnecessary.
 To solve the infix conversion problem, we need to create a stack data
 structure whose elements are terms from an infix expression, where a
 term is an operator, operand, or a parenthesis. We created a stack to
-solve the nesting expression problem in
-Section #solution:Nested expressions[[solution:Nested expressions]], but
-we explore stacks in this chapter as one of many different kinds of
-dynamic data structure.
+solve the nesting expression problem in Section REF=solution:Nested
+expressions, but we explore stacks in this chapter as one of many
+different kinds of dynamic data structure.
 
 === Dynamic data structures (concepts)
 
@@ -118,12 +115,12 @@ integers into it.
 In this chapter, we examine _dynamic_ data structures: As more data is
 read or processed, these data structures grow and shrink in memory to
 store what is needed. The stack used to solve the nesting expressions
-problem from Chapter #chapter:Classes[[chapter:Classes]] is not actually
-a dynamic data structure since it is defined with a fixed maximum size.
-In this chapter, we implement a true stack as well as many other kinds
-of dynamic data structures.
+problem from Chapter REF=chapter:Classes is not actually a dynamic data
+structure since it is defined with a fixed maximum size. In this
+chapter, we implement a true stack as well as many other kinds of
+dynamic data structures.
 
-== Dynamic arrays
+=== Dynamic arrays
 
 There are two broad classes of dynamic data structures we examine here.
 The first kind are based on arrays that grow and shrink. Dynamic arrays
@@ -143,7 +140,7 @@ deletions at the end of a dynamic array are usually efficient, but
 insertions and deletions in the middle are very time consuming.
 
 [[subsection:Linked lists]]
-== Linked lists
+=== Linked lists
 
 The second kind of dynamic data structure is based on objects that link
 to (or reference) other objects. The simplest form of such a data type
@@ -178,7 +175,7 @@ It turns out that either dynamic arrays or linked lists can be used to
 create an efficient solution to the infix conversion problem defined at
 the beginning of the chapter.
 
-== Abstract data types
+=== Abstract data types
 
 The fact that dynamic arrays and linked lists can be used to solve
 similar problems points out that we may often be more interested in the
@@ -194,12 +191,12 @@ value, pop a value, and tell us what value is on top. The internal
 workings of the stack are irrelevant (as long as they are efficient). It
 is possible to use either a dynamic array or a linked list to implement
 a stack ADT. A queue is another ADT we discuss in
-Section #syntax:Abstract data types (ADT)[[syntax:Abstract data types (ADT)]],
-but there are many other useful ADTs.
+Section REF=syntax:Abstract data types (ADT), but there are many other
+useful ADTs.
 
 === Dynamic arrays and linked lists (syntax)
 
-== Dynamic arrays
+=== Dynamic arrays
 
 Suppose you are faced with the problem of reading a list of names from a
 file, sorting them into alphabetical order, and printing them out. You
@@ -222,14 +219,13 @@ amounts of data is to watch our array accesses and expand the array as
 necessary during processing. (It is also possible to contract an array
 once you determine that the array has more space than needed.)
 
-=== A simple solution
+==== A simple solution
 
-Program #program:ReadIntoFixedArray[[program:ReadIntoFixedArray]]
-allocates an array of 10 strings and reads a list of names from standard
-input until it reaches the end of the file, storing each name in
-successive array locations. If the number of names in the input is
-larger than the size of the array, it generates an exception. .
-]Exercise .
+Program REF=program:ReadIntoFixedArray allocates an array of 10 strings
+and reads a list of names from standard input until it reaches the end
+of the file, storing each name in successive array locations. If the
+number of names in the input is larger than the size of the array, it
+generates an exception. . ]Exercise .
 
 Since programs that generate uncaught exceptions are, in general, a bad
 idea, our first change to this program should be either to catch the
@@ -238,27 +234,10 @@ either case, we would then take some action that is more user friendly
 than generating an exception, perhaps simply printing an explanatory
 message before exiting.
 
-[source,numberLines,java]
-----
-import java.util.Arrays;
-import java.util.Scanner;
-
-public class ReadIntoFixedArray {
-	public static void main(String[] args) {
-		Scanner in = new Scanner(System.in);
-		String[] names = new String[10];
-		int n = 0;
-
-		while( in.hasNextLine() )
-			names[n++] = in.nextLine();
-		
-		Arrays.sort(names, 0, n);
-		
-		for( int i = 0; i < n; i++ )
-			System.out.println(names[i]);
-	}
-}
-----
+[[program:ReadIntoFixedArray]][program:ReadIntoFixedArray]
+PROGRAM=DynamicDataStructuresChapter/programs/ReadIntoFixedArray.java,
+CAPTION=Program to read names into an array, sort, and print. If there
+are more than 10 lines in the input, an exception is generated.
 
 Our second change is to take a recovery action that allows the program
 to proceed. What went wrong? We made a guess of the input size,
@@ -269,53 +248,22 @@ to us if the program has been distributed to users around the world.
 Instead, we fix the problem on the fly by allocating a larger array,
 copying the old array into the new array, and continuing.
 
-Program #program:ReadAndGrowArray[[program:ReadAndGrowArray]] begins
-like the previous program by allocating a fixed array. However, it now
-catches the `ArrayOutOfBoundsException` at
-line link:#exceptionRAGA[[exceptionRAGA]] if it tries to store too many
-names into the array. The `catch` clause allocates a new array, twice
-the size of the original (current) array, copies the existing array into
-it, and replaces the reference to the current array with a reference to
-the new array. . ]Exercise .
+Program REF=program:ReadAndGrowArray begins like the previous program by
+allocating a fixed array. However, it now catches the
+`ArrayOutOfBoundsException` at line REF=exceptionRAGA if it tries to
+store too many names into the array. The `catch` clause allocates a new
+array, twice the size of the original (current) array, copies the
+existing array into it, and replaces the reference to the current array
+with a reference to the new array. . ]Exercise .
 
-[source,numberLines,java]
-----
-import java.util.Arrays;
-import java.util.Scanner;
-
-public class ReadAndGrowArray {
-	public static void main(String[] args) {
-		String[] names = new String[10];/*@\label{lineNames}@*/		
-		Scanner in = new Scanner(System.in);
-		int n = 0;
-		String name = null;
-		
-		while (in.hasNextLine()) {
-			name = in.nextLine();
-			try {
-				names[n] = name;
-			}
-			catch( ArrayIndexOutOfBoundsException e ) {/*@\label{exceptionRAGA}@*/
-				names = Arrays.copyOfRange(names, 0,/*@\label{lineCopy}@*/
-							names.length*2);
-				names[n] = name;
-			}
-			n++;
-		}
-		
-		Arrays.sort(names, 0, n);
-		
-		for (int i = 0; i < n; i++)
-			System.out.println(names[i]);
-	}
-}
-----
+[[program:ReadAndGrowArray]][program:ReadAndGrowArray]
+PROGRAM=DynamicDataStructuresChapter/programs/ReadAndGrowArray.java,
+CAPTION=Read names into an array, enlarging the array as necessary.
 
 Note that it was necessary to refactor the code in
-Program #program:ReadIntoFixedArray[[program:ReadIntoFixedArray]]
-slightly: Add the `name` variable to hold the temporary result of
-reading the input line, and move the counter increment to outside the
-`try`-`catch` block.
+Program REF=program:ReadIntoFixedArray slightly: Add the `name` variable
+to hold the temporary result of reading the input line, and move the
+counter increment to outside the `try`-`catch` block.
 
 Can this new, improved program still fail? Yes, but only for *very
 large* input, in the case when the Java virtual machine runs out of
@@ -331,13 +279,12 @@ a new array.
 This line works because we know the only variable that references the
 array is `names`. If other variables referenced that array, they would
 continue to reference the old, smaller, and now out-of-date version of
-the `names` array.
-Figure #figure:dynamicproblems[[figure:dynamicproblems]] gives an
-example of this problem.
+the `names` array. Figure REF=figure:dynamicproblems gives an example of
+this problem.
 
 to
 
-=== A more complete solution
+==== A more complete solution
 
 The problem of updating variables that reference the dynamic array is a
 serious issue in large programs. It may not be enough to allocate a
@@ -348,74 +295,33 @@ array.
 A solution to this problem is to create a new class whose objects
 contain the array as a private field. References to the array are then
 mediated, as usual, via accessor methods, which always refers to the
-same version of the array.
-Program #program:DynamicArray[[program:DynamicArray]] is a simple
+same version of the array. Program REF=program:DynamicArray is a simple
 implementation of a dynamic array class. This class maintains an
 internal array of `String` objects, which it extends whenever a call to
 `set()` tries to write a new element just past the end of the array.
 
-[source,numberLines,java]
-----
-import java.util.Arrays;
-
-public class DynamicArray {
-    private String[] strings = new String[10];
-   
-    public synchronized void set(int i, String string) {
-        if (i == strings.length)
-            strings = Arrays.copyOfRange(strings, 0,
-                                         strings.length*2);
-        strings[i] = string;
-    }
-    
-    public String get(int i) {
-        return strings[i];
-    }
-    
-    public synchronized void sort(int first, int last) {
-        Arrays.sort(strings, first, last);
-    }
-}
-----
+[[program:DynamicArray]][program:DynamicArray]
+PROGRAM=DynamicDataStructuresChapter/programs/DynamicArray.java,
+CAPTION=A class to manage a dynamic array. This array grows by doubling
+when more space is needed.
 
 Note that the `set()` and `sort()` methods are both `synchronized` in
 case this class is used by multiple threads simultaneously. Exercise .
 explores the need to synchronize these methods in the presence of
 multiple threads. . ]Exercise . . ]Exercise .
 
-Program #program:UseDynamicArray[[program:UseDynamicArray]] illustrates
-how to modify and extend
-Program #program:ReadIntoFixedArray[[program:ReadIntoFixedArray]] to use
-this new class. Since the array grows automatically, there is no need
-for the original program to check for out-of-bounds exceptions. Of
-course, the array expansion only works if the reference occurs exactly
-at the index corresponding to one beyond the end of the array. Other
-out-of-bound references generate an exception.
+Program REF=program:UseDynamicArray illustrates how to modify and extend
+Program REF=program:ReadIntoFixedArray to use this new class. Since the
+array grows automatically, there is no need for the original program to
+check for out-of-bounds exceptions. Of course, the array expansion only
+works if the reference occurs exactly at the index corresponding to one
+beyond the end of the array. Other out-of-bound references generate an
+exception.
 
-[source,numberLines,java]
-----
-import java.util.Scanner;
-
-public class UseDynamicArray {
-    public static void main(String[] args) {
-        DynamicArray names = new DynamicArray();
-        
-        Scanner in = new Scanner(System.in);
-        int n = 0;
-        String name = null;
-        while (in.hasNextLine()) {
-            name = in.nextLine();
-            names.set(n, name);
-            n++;
-        }
-        
-        names.sort(0, n);
-        
-        for (int i = 0; i < n; i++)
-            System.out.println(names.get(i));
-    }
-}
-----
+[[program:UseDynamicArray]][program:UseDynamicArray]
+PROGRAM=DynamicDataStructuresChapter/programs/UseDynamicArray.java,
+CAPTION=A program that uses the `DynamicArray` class to store input read
+from a file.
 
 Since `names` is no longer an array, but rather an object of class
 `DynamicArray`, we can no longer use braces (`[]`) to access elements,
@@ -431,7 +337,7 @@ a resize, the array is only half full, resulting in wasted space. Even
 on average, the array will only be three-quarters full . ]Exercise .
 
 [[linked-lists]]
-== Linked lists
+=== Linked lists
 
 As we’ve seen, while dynamic arrays can grow to accommodate a large
 number of items, the performance penalties of repeated copying and the
@@ -449,7 +355,7 @@ name on a small index card, and then link the index cards together to
 keep track of them, much like the cars of a railroad train are linked by
 the coupling from one to the next.
 
-=== Constructing a linked list
+==== Constructing a linked list
 
 In Java, a linked list is usually implemented as a class that provides
 methods to interact with a sequence of objects. The objects in the list
@@ -461,8 +367,8 @@ modification. The nested class has two fields, one containing the data
 to be stored and the other containing a link or reference to the next
 object, or _node_, in the list. Since they are only accessed by the
 outer class, it is reasonable to make these fields public. If you need a
-refresher on static nested classes, refer to
-Section #advanced:Nested classes[[advanced:Nested classes]].
+refresher on static nested classes, refer to Section REF=advanced:Nested
+classes.
 
 ....
 public class LinkedList {
@@ -494,68 +400,19 @@ field that we increment whenever we add a node, as well as an accessor
 to read its value. Finally, we can create a `fillArray()` method that
 fills an array with the values in the list.
 
-[source,numberLines,java]
-----
-public class LinkedList {
-    private static class Node {
-        public String value;
-        public Node next;
-    }
- 
-    private Node head = null;
-    private int size = 0;
-    
-    public void add(String value) {
-    	Node temp = new Node();
-    	temp.value = value;
-    	temp.next = head;
-    	head = temp;
-    	size++;
-    }
-    
-    public int size() {
-    	return size;
-    }
-    
-    public void fillArray(String[] array) {    	
-    	Node temp = head;
-    	int position = 0;
-    	while( temp != null ) {
-    		array[position++] = temp.value;
-    		temp = temp.next;
-    	}   		
-    }
-}
-----
+[[program:LinkedList]][program:LinkedList]
+PROGRAM=DynamicDataStructuresChapter/programs/LinkedList.java, CAPTION=A
+basic implementation of a linked list class to hold `String` objects.
 
-Program #program:UseLinkedList[[program:UseLinkedList]] is a
-re-implementation of the name-reading program using class `LinkedList`.
-Note that no array needs to be pre-allocated. Instead, we capture all
-the lines of input into a linked list called `list`.
+Program REF=program:UseLinkedList is a re-implementation of the
+name-reading program using class `LinkedList`. Note that no array needs
+to be pre-allocated. Instead, we capture all the lines of input into a
+linked list called `list`.
 
-[source,numberLines,java]
-----
-import java.util.Arrays;
-import java.util.Scanner;
-
-public class UseLinkedList {
-	public static void main(String[] args) {
-		Scanner in = new Scanner(System.in);
-		LinkedList list = new LinkedList();
-
-		while (in.hasNextLine())
-			list.add(in.nextLine());/*@\label{lineReadNew}@*/
-		
-		String[] names = new String[list.getSize()]; 
-		list.fillArray(names);
-
-		Arrays.sort(names);/*@\label{lineSort}@*/
-		
-		for (int i = 0; i < names.length; i++)
-			System.out.println(names[i]);
-	}
-}
-----
+[[program:UseLinkedList]][program:UseLinkedList]
+PROGRAM=DynamicDataStructuresChapter/programs/UseLinkedList.java,
+CAPTION=A program that uses the `LinkedList` class to store input read
+from a file.
 
 Each time we read a new line from the file, the `LinkedList` class
 internally creates a new `Node` with the input line as its `value`. It
@@ -564,10 +421,10 @@ of the list (which could be empty if `head` is `null`) comes after the
 new `Node`. We then update the `head` field to reference the new `Node`.
 Thus, each new line read from the file is stored at the *beginning* of
 the linked list. The last node in the list, which contains the first
-`String` read in, has a `next` value of `null`.
-Figure #figure:linked list classes[[figure:linked list classes]] shows a
-visualization of the contents of this implementation of a linked list.
-An ``X'' is used in place of an arrow that point to `null`.
+`String` read in, has a `next` value of `null`. Figure REF=figure:linked
+list classes shows a visualization of the contents of this
+implementation of a linked list. An ``X'' is used in place of an arrow
+that point to `null`.
 
 to
 
@@ -578,7 +435,7 @@ visits every node in the linked list, storing its `value` into the
 array. In `UseLinkedList`, we sort the returned array as before and then
 print it.
 
-=== Appending to the end of a linked list
+==== Appending to the end of a linked list
 
 The `LinkedList` class maintains a field named `head` that references
 the first node in the linked list. As we saw, that element was actually
@@ -593,69 +450,25 @@ the list (the one with `next` pointing to `null`) containing the
 `String` most recently read, we can maintain a second field that
 references the _tail_ of the list.
 
-Program #program:LinkedListWithTail[[program:LinkedListWithTail]] adds a
-_tail pointer_ called `tail` to the `LinkedList` class. Note that we
-have changed the `add()` method to the `addFirst()` method, and we have
-also added an `addLast()` method to make it easy to append elements to
-the end of a linked list. Note that the `addFirst()` method has been
-updated to change the `tail` pointer, but only if the list is empty
-(`head` is `null`). After all, adding to the front of a list only
-changes `tail` if the front is *also* the back. In the `addLast()`
-method, adding a value to an empty list also sets both the `head` and
-`tail` to point at a node containing that value. Once the list has a
-node in it, subsequent calls to `addLast()` creates a new `Node`, points
-the `next` field of the old `tail` at it, and changes the `tail` field
-so that it also points at it.
+Program REF=program:LinkedListWithTail adds a _tail pointer_ called
+`tail` to the `LinkedList` class. Note that we have changed the `add()`
+method to the `addFirst()` method, and we have also added an `addLast()`
+method to make it easy to append elements to the end of a linked list.
+Note that the `addFirst()` method has been updated to change the `tail`
+pointer, but only if the list is empty (`head` is `null`). After all,
+adding to the front of a list only changes `tail` if the front is *also*
+the back. In the `addLast()` method, adding a value to an empty list
+also sets both the `head` and `tail` to point at a node containing that
+value. Once the list has a node in it, subsequent calls to `addLast()`
+creates a new `Node`, points the `next` field of the old `tail` at it,
+and changes the `tail` field so that it also points at it.
 
-[source,numberLines,java]
-----
-public class LinkedListWithTail {
-    private static class Node {
-        public String value;
-        public Node next;
-    }
- 
-    private Node head = null;
-    private Node tail = null;
-    private int size = 0;
-    
-    public void addFirst(String value) {
-    	Node temp = new Node();
-    	temp.value = value;
-    	temp.next = head;
-    	head = temp;
-    	if( tail == null )
-    		tail = head;
-    	size++;
-    }
-    
-    public void addLast(String value) {
-    	Node temp = new Node();
-    	temp.value = value;
-    	temp.next = null;
-    	if( tail == null )
-    		head = tail = temp;
-    	else 
-    		tail.next = temp;
-    	size++;    	
-    }
-    
-    public int getSize() {
-    	return size;
-    }
-    
-    public void fillArray(String[] array) {    	
-    	Node temp = head;
-    	int position = 0;
-    	while( temp != null ) {
-    		array[position++] = temp.value;
-    		temp = temp.next;
-    	}   		
-    }
-}
-----
+[[program:LinkedListWithTail]][program:LinkedListWithTail]
+PROGRAM=DynamicDataStructuresChapter/programs/LinkedListWithTail.java,
+CAPTION=We can append to the end of a linked list by using an additional
+variable, `tail`, to reference the last element (tail) of the list.
 
-=== Inserting into a linked list
+==== Inserting into a linked list
 
 In the running example for this chapter, we are interested in printing a
 sorted list of `String` objects read from input. Thus far we have
@@ -664,14 +477,13 @@ into an array of the right size, and then sorted the array. An
 alternative solution is to insert the elements into the linked list at
 the right point in the first place.
 
-Program #program:SortedLinkedList[[program:SortedLinkedList]] is a
-version of a linked list that inserts elements into the linked list in
-sorted order. The only significant difference between it and the
-previous implementations of a linked list is its `add()` method. This
-method walks down the linked list, starting at `head`, until it either
-walks off the end of the list or finds an element before which the new
-`String` should go. There are special cases that must be handled to make
-this process work correctly.
+Program REF=program:SortedLinkedList is a version of a linked list that
+inserts elements into the linked list in sorted order. The only
+significant difference between it and the previous implementations of a
+linked list is its `add()` method. This method walks down the linked
+list, starting at `head`, until it either walks off the end of the list
+or finds an element before which the new `String` should go. There are
+special cases that must be handled to make this process work correctly.
 
 Empty list:::
   The first time an item is inserted into a linked list, the `head` and
@@ -693,65 +505,10 @@ Insert at end:::
   `null`, and the new node has a `next` field of `null`. However, the
   `tail` field must be updated to reference the new node.
 
-[source,numberLines,java]
-----
-public class SortedLinkedList {
-    private static class Node {
-        public String value;
-        public Node next;
-    }
- 
-    private Node head = null;
-    private Node tail = null;
-    private int size = 0;
-    
-    public void add( String value ) {
-    	Node temp = new Node();
-    	temp.value = value;
-    	temp.next = null;
-    	
-    	if( head == null )
-    		//empty list
-    		head = tail = temp;
-    	else if( value.compareTo( head.value ) < 0 ) {
-    		//insert at beginning
-    		temp.next = head;
-    		head = temp;    		
-    	}
-    	else {
-    		//insert at middle or end
-    		Node previous = head;
-    		Node current = head.next;
-    		
-    		while( current != null && 
-    			value.compareTo( current.value ) >= 0 ) {
-    			previous = current;
-    			current = current.next;
-    		}
-    		
-    		previous.next = temp;
-    		temp.next = current;
-    		
-    		if( current == null ) //insert at end of list
-    			tail = temp;
-    	}
-    	size++;
-    }
-    
-    public int size() {
-    	return size;
-    }
-    
-    public void fillArray(String[] array) {    	
-    	Node temp = head;
-    	int position = 0;
-    	while( temp != null ) {
-    		array[position++] = temp.value;
-    		temp = temp.next;
-    	}   		
-    }
-}
-----
+[[program:SortedLinkedList]][program:SortedLinkedList]
+PROGRAM=DynamicDataStructuresChapter/programs/SortedLinkedList.java,
+CAPTION=A linked list class in which calling the `add()` method inserts
+each value in sorted order.
 
 === Abstract data types (ADT) (syntax)
 
@@ -787,19 +544,18 @@ interface that defines that ADT.
 In subsequent sections we look at two fundamental abstract data types,
 _stacks_ and _queues_, and sample classes that implement them.
 
-== Stacks
+=== Stacks
 
 We have already used stacks to solve problems in
-Chapter #chapter:Classes[[chapter:Classes]]. Recall that a stack data
-structure behaves like a stack of books on your desk. When you place a
-book on the stack it covers the books that are already there. When you
-take a book off the stack, you remove the book most recently placed
-there, exposing the one beneath it.
+Chapter REF=chapter:Classes. Recall that a stack data structure behaves
+like a stack of books on your desk. When you place a book on the stack
+it covers the books that are already there. When you take a book off the
+stack, you remove the book most recently placed there, exposing the one
+beneath it.
 
 You can find a simple implementation of a stack in the solution to the
-infix conversion problem in
-Section #solution:Infix conversion[[solution:Infix conversion]], but we
-now examine the stack more deeply as an archetypal ADT. A stack’s
+infix conversion problem in Section REF=solution:Infix conversion, but
+we now examine the stack more deeply as an archetypal ADT. A stack’s
 restricted set of operations (pushing and popping) is adequate for many
 tasks and can be implemented in a number of different ways, some more
 efficient than others.
@@ -809,7 +565,7 @@ stack. The last item that has been pushed onto the stack is the first
 item to be popped off the stack. In the next section, we’ll study the
 _queue_, which is a FIFO (first in, first out) data structure.
 
-== Abstract Data Type: Operations on a stack
+=== Abstract Data Type: Operations on a stack
 
 There are two essential operations on a stack abstract data type
 (corresponding to placing a book on the pile and removing it): `push()`
@@ -828,64 +584,19 @@ concerned with *how* these operations are implemented, merely that they
 are. Thus, we can specify an interface called `Stack` that requires
 these four methods.
 
-[source,numberLines,java]
-----
-public interface Stack {
-	void push(String value);
-	String pop();
-	String top();
-	boolean isEmpty();
-}
-----
+[[program:Stack]][program:Stack]
+PROGRAM=DynamicDataStructuresChapter/programs/Stack.java, CAPTION=An
+interface specifying the stack ADT.
 
-=== Linked list implementation
+==== Linked list implementation
 
 All the operations defined by the stack ADT (and interface) are
 implemented as methods in the class `LinkedListStack`, shown in
-Program #program:LinkedListStack[[program:LinkedListStack]].
+Program REF=program:LinkedListStack.
 
-[source,numberLines,java]
-----
-public class LinkedListStack implements Stack {
-	private static class Node {
-        public String value;
-        public Node next;
-    }
-	
-	private Node head = null;
-
-	public void push(String value) {
-		Node temp = new Node();
-		temp.value = value;
-		temp.next = head;
-		head = temp;
-	}
-
-	public String pop() {/*@\label{linePop}@*/
-		String value = null;
-		if (isEmpty())
-			System.out.println("Can't pop empty stack!");
-		else {
-			value = head.value;
-			head = head.next;
-		}
-		return value;
-	}
-
-	public String top() {/*@\label{lineTop}@*/
-		String value = null;
-		if (isEmpty())
-			System.out.println("No top on an empty stack!");
-		else
-			value = head.value;
-		return value;
-	}
-
-	public boolean isEmpty() {
-		return head == null;
-	}
-}
-----
+[[program:LinkedListStack]][program:LinkedListStack]
+PROGRAM=DynamicDataStructuresChapter/programs/LinkedListStack.java,
+CAPTION=A class to implement a stack ADT using a linked list.
 
 The `head` field is used to maintain a reference to the linked list that
 defines the stack. It is initialized to `null`.
@@ -900,65 +611,37 @@ The `pop()` method needs to return the `value` of the `head` node and
 remove that node from the linked list. It does this by replacing the
 `head` node with the node pointed at by the `next` link in `head`. The
 `pop()` method from the simpler stack used in the solution to the nested
-expressions problem in Section #solution:Nested
-expressions[[solution:Nested
-expressions]] merely removed the top and did not return the value. Most
-real-world stack implementations of `pop()` *do* return this value,
-giving programmers more flexibility.
+expressions problem in Section REF=solution:Nested expressions merely
+removed the top and did not return the value. Most real-world stack
+implementations of `pop()` *do* return this value, giving programmers
+more flexibility.
 
 Note that both `pop()` and `top()` print an error message if the stack
 is empty. Other more elaborate error handling is possible, for example,
 by throwing an exception.
 
-=== Dynamic array implementation
+==== Dynamic array implementation
 
-Like the dynamic array example of
-Program #program:UseDynamicArray[[program:UseDynamicArray]],
-Program #program:DynamicArrayStack[[program:DynamicArrayStack]]
-implements a stack of `String` values using a dynamic array data
-structure.
+Like the dynamic array example of Program REF=program:UseDynamicArray,
+Program REF=program:DynamicArrayStack implements a stack of `String`
+values using a dynamic array data structure.
 
-[source,numberLines,java]
-----
-import java.util.Arrays;
-
-public class DynamicArrayStack implements Stack {
-	private String[] strings = new String[10];
-	private int size = 0;
-	
-	public void push(String string) {
-		if( size == strings.length )
-			doubleArray();
-		strings[size++] = string;
-	}
-	
-	public String pop() {
-		String value = null;
-		if (size == 0)
-			System.out.println("Can't pop empty stack!");
-		else
-			value = strings[--size];
-		return value;
-	}
-
-	private void doubleArray() {
-		strings = Arrays.copyOfRange(strings, 0, strings.length*2);
-	}
-}
-----
+[[program:DynamicArrayStack]][program:DynamicArrayStack]
+PROGRAM=DynamicDataStructuresChapter/programs/DynamicArrayStack.java,
+CAPTION=Program illustrating a stack ADT partially implemented using a
+dynamic array.
 
 This stack implementation using a dynamic array omits the `top()` and
 `isEmpty()` methods (causing a compiler error in
-Program #program:DynamicArrayStack[[program:DynamicArrayStack]] until
-the `Stack` interface is properly implemented). Exercise . has you
-provide implementations of these methods. . ]Exercise .
+Program REF=program:DynamicArrayStack until the `Stack` interface is
+properly implemented). Exercise . has you provide implementations of
+these methods. . ]Exercise .
 
 At the beginning of the chapter, we introduced the problem of converting
-an expression from infix to postfix notation. In Section #solution:Infix
-conversion[[solution:Infix
-conversion]], we give the solution to this problem, but without a
-program that can evaluate a postfix expression, the conversion tool is
-not very useful.
+an expression from infix to postfix notation. In
+Section REF=solution:Infix conversion, we give the solution to this
+problem, but without a program that can evaluate a postfix expression,
+the conversion tool is not very useful.
 
 Here we give a simple postfix evaluator. Recall the algorithm: Scan the
 input expression from left to right, if you see a number, put it on the
@@ -985,87 +668,17 @@ simple, we update the definition of `Term` later in the solution to the
 infix to postfix conversion problem. By doing so, we can keep exactly
 the same definition for `TermStack` given next.
 
-[source,numberLines,java]
-----
-public class TermStack {
-	private static class Node {
-        public Term value;
-        public Node next;
-    }
-	
-	private Node head = null;
-
-	public void push( Term value ) {
-		Node temp = new Node();
-		temp.value = value;
-		temp.next = head;
-		head = temp;
-	}
-
-	public Term pop() {
-		Term value = null;
-		if (isEmpty())
-			System.out.println("Can't pop empty stack!");
-		else {
-			value = head.value;
-			head = head.next;
-		}
-		return value;
-	}
-
-	public Term top() {
-		Term value = null;
-		if (isEmpty())
-			System.out.println("No top on an empty stack!");
-		else
-			value = head.value;
-		return value;
-	}
-
-	public boolean isEmpty() {
-		return head == null;
-	}
-}
-----
+[[program:TermStack]][program:TermStack]
+PROGRAM=DynamicDataStructuresChapter/programs/TermStack.java,
+CAPTION=Class to manage a stack of `Term` objects.
 
 This class gives a linked list implementation of a stack. In fact, it is
-virtually identical to
-Program #program:LinkedListStack[[program:LinkedListStack]] with the
+virtually identical to Program REF=program:LinkedListStack with the
 substitution of `Term` for `String`.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class PostfixCalculator {
-	public static void main(String[] args) {
-		Scanner in = new Scanner( System.in );
-		String expression = in.nextLine();
-		TermStack stack = new TermStack();
-		for( int i = 0; i < expression.length(); i++ ) {
-			char term = expression.charAt(i);
-			if(  term >= '0'&& term <= '9' )
-				stack.push( new Term( (int)(term - '0')) );
-			else {
-				int b = stack.pop().getValue();				
-				int a = stack.pop().getValue();				
-				switch( term ) {
-					case '+': stack.push( new Term( a + b ) );
-						break;
-					case '-': stack.push( new Term( a - b ) );
-						break;
-					case '*': stack.push( new Term( a * b ) );
-						break;
-					case '/': stack.push( new Term( a / b ) );
-						break;
-				}
-			}
-		}
-		System.out.println("The answer is: " +
-				stack.top().getValue());
-	}
-}
-----
+[[program:PostfixCalculator]][program:PostfixCalculator]
+PROGRAM=DynamicDataStructuresChapter/programs/PostfixCalculator.java,
+CAPTION=Program to evaluate a postfix expression.
 
 With our utility classes in place, the code for the postfix evaluator is
 short. Our `main()` method reads in the expression from the user and
@@ -1084,7 +697,7 @@ zero!.  
 
 '''''
 
-== Queues
+=== Queues
 
 A _queue_ data structure is similar to a stack data structure, except
 that when getting an item from a queue, the item that has been in the
@@ -1098,7 +711,7 @@ due to this property. To distinguish the operations on a queue from
 those on a stack, we use the terms enqueue and dequeue instead of push
 and pop.
 
-== Abstract Data Type: Operations on a queue
+=== Abstract Data Type: Operations on a queue
 
 Four typical operations on a queue data structure are:
 
@@ -1112,76 +725,23 @@ queue.
 As with stacks, we can specify an interface called `Queue` that requires
 these four methods.
 
-[source,numberLines,java]
-----
-public interface Queue {
-	void enqueue(String value);
-	String dequeue();
-	String front();
-	boolean isEmpty();
-}
-----
+[[program:Queue]][program:Queue]
+PROGRAM=DynamicDataStructuresChapter/programs/Queue.java, CAPTION=An
+interface specifying the queue ADT.
 
-=== Linked list implementation
+==== Linked list implementation
 
-Program #program:LinkedListQueue[[program:LinkedListQueue]] shows an
-implementation of the queue ADT operations using a linked list. Because
-we need to keep track of nodes at both ends of the linked list, we
-maintain `head` and `tail` variables to reference these nodes. The
-`enqueue()` and `dequeue()` methods manipulate these variables to manage
-the queue as values are put onto it and removed from it.
+Program REF=program:LinkedListQueue shows an implementation of the queue
+ADT operations using a linked list. Because we need to keep track of
+nodes at both ends of the linked list, we maintain `head` and `tail`
+variables to reference these nodes. The `enqueue()` and `dequeue()`
+methods manipulate these variables to manage the queue as values are put
+onto it and removed from it.
 
-[source,numberLines,java]
-----
-public class LinkedListQueue implements Queue {
-	private static class Node {
-        public String value;
-        public Node next;
-    }
-	
-    private Node head = null;
-    private Node tail = null;    
-	
-	public void enqueue(String value) {/*@\label{linePutQueue}@*/
-		Node temp = new Node();
-		temp.value = value;
-		temp.next = null;
-		
-		if( isEmpty() )
-			head = tail = temp; /*@\label{lineNewLLN}@*/
-		else {			
-			tail.next = temp;
-			tail = temp;			
-		}
-	}
-	
-	public String dequeue() { 
-		String value = null;
-		if( isEmpty() )
-			System.out.println("Can't dequeue an empty queue!");
-		else {
-			value = head.value;
-			head = head.next;
-			if( head == null )
-				tail = null;
-		}
-		return value;
-	}
-	
-	public String front() {
-		String value = null;
-		if( isEmpty() )
-			System.out.println("No front on an empty queue!");
-		else
-			value = head.value;
-		return value;
-	}
-	
-	public boolean isEmpty() {
-		return head == null;
-	}
-}
-----
+[[program:LinkedListQueue]][program:LinkedListQueue]
+PROGRAM=DynamicDataStructuresChapter/programs/LinkedListQueue.java,
+CAPTION=Program illustrating a queue ADT implemented using a linked
+list.
 
 Note that the implemention of the `LinkedListQueue` class is very
 similar to the implementation of the `LinkedListWithTail` class. The
@@ -1207,51 +767,12 @@ of type `Object` can hold a reference to a value of any reference type
 (since all classes are subtypes of `Object`). If we create data
 structures using `Object` as the underlying type, we can store values of
 any type in the data structure. For example,
-Program #program:ObjectStack[[program:ObjectStack]] is an implementation
-of a stack ADT with an underlying data type of `Object`.
+Program REF=program:ObjectStack is an implementation of a stack ADT with
+an underlying data type of `Object`.
 
-[source,numberLines,java]
-----
-public class ObjectStack {
-	private static class Node {
-        public Object value;
-        public Node next;
-    }
-	
-	private Node head = null;
-
-	public void push(Object value) {
-		Node temp = new Node();
-		temp.value = value;
-		temp.next = head;
-		head = temp;
-	}
-
-	public Object pop() {
-		Object value = null;
-		if (isEmpty())
-			System.out.println("Can't pop empty stack!");
-		else {
-			value = head.value;
-			head = head.next;
-		}
-		return value;
-	}
-
-	public Object top() {
-		Object value = null;
-		if (isEmpty())
-			System.out.println("Can't get top of empty stack!");
-		else
-			value = head.value;
-		return value;
-	}
-
-	public boolean isEmpty() {
-		return head == null;
-	}
-}
-----
+[[program:ObjectStack]][program:ObjectStack]
+PROGRAM=DynamicDataStructuresChapter/programs/ObjectStack.java,
+CAPTION=A class that implements a stack of `Object` references.
 
 Note that a stack of `Object` references is an example of a
 _heterogeneous data structure_. It is possible to put objects of
@@ -1279,7 +800,7 @@ essentially forces type checking to move from compile-time to run-time.
 Instead of having the Java compiler verify the type correctness of
 operations, we force the Java virtual machine to do the check.
 
-== Generics in Java
+=== Generics in Java
 
 Java provides a general facility to create classes that implement the
 same basic ADT but with a different underlying data type. This mechanism
@@ -1361,44 +882,14 @@ int i = (Integer) genericRaw.transform(27); // cast needed
 
 The next two examples illustrate defining generic classes in Java.
 
-Program #program:GenericLinkedList[[program:GenericLinkedList]] defines
-a generic version of the `LinkedList` class shown earlier. Note that it
-is necessary to include the type parameter `T` on the outer class as
-well as the nested class `Node`.
+Program REF=program:GenericLinkedList defines a generic version of the
+`LinkedList` class shown earlier. Note that it is necessary to include
+the type parameter `T` on the outer class as well as the nested class
+`Node`.
 
-[source,numberLines,java]
-----
-public class GenericLinkedList<T> {
-    private static class Node<T> {
-        public T value;
-        public Node<T> next;
-    }
- 
-    private Node<T> head = null;
-    private int size = 0;
-    
-    public void add(T value) {
-    	Node<T> temp = new Node<T>();
-    	temp.value = value;
-    	temp.next = head;
-    	head = temp;
-    	size++;
-    }
-    
-    public int size() {
-    	return size;
-    }
-    
-    public void fillArray(T[] array) {    	
-    	Node<T> temp = head;
-    	int position = 0;
-    	while( temp != null ) {
-    		array[position++] = temp.value;
-    		temp = temp.next;
-    	}   		
-    }
-}
-----
+[[program:GenericLinkedList]][program:GenericLinkedList]
+PROGRAM=DynamicDataStructuresChapter/programs/GenericLinkedList.java,
+CAPTION=A class that implements a generic linked list.
 
 Using generics can be very easy, but there are some oddities. In
 particular, there are problems instantiating arrays with generic types.
@@ -1407,7 +898,7 @@ fills it.  
 
 '''''
 
-== Using a Generic Class
+=== Using a Generic Class
 
 Creating an instance of a generic class is similar to creating an
 instance of a regular class, except that (to avoid warnings) you must
@@ -1416,36 +907,16 @@ class. For example, if you want to create an instance of the
 `GenericClass<T>` class, you must specify the type `T`, for example
 `new GenericClass<String>()`.
 
-Program #program:UseGenericLinkedList[[program:UseGenericLinkedList]]
-uses the generic class `GenericLinkedList` parameterized by `String` to
-re-implement Program #program:UseLinkedList[[program:UseLinkedList]].
+Program REF=program:UseGenericLinkedList uses the generic class
+`GenericLinkedList` parameterized by `String` to re-implement
+Program REF=program:UseLinkedList.
 
-[source,numberLines,java]
-----
-import java.util.Arrays;
-import java.util.Scanner;
+[[program:UseGenericLinkedList]][program:UseGenericLinkedList]
+PROGRAM=DynamicDataStructuresChapter/programs/UseGenericLinkedList.java,
+CAPTION=Program that uses the generic class `GenericLinkedList` to
+create and use a linked list of Strings.
 
-public class UseGenericLinkedList {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        GenericLinkedList<String> list =
-        	new GenericLinkedList<String>();        
-        
-        while( in.hasNextLine() )
-            list.add( in.nextLine() );
-        
-		String[] names = new String[list.getSize()]; 
-		list.fillArray(names);
-        
-        Arrays.sort(names);
-        
-        for (int i = 0; i < names.length; i++)
-            System.out.println(names[i]);
-    }
-}
-----
-
-== Using Java Libraries
+=== Using Java Libraries
 
 Many of the Java library classes use generics to make them more general
 purpose. The `java.util` package includes many classes to implement
@@ -1456,11 +927,11 @@ different underlying types. We illustrate three examples here: `Vector`,
 class, which is a great deal more powerful than the `LinkedList` class
 defined in this chapter. Any class that implements the `Iterable`
 interface can be used in the for-each loops described in
-Section #subsection:The for-each loop[[subsection:The for-each loop]].
-The `ArrayDeque`, `ArrayList`, `HashSet`, `TreeSet`, and `Vector`,
-classes all implement `Iterable`. In our examples, a `Vector` object and
-a `Set` (returned by the `entrySet()` method of a `HashMap`) are used as
-targest of for-each loops.
+Section REF=subsection:The for-each loop. The `ArrayDeque`, `ArrayList`,
+`HashSet`, `TreeSet`, and `Vector`, classes all implement `Iterable`. In
+our examples, a `Vector` object and a `Set` (returned by the
+`entrySet()` method of a `HashMap`) are used as targest of for-each
+loops.
 
 A `Vector` (`java.util.Vector`) implements an array of objects that can
 grow at run time. The array is automatically extended whenever an
@@ -1472,42 +943,19 @@ causing following elements to be pushed back to later indexes. Arbitrary
 elements can also be deleted from the `Vector` using the `remove()`
 method.
 
-Program #program:VectorExample[[program:VectorExample]] illustrates a
-use of the `Vector` class. The program creates an empty `Vector` and
-generates random integers between 1 and 10, appending them to the end of
-the vector, until their sum is at least 100. Then, it prints the
-integers and their sum (including how many were generated).
+Program REF=program:VectorExample illustrates a use of the `Vector`
+class. The program creates an empty `Vector` and generates random
+integers between 1 and 10, appending them to the end of the vector,
+until their sum is at least 100. Then, it prints the integers and their
+sum (including how many were generated).
 
-[source,numberLines,java]
-----
-import java.util.Random;
-import java.util.Vector;
-
-public class VectorExample {
-	public static void main(String[] args) {
-		Random random = new Random();
-		
-		Vector<Integer> vector = new Vector<Integer>();
-		
-		int sum = 0;
-		while (sum < 100) {
-			int n = random.nextInt(10) + 1;
-			vector.add(n);  // append n to end of vector
-			sum += n;
-		}
-
-		for( int n : vector )
-			System.out.format("%3d\n", n);
-		System.out.println("---");
-		System.out.format("%3d (%d values)\n", sum, vector.size());
-	}
-}
-----
-
+[[program:VectorExample]][program:VectorExample]
+PROGRAM=DynamicDataStructuresChapter/programs/VectorExample.java,
+CAPTION=A simple program to illustrate the use of the Vector class.
 *FIX: VectorExample program listing not available.*
 
-Output from a typical run of
-Program #program:VectorExample[[program:VectorExample]] is shown below:
+Output from a typical run of Program REF=program:VectorExample is shown
+below:
 
 ....
   9
@@ -1538,47 +986,18 @@ associates unique keys with values. You can think of it as _mapping_ a
 _key_ to a _value_. In the Java `HashMap` class, keys and values can be
 arbitrary Java classes.
 
-Program #program:HashMapExample[[program:HashMapExample]] reads a
-sequence of lines containing names and ages (for simplicity, the name is
-one word and the age is a simple integer). It stores these (name, age)
-pairs in a `HashMap<String,Integer>` data structure. Once all the input
-is read (`in.hasNext()` returns `false`), the program prints all the
-keys (names), then all the values (ages), and finally it prints the
-names and ages of each person in the input file.
+Program REF=program:HashMapExample reads a sequence of lines containing
+names and ages (for simplicity, the name is one word and the age is a
+simple integer). It stores these (name, age) pairs in a
+`HashMap<String,Integer>` data structure. Once all the input is read
+(`in.hasNext()` returns `false`), the program prints all the keys
+(names), then all the values (ages), and finally it prints the names and
+ages of each person in the input file.
 
-[source,numberLines,java]
-----
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-
-public class HashMapExample {
-	public static void main(String[] args) {
-		HashMap<String,Integer> map =
-			new HashMap<String,Integer>();
-		
-		Scanner in = new Scanner(System.in);
-		while( in.hasNext() ) {
-			String name = in.next();
-			int age = in.nextInt();
-			map.put(name, age);
-		}
-	
-		System.out.format("Keys\n");
-		for( String name : map.keySet() )
-			System.out.println("\t" + name);
-		
-		System.out.println("Values");
-		for( int age : map.values() )
-			System.out.println("\t" + age);
-		
-		for( Map.Entry<String, Integer> entry : map.entrySet() ) {
-			System.out.format(entry.getKey() + " -> " +
-							  entry.getValue());
-		}
-	}
-}
-----
+[[program:HashMapExample]][program:HashMapExample]
+PROGRAM=DynamicDataStructuresChapter/programs/HashMapExample.java,
+CAPTION=A program that illustrates using a `HashMap` dictionary to store
+a set of names and ages.
 
 Shown below is the output for a simple input file.
 
@@ -1805,69 +1224,23 @@ be updated incorrectly, potentially causing the stack or queue to lose
 elements. As you have seen, multiple threads operating on the same data
 can produce unexpected results.
 
-Program #program:UseLinkedListQueue[[program:UseLinkedListQueue]] is a
-simple multi-threaded program to test (and break!) the thread safety of
-the queue implementation in
-Program #program:LinkedListQueue[[program:LinkedListQueue]]. This
-program (#program:UseLinkedListQueue[[program:UseLinkedListQueue]])
-creates a queue and stores a reference to it in a static (class)
-variable `queue`. It then creates and starts 10 threads. During the
-adding phase (indicated by `adding` being `true`), each thread adds its
-thread ID number to the queue and prints it to standard output. Then,
-the program joins the threads until each has finished. The program then
-ends the adding phase (by setting the boolean variable `adding` to
-`false`) and starts 10 more threads. These threads each read one value
-from the queue and print it to standard output.
+Program REF=program:UseLinkedListQueue is a simple multi-threaded
+program to test (and break!) the thread safety of the queue
+implementation in Program REF=program:LinkedListQueue. This program
+(REF=program:UseLinkedListQueue) creates a queue and stores a reference
+to it in a static (class) variable `queue`. It then creates and starts
+10 threads. During the adding phase (indicated by `adding` being
+`true`), each thread adds its thread ID number to the queue and prints
+it to standard output. Then, the program joins the threads until each
+has finished. The program then ends the adding phase (by setting the
+boolean variable `adding` to `false`) and starts 10 more threads. These
+threads each read one value from the queue and print it to standard
+output.
 
-[source,numberLines,java]
-----
-public class UseLinkedListQueue extends Thread {
-	private static final int THREADS = 10;
-	private static LinkedListQueue queue = new LinkedListQueue();/*@\label{lineQueueRef}@*/
-	private static boolean adding = true;
-	
-	public static void main(String[] args) {
-		Thread[] threads = new Thread[THREADS];
-		for (int i = 0; i < THREADS; i++) {
-			threads[i] = new UseLinkedListQueue();
-			threads[i].start();/*@\label{lineStart10a}@*/
-		}
-		
-		for (int i = 0; i < THREADS; i++)
-			try { threads[i].join(); } /*@\label{lineJoin}@*/
-			catch (InterruptedException e) {}			
-		
-		adding = false;
-		
-		for (int i = 0; i < THREADS; i++) {
-			threads[i] = new UseLinkedListQueue();
-			threads[i].start();/*@\label{lineStart10b}@*/
-		}
- 
-		for (int i = 0; i < THREADS; i++)
-			try { threads[i].join(); }
-			catch (InterruptedException e) {}
-		
-		while( !queue.isEmpty() )
-			System.out.println("Left in queue: ID = " +
-					queue.dequeue());
-	}
-	
-	public void run() {
-		if( adding ) {
-			long ID = Thread.currentThread().getId();
-			System.out.println("Thread ID added to queue: " +
-					Thread.currentThread().getId());
-			queue.enqueue(String.valueOf(ID));
-		}
-		else {
-			String ID = queue.dequeue();
-			System.out.println("Thread ID removed from queue: "
-					+ ID);
-		}
-	}
-}
-----
+[[program:UseLinkedListQueue]][program:UseLinkedListQueue]
+PROGRAM=DynamicDataStructuresChapter/programs/UseLinkedListQueue.java,
+CAPTION=Program to test the queue implementation, including its thread
+safety.
 
 Without appropriate synchronization, the program may not correctly link
 all values into the queue nor remove them at the end. A typical
@@ -1900,28 +1273,27 @@ Thread ID removed from queue: null
 
 How does this implementation fail? Consider the situation in which two
 threads are attempting to put a value in the queue simultaneously (see
-line link:#linePutQueue[[linePutQueue]] in
-Program #program:LinkedListQueue[[program:LinkedListQueue]]). Suppose
+line REF=linePutQueue in Program REF=program:LinkedListQueue). Suppose
 the first thread tests the queue and finds it empty (`isEmpty()` returns
 `true`) but is then interrupted. If a second thread gets control it will
 also see that the queue is empty then sets the `head` and `tail`
-variables to the new `Node` object `temp` at
-line link:#lineNewLLN[[lineNewLLN]] and return. The first thread will
-eventually wake up, still thinking that the queue is empty, and also set
-the `head` and `tail` variables to its own new `Node` `temp`. But these
-assignments overwrite the assignments just done by the previous thread!
-The initial node that was in the queue is now lost.
+variables to the new `Node` object `temp` at line REF=lineNewLLN and
+return. The first thread will eventually wake up, still thinking that
+the queue is empty, and also set the `head` and `tail` variables to its
+own new `Node` `temp`. But these assignments overwrite the assignments
+just done by the previous thread! The initial node that was in the queue
+is now lost.
 
 This problem can be fixed by ensuring that once one thread starts
 examining and modifying queue variables, no other thread can access the
 same variables until the first one is finished. As shown in
-Chapter #chapter:Synchronization[[chapter:Synchronization]], this mutual
-exclusion can be achieved by using the `synchronized` keyword on methods
-that need to have exclusive access to object variables. In this queue
-implementation, we need to synchronize access by threads that are using
-either the `enqueue()` or `dequeue()` methods, since both methods access
-and manipulate variables in the object. Although it is not called in
-this program, the `front()` method should also be synchronized so that a
+Chapter REF=chapter:Synchronization, this mutual exclusion can be
+achieved by using the `synchronized` keyword on methods that need to
+have exclusive access to object variables. In this queue implementation,
+we need to synchronize access by threads that are using either the
+`enqueue()` or `dequeue()` methods, since both methods access and
+manipulate variables in the object. Although it is not called in this
+program, the `front()` method should also be synchronized so that a
 `null` `head` is not accessed accidentally. The `isEmpty()` method does
 not need to be synchronized since the only methods that call it that can
 do any harm are already synchronized. Outside code that calls
@@ -1930,61 +1302,14 @@ contents of the queue, but there is no guarantee that other threads will
 not modify the state of the queue at any point after the `isEmpty()`
 method is called anyway.
 
-[source,numberLines,java]
-----
-public class LinkedListQueueTS implements Queue {
-	private static class Node {
-        public String value;
-        public Node next;
-    }
-	
-    private Node head = null;
-    private Node tail = null;  
-	
-	public synchronized void enqueue(String value) {
-		Node temp = new Node();
-		temp.value = value;
-		temp.next = null;
-		
-		if( isEmpty() )
-			head = tail = temp;
-		else {			
-			tail.next = temp;
-			tail = temp;			
-		}
-	}
-	
-	public synchronized String dequeue() {
-		String value = null;
-		if( isEmpty() )
-			System.out.println("Can't dequeue an empty queue!");
-		else {
-			value = head.value;
-			head = head.next;
-			if( head == null )
-				tail = null;
-		}
-		return value;
-	}
-	
-	public synchronized String front() {
-		String value = null;
-		if( isEmpty() )
-			System.out.println("No front on an empty queue!");
-		else
-			value = head.value;
-		return value;
-	}
-	
-	public boolean isEmpty() {
-		return head == null;
-	}
-}
-----
+[[program:LinkedListQueueTS]][program:LinkedListQueueTS]
+PROGRAM=DynamicDataStructuresChapter/programs/LinkedListQueueTS.java,
+CAPTION=A synchronized version of the queue class that allows
+thread-safe use.
 
 With both `enqueue()` and `dequeue()` methods synchronized as in
-Program #program:LinkedListQueueTS[[program:LinkedListQueueTS]], a
-typical output generated by the program is shown below.
+Program REF=program:LinkedListQueueTS, a typical output generated by the
+program is shown below.
 
 ....
 Thread ID added to queue: 9
@@ -2011,10 +1336,10 @@ Thread ID removed from queue: 11
 
 === Thread-safe libraries (concurrency)
 
-As we mentioned in Section #concurrency:Objects[[concurrency:Objects]],
-some libraries are thread-safe and some are not. The Java Collections
-Framework (JCF) is a very useful library, but it is also a library that
-requires thread safety to be at the forefront of your mind.
+As we mentioned in Section REF=concurrency:Objects, some libraries are
+thread-safe and some are not. The Java Collections Framework (JCF) is a
+very useful library, but it is also a library that requires thread
+safety to be at the forefront of your mind.
 
 The JCF defines the `Collection` interface and the `Map` interface. The
 `Collection` interface, which any collection of objects should
@@ -2024,12 +1349,12 @@ queue of items. The `Map` interface gives the basic operations for a
 dictionary, a collection of key-value pairs, one implementation of which
 is the `HashMap` from Example ..
 
-As we mentioned in Chapter #chapter:Interfaces[[chapter:Interfaces]], an
-interface cannot mark a method with the `synchronized` keyword.
-Consequently, the JCF can make no guarantee about the thread safety of a
-container based on which interface it implements. The programmer must
-read the documentation carefully in order to know if a container is
-thread-safe and react accordingly.
+As we mentioned in Chapter REF=chapter:Interfaces, an interface cannot
+mark a method with the `synchronized` keyword. Consequently, the JCF can
+make no guarantee about the thread safety of a container based on which
+interface it implements. The programmer must read the documentation
+carefully in order to know if a container is thread-safe and react
+accordingly.
 
 An `ArrayList` is like a `Vector`, with essentially the same interface
 but lacks synchronization. That is, if two threads attempt to insert or
@@ -2037,55 +1362,19 @@ remove an element from the same `ArrayList` at the same time, the
 `ArrayList` internal state may become corrupt or the results may be
 incorrect.
 
-Program #program:ArrayListExample[[program:ArrayListExample]] is an
-example of synchronizing updates to the `ArrayList` class with multiple
-threads. The program creates an `ArrayList` and places a reference to it
-in the static class variable `list`. It then creates and starts two
-threads. Each thread repeats a loop 10 times, appending a `String` to
-the `ArrayList` on each iteration. To increase the likelihood of
-concurrent update attempts, the thread sleeps for a millisecond on each
-iteration. To prevent concurrent updates from actually happening, each
-thread synchronizes on the common (shared) class variable `list` at
-line link:#aleSync[[aleSync]].
+Program REF=program:ArrayListExample is an example of synchronizing
+updates to the `ArrayList` class with multiple threads. The program
+creates an `ArrayList` and places a reference to it in the static class
+variable `list`. It then creates and starts two threads. Each thread
+repeats a loop 10 times, appending a `String` to the `ArrayList` on each
+iteration. To increase the likelihood of concurrent update attempts, the
+thread sleeps for a millisecond on each iteration. To prevent concurrent
+updates from actually happening, each thread synchronizes on the common
+(shared) class variable `list` at line REF=aleSync.
 
-[source,numberLines,java]
-----
-import java.util.ArrayList;
-
-public class ArrayListExample extends Thread {
-	private static ArrayList<String> list;
-
-	public static void main(String[] args) {
-		Thread t1 = new ArrayListExample();
-		Thread t2 = new ArrayListExample();
-
-		list = new ArrayList<String>();
-
-		t1.start();
-		t2.start();
-		
-		try {
-			t1.join();
-			t2.join();
-		} catch (InterruptedException e) { e.printStackTrace(); }
-		
-		for (String s : list)
-			System.out.println(s);
-	}
-	
-	public void run() {
-		for (int i = 0; i < 10; i++) {
-			synchronized (list) {/*@\label{aleSync}@*/
-				list.add(this.getName() + ": " + i);
-			}
-			try { Thread.sleep(1);	}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-}
-----
+[[program:ArrayListExample]][program:ArrayListExample]
+PROGRAM=DynamicDataStructuresChapter/programs/ArrayListExample.java,
+CAPTION=Example of thread-safe use of an `ArrayList`.
 
 *Without* the `synchronized` keyword, a typical run, shown below,
 includes a `null` reference in the output, indicating that the internal
@@ -2145,7 +1434,7 @@ Thread-0: 9
 
 '''''
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -2157,22 +1446,19 @@ structures.
 In which situations is it better to use a dynamic array? In which
 situations is it better to use a linked list? Explain why in each case.
 
-On which line in
-Program #program:ReadIntoFixedArray[[program:ReadIntoFixedArray]] is an
-exception generated?
+On which line in Program REF=program:ReadIntoFixedArray is an exception
+generated?
 
-In Program #program:ReadAndGrowArray[[program:ReadAndGrowArray]], is it
-possible to post-increment `n` inside the `try` clause rather than at
-the bottom of the `while` loop?
+In Program REF=program:ReadAndGrowArray, is it possible to
+post-increment `n` inside the `try` clause rather than at the bottom of
+the `while` loop?
 
-Explain why the `names` array in
-Program #program:UseDynamicArray[[program:UseDynamicArray]] is, on
-average, only three-quarters full.
+Explain why the `names` array in Program REF=program:UseDynamicArray is,
+on average, only three-quarters full.
 
 Based on the stack implementation in
-Program #program:LinkedListStack[[program:LinkedListStack]], draw a
-picture of the linked list structure after each of the following
-statements.
+Program REF=program:LinkedListStack, draw a picture of the linked list
+structure after each of the following statements.
 
 ....
     LinkedListStack stack = new LinkedListStack();
@@ -2186,12 +1472,10 @@ statements.
 ....
 
 Implement the methods `top()` and `isEmpty()` for the dynamic array
-implementation of the stack in
-Program #program:DynamicArrayStack[[program:DynamicArrayStack]].
+implementation of the stack in Program REF=program:DynamicArrayStack.
 
-Based on queue implementation in
-Program #program:LinkedListQueue[[program:LinkedListQueue]], draw a
-picture of the linked list structure after each of the following
+Based on queue implementation in Program REF=program:LinkedListQueue,
+draw a picture of the linked list structure after each of the following
 statements.
 
 ....
@@ -2213,41 +1497,38 @@ capacity is being used. This design can save significant amounts of
 space if a large number of items are added to the dynamic array at once
 and then removed.
 
-Consider
-Program #program:LinkedListWithTail[[program:LinkedListWithTail]] which
-defines the `LinkedListWithTail` class for storing a linked list of
-`String` values. Add a `public reverse()` method to the class which
-reverses the order of the nodes in the linked list. The key idea is make
-a new linked list that holds the head of the list. Then, remove the head
-from the original linked list. Put the next node *in front* of the head
-in the new linked list and remove it from the old. Continue the process
-until there is nothing left in the original list. Be sure to reset the
-`head` and `tail` references correctly after the reversal.
+Consider Program REF=program:LinkedListWithTail which defines the
+`LinkedListWithTail` class for storing a linked list of `String` values.
+Add a `public reverse()` method to the class which reverses the order of
+the nodes in the linked list. The key idea is make a new linked list
+that holds the head of the list. Then, remove the head from the original
+linked list. Put the next node *in front* of the head in the new linked
+list and remove it from the old. Continue the process until there is
+nothing left in the original list. Be sure to reset the `head` and
+`tail` references correctly after the reversal.
 
-In Section #subsection:Linked lists[0.3], we use two kinds of linked
-lists to store data, but copy all of that data back into an array before
+In Section REF=subsection:Linked lists, we use two kinds of linked lists
+to store data, but copy all of that data back into an array before
 sorting it. We use third linked list class (`SortedLinkedList`) to
 insert data and maintain a sorted order. However, it is possible to add
 data in non-sorted order to a linked list and then sort it afterwards.
 Add a `sort()` method to the `LinkedListWithTail` class that performs a
 bubble sort on the nodes inside.
 
-The algorithm for a bubble sort is described in
-Section #problem:Sort it out[[problem:Sort it out]]. The idea is to make
-repeated passes through a list, swapping two adjacent items if they are
-out of order. You keep making passes over the list until no adjacent
-items are out of order. For a this `sort()` method, you will need to use
-the `compareTo()` method to compare the `String` values in the linked
-list nodes. Also, it may be necessary to have special cases that update
-the `head` and `tail` pointers if those nodes are swapped with other
-nodes. Note that bubble sort is not the fastest way to sort a linked
-list. We introduce a faster approach in
-Chapter #chapter:Recursion[[chapter:Recursion]].
+The algorithm for a bubble sort is described in Section REF=problem:Sort
+it out. The idea is to make repeated passes through a list, swapping two
+adjacent items if they are out of order. You keep making passes over the
+list until no adjacent items are out of order. For a this `sort()`
+method, you will need to use the `compareTo()` method to compare the
+`String` values in the linked list nodes. Also, it may be necessary to
+have special cases that update the `head` and `tail` pointers if those
+nodes are swapped with other nodes. Note that bubble sort is not the
+fastest way to sort a linked list. We introduce a faster approach in
+Chapter REF=chapter:Recursion.
 
 Concurrency Create JUnit test cases to verify that the `synchronized`
 keywords are needed on the `set()` and `sort()` methods of the
-`DynamicArray` example
-(Program #program:DynamicArray[[program:DynamicArray]]). To test the
+`DynamicArray` example (Program REF=program:DynamicArray). To test the
 `set()` method, you can create one thread that repeatedly sets, gets,
 and tests a changing value at a fixed location (e.g., 0) and another
 thread that continuously appends to the array (causing it to grow by
@@ -2271,14 +1552,13 @@ parenthesis, you continue to look for an operator.
 
 Using this first pass over input to separate terms as well as the
 `parseDouble()` method from Example . to compute the equivalent `double`
-values of operands, rewrite the solution from
-Section #solution:Infix conversion[[solution:Infix conversion]] to
-convert your terms into postfix ordering and then calculate the answer.
+values of operands, rewrite the solution from Section REF=solution:Infix
+conversion to convert your terms into postfix ordering and then
+calculate the answer.
 
 Re-implement the solution to the infix conversion problem given in
-Section #solution:Infix conversion[[solution:Infix conversion]] so that
-it uses `GenericStack` with a type parameter of `Term` instead of
-`TermStack`.
+Section REF=solution:Infix conversion so that it uses `GenericStack`
+with a type parameter of `Term` instead of `TermStack`.
 
 Interfaces can also be generic. Consider the following generic version
 of `Queue`.

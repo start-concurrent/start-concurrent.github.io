@@ -1,4 +1,3 @@
-[[chapter:Selection]]
 == Selection
 
 [[section:Monty Hall]]
@@ -42,10 +41,9 @@ from problems in previous chapters. First, randomness play a role.
 Generating random numbers has become an important part of computer
 science, and most languages provide programmers with tools for
 generating random or nearly random numbers. Recall the `Random` class
-from
-Chapter #chapter:Primitive Types and Strings[[chapter:Primitive Types and Strings]].
-With an object of type `Random` called `random`, you can generate a
-random `int` between `0` and `n - 1` by calling `random.nextInt(n)`.
+from Chapter REF=chapter:Primitive Types and Strings. With an object of
+type `Random` called `random`, you can generate a random `int` between
+`0` and `n - 1` by calling `random.nextInt(n)`.
 
 The second and much more important feature of Java in the solution to
 this problem is the element of choice. A random door is chosen to hide
@@ -77,7 +75,7 @@ probably run across _Boolean logic_. Boolean logic gives a set of rules,
 similar to the rules of traditional algebra, that can be applied to a
 system with only two values: true and false.
 
-== Simple choices
+=== Simple choices
 
 Because we want to build a system using only yes-or-no questions,
 Boolean logic is a perfect fit for computer science. To conform with
@@ -110,7 +108,7 @@ food_ be action latexmath:[$c$]. Now we have created a decision. If
 latexmath:[$q$] is true, the person will do action latexmath:[$b$], but,
 if it is false, she will do action latexmath:[$c$].
 
-== Boolean operations
+=== Boolean operations
 
 Even by itself, the ability to pick between two options is powerful, but
 we can augment this ability in a couple of ways. First, we don’t have to
@@ -212,7 +210,7 @@ clear up the ambiguity present in the original statement. If we can map
 individual conditions to Boolean variables, we can build conditions of
 arbitrary complexity.
 
-== Nested choices
+=== Nested choices
 
 Making one choice is all well and good, but in life and computer
 programs, we may have to make many interrelated choices. For example, if
@@ -248,7 +246,7 @@ describe these choices. It was no accident that we kept repeating the
 word ``if,'' because the main Java language feature for making choices
 is called an `if` statement.
 
-== `if` statements
+=== `if` statements
 
 The designers of Java studied Boolean logic and created a type called
 `boolean`. Every condition used by an `if` statement must evaluate to a
@@ -267,12 +265,11 @@ if( raining ) {
 
 The action taken if it is raining is done by calling a _method_ on an
 _object_. We’ll discuss objects and methods further in
-Chapters #chapter:Methods[[chapter:Methods]] and
-#chapter:Classes[[chapter:Classes]]. What we’re focusing on now is that
-the line `umbrella.take();` is executed only if `raining` has the value
-`true`. Nothing is done if it is `false`. Figure #figure:if[[figure:if]]
-shows this pattern of conditional execution followed by all `if`
-statements.
+Chapters REF=chapter:Methods and REF=chapter:Classes. What we’re
+focusing on now is that the line `umbrella.take();` is executed only if
+`raining` has the value `true`. Nothing is done if it is `false`.
+Figure REF=figure:if shows this pattern of conditional execution
+followed by all `if` statements.
 
 to
 
@@ -347,13 +344,12 @@ else
     fastFood.eat();
 ....
 
-Figure #figure:else[[figure:else]] shows the pattern of conditional
-execution followed by all `if` statements that have a matching `else`
-statement.
+Figure REF=figure:else shows the pattern of conditional execution
+followed by all `if` statements that have a matching `else` statement.
 
 to
 
-=== Pitfall: Misleading indentation
+==== Pitfall: Misleading indentation
 
 Indentation is used to make the code more readable, but Java ignores
 whitespace, meaning that the indentation has no effect on the execution
@@ -385,7 +381,7 @@ else {
 }
 ....
 
-== The `boolean` type and its operations
+=== The `boolean` type and its operations
 
 Recall that Java uses the type `boolean` for values that can only be
 true or false. Just like the numerical types `double` and `int`, the
@@ -521,9 +517,9 @@ if( pressure > CRITICAL_PRESSURE )
 This code allows you to call the appropriate emergency method when
 `pressure` is too high. Of course, the `>` operator is not the only way
 to compare two values in Java. We list all the relational operators in
-Chapter #chapter:Primitive Types and Strings[[chapter:Primitive Types and Strings]],
-but Table #table:relational operators[[table:relational operators]]
-below shows them again in a mathematical context.
+Chapter REF=chapter:Primitive Types and Strings, but
+Table REF=table:relational operators below shows them again in a
+mathematical context.
 
 .Relational operators in Java.
 [cols="<,^,^,<",]
@@ -588,7 +584,7 @@ if( 4 )
 To be used in an `if` statement, the value `4` must be first compared
 with some other numerical type to yield a `true` or `false`. +
 
-=== Pitfall: Assignment instead of equality
+==== Pitfall: Assignment instead of equality
 
 Along these lines, a common pitfall is to forget one of the equal signs
 in the comparison operator.
@@ -654,26 +650,10 @@ after integer division. Thus, if `n \% 100` gives zero, `n` has no
 remainder after being divided by `100` and must be evenly divisible by
 100.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class LeapYear {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a year: ");
-		int year = in.nextInt();
-		if( year % 400 == 0 )
-			System.out.println(year + " is a leap year.");
-		else if( year % 100 == 0 )
-			System.out.println(year + " is not a leap year.");
-		else if( year % 4 == 0 )
-			System.out.println(year + " is a leap year.");
-		else
-			System.out.println(year + " is not a leap year.");
-	}
-}
-----
+[[program:LeapYear]][program:LeapYear]
+PROGRAM=SelectionChapter/programs/LeapYear.java, CAPTION=A program that
+prompts the user for a year and then determines whether or not it is a
+leap year.
 
 As with all of the programs in this section, we begin by importing
 `java.util.*`, which is needed for the `Scanner` class for input. The
@@ -700,38 +680,9 @@ zero, there will be a single real answer to the problem. If you want to
 write a program to solve quadratic equations for you, it should take
 these three possibilities into account.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class Quadratic {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );
-		System.out.println("This program solves quadratic" + 
-			" equations of the form ax^2 + bx + c = 0.");
-		System.out.print("Please enter a value for a: ");
-		double a = in.nextDouble();
-		System.out.print("Please enter a value for b: ");
-		double b = in.nextDouble();
-		System.out.print("Please enter a value for c: ");
-		double c = in.nextDouble();
-		double discriminant = b*b - 4*a*c;
-		if( discriminant == 0.0 )
-			System.out.println("The answer is x = " + (-b/(2*a)));
-		else if( discriminant < 0.0 )
-			System.out.println("The answers are x = " +
-                (-b / (2*a)) + " + " +
-                Math.sqrt(-discriminant) / (2*a) + "i and x = " +
-                (-b / (2*a)) + " - " +
-                Math.sqrt(-discriminant) / (2*a) + "i");
-		else
-			System.out.println("The answers are x = " +
-                (-b + Math.sqrt(discriminant))/(2*a) +
-                " and x = " +
-                (-b - Math.sqrt(discriminant))/(2*a));
-	}
-}
-----
+[[program:Quadratic]][program:Quadratic]
+PROGRAM=SelectionChapter/programs/Quadratic.java, CAPTION=Program to
+solve a quadratic equation.
 
 This program begins by prompting the user and reading in values for `a`,
 `b`, and `c`. Then, it computes the discriminant. In the first case, we
@@ -778,72 +729,11 @@ mammal, we could ask if it lives on land, deciding between human and
 dolphin. If it is not a mammal, we could ask if it flies, deciding
 between an eagle and a lizard. We can construct similar questions for
 the things in the vegetable and mineral categories, matching
-Figure #figure:flowchart[[figure:flowchart]].
+Figure REF=figure:flowchart.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class TwentyQuestions {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Is it an animal, vegetable, or mineral?" +
-			"('a', 'v', or 'm'): ");
-		String response = in.next().toLowerCase();
-		if( response.equals("a") ) {
-			System.out.print("Is it a mammal? ('y' or 'n'): ");
-			response = in.next().toLowerCase();
-			if( response.equals("y") ) {
-				System.out.print(
-					"Does it live on land? ('y' or 'n'): ");
-				response = in.next().toLowerCase();
-				if( response.equals("y") )
-					System.out.println("It's a human.");				
-				else //assume "n"
-					System.out.println("It's a dolphin.");				
-			}
-			else { //assume "n"
-				System.out.print("Does it fly? ('y' or 'n'): ");
-				response = in.next().toLowerCase();
-				if( response.equals("y") )
-					System.out.println("It's an eagle.");				
-				else //assume "n"
-					System.out.println("It's a lizard.");
-			}
-		}
-		else if( response.equals("v") ) {
-			System.out.print("Is it a fruit? ('y' or 'n'): ");
-			response = in.next().toLowerCase();
-			if( response.equals("y") ) {
-				System.out.print(
-					"Does it grown on a vine? ('y' or 'n'): ");
-				response = in.next().toLowerCase();
-				if( response.equals("y") )
-					System.out.println("It's a tomato.");				
-				else //assume "n"
-					System.out.println("It's a peach.");				
-			}
-			else { //assume "n"
-				System.out.print("Is it a tree? ('y' or 'n'): ");
-				response = in.next().toLowerCase();
-				if( response.equals("y") )
-					System.out.println("It's a maple tree.");
-				else //assume "n"
-					System.out.println("It's a potato.");
-			}
-		}
-		else { //assume "m"
-				System.out.print(
-					"Is it the hardest mineral? ('y' or 'n'): ");
-				response = in.next().toLowerCase();
-				if( response.equals("y") )
-					System.out.println("It's a diamond.");				
-				else //assume "n"
-					System.out.println("It's lead.");
-		}		
-	}
-}
-----
+[[program:TwentyQuestions]][program:TwentyQuestions]
+PROGRAM=SelectionChapter/programs/TwentyQuestions.java, CAPTION=Program
+to navigate the possible choices in the decision tree.
 
 The code in this example is straightforward, although even 10 items
 makes for a lot of `if` and `else` blocks. Other than the `if`-`else`
@@ -868,7 +758,7 @@ permanently). These concepts are covered in later chapters. 
 '''''
 
 [[subsection:switch statements]]
-== `switch` statements
+=== `switch` statements
 
 The `if` statement is the workhorse of Java conditional execution. With
 enough care, you can craft code that can make any fixed sequence of
@@ -1125,37 +1015,9 @@ program that gives the length of each month (assume that February always
 has 28 days). Given the month as a number, we can easily write a program
 that maps the number of the month to the number of days it contains.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class DaysInMonth {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please a month number (1-12): ");
-		int month = in.nextInt();
-		int days = 0;
-		switch( month ) {
-			case 2:  days = 28; break;
-
-			case 4:
-			case 6:
-			case 9:
-			case 11: days = 30; break;
-
-			case 1:
-			case 3:
-			case 5:
-			case 7:
-			case 8:
-			case 10:
-			case 12: days = 31; break;
-		}	
-		System.out.println("The month you entered has " +
-			days + " days.");
-	}
-}
-----
+[[program:DaysInMonth]][program:DaysInMonth]
+PROGRAM=SelectionChapter/programs/DaysInMonth.java, CAPTION=This program
+computes the number of days in a given month.
 
 This program has a single label for February setting `days` to 28. Then,
 there are labels for April, June, September, and November, months that
@@ -1183,27 +1045,9 @@ should generally be used. For most other numbers, the letters ``th''
 should be used. We can use a `switch` statement to write a program to
 give the correct ordinal endings for most numbers as follows.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class Ordinals {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a positive number: ");
-		int number = in.nextInt();
-		String ending;
-		switch( number % 10 ) {
-			case 1:  ending = "st"; break;
-			case 2:  ending = "nd"; break;
-			case 3:  ending = "rd"; break;
-			default: ending = "th"; break;
-		}	
-		System.out.println("Its ordinal version is "
-			+ number + ending + ".");
-	}
-}
-----
+[[program:Ordinals]][program:Ordinals]
+PROGRAM=SelectionChapter/programs/Ordinals.java, CAPTION=This program
+appends the appropriate suffix to a numeral to make it an ordinal.
 
 This program prompts and then reads in an `int` from the user. We then
 find the remainder of `number` when it is divided by 10, yielding its
@@ -1254,35 +1098,9 @@ your birthday is early in the year. Let’s ignore this problem for the
 moment and write a program using a `switch` statement designed to
 correctly output the animal corresponding to an input birth year.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class ChineseZodiac {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a year: ");
-		int year = in.nextInt();		
-		String animal = "";
-		switch( year % 12 ) {
-			case 0:  animal = "Monkey"; break;
-			case 1:  animal = "Rooster"; break;
-			case 2:  animal = "Dog"; break;
-			case 3:  animal = "Boar"; break;
-			case 4:  animal = "Rat"; break;
-			case 5:  animal = "Ox"; break;
-			case 6:  animal = "Tiger"; break;
-			case 7:  animal = "Rabbit"; break;
-			case 8:  animal = "Dragon"; break;
-			case 9:  animal = "Snake"; break;
-			case 10: animal = "Horse"; break;
-			case 11: animal = "Ram"; break;
-		}	
-		System.out.println("The Chinese zodiac animal for " + 
-			"this year is: " + animal);
-	}
-}
-----
+[[program:ChineseZodiac]][program:ChineseZodiac]
+PROGRAM=SelectionChapter/programs/ChineseZodiac.java, CAPTION=This
+program determines a Chinese zodiac animal based on birth year.
 
 [cols="<,<,<",options="header",]
 |=====================================================
@@ -1309,84 +1127,9 @@ If you want to implement the rules for this zodiac in code, a `switch`
 statement is a good place to start, but you also have to put `if`
 statements for each month to test the exact range of dates.
 
-[source,numberLines,java]
-----
-import java.util.*;
-
-public class WesternZodiac {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );		
-		System.out.print("Please enter a month number (1-12): ");
-		int month = in.nextInt();
-		System.out.print("Please enter a day number in that month (1-31): ");
-		int day = in.nextInt();
-		String sign = "";
-		switch( month ) {
-			case 1: if( day < 20 )
-					sign = "Capricorn";
-				else
-					sign = "Aquarius";
- 				break;
-			case 2: if( day < 20 )
-					sign = "Aquarius";
-				else
-					sign = "Pices";
- 				break;
-			case 3: if( day < 20 )
-					sign = "Pices";
-				else
-					sign = "Aries";
- 				break;
-			case 4: if( day < 20 )
-					sign = "Aries";
-				else
-					sign = "Taurus";
- 				break;
-			case 5: if( day < 21 )
-					sign = "Taurus";
-				else
-					sign = "Gemini";
- 				break;
-			case 6: if( day < 21 )
-					sign = "Gemini";
-				else
-					sign = "Cancer";
- 				break;
-			case 7: if( day < 23 )
-					sign = "Cancer";
-				else
-					sign = "Leo";
- 				break;
-			case 8: if( day < 23 )
-					sign = "Leo";
-				else
-					sign = "Virgo";
- 				break;
-			case 9: if( day < 23 )
-					sign = "Virgo";
-				else
-					sign = "Libra";
- 				break;
-			case 10:if( day < 23 )
-					sign = "Libra";
-				else
-					sign = "Scorpio";
- 				break;
-			case 11:if( day < 22 )
-					sign = "Scorpio";
-				else
-					sign = "Sagittarius";
- 				break;
-			case 12:if( day < 20 )
-					sign = "Sagittarius";
-				else
-					sign = "Capricorn";
- 				break;			
-		}	
-		System.out.println("The zodiac sign is: " + sign);
-	}
-}
-----
+[[program:WesternZodiac]][program:WesternZodiac]
+PROGRAM=SelectionChapter/programs/WesternZodiac.java, CAPTION=This
+program determines Western zodiac signs based on birth month and day.
 
 This program is just slightly more complex than the program for the
 Chinese zodiac. You still need to jump to 12 different cases (numbered
@@ -1546,8 +1289,7 @@ languages running on all computers.
 
 The second reason is more troubling and is related to a problem with
 some concurrent programs called a _race condition_, which is discussed
-in great detail in Chapter
-#chapter:Synchronization[[chapter:Synchronization]]. Remember, one of
+in great detail in Chapter REF=chapter:Synchronization. Remember, one of
 the biggest challenges of programming a computer is thinking in a
 completely sequential and logical way. Each line of code is executed one
 after the other. Adding in `if` statements means that some code is
@@ -1615,7 +1357,7 @@ or not you are programming concurrently, it is always important to keep
 in mind the assumptions your code makes and the way different parts of
 your program interact with each other.
 
-= Exercises
+=== Exercises (exercises)
 
 .
 
@@ -1723,7 +1465,7 @@ operator to find the last two digits of the number. Using either an `if`
 statement, a `switch` statement, or a combination, check for those three
 cases before going into the normal cases.
 
-At the bottom of Section #subsection:switch statements[0.7], we use a
+At the bottom of Section REF=subsection:switch statements, we use a
 `switch` statement to determine the location of various area codes in
 New York state. Write an equivalent fragment of code using `if`-`else`
 statements instead.
@@ -1749,5 +1491,5 @@ are several ways to structure the `if` statements you need to use, but
 the number of conditions may become large. (23 or more!)
 
 Re-implement GUIthe solution to the Monty Hall program given in
-Section #solution:Monty Hall[[solution:Monty Hall]] using `JOptionPane`
-to generate GUIs for input and output.
+Section REF=solution:Monty Hall using `JOptionPane` to generate GUIs for
+input and output.
