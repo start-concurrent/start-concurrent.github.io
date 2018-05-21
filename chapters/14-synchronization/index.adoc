@@ -1,7 +1,8 @@
 [[chapter:Synchronization]]
+:imagesdir: chapters/14-synchronization/images
 == Synchronization
 
-=== unspecified section category: Introduction
+=== Introduction
 
 Concurrent programs allow multiple threads to be scheduled and executed,
 but the programmer does not have a great deal of control over when
@@ -16,7 +17,7 @@ we introduce next illustrates why one thread execution sequence might be
 perfectly fine while another might lead to unexpected and incorrect
 behavior (and even people starving!)
 
-=== problem: Dining philosophers
+=== Problem: Dining philosophers
 
 Concurrency gives us the potential to make our programs faster but
 introduces a number of other problems. The way that threads interact can
@@ -34,7 +35,9 @@ eat. In order to eat, a philosopher must pick up both the chopstick on
 her left and the chopstick on her right. Figure REF=figure:dining shows
 an example of the situation.
 
-to
+.Table for five dining philosophers.
+image::diners.png[]
+
 
 Your goal is to write a class called `DiningPhilosopher` which extends
 `Thread`. Each thread created in the `main()` method should be a
@@ -50,21 +53,23 @@ same time. Likewise, we need to avoid a situation where every
 philosopher is waiting for every other philosopher to give up a
 chopstick.
 
-=== concepts: Thread interaction
+=== Concepts: Thread interaction
 
 This dining philosopher problem highlights some difficulties which were
-emerging toward the end of the last chapter. In Exercise . two snippets
-of code could run concurrently and modify the same shared variable,
-potentially producing incorrect output. Because of the nondeterministic
-nature of scheduling, we have to assume that the code executing in two
-or more threads can be interleaved in any possible way. When the
-*result* of computation changes depending on the order of thread
-execution, it is called a _race condition_. Below is a simple example of
-a race condition in Java. . ]Exercise . . ]Exercise .
+emerging toward the end of the last chapter. In
+Exercise REF=exercise:interleavings two snippets of code could run
+concurrently and modify the same shared variable, potentially producing
+incorrect output. Because of the nondeterministic nature of scheduling,
+we have to assume that the code executing in two or more threads can be
+interleaved in any possible way. When the *result* of computation
+changes depending on the order of thread execution, it is called a _race
+condition_. Below is a simple example of a race condition in Java.
 
-[[program:RaceCondition]][program:RaceCondition]
-PROGRAM=SynchronizationChapter/programs/RaceCondition.java, CAPTION=A
-short example of a race condition.
+.A short example of a race condition.
+[source, java, linenums]
+----
+include::programs/RaceCondition.java[]
+----
 
 This short (and pointless) class attempts to increment the variable
 `counter` until it reaches `1000000`. To illustrate the race condition,
@@ -124,9 +129,9 @@ hides some of the details of enforcing mutual exclusion from the user.
 Mutual exclusion is a deeply researched topic with many approaches other
 than monitors. If you plan to write concurrent programs in another
 language, you may need to brush up on the features provided by that
-language. . ]Exercise .
+language.
 
-=== syntax: Thread synchronization
+=== Syntax: Thread synchronization
 
 ==== The `synchronized` keyword
 
@@ -136,7 +141,7 @@ keyword: with a method or with an arbitrary block of code. In the method
 version, you add the `synchronized` modifier before the return type.
 Let’s imagine a class with a private `String` field called `message`
 which is set to be `"Will Robinson!"` by the constructor. Now, we define
-the following method. . ]Exercise .
+the following method.
 
 ....
 public synchronized void danger() {
@@ -159,9 +164,9 @@ hold. If another thread tries to access the code, it is forced to wait
 until the lock is released. This lock is _re-entrant_. Re-entrant means
 that, when a thread currently holds a lock and tries to get it again, it
 succeeds. This situation frequently occurs with synchronized methods
-which call other synchronized methods. . ]Exercise .
+which call other synchronized methods.
 
-Consider method `safety()` which does the ``opposite'' of `danger()`, by
+Consider method `safety()` which does the "`opposite`" of `danger()`, by
 removing occurrences of `"Danger, "` from the beginning of `message`.
 
 ....
@@ -179,7 +184,7 @@ method, the object the method is being called on (whichever object
 `this` refers to inside the method) serves as the lock. Thus, only one
 thread can be inside of either of these methods. If you have 10
 synchronized methods in an object, only one of them can execute at a
-time in a given object. . ]Exercise . . ]Exercise .
+time in a given object.
 
 Perhaps this level of control is too restrictive. You may have six
 methods which conflict with each other and four others which conflict
@@ -322,7 +327,9 @@ call `notifyAll()`. If a particular condition changes and a single
 waiting thread is notified, that thread may need to notify the next
 waiting thread when it is done. If your code is not very carefully
 designed, some thread may end up waiting forever and never be notified
-if you only rely on `notify()`. . ]Exercise . . ]Exercise .
+if you only rely on `notify()`.
+
+==== Begin Example: Producer/consumer
 
 To illustrate the use of `wait()` and `notify()` calls inside of
 synchronized code, we give a simple solution to the producer/consumer
@@ -338,9 +345,11 @@ producer until the consumer can take them away. Our solution does all
 synchronization on the buffer. Many different threads can share this
 buffer, but all accesses will be controlled.
 
-[[program:Buffer]][program:Buffer]
-PROGRAM=SynchronizationChapter/programs/Buffer.java, CAPTION=An example
-of a synchronized buffer.
+.An example of a synchronized buffer.
+[source, java, linenums]
+----
+include::programs/Buffer.java[]
+----
 
 When adding an item, producers enter the synchronized `addItem()`
 method. If `count` shows that the buffer is full, the producer must wait
@@ -356,10 +365,11 @@ sequential. Although it seems undesirable, sequential behavior is
 precisely what is needed for the producer/consumer problem. All
 synchronized code is a protection against unsafe concurrency. The goal
 is to minimize the amount of time spent in synchronized code and get
-threads back to concurrent execution as quickly as possible. . ]Exercise
-.  
+threads back to concurrent execution as quickly as possible.
 
-'''''
+==== End Example
+
+==== Begin Example: Bank account
 
 Although producer/consumer is a good model to keep in mind, there are
 other ways that reading and writing threads might interact. Consider the
@@ -466,11 +476,9 @@ the balance of the account.
 }
 ----
 
- 
+==== End Example
 
-'''''
-
-=== pitfalls: Synchronization challenges
+=== Pitfalls: Synchronization challenges
 
 As you can see from the dining philosophers problem, synchronization
 tools help us get the right answer but also create other difficulties.
@@ -494,6 +502,8 @@ resources.
 release it by another thread.
 4.  Circular Wait: Two or more threads hold resources which make up a
 circular chain of dependency.
+
+==== Begin Example: Deadlock philosophers
 
 We illustrate deadlock with an example of how *not* to solve the dining
 philosophers problem. What if all the philosophers decided to pick up
@@ -571,9 +581,9 @@ above, we have already gotten ourselves into trouble.
 }	
 ----
 
- 
+==== End Example
 
-'''''
+==== Begin Example: Deadlock sum
 
 Here is another example of deadlock. We emphasize deadlock because it is
 one of the most common and problematic issues with using synchronization
@@ -695,9 +705,9 @@ possible, use the resource you need as its own lock. Many other
 languages require programmers to create additional locks or semaphores
 to protect a given resource, but this approach causes problems if the
 same lock is not consistently used. Using the resource itself as a lock
-elegantly avoids this problem. . ]Exercise .  
+elegantly avoids this problem.
 
-'''''
+==== End Example
 
 [[section:starvation_and_livelock]]
 ==== Starvation and livelock
@@ -713,16 +723,16 @@ with humorous intent. If a philosopher is never able to acquire
 chopsticks, that philosopher will quite literally starve.
 
 Starvation does not necessarily mean deadlock, however. Examine the
-implementation in Example . for the bank account. That solution is
-correct in the sense that it preserves mutual exclusion. No combination
-of balance checks, deposits, or withdrawals will cause the balance to be
-incorrect. Money will neither be created nor destroyed. A closer
-inspection reveals that the solution is not entirely fair. If a single
-thread is checking the balance, no other thread can make a deposit or a
-withdrawal. Balance checking threads could be coming and going
-constantly, incrementing and decrementing the `readers` variable, but if
-`readers` never goes down to zero, threads waiting to make deposits and
-withdrawals will wait forever. . ]Exercise .
+implementation in Example REF=example:Bank account for the bank account.
+That solution is correct in the sense that it preserves mutual
+exclusion. No combination of balance checks, deposits, or withdrawals
+will cause the balance to be incorrect. Money will neither be created
+nor destroyed. A closer inspection reveals that the solution is not
+entirely fair. If a single thread is checking the balance, no other
+thread can make a deposit or a withdrawal. Balance checking threads
+could be coming and going constantly, incrementing and decrementing the
+`readers` variable, but if `readers` never goes down to zero, threads
+waiting to make deposits and withdrawals will wait forever.
 
 Another kind of starvation is _livelock_. In deadlock, two or more
 threads get stuck and wait forever, doing nothing. Livelock is similar
@@ -732,6 +742,8 @@ polite (but oddly predictable) people who are speaking with each other:
 Both happen to start talking at exactly the same moment and then stop to
 hear what the other has to say. After exactly one second, they both
 begin again and immediately stop. Lather, rinse, repeat.
+
+==== Begin Example: Livelock party preparations
 
 Imagine three friends who are going to a party. Each of them starts
 getting ready at different times. They follow the pattern of getting
@@ -844,9 +856,9 @@ demand to know what was taking so long. Computers are not nearly as
 sensible and must obey instructions, even if they cause useless
 repetitive patterns. Realistic examples of livelock are hard to show in
 a short amount of code, but they do crop up in real systems and can be
-very difficult to predict.  
+very difficult to predict.
 
-'''''
+==== End Example
 
 ==== Sequential execution
 
@@ -858,8 +870,9 @@ with synchronization tools may produce a program which gives the right
 answer but does not exploit any parallelism.
 
 For example, we can take the `run()` method from the parallel
-implementation of matrix multiply given in Example . and use the
-`synchronized` keyword to lock on the matrix itself.
+implementation of matrix multiply given in Example REF=example:Matrix
+multiplication and use the `synchronized` keyword to lock on the matrix
+itself.
 
 ....
 public void run() {
@@ -897,11 +910,10 @@ high priority thread.
 Worse, if there are some medium priority threads in the system, the low
 priority thread may hold the lock needed by the high priority thread for
 even longer because those medium priority threads reduce the amount of
-CPU time the low priority thread has to finish its task. . ]Exercise . .
-]Exercise .
+CPU time the low priority thread has to finish its task.
 
 [[solution:dining_philosophers]]
-=== solution: Dining philosophers
+=== Solution: Dining philosophers
 
 Now we give our solution to the dining philosophers problem. Although
 deadlock was the key pitfall we were trying to avoid, many other issues
@@ -1062,129 +1074,119 @@ a sequence will probably be interrupted. If all philosophers thought for
 exactly the same amount of time each turn, an unlucky pattern could
 repeat over and over. It is not unreasonable to believe that the amount
 of thinking a philosopher (or a server) will do at any given time will
-vary, but this kind of behavior will vary from system to system. .
-]Exercise .
+vary, but this kind of behavior will vary from system to system.
 
 It is very difficult to come up with a perfect answer to some
 synchronization problems. Such problems have been studied for many
 years, and research continues to find better solutions.
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-What is the purpose of the `synchronized` keyword? How does it work?
-
-The language specification for Java makes it illegal to use the
-`synchronized` keyword on constructors. During the creation of an
-object, it is possible to _leak_ data to the outside world by adding a
-reference to the object under construction to some shared data
-structure. What’s the danger of leaking data in this way?
-
-If you call `wait()` or `notify()` on an object, it must be inside of a
-block synchronized on the same object. If not, the code will compile,
-but an `IllegalMonitorStateException` may be thrown at run time. Why is
-it necessary to own the lock on an object before calling `wait()` or
+1.  <<exercise:synchronized keyword>> What is the purpose of the
+`synchronized` keyword? How does it work?
+2.  <<exercise:constructor leak>> The language specification for Java
+makes it illegal to use the `synchronized` keyword on constructors.
+During the creation of an object, it is possible to _leak_ data to the
+outside world by adding a reference to the object under construction to
+some shared data structure. What’s the danger of leaking data in this
+way?
+3.  <<exercise:wait or notify without synchronized>> If you call
+`wait()` or `notify()` on an object, it must be inside of a block
+synchronized on the same object. If not, the code will compile, but an
+`IllegalMonitorStateException` may be thrown at run time. Why is it
+necessary to own the lock on an object before calling `wait()` or
 `notify()` on it?
-
-Why is it safer to call `notifyAll()` than `notify()`? If it is
-generally safer to call `notifyAll()`, are there any scenarios in which
-there are good reasons to call `notify()`?
-
-Imagine a simulation of a restaurant with many waiter and chef objects.
-The waiters must submit orders to the kitchen staff, and the chefs must
-divide the work among themselves. How would you design this system? How
-would information and food be passed from waiter to chef and chef to
-waiter? How would you synchronize the process?
-
-What is a race condition? Give a real life example of one.
-
-Let’s reexamine the code that increments a variable with several threads
-from Section REF=concepts:Thread interaction. We can rewrite the `run()`
+4.  <<exercise:notify vs. notifyAll>> Why is it safer to call
+`notifyAll()` than `notify()`? If it is generally safer to call
+`notifyAll()`, are there any scenarios in which there are good reasons
+to call `notify()`?
+5.  <<exercise:restaurant synchronization>> Imagine a simulation of a
+restaurant with many waiter and chef objects. The waiters must submit
+orders to the kitchen staff, and the chefs must divide the work among
+themselves. How would you design this system? How would information and
+food be passed from waiter to chef and chef to waiter? How would you
+synchronize the process?
+6.  <<exercise:race condition>> What is a race condition? Give a real
+life example of one.
+7.  <<exercise:per object lock>> Let’s reexamine the code that
+increments a variable with several threads from
+Section REF=concepts:Thread interaction. We can rewrite the `run()`
 method as follows.
-
++
 ....
 public synchronized void run() {
     for( int i = 0; i < COUNT / THREADS; i++ )
         counter++;
 }
 ....
-
++
 Will this change fix the race condition? Why or why not?
-
-Examine our deadlock example from Example .. Explain why this example
-fulfills all four conditions for deadlock. Be specific about which
-threads and which resources are needed to show each condition.
-
-What is priority inversion? Why can a low priority thread holding a lock
-be particularly problematic?
-
--0.5in *Programming Practice*
-
-In Example . the `Buffer` class used to implement a solution to the
-producer/consumer problem only has a single lock. When the buffer is
-empty and a producer puts an item in it, both producers and consumers
-are woken up. A similar situation happens whenever the buffer is full
-and a consumer removes an item. Re-implement this solution with two
-locks so that a producer putting an item into an empty buffer only wakes
-up consumers and a consumer removing an item from a full buffer only
-wakes up producers.
-
-In Example . we used the class `SynchronizedAccount` to solve a bank
-account problem. As we mention in Section REF=section:starvation and
-livelock, depositing and withdrawing threads can be starved out by a
-steady supply of balance checking threads. Add additional
-synchronization tools to `SynchronizedAccount` so that balance checking
-threads will take turns with depositing and withdrawing threads. If
-there are no depositing or withdrawing threads, make your implementation
-continue to allow an unlimited number of balance checking threads to
-read concurrently.
-
-The solution to the dining philosophers problem given in
-Section REF=solution:dining philosophers suffers from the problem that a
-philosopher could be starved by the two philosophers on either side of
-her, if she happened to get unlucky. Add variables to each philosopher
-which indicate hunger and the last time a philosopher has eaten. If a
-given philosopher is hungry and has not eaten for longer than her
-neighbor, her neighbor should not pick up the chopstick they share. Add
-synchronization tools to enforce this principle of fairness. Note that
-this solution should not cause deadlock. Although one philosopher may be
-waiting on another who is waiting on another and so on, *some*
-philosopher in the circle must have gone hungry the longest, breaking
-circular wait.
-
--0.5in *Experiments*
-
-Critical sections can slow down your program by preventing parallel
-computation. However, the locks used to enforce critical sections can
-add extra delays on top of that. Design a simple experiment which
-repeatedly acquires a lock and does some simple operation. Test the
-running time with and without the lock. See if you can estimate the time
-needed to acquire a lock in Java on your system.
-
-Design a program which experimentally determines how much time a thread
-is scheduled to spend running on a CPU before switching to the next
-thread. To do this, first create a tight loop which runs a large number
-of iterations, perhaps 1,000,000 or more. Determine how much time it
-takes to run a single run of those iterations. Then, write an outer loop
-which runs the tight loop several times. Each iteration of the outer
-loop, test to see how much time has passed. When you encounter a large
-jump in time, typically at least 10 times the amount of time the tight
-loop usually takes to run to completion, record that time. If you run
-these loops in multiple threads and average the unusually long times
-together for each thread, you should be able to find out about how long
-each thread waits between runs. Using this information, you can estimate
-how much time each thread is allotted. Bear in mind that this is only an
-estimation. Some JVMs will change the amount of CPU time allotted to
-threads for various reasons. If you are on a multicore machine, it will
-be more difficult to interpret your data since some threads will be
-running concurrently.
-
-Create an experiment to investigate priority inversion in the following
-way.
-
+8.  <<exercise:deadlock conditions>> Examine our deadlock example from
+Example REF=example:Deadlock sum. Explain why this example fulfills all
+four conditions for deadlock. Be specific about which threads and which
+resources are needed to show each condition.
+9.  <<exercise:priority inversion>> What is priority inversion? Why can
+a low priority thread holding a lock be particularly problematic?
++
+*Programming Practice*
+10. <<exercise:better producer/consumer>> In
+Example REF=example:Producer/consumer the `Buffer` class used to
+implement a solution to the producer/consumer problem only has a single
+lock. When the buffer is empty and a producer puts an item in it, both
+producers and consumers are woken up. A similar situation happens
+whenever the buffer is full and a consumer removes an item. Re-implement
+this solution with two locks so that a producer putting an item into an
+empty buffer only wakes up consumers and a consumer removing an item
+from a full buffer only wakes up producers.
+11. <<exercise:fair bank account>> In Example REF=example:Bank account
+we used the class `SynchronizedAccount` to solve a bank account problem.
+As we mention in Section REF=section:starvation and livelock, depositing
+and withdrawing threads can be starved out by a steady supply of balance
+checking threads. Add additional synchronization tools to
+`SynchronizedAccount` so that balance checking threads will take turns
+with depositing and withdrawing threads. If there are no depositing or
+withdrawing threads, make your implementation continue to allow an
+unlimited number of balance checking threads to read concurrently.
+12. <<exercise:philosophers with hunger>> The solution to the dining
+philosophers problem given in Section REF=solution:dining philosophers
+suffers from the problem that a philosopher could be starved by the two
+philosophers on either side of her, if she happened to get unlucky. Add
+variables to each philosopher which indicate hunger and the last time a
+philosopher has eaten. If a given philosopher is hungry and has not
+eaten for longer than her neighbor, her neighbor should not pick up the
+chopstick they share. Add synchronization tools to enforce this
+principle of fairness. Note that this solution should not cause
+deadlock. Although one philosopher may be waiting on another who is
+waiting on another and so on, *some* philosopher in the circle must have
+gone hungry the longest, breaking circular wait.
++
+*Experiments*
+13. <<exercise:time lock acquisition>> Critical sections can slow down
+your program by preventing parallel computation. However, the locks used
+to enforce critical sections can add extra delays on top of that. Design
+a simple experiment which repeatedly acquires a lock and does some
+simple operation. Test the running time with and without the lock. See
+if you can estimate the time needed to acquire a lock in Java on your
+system.
+14. <<exercise:thread time on CPU>> Design a program which
+experimentally determines how much time a thread is scheduled to spend
+running on a CPU before switching to the next thread. To do this, first
+create a tight loop which runs a large number of iterations, perhaps
+1,000,000 or more. Determine how much time it takes to run a single run
+of those iterations. Then, write an outer loop which runs the tight loop
+several times. Each iteration of the outer loop, test to see how much
+time has passed. When you encounter a large jump in time, typically at
+least 10 times the amount of time the tight loop usually takes to run to
+completion, record that time. If you run these loops in multiple threads
+and average the unusually long times together for each thread, you
+should be able to find out about how long each thread waits between
+runs. Using this information, you can estimate how much time each thread
+is allotted. Bear in mind that this is only an estimation. Some JVMs
+will change the amount of CPU time allotted to threads for various
+reasons. If you are on a multicore machine, it will be more difficult to
+interpret your data since some threads will be running concurrently.
+15. <<exercise:priority inversion experiment>> Create an experiment to
+investigate priority inversion in the following way.
 a.  Create two threads, setting the priority of the first to
 `MIN\_PRIORITY` and the priority of the second to `MAX\_PRIORITY`. Start
 the first thread running but wait 100 milliseconds before starting the

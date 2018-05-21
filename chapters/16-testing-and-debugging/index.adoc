@@ -1,8 +1,9 @@
 [[chapter:Testing_and_Debugging]]
+:imagesdir: chapters/16-testing-and-debugging/images
 == Testing and Debugging
 
 [[section:Fixing_bugs]]
-=== unspecified section category: Fixing bugs
+=== Fixing bugs
 
 This chapter is about finding, fixing, and, more importantly, preventing
 bugs in software. This chapter is unique in that it is not based on
@@ -88,7 +89,7 @@ Null Pointer Errors:::
   has not been initialized with some default constructor, but more often
   there is a logical error in the design of the code.
 
-=== concepts: Approaches to debugging
+=== Concepts: Approaches to debugging
 
 When you have discovered the existence of a bug, pinning down its cause
 can be difficult. There are a number of different techniques that are
@@ -188,7 +189,7 @@ breakpoints can be used to save the debugger a great deal of time.
 Rather than always pausing execution on a given line, a conditional
 breakpoint will only pause if a certain condition is met.
 
-=== syntax: Java debugging tools
+=== Syntax: Java debugging tools
 
 ==== Assertions
 
@@ -334,7 +335,7 @@ methods in your debug printing class print or stay silent. When you want
 to change from debugging to your submission or retail version of the
 code, you can simply switch this value to `false`.
 
-A ``modernized'' method of using print statements is creating a simple
+A "`modernized`" method of using print statements is creating a simple
 GUI instead. In preparing materials for this textbook, we were
 occasionally frustrated by the fact that multiple threads can interfere
 with each other while printing on the screen: You can’t always tell
@@ -407,11 +408,13 @@ for hours before finally squashing it, but we will give a few examples
 corresponding to the common bugs listed in Section REF=section:Fixing
 bugs.
 
+==== Begin Example: Precision errors
+
 Precision can cause some subtle errors, especially with `float` types.
 Here is an example of a program attributed to Cleve Moler that gives
 some estimation of the threshold for floating point precision. Note that
-`a` latexmath:[$\approx 4/3$], making `b` latexmath:[$\approx 1/3$], `c`
-latexmath:[$\approx 1$], and `d` latexmath:[$\approx 0$]. Nevertheless,
+`a` latexmath:[\approx 4/3], making `b` latexmath:[\approx 1/3], `c`
+latexmath:[\approx 1], and `d` latexmath:[\approx 0]. Nevertheless,
 the comparison `(d == 0.0)` in the `if` statement in this code will
 evaluate to `false`.
 
@@ -433,9 +436,11 @@ minimizing the amount of floating point error introduced, but awareness
 is an easy solution to these kinds of bugs. When testing for specific
 values of a floating point number, it is wise to test for a range rather
 than a single value. For example, the condition `(d == 0.0)` could be
-replaced by `(Math.abs(d) < 0.000001)`. 
+replaced by `(Math.abs(d) < 0.000001)`.
 
-'''''
+==== End Example
+
+==== Begin Example: Overflow and underflow
 
 As you well know, the `int` and `long` types have limited bits for
 storage. If an arithmetic operation pushes the value of an `int`
@@ -495,7 +500,7 @@ has red, green, and blue values of `(128,0,128)`. Since Java `byte`
 values are signed, printing the `byte` values for each component of
 purple directly will actually print `(-128,0,-128)`. Multiplying the
 green value by 2 is clearly still 0. However, multiplying -128 by 2 as a
-`byte` value is -256 which underflows back to 0. Thus, ``brightening''
+`byte` value is -256 which underflows back to 0. Thus, "`brightening`"
 purple actually turns it into `(0,0,0)`, black. Properly applying the
 filter to a `byte` requires a conversion to the `int` type, masking out
 the sign bit, scaling by 2, capping the values at 255, and then casting
@@ -508,9 +513,9 @@ to int green = (byte)Math.min( 255, 2*(green & 0xFF));
 blue = (byte)Math.min( 255, 2*(blue & 0xFF));
 ....
 
- 
+==== End Example
 
-'''''
+==== Begin Example: Casting errors
 
 The previous example about scaling color component values is an
 excellent example of the dangers of casting. Someone can easily forget
@@ -569,21 +574,23 @@ discussed in Chapter REF=chapter:Dynamic Data Structures, can reduce the
 number of casting errors of this kind, but some applications require a
 list to hold many different types with a common superclass. In those
 cases, some amount of explicit (and therefore dangerous) casting will
-usually be necessary when retrieving the objects from the list. 
+usually be necessary when retrieving the objects from the list.
 
-'''''
+==== End Example
 
 Loops give Java much of its expressive power and unsurprisingly give it
 much of its power to express incorrect as well as correct code. We are
 just going to mention a few of the most common loop errors.
 
+==== Begin Example: Off-by-one errors
+
 Computer scientists often use zero-based counting. This departure from
-``normal'' practices is just one source of loops that iterate one time
+"`normal`" practices is just one source of loops that iterate one time
 more or less than they should. A good rule of thumb is, if you want to
-iterate latexmath:[$n$] times, start at 0 and go up to but not including
-latexmath:[$n$]. Alternatively, if you have a reason not to be
+iterate latexmath:[n] times, start at 0 and go up to but not including
+latexmath:[n]. Alternatively, if you have a reason not to be
 zero-based, you can start at 1 and go up to and including
-latexmath:[$n$].
+latexmath:[n].
 
 ....
 for( int i = 1; i < 50; i++ )
@@ -630,9 +637,11 @@ could simply be initialized to `-1`. The mistake is a simple one, but it
 doesn’t jump out at you unless you trace a few executions. What is most
 insidious is that, especially for large sets of input numbers, the error
 is going to be small. Catching this kind of bug will be discussed more
-throughly in the second half of this chapter, dealing with testing. 
+throughly in the second half of this chapter, dealing with testing.
 
-'''''
+==== End Example
+
+==== Begin Example: Infinite loops
 
 Infinite loops come in many different flavors, from the `char` overflow
 example earlier to traversing a linked-list which has a cycle in it.
@@ -704,9 +713,11 @@ System.out.println("Blast-off!");
 In this case, the programmer clearly wanted to count *down* from 10 to
 1, but after so much incrementing, he or she forgot to make `i`
 decrement. As a result, the value of `i` increases for a very long (but
-not infinite) time, until it overflows. 
+not infinite) time, until it overflows.
 
-'''''
+==== End Example
+
+==== Begin Example: Zero loops
 
 On the other end of the spectrum, a bad condition can make a loop
 execute zero times on `for` and `while` loops. For some input, doing so
@@ -770,9 +781,11 @@ student writes a program of this kind, he or she should have a fair idea
 of how `for` loops and `if` statements work. Likewise, the student will
 have a fair understanding of the notion of primality. Yet, in the
 process of combining the ideas together, it is easy to get sloppy and
-write code that gives some semblance of being correct without being. 
+write code that gives some semblance of being correct without being.
 
-'''''
+==== End Example
+
+==== Begin Example: Equivalence testing errors
 
 Equivalence is tricky in Java. Very inexperienced programmers confuse
 the `=` operator with the `==` operator, but using the `==` operator to
@@ -832,9 +845,9 @@ should also imply that you implement a custom `hashCode()` method so
 that objects that are equivalent with `equals()` give the same hash
 value. It seems nit-picky to mention this, but many real-world
 applications depend on the efficient and correct operation of hash
-tables. 
+tables.
 
-'''''
+==== End Example
 
 ==== Array errors
 
@@ -844,6 +857,8 @@ very good exceptions that will point you to the line number. Once you
 have gotten to this point, the bug should be obvious. The biggest
 difficulties arise when some unusual course of events is responsible for
 the bug cropping up and you have to reconstruct what it is.
+
+==== Begin Example: Out of bounds
 
 We have all experienced an `ArrayIndexOutOfBoundsException`. Either a
 little carelessness with our indexes or a mistake about the size of the
@@ -880,9 +895,11 @@ we assumed that `word` began with either an upper or lower case letter.
 We are depending on other code to check the input and throw out words
 like `"\$1"` or `"-isms"`. Incidentally, we are also assuming that
 `word` has at least one character in it. Even if we expect the input to
-the method to be error free, some error checking is always safe. 
+the method to be error free, some error checking is always safe.
 
-'''''
+==== End Example
+
+==== Begin Example: Uninitialized object arrays
 
 Another simple mistake that can occur with arrays is failing to
 initialize an object array. With a primitive data type like `int`,
@@ -904,9 +921,9 @@ experienced programmers, this kind of mistake is usually more of a
 forehead-slapping, how-silly-of-me-to-forget error than a mind-numbing
 puzzler that will take hours to debug. It is probably just a matter of
 instantiating each element in the array before you try to feed those
-hungry, hungry hippos. 
+hungry, hungry hippos.
 
-'''''
+==== End Example
 
 ....
 Hippopotamus[] hippos = new Hippopotamus[15];
@@ -920,6 +937,8 @@ hippos[3].feed();
 We don’t have variables in real life, and, as a consequence, out
 intuition about them is sometimes wrong. Which variable you are
 accessing at any given time can appear obvious, even if it really isn’t.
+
+==== Begin Example: Shadowing variables
 
 Java allows variables in different scopes to be declared with the same
 identifier. If the scopes are two separate methods, then they will never
@@ -981,9 +1000,11 @@ object, the `strength` field for `Bodybuilder` will be set to 15 on line
 REF=line:strength=15, and the `strength` field for `BraggingBodybuilder`
 will be set to 20 on line REF=line:strength=20. Thus, the first call to
 `brag()` will print out `My strength is 10!`, but the second call will
-print out `My strength is 20!`. 
+print out `My strength is 20!`.
 
-'''''
+==== End Example
+
+==== Begin Example: Reference vs. value
 
 The final category of scope error we will talk about occurs because of
 confusion between passing by reference and passing by value when using
@@ -1018,9 +1039,9 @@ by a factor of 10. Unlike the previous code, the increase in the value
 of that element will affect the array passed in by the calling code. The
 values in the array are shared by the `increaseMagnitude()` method and
 the calling code. The same phenomenon can be observed with the fields of
-objects whose references are passed into a method. 
+objects whose references are passed into a method.
 
-'''''
+==== End Example
 
 ==== Null pointer errors
 
@@ -1047,7 +1068,7 @@ appropriate exception when this happens. Poorly designed code may
 blindly use a null reference without checking it first, causing a
 `NullPointerException`.
 
-=== concurrency: Parallel bugs
+=== Concurrency: Parallel bugs
 
 We will only briefly discuss parallel bugs here because we have already
 gone into depth about the dangers of parallel programming in
@@ -1123,7 +1144,7 @@ hardware characteristics. For now, it’s enough to be aware of the risk
 of sequential execution and be as careful as possible when applying
 locks and other synchronization tools.
 
-=== unspecified section category: Finding and avoiding bugs
+=== Finding and avoiding bugs
 
 What would you do if you wanted to design a system for administering a
 dose of radiation to a specific location on a patient to help treat them
@@ -1186,7 +1207,7 @@ In the remaining half of this chapter, we will discuss a number of
 testing methodologies and design strategies to minimize errors in
 software.
 
-=== concepts: Design, implementation, and testing
+=== Concepts: Design, implementation, and testing
 
 Unfortunately, there is no foolproof way to design software. There are
 many researchers who work to design new languages and new development
@@ -1402,8 +1423,8 @@ path of execution through a program is called _exercising_ that path.
 In order to exercise every possible path, it is necessary to force each
 conditional statement to be true and false on some path. Some
 combinations of true and false may be impossible, but, ignoring this
-fact, a program with latexmath:[$n$] independent conditionals would
-require latexmath:[$2^n$] runs to test them all. Because of the large
+fact, a program with latexmath:[n] independent conditionals would
+require latexmath:[2^n] runs to test them all. Because of the large
 number of possible execution paths, white box testing generally tries to
 maximize coverage over metrics that are not quite so demanding.
 
@@ -1440,7 +1461,7 @@ is being done on your code. Regular testing gives developers the
 opportunity to track changes in other aspects of their program such as
 memory usage, run time, and other non-functional issues.
 
-=== syntax: Java testing tools
+=== Syntax: Java testing tools
 
 There is an open-source tool for testing Java called JUnit testing.
 There are other testing tools for Java, and there are a wide array of
@@ -1581,12 +1602,16 @@ of this method for `long` and `Object` types. Note that the preferred
 `assertEquals()` method for the `double` type takes three parameters,
 including an epsilon threshold in case the values don’t match exactly.
 
+==== Begin Example: JUnit math testing
+
 Using these methods, we can finally write a complete (though very
 simple) implementation of `MathTest.java`.
 
-[[program:MathTest]][program:MathTest]
-PROGRAM=TestingAndDebuggingChapter/programs/MathTest.java, CAPTION=A
-simple testing suite.
+.A simple testing suite.
+[source, java, linenums]
+----
+include::programs/MathTest.java[]
+----
 
 Note that the `setUp()` method is extremely trivial here, and no clean
 up is needed. JUnit has many other powerful features that allow you to
@@ -1596,9 +1621,9 @@ ideal world, you are actually developing tests as you develop code.
 Sometimes, in fact, you might have completed a test for a specific
 feature before you have finished implementing it. Or, perhaps a feature
 in your program is broken at the moment, but you want to continue
-running tests on the rest of the features.  
+running tests on the rest of the features.
 
-'''''
+==== End Example
 
 In these cases and others, it is useful to turn off a particular test
 temporarily. To do this, you add the annotation `@Ignore` before the
@@ -1619,7 +1644,7 @@ say that you are using JUnit 4.5 from a jar file called `junit-4.5.jar`
 that can be found in `C:\ Utilities\Java\JUnit\`. To compile `MathTest`,
 you would type:O
 
-latexmath:[$\oslash$][multiblock footnote omitted]
+[multiblock footnote omitted]
 
 ....
 javac -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar MathTest.java}
@@ -1647,7 +1672,7 @@ then something like `OK (3 tests)` if all of your tests ran without an
 error. If there is an error, it will list each error, probably with a
 long stack trace showing the propagation of the exception.
 
-=== concurrency: Testing tools
+=== Concurrency: Testing tools
 
 In this section, we describe some tools that exist specifically to help
 you catch those bugs that are present as a direct result of concurrency.
@@ -1674,7 +1699,7 @@ concurrent code designed to introduce some randomness into the system.
 By introducing `sleep()` and `yield()` methods in random places, the JVM
 can be forced into producing interleavings that would otherwise be
 unusual. The designers of ConTest have used heuristics so that ConTest
-adds this randomness in ``smart'' locations designed to maximize unusual
+adds this randomness in "`smart`" locations designed to maximize unusual
 interleavings and catch bugs.
 
 ConTest is not a panacea. Although it can reveal bugs that are very
@@ -1723,11 +1748,13 @@ contrast, has been perceived as a slow language, more suited for desktop
 applications. As the role of concurrency continues to evolve, so will
 the tools to help programmers.
 
-=== examples: Testing a class
+=== Examples: Testing a class
 
 The larger the system, the more critical testing becomes. We do not have
 the space to give or explain a complex testing example, but we can give
 you another example of JUnit testing.
+
+==== Begin Example: A broken class
 
 We are going to rely on an example from physics and create a
 `PointCharge` class that has a certain charge and a specific location in
@@ -1735,28 +1762,31 @@ We are going to rely on an example from physics and create a
 Because the class is so simple, the errors should be obvious.
 Nevertheless, we have picked errors that are reasonable to make.
 
-[[program:PointCharge]][program:PointCharge]
-PROGRAM=TestingAndDebuggingChapter/programs/PointCharge.java,
-CAPTION=Example physics class with errors. *FIX: PointCharge listing not
-available.*
+.Example physics class with errors.
+[source, java, linenums]
+----
+include::programs/PointCharge.java[]
+----
 
 The `PointCharge` class has the expected constructor and then a method
 to determine distance to another `PointCharge`. This method in turn
 relies on a private helper method that can compute distance to an
-arbitrary latexmath:[$x$], latexmath:[$y$], and latexmath:[$z$]
-location. Finally, the ``important'' work done by the class are in
+arbitrary latexmath:[x], latexmath:[y], and latexmath:[z]
+location. Finally, the "`important`" work done by the class are in
 determining the scalar force between two charges and the magnitude of
 the electric field due to the charge at some location. Recall from
-physics that the force latexmath:[$F$] between two charges
-latexmath:[$q_1$] and latexmath:[$q_2$] is
-latexmath:[$k_\mathrm{e} \frac{q_1q_2}{r^2}$] where
-latexmath:[$k_\mathrm{e}$] is the proportionality constant
-latexmath:[$8.9875517873681764 \times 10^9 \ \mathrm{N  \cdot m^2 \cdot C^{-2}}$]
-and latexmath:[$r$] is the distance between the charges. Likewise the
-electric field latexmath:[$E$] at a given location due to a charge
-latexmath:[$q$] is latexmath:[$k_\mathrm{e} \frac{q}{r^2}$].  
+physics that the force latexmath:[F] between two charges
+latexmath:[q_1] and latexmath:[q_2] is
+latexmath:[k_\mathrm{e} \frac{q_1q_2}{r^2}] where
+latexmath:[k_\mathrm{e}] is the proportionality constant
+latexmath:[8.9875517873681764 \times 10^9 \ \mathrm{N  \cdot m^2 \cdot C^{-2}}]
+and latexmath:[r] is the distance between the charges. Likewise the
+electric field latexmath:[E] at a given location due to a charge
+latexmath:[q] is latexmath:[k_\mathrm{e} \frac{q}{r^2}].
 
-'''''
+==== End Example
+
+==== Begin Example: Testing the distance methods
 
 Let’s come up with a test for the `distance()` methods first. We’re
 going to need some other `PointCharge`s. Let’s make 4 altogether: one at
@@ -1790,7 +1820,7 @@ public void distance() {
 
 The distances between `charge1` and the other three should be 1, and the
 distance between `charge2` and `charge3` should be about
-latexmath:[$\sqrt{2}$]. Yet, when we run this test with JUnit, the test
+latexmath:[\sqrt{2}]. Yet, when we run this test with JUnit, the test
 fails. We get:
 
 ....
@@ -1805,7 +1835,7 @@ find the culprit: `this.z = y;`, a simple cut and paste error.
 
 With the `distance()` methods working, we can test other things. We are
 going to run a similar test for `scalarForce()` generated by plugging in
-appropriate values into the equation for latexmath:[$F$].
+appropriate values into the equation for latexmath:[F].
 
 ....
 @Test
@@ -1834,9 +1864,11 @@ was `return K*charge*p.charge/(r*r);`
 
 The most striking thing about this example is that three test cases
 passed! Perhaps that means that we were choosing values that were too
-simple, but it also illustrates the importance of serious testing.  
+simple, but it also illustrates the importance of serious testing.
 
-'''''
+==== End Example
+
+==== Begin Example: Testing the field magnitude method
 
 Finally, let’s test the value of the `fieldMagnitude()` method. For
 simplicity, we’ll test the field at the locations of `charge1`,
@@ -1854,59 +1886,57 @@ omitted? Yes, our version of `fieldMagnitude()` left off a factor of
 `K`. Once we fix that, our code finally produces the `OK (3 tests)` we
 have been waiting to see from JUnit. Why didn’t we fail the assertions
 after the first one? Because of the exception handling mechanism, each
-JUnit test method stops once a failure has happened.  
+JUnit test method stops once a failure has happened.
 
-'''''
+==== End Example
 
 Here is the fully corrected version of `PointCharge` renamed
 `FixedPointCharge`.
 
-[[program:FixedPointCharge]][program:FixedPointCharge]
-PROGRAM=TestingAndDebuggingChapter/programs/FixedPointCharge.java,
-CAPTION=Corrected version of `PointCharge`.
+.Corrected version of `PointCharge`.
+[source, java, linenums]
+----
+include::programs/FixedPointCharge.java[]
+----
 
 And, for easy readability, here is the full JUnit test class
 `TestPointCharge`. Note that you will have to change the name
 `PointCharge` to `FixedPointCharge` if you want to test the corrected
 class.
 
-[[program:TestPointCharge]][program:TestPointCharge]
-PROGRAM=TestingAndDebuggingChapter/programs/TestPointCharge.java,
-CAPTION=Class for testing `PointCharge`.
+.Class for testing `PointCharge`.
+[source, java, linenums]
+----
+include::programs/TestPointCharge.java[]
+----
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-What is the purpose of the `assert` keyword in Java? What steps must be
-taken for it to be active?
-
-What is the value of `j` after the following statements are executed?
-
+1.  What is the purpose of the `assert` keyword in Java? What steps must
+be taken for it to be active?
+2.  What is the value of `j` after the following statements are
+executed?
++
 ....
 int j = 1;
 int i;
 for( i = 0; i < 10; i++ );
     j += i;
 ....
-
++
 Assuming the programmer made an error, what category of programming
 error does it fall under?
-
-The following loop is intended to print out all possible `byte` values.
-What is the conceptual error made in the following loop? How many times
-will it execute?
-
+3.  The following loop is intended to print out all possible `byte`
+values. What is the conceptual error made in the following loop? How
+many times will it execute?
++
 ....
 for( byte value = 0; value < 256; ++value )
     System.out.println("Byte: " + value);
 ....
-
-What are all the possible run-time errors that could occur in this
+4.  What are all the possible run-time errors that could occur in this
 method that reverses a section of an array?
-
++
 ....
 public void reverse( Object[] array, int start, int end ) {
     Object temp;
@@ -1920,11 +1950,11 @@ public void reverse( Object[] array, int start, int end ) {
     }
 }
 ....
-
++
 What checks could be added to catch these errors?
-
-Consider the following definition of a stack that holds `int` values.
-
+5.  Consider the following definition of a stack that holds `int`
+values.
++
 ....
 public class IntegerStack {
     private static Node {
@@ -1946,24 +1976,21 @@ public class IntegerStack {
     public boolean empty() { return head == null; }
 }
 ....
-
++
 What exceptions could be thrown when using this class? Where could they
 be thrown?
-
-This question sometimes comes up in job interviews. Imagine that you
+6.  This question sometimes comes up in job interviews. Imagine that you
 have a simple singly linked list such as the one described in
 Chapter REF=chapter:Dynamic Data Structures. What if there is a loop in
 the list such that the last element in the list points to an earlier
 element in the list? For this reason, a simple traversal of the list
 will go on forever. How could you detect such a problem during program
 execution?
-
-What is the difference between black box testing and white box testing?
-What kinds of bugs are more likely to be caught by black box testing? By
-white box testing?
-
-The Microsoft Zune is a portable media player in competition with the
-Apple iPod. The first generation Zune 30 received negative publicity
+7.  What is the difference between black box testing and white box
+testing? What kinds of bugs are more likely to be caught by black box
+testing? By white box testing?
+8.  The Microsoft Zune is a portable media player in competition with
+the Apple iPod. The first generation Zune 30 received negative publicity
 because many of them froze on December 31, 2008 due to a leap year bug.
 It is possible to find segments of the source code that caused this
 problem on the Internet. Essentially, the clock code for the Zune
@@ -1972,31 +1999,27 @@ Likewise, when the day was greater than 366, it would correctly move to
 the next year and reset the day counter. When day was exactly 366,
 however, the Zune became stuck in an infinite loop. What kind of testing
 should Microsoft have done to prevent this bug?
-
--0.5in *Programming Practice*
-
-Apply JUnit testing to the last major assignment you did in class. What
-bugs did you uncover?
-
--0.5in *Experiments*
-
-James Gosling’s original specification for Java contained assertions,
-but they were not included until Java 1.4. One of the concerns about an
-assertion mechanism is the additional time required to process the
-assertions. Time a program of at least moderate length before adding
-`assert` statements to its methods. If you use `assert` statements to
-check method input and output thoroughly, you should see a slight
-decrease in performance when assertions are enabled. When disabled, you
-should see almost none. How great is the performance hit?
-
-Take another look at your last programming assignment. Calculate the
++
+*Programming Practice*
+9.  Apply JUnit testing to the last major assignment you did in class.
+What bugs did you uncover?
++
+*Experiments*
+10. James Gosling’s original specification for Java contained
+assertions, but they were not included until Java 1.4. One of the
+concerns about an assertion mechanism is the additional time required to
+process the assertions. Time a program of at least moderate length
+before adding `assert` statements to its methods. If you use `assert`
+statements to check method input and output thoroughly, you should see a
+slight decrease in performance when assertions are enabled. When
+disabled, you should see almost none. How great is the performance hit?
+11. Take another look at your last programming assignment. Calculate the
 number of branches based on `if` and `switch` statements and compute 2
 raised to that power. Time your program executing once under normal
 circumstances. Multiply that time by the number of different
 possibilities you would need to exercise every possible combination of
 branches in your program. How long would it take?
-
-Take a concurrent program you have written that relies on explicit
+12. Take a concurrent program you have written that relies on explicit
 synchronization mechanisms for correctness. Remove all synchronization
 tools and run the code many times, testing for race conditions. Then,
 instrument the code with ConTest and run it many more times. Do you see

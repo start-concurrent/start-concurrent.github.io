@@ -1,7 +1,8 @@
 [[chapter:Classes]]
+:imagesdir: chapters/09-classes/images
 == Classes
 
-=== problem: Nested expressions
+=== Problem: Nested expressions
 
 How does the compiler check the Java code that you write and find
 errors? Syntax checking and type checking are involved processes that
@@ -70,7 +71,7 @@ stack is empty. If it is, then all of the left grouping symbols have
 been matched up with right grouping symbols. If not, there are left
 symbols left on the stack, and the expression isn’t correctly nested.
 
-=== concepts: Object-oriented programming
+=== Concepts: Object-oriented programming
 
 To solve the nested expressions problem, we need to create a stack data
 structure. Each element of the stack should be able to hold a `char`
@@ -113,7 +114,9 @@ of birth, height, and so on. Then, the object has specific values for
 each one of those characteristics, such as Albert Einstein, March 14,
 1879, 175, and so on.
 
-to
+.Example of a class serving as a template for an object.
+image::class.png[]
+
 
 This idea of a class as a template is key because it means that an
 object of a given type (from a given class) can be used anywhere that is
@@ -135,14 +138,14 @@ This feature is called _encapsulation_. One programmer may write the
 class file defining a type of object while another or many others write
 code that uses those objects. The programmers who use objects written by
 others do not need to understand the inner workings of those objects.
-Instead, they can treat each object as a ``black box'' with a list of
+Instead, they can treat each object as a "`black box`" with a list of
 actions that the object can do. Each action has a certain specified
 input and a certain specified output, but the internal functioning of
 the object is hidden.
 
 ==== Instance methods
 
-These ``actions'' are methods, but not static ones. Static methods did
+These "`actions`" are methods, but not static ones. Static methods did
 not need an object in order to be called. Regular (instance) methods
 should be thought of as an action performed on (or by) a specific
 object. This action could be asking a question, such as inquiring what
@@ -158,7 +161,7 @@ of code into smaller functional units. However, instance methods are
 tightly coupled to the fields of an object and perform tasks that change
 the object or get information from it.
 
-=== syntax: Classes in Java
+=== Syntax: Classes in Java
 
 OOP concepts such as encapsulation may seem esoteric until you see them
 in practice. Remember, we just want to create some private data and then
@@ -210,9 +213,11 @@ any particular object. When we tell the `main()` method to change the
 fields, it does not know what object we are talking about. If we
 actually want to use an object, we’ll have to create one.
 
-[[program:Human]][program:Human]
-PROGRAM=ClassesChapter/programs/Human.java, CAPTION=Example of a class
-encapsulating the attributes of a human being.
+.Example of a class encapsulating the attributes of a human being.
+[source, java, linenums]
+----
+include::programs/Human.java[]
+----
 
 The above code compiles because we have used the `new` keyword to create
 an object of type `Human` saved in a reference variable called
@@ -254,7 +259,9 @@ scientific notation. If several `Human` objects were created, they would
 have their own `name`, `DOB`, and `height` values, but the value for
 `population` would only be stored in the class.
 
-to
+.Class variables (static fields) are stored with the class, not with individual objects.
+image::staticvalue.png[]
+
 
 ==== Constructors
 
@@ -548,12 +555,14 @@ with each modifier.
 |`private` |No |No |No
 |======================================================
 
-=== examples: Classes
+=== Examples: Classes
 
 Although large and complex programs are needed to see the real benefits
 of OOP in Java, here are two short examples showing, respectively, how
 objects can be used to make a roster of students and compute the value
 of an expression in postfix notation.
+
+==== Begin Example: Student roster
 
 We are going to create a `Student` class so that we can store objects
 containing student roster information. Then, we’re going to create a
@@ -687,11 +696,11 @@ prompt the user clearly.
 Using OOP is not necessary to solve this problem. Instead of objects, we
 could have used three separate arrays holding the name, year, and GPA of
 each student, respectively. However, coordinating these arrays together
-would become tedious, particularly when sorting. 
+would become tedious, particularly when sorting.
 
-'''''
+==== End Example
 
-=== advanced: Nested classes
+=== Advanced: Nested classes
 
 Inside of a class, you can define fields and methods, but what about
 other classes? Yes! Doing so creates a _nested class_. When you define a
@@ -726,7 +735,9 @@ when given an outer class object, code in a static nested class can
 access and modify `private` (and `protected)`) data in the outer class
 object.
 
-to
+.A static nested class object is allowed to access data from outer class objects even though there is no direct relationship between them.
+image::nested.png[]
+
 
 Static nested classes can be used when the class you need is only useful
 in connection with the outer class. Thus, nesting the class groups it
@@ -749,6 +760,8 @@ Note that static nested classes can be marked `public`, `private`,
 `protected`, or package-private (no explicit modifier). These access
 modifiers control which code can access or instantiate static nested
 classes using the sames access rules for fields and methods.
+
+==== Begin Example: Static nested class for testing
 
 One application for static nested classes is testing. You can write code
 that tests the functionality of your outer class, fiddling with its
@@ -812,9 +825,9 @@ To run the tests, you would compile `Square.java` and then run the
 nested class by invoking `java Square$Test`. It is unwise to use the
 nested class to change the private fields in `square`, but we did so to
 show that it is allowed by Java. A better test would create a second
-`Square` object with a side of length 7.  
+`Square` object with a side of length 7.
 
-'''''
+==== End Example
 
 ==== Inner classes
 
@@ -856,7 +869,9 @@ The relationship between outer and inner objects is one to many. We can
 instantiate any number of inner class objects that all live inside of
 the same outer class object.
 
-to
+.An inner class object is always associated with a specific outer class object.
+image::inner.png[]
+
 
 Another issue with inner classes (as opposed to static nested classes)
 is that they cannot contain static fields (except for constants) or
@@ -871,6 +886,8 @@ well. Such a class is called an _anonymous class_. Both local and
 anonymous classes are special kinds of inner classes. Because of the way
 they are created and used, we discuss them in Section REF=advanced:Local
 and anonymous classes
+
+==== Begin Example: Inner class objects as iterators
 
 If you create a data structure for other programmers to use, a useful
 feature is the ability to retrieve each item from the data structure in
@@ -951,20 +968,20 @@ public static findSum( SafeArray array ) {
 }
 ....
 
- 
+==== End Example
 
-'''''
-
-=== solution: Nested expressions
+=== Solution: Nested expressions
 
 We now have enough knowledge to solve the nested expressions problem
 from the beginning of the chapter. Classes help us divide up the work of
 solving the problem. First, we need a stack class that can hold `char`
 values.
 
-[[program:SymbolStack]][program:SymbolStack]
-PROGRAM=ClassesChapter/programs/SymbolStack.java, CAPTION=Simple stack
-class to hold symbols from an input expression.
+.Simple stack class to hold symbols from an input expression.
+[source, java, linenums]
+----
+include::programs/SymbolStack.java[]
+----
 
 The `SymbolStack` class allows us to perform the push, pop, and top
 stack operations with methods of the same names. Its constructor takes a
@@ -1063,7 +1080,7 @@ matched with right symbols. In that case, we set `correct` to `false`.
 Finally, we print out whether the input is correctly or incorrectly
 nested based on the value of `correct`.
 
-=== concurrency: Objects
+=== Concurrency: Objects
 
 Nearly everything in Java is an object: arrays, lists, `String` values,
 colors, and even exceptions, which form Java’s error-handling system and
@@ -1084,10 +1101,13 @@ their inquisitive nature, another tradition holds that curiosity killed
 the cat. Consider the class below that keeps track of the lives a cat
 has, losing one every time it becomes curious.
 
-[[program:Cat]][program:Cat] PROGRAM=ClassesChapter/programs/Cat.java,
-CAPTION=Program to record the number of lives a cat has left. Each `Cat`
-object starts with 9, but loses one each time it uses its curiosity. If
-no more lives remain, an error message is output.
+==== Begin Example: Thread safety
+
+.Program to record the number of lives a cat has left. Each `Cat` object starts with 9, but loses one each time it uses its curiosity. If no more lives remain, an error message is output.
+[source, java, linenums]
+----
+include::programs/Cat.java[]
+----
 
 If the relationship between curiosity and mortality is the only feature
 of a cat you are trying to model, this class appears to function well.
@@ -1109,9 +1129,9 @@ problem, using the `synchronized` keyword to allow only a single thread
 at a time to execute the body of a method. The goal is to make
 `useCuriosity()` _thread-safe_, meaning that its behavior is consistent
 and correct no matter how many threads try to execute it at the same
-time.  
+time.
 
-'''''
+==== End Example
 
 As you work through this book and begin to write your own concurrent
 programs, we discuss ways to make them thread-safe. However, you are
@@ -1130,7 +1150,7 @@ Java was intended to be multi-threaded from the very beginning, but
 concurrency was never the most important feature in the language. For
 that reason, the documentation does not clearly mark which methods are
 thread-safe. Usually, some of the paragraphs of description above the
-list of methods say that a class is ``synchronized'' if it is
+list of methods say that a class is "`synchronized`" if it is
 thread-safe. If it is not, the documentation may not mention anything.
 Careful attention is needed to be sure which classes and APIs are
 thread-safe.
@@ -1141,34 +1161,24 @@ with the `synchronized` keyword. The JVM is relatively efficient about
 how it enforces that keyword, but the computational expense is not zero.
 Learn the libraries well, and use the right tools for the right job.
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-Explain the relationship between a class and an object.
-
-What is the difference between a static method and an instance method?
-
-What is the purpose of a constructor? Why is it impossible for a
+1.  Explain the relationship between a class and an object.
+2.  What is the difference between a static method and an instance
+method?
+3.  What is the purpose of a constructor? Why is it impossible for a
 constructor to return a value? Why is it impossible for a constructor to
 be called multiple times on the same object?
-
-A static method can be called directly from a instance method, but an
-instance method cannot be called directly from a static method. Why?
-
-Describe the uses of accessor and mutator methods. Is it possible to
+4.  A static method can be called directly from a instance method, but
+an instance method cannot be called directly from a static method. Why?
+5.  Describe the uses of accessor and mutator methods. Is it possible to
 create a method that is both an accessor and a mutator? Why or why not?
-
-Why do we usually mark fields with the `private` keyword when it would
-be easier to make all fields `public`?
-
-What is the meaning of the `this` keyword? When is it necessary to use
-it? When can it be ignored?
-
-Consider the following class definitions.
-
+6.  Why do we usually mark fields with the `private` keyword when it
+would be easier to make all fields `public`?
+7.  What is the meaning of the `this` keyword? When is it necessary to
+use it? When can it be ignored?
+8.  Consider the following class definitions.
++
 ....
 public class A {
     private int a;
@@ -1195,26 +1205,24 @@ public class B {
     }
 }
 ....
-
++
 The field `a` is used three times in the previous code. Which of these
 uses cause a compiler error and why?
-
-In Section REF=solution:Nested expressions, we gave a definition of
+9.  In Section REF=solution:Nested expressions, we gave a definition of
 `SymbolStack` that implements a simple stack using two fields, defined
 as followed:
-
++
 ....
 private char[] symbols;
 private int size;
 ....
-
++
 By calling the `top()` or `pop()` methods on an empty stack, it is
 possible to cause a program to crash. What additional problems could
 happen if `symbols` and `size` were declared `public` and malicious or
 poorly written code had access to the object?
-
-Consider the following class definition.
-
+10. Consider the following class definition.
++
 ....
 public class GroceryItem {
     private String name;
@@ -1229,20 +1237,19 @@ public class GroceryItem {
     public String getPrice() { return price; }
 }
 ....
-
++
 This class compiles, but its constructor does not function properly. Why
 not?
-
--0.5in *Programming Practice*
-
-OOP is often used when the data inside the object must maintain special
-relationships. Consider a clock with hours, minutes, and seconds. When
-the number of seconds reaches 60, the number of minutes is increased by
-1, and the number of seconds is reset to 0. When the number of minutes
-reaches 60, the numer of hours is increased by 1, and the number of
-seconds is reset to 0. When the number of hours reaches 13, it is reset
-to 1. AM and PM switch whenever the number of hours reaches 12.
-
++
+*Programming Practice*
+11. OOP is often used when the data inside the object must maintain
+special relationships. Consider a clock with hours, minutes, and
+seconds. When the number of seconds reaches 60, the number of minutes is
+increased by 1, and the number of seconds is reset to 0. When the number
+of minutes reaches 60, the numer of hours is increased by 1, and the
+number of seconds is reset to 0. When the number of hours reaches 13, it
+is reset to 1. AM and PM switch whenever the number of hours reaches 12.
++
 Define a `Clock` class with private `int` fields `hours`, `minutes`, and
 `seconds` and a `boolean` field `PM`. Write a constructor that
 initializes `hours` to `12`, `minutes` and `seconds` to `0`, and `PM` to
@@ -1252,8 +1259,7 @@ Write an accessor called `toString()` that returns a nicely formatted
 version of the time as a `String`. For example, the initial time would
 be returned as `"12:00:00 AM"`. Make sure you pad the output for
 `seconds` and `minutes` with an extra `"0"` if they are less than `10`.
-
-Draw on any of your hobbies to come up with a collection of items,
+12. Draw on any of your hobbies to come up with a collection of items,
 whether those items are books you like to read, athletes you follow,
 music you collect, or anything else that is easy to classify. First
 create a class that can describe one of these items with three to five
@@ -1261,42 +1267,39 @@ attributes. For example, the important attributes of a book might be
 author, title, genre, and page count. Each of these attributes should be
 stored as a `private` field and manipulated with `public` accessor and
 mutator methods.
-
++
 Using an array, create a database of these objects. Write methods that
 print out all objects that have a particular value for an attribute.
 Using the book example, your database program should let the user input
 that he or she is looking for all books whose author is
 `Alexandre Dumas`. You may wish to use input redirection so that you do
 not have to enter data about your objects repetitively.
-
-The `java.awt` package defines a class called `Point` that can be used
-to manipulate an latexmath:[$(x,y)$] pair in programs involving the
+13. The `java.awt` package defines a class called `Point` that can be
+used to manipulate an latexmath:[(x,y)] pair in programs involving the
 Cartesian coordinate system. Create your own `Point` class with `int`
 values `x` and `y` as fields.
-
++
 Create one constructor that allows the user to specify values for `x`
 and `y` and a default constructor that takes no arguments and sets both
 `x` and `y` to `0`. Create accessors and mutators for `x` and `y`.
-
++
 Finally, create a method with the signature
 `public double distance( Point p )` that uses the distance formula
-latexmath:[$\sqrt{(x_1 - x_2)^2+(y_1 - y_2)^2}$] to find the distance
+latexmath:[\sqrt{(x_1 - x_2)^2+(y_1 - y_2)^2}] to find the distance
 between the current `Point` object and the `Point` object `p` passed in
 as an argument.
-
++
 Write client code that allows you to create two `Point` objects and test
 if the `distance()` method gives the right answer.
-
-GUIRe-implement the solution from Section REF=solution:Nested
+14. Re-implement the solution from Section REF=solution:Nested
 expressions so that it performs its input and output with GUIs created
 using `JOptionPane`.
-
--0.5in *Experiments*
-
-Objects are great tools for solving problems, but there is some
++
+*Experiments*
+15. Objects are great tools for solving problems, but there is some
 additional overhead associated with creating objects and calling
 methods.
-
++
 Write a piece of code that allocates an array of 10,000,000 `int`
 values. Iterate through that array, storing the value `i` into index
 `i`, and time the process using an OS `time` command. As you know, the

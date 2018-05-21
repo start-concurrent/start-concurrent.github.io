@@ -1,7 +1,8 @@
 [[chapter:Concurrent_Programming]]
+:imagesdir: chapters/13-concurrency/images
 == Concurrent Programming
 
-=== unspecified section category: Introduction
+=== Introduction
 
 So far we have focused mostly on writing sequential programs. Such
 programs are executed sequentially by a computer. Sequential execution
@@ -19,7 +20,7 @@ write simple concurrent programs in Java that exploit the power of a
 multicore computer. We begin with an example in which the fate of the
 planet is in grave danger!
 
-=== problem: Deadly virus
+=== Problem: Deadly virus
 
 A deadly virus capable of wiping out the world’s population is about to
 be released by an evil mastermind. Only he knows the security code that
@@ -43,7 +44,7 @@ this problem is not difficult, the numbers used for public key
 cryptography, typically more than 300 decimal digits long, have resisted
 factorization by even the fastest computers.
 
-=== concepts: Splitting up work
+=== Concepts: Splitting up work
 
 The deadly virus problem has one large task (factoring a number) to
 perform. How should we split up this task so that we can do it more
@@ -62,7 +63,7 @@ quickly. Perhaps we have an interactive system that should continue to
 handle user requests even though it is working on a solution in the
 background. Again, if the overhead of coordinating our workers takes
 more time than a sequential solution or makes the system less
-responsive, it is not useful. . ]Exercise .
+responsive, it is not useful.
 
 There are two main ways to split up work. The first is called _task
 decomposition_. In this approach, each worker is given a different job
@@ -90,11 +91,13 @@ the dinner couldn’t finish until certain supplies had been bought.
 Task decomposition is often easier than domain decomposition because
 many tasks have natural divisions. Unfortunately, it is not always an
 effective way to use multiple cores on a computer. If one task finishes
-long before the others, a core might sit idle. . ]Exercise .
+long before the others, a core might sit idle.
 
 The next two examples give simple illustrations of the process of
 splitting a task into smaller subtasks in the context of multicore
 programming.
+
+==== Begin Example: Video game tasks
 
 Consider a simple video game that consists of the following tasks.
 
@@ -104,7 +107,9 @@ Consider a simple video game that consists of the following tasks.
 4.  repaint screen
 5.  end game
 
-to
+.Execution of tasks in a video game. (a) Sequential execution on a single core. (b) Concurrent execution on two cores. Arrows show the flow of execution and data transfer.
+image::video-game-tasks.png[]
+
 
 Suppose that tasks B and D are independent and can be executed
 concurrently if two cores are available. Task D continually updates the
@@ -118,38 +123,40 @@ task D is executing concurrently on another. Note from the figure that
 task C sends the score and any other data to task D which is
 continuously updating the screen. Having two cores can allow a faster
 refresh of the display as the processor does not have to wait for tasks
-B or C to complete. 
+B or C to complete.
 
-'''''
+==== End Example
+
+==== Begin Example: Math expression tasks
 
 Suppose that the following mathematical expression is to be evaluated
-for parameters latexmath:[$a$] and latexmath:[$K$] at a given value of
-latexmath:[$t$].
-latexmath:[\[2\cdot K\cdot a\cdot t\cdot e^{-a\cdot t^2}\]] We can
+for parameters latexmath:[a] and latexmath:[K] at a given value of
+latexmath:[t].
+latexmath:[2\cdot K\cdot a\cdot t\cdot e^{-a\cdot t^2}] We can
 divide the expression into two terms:
-latexmath:[$2\cdot K\cdot a\cdot t$] and latexmath:[$e^{-a\cdot t^2}$].
+latexmath:[2\cdot K\cdot a\cdot t] and latexmath:[e^{-a\cdot t^2}].
 Each of these terms can be assigned to a different task for evaluation.
 On a dual-core processor, these two tasks can be executed on separate
 cores and the results from each combined to generate the value of the
 expression by the main task.
 
-to
+.Evaluation of a mathematical expression (a) sequentially on a single core and (b) concurrently on two cores. Arrows show the flow of execution and data transfer. Bold typeface indicates the operation being performed.
+image::mathematical-expression-evaluation.png[]
+
 
 Figure REF=figure:math evaluation shows how this expression can be
 evaluated on single core and dual-core processors. Sometimes, using
 multiple cores to evaluate an expression like this will take less time
 than a single core. However, there is no guarantee that using multiple
 cores will always be faster, because tasks take time to set up and to
-communicate with each other. 
+communicate with each other.
 
-'''''
-
-. ]Exercise .
+==== End Example
 
 These examples illustrate how a task can be divided into two or more
 subtasks executed by different cores of a processor. We use a dual-core
 processor for our examples, but the same ideas can be expanded to a
-larger number of cores. . ]Exercise .
+larger number of cores.
 
 ==== Domain decomposition
 
@@ -183,60 +190,68 @@ answer is called the _reduce_ step.
 We illustrate the domain decomposition strategy in the next two
 examples.
 
-Suppose that we want to apply function latexmath:[$f()$] to each element
-of an array latexmath:[$A$] and sum the results. Mathematically, we want
+==== Begin Example: Array summation preview
+
+Suppose that we want to apply function latexmath:[f()] to each element
+of an array latexmath:[A] and sum the results. Mathematically, we want
 to compute the following sum.
 
-latexmath:[\[S=\sum_{i=1}^N f\left(a(i)\right)\]]
+latexmath:[S=\sum_{i=1}^N f\left(a(i)\right)]
 
-In this formula, latexmath:[$a(i)$] is the latexmath:[$i$]^th^ element
-of array latexmath:[$A$]. We want to perform the task of applying
-function latexmath:[$f()$] to each element in the array and summing the
+In this formula, latexmath:[a(i)] is the latexmath:[i]^th^ element
+of array latexmath:[A]. We want to perform the task of applying
+function latexmath:[f()] to each element in the array and summing the
 result. Let’s assume that we have a dual-core processor available to
 compute the sum. We split up the array so that each core performs the
-task on half of the array. Let latexmath:[$S_1$] and latexmath:[$S_2$]
+task on half of the array. Let latexmath:[S_1] and latexmath:[S_2]
 denote the sums computed by core 1 and core 2, respectively.
 
-latexmath:[\[S_1 =\sum_{i=1}^{\lfloor \frac{N}{2}\rfloor } f\left(a(i)\right)\hspace{.75in}
-S_2 =\sum_{i=\lfloor \frac{N}{2} \rfloor +1}^{N} f\left(a(i)\right)\]]
+latexmath:[S_1 =\sum_{i=1}^{\lfloor \frac{N}{2}\rfloor } f\left(a(i)\right)\hspace{.75in}
+S_2 =\sum_{i=\lfloor \frac{N}{2} \rfloor +1}^{N} f\left(a(i)\right)]
 
-Assuming that latexmath:[$N$] is even, both cores process exactly the
-same amount of data. For odd latexmath:[$N$], one of the cores processes
+Assuming that latexmath:[N] is even, both cores process exactly the
+same amount of data. For odd latexmath:[N], one of the cores processes
 one more data item than the other.
 
-After latexmath:[$S_1$] and latexmath:[$S_2$] have been computed, one of
-the cores can add these two numbers together to get latexmath:[$S$].
+After latexmath:[S_1] and latexmath:[S_2] have been computed, one of
+the cores can add these two numbers together to get latexmath:[S].
 This strategy is illustrated in Figure REF=figure:array decomposition.
 After the two cores have completed their work on each half of the array,
-the individual sums are added together to produce the final sum. 
+the individual sums are added together to produce the final sum.
 
-'''''
+==== End Example
 
-to
+.Computing the sum of a function of each element of an array.
+image::arrayDecomposition.png[]
+
+
+==== Begin Example: Matrix multiplication preview
 
 The need to multiply matrices arises in many mathematical, scientific,
 and engineering applications. Suppose we are asked to write a program to
-multiply two square matrices latexmath:[$A$] and latexmath:[$B$], which
-are both latexmath:[$n\times n$] matrices. The product matrix
-latexmath:[$C$] will also be latexmath:[$n\times n$]. A sequential
-program will compute each element of matrix latexmath:[$C$] one at a
+multiply two square matrices latexmath:[A] and latexmath:[B], which
+are both latexmath:[n\times n] matrices. The product matrix
+latexmath:[C] will also be latexmath:[n\times n]. A sequential
+program will compute each element of matrix latexmath:[C] one at a
 time. However, a concurrent program can compute more than one element of
-latexmath:[$C$] simultaneously using multiple cores.
+latexmath:[C] simultaneously using multiple cores.
 
-to
+.Data decomposition to multiply two latexmath:[4\times 4] matrices. The two cores perform the same multiplication tasks but on different data from matrix latexmath:[A]. The two cores compute the top and bottom two rows of latexmath:[C], respectively.
+image::matrixDecomposition.png[]
 
-In this problem, the task is to multiply matrices latexmath:[$A$] and
-latexmath:[$B$]. Through domain decomposition, we can replicate this
+
+In this problem, the task is to multiply matrices latexmath:[A] and
+latexmath:[B]. Through domain decomposition, we can replicate this
 task on each core. As shown in Figure REF=figure:matrix decomposition,
-each core computes only a portion of latexmath:[$C$]. For example, if
-latexmath:[$A$] and latexmath:[$B$] are latexmath:[$4\times 4$]
+each core computes only a portion of latexmath:[C]. For example, if
+latexmath:[A] and latexmath:[B] are latexmath:[4\times 4]
 matrices, we can ask one core to compute the product of the first two
-rows of latexmath:[$A$] with all four columns of latexmath:[$B$] to
-generate the first two rows of latexmath:[$C$]. The second core computes
-the remaining two rows of latexmath:[$C$]. Both cores can access
-matrices latexmath:[$A$] and latexmath:[$B$]. 
+rows of latexmath:[A] with all four columns of latexmath:[B] to
+generate the first two rows of latexmath:[C]. The second core computes
+the remaining two rows of latexmath:[C]. Both cores can access
+matrices latexmath:[A] and latexmath:[B].
 
-'''''
+==== End Example
 
 ==== Tasks and threads
 
@@ -262,14 +277,15 @@ it takes care to package up the right set of tasks into a single thread
 of execution. Recall the previous examples of concurrent programming in
 this chapter.
 
-Consider dividing the tasks in Example . into two threads. Tasks B and C
-in can be packaged into thread 1, and task D can be packaged into thread
-2. This division is shown in Figure REF=figure:tasks in threads(a).
+Consider dividing the tasks in Example REF=example:Video game tasks into
+two threads. Tasks B and C in can be packaged into thread 1, and task D
+can be packaged into thread 2. This division is shown in
+Figure REF=figure:tasks in threads(a).
 
-Tasks to evaluate different subexpressions in Example . can also be
-divided into two threads as shown in Figure REF=figure:tasks in
-threads(b). In many problems there are several reasonable ways of
-dividing a set of subtasks into threads.
+Tasks to evaluate different subexpressions in Example REF=example:Math
+expression tasks can also be divided into two threads as shown in
+Figure REF=figure:tasks in threads(b). In many problems there are
+several reasonable ways of dividing a set of subtasks into threads.
 
 Note that these figures look exactly like the earlier figures, except
 that the tasks are grouped as threads instead of cores. This grouping is
@@ -281,17 +297,21 @@ thread started these threads running. Every Java program, concurrent or
 sequential, starts with one thread. We will refer to this thread as the
 _main_ thread since it contains the `main()` method.
 
-Examples . and . use multiple identical tasks. But these tasks operate
-on different data. Nevertheless, in Example ., the two tasks can be
-assigned two threads that operate on different portions of the input
-array. The task of summing the results from the two threads can either
-be a separate thread or a subtask included in one of the other threads.
-In Example ., the two tasks can again be assigned to two distinct
-threads that operate on different parts of the input matrix
-latexmath:[$A$] to generate the corresponding portions of the output
-matrix latexmath:[$C$].
+Examples REF=example:Array summation preview and REF=example:Matrix
+multiplication preview use multiple identical tasks. But these tasks
+operate on different data. Nevertheless, in Example REF=example:Array
+summation preview, the two tasks can be assigned two threads that
+operate on different portions of the input array. The task of summing
+the results from the two threads can either be a separate thread or a
+subtask included in one of the other threads. In
+Example REF=example:Matrix multiplication preview, the two tasks can
+again be assigned to two distinct threads that operate on different
+parts of the input matrix latexmath:[A] to generate the corresponding
+portions of the output matrix latexmath:[C].
 
-to
+.(a) Tasks in a video game shown packaged into two threads. (b) Tasks to evaluate a mathematical expression shown packaged into two threads. Each thread may or may not run on the same core as the other.
+image::task-thread-packaging.png[]
+
 
 There can be many ways to package tasks into threads. There can also be
 many ways to decompose data into smaller chunks. The best ways to
@@ -344,7 +364,7 @@ of execution so that two or more threads are executing different parts
 of the program, and the next section will show you how it is done in
 Java.
 
-=== syntax: Threads in Java
+=== Syntax: Threads in Java
 
 ==== The `Thread` class
 
@@ -372,6 +392,8 @@ least one thread is active. The following example shows two threads,
 each evaluating a separate subexpression as in Figure REF=figure:tasks
 in threads(b).
 
+==== Begin Example: Thread samples
+
 We will create `Thread1` and `Thread2` classes. The threads of execution
 created by instances of these classes compute, respectively, the two
 subexpressions in Figure REF=figure:tasks in threads(b) and save the
@@ -379,9 +401,9 @@ computed values.
 
 The `run()` method in each thread above computes a subexpression and
 saves its value. We show how these threads can be executed to solve the
-math expression problem in Example .. 
+math expression problem in Example REF=example:Math expression threads.
 
-'''''
+==== End Example
 
 ==== Creating a thread object
 
@@ -449,16 +471,18 @@ interrupted the main thread, forcing it to stop waiting for `thread1`.
 
 In earlier versions of Java, there was a `stop()` method which would
 stop an executing thread. Although this method still exists, it has been
-deprecated and should not be used. . ]Exercise .
+deprecated and should not be used.
+
+==== Begin Example: Math expression threads
 
 Now that we have the syntax to start threads and wait for them to
-finish, we can use the threads defined in Example . with a main thread
-to make our first complete concurrent program. The main thread in class
-`MathExpression` creates and starts the worker threads `thread1` and
-`thread2` and waits for their completion. When the two threads complete
-their execution, we can ask each for its computed value. The main thread
-then prints the product of these values, which is the result of the
-expression we want to evaluate.
+finish, we can use the threads defined in Example REF=example:Thread
+samples with a main thread to make our first complete concurrent
+program. The main thread in class `MathExpression` creates and starts
+the worker threads `thread1` and `thread2` and waits for their
+completion. When the two threads complete their execution, we can ask
+each for its computed value. The main thread then prints the product of
+these values, which is the result of the expression we want to evaluate.
 
 We want to make it absolutely clear when threads are created, start
 executing, and finish. These details are crucial for the finer points of
@@ -479,7 +503,9 @@ symmetrical: The main thread and `thread1` would both independently
 execute code inside the `Thread1` class while only `thread2` would
 execute code inside the `Thread2` class.
 
-to
+.Creation, starting, and joining of threads in `MathExpression`, `Thread1`, and `Thread2`.
+image::thread-lifecycle.png[]
+
 
 Figure REF=figure:thread execution shows the execution of `thread1` and
 `thread2` and the main thread. Note that the creation and start of the
@@ -487,9 +513,9 @@ main thread is done implicitly by the JVM while `thread1` and `thread2`
 are created explicitly and started by the main thread. Even after the
 threads associated with `thread1` and `thread2` have stopped running,
 the objects continue to exist. Methods and fields can continue to be
-accessed.  
+accessed.
 
-'''''
+==== End Example
 
 [[subsection:runnable]]
 ==== The `Runnable` interface
@@ -537,7 +563,9 @@ instantiate a separate `Thread` object. However, most developers prefer
 to design classes that implement `Runnable` instead of inheriting from
 `Thread`. Why? Java only allows for single inheritance. If your class
 implements `Runnable`, it is free to inherit from another parent class
-with the features you want. . ]Exercise .
+with the features you want.
+
+==== Begin Example: Array of threads
 
 In domain decomposition, we often need to create multiple threads, all
 from the same class. As an example, consider the following thread
@@ -579,33 +607,33 @@ finish, an `InterruptedException` will be caught. As before, we warn the
 user that a thread didn’t finish. For production-quality code, the
 `catch` block should handle the exception in such a way that the thread
 can recover and do useful work even though it didn’t get what it was
-waiting for.  
+waiting for.
 
-'''''
+==== End Example
 
-=== examples: Concurrency and speedup
+=== Examples: Concurrency and speedup
 
 Speedup is one of the classic motivations for writing concurrent
 programs. To understand speedup, let’s assume we have a problem to
 solve. We write two programs to solve this problem, one that is
 sequential and another that is concurrent and, hence, able to exploit
-the multiple cores. Let latexmath:[$t_s$] be the average time to execute
-the sequential program and latexmath:[$t_c$] the average time to execute
+the multiple cores. Let latexmath:[t_s] be the average time to execute
+the sequential program and latexmath:[t_c] the average time to execute
 the concurrent program. Sometimes we will use the notation
-latexmath:[$t_c^k$] to refer to the execution time of a concurrent
-program with latexmath:[$k$] threads. So that the comparison is
+latexmath:[t_c^k] to refer to the execution time of a concurrent
+program with latexmath:[k] threads. So that the comparison is
 meaningful, assume that both programs are executed on the same computer.
 The speedup obtained from concurrent programming is defined as follows.
-latexmath:[\[\mbox{speedup}=\frac{t_s}{t_c}\]]
+latexmath:[\mbox{speedup}=\frac{t_s}{t_c}]
 
 Speedup measures how much faster the concurrent program executes
 relative to the sequential program. Ideally, we expect
-latexmath:[$t_c<t_s$], making the speedup greater than 1. However,
+latexmath:[t_c<t_s], making the speedup greater than 1. However,
 simply writing a concurrent program does not necessarily make it faster
-than the sequential version. . ]Exercise . . ]Exercise .
+than the sequential version.
 
-To determine speedup, we need to measure latexmath:[$t_s$] and
-latexmath:[$t_c$]. Time in a Java program can easily be measured with
+To determine speedup, we need to measure latexmath:[t_s] and
+latexmath:[t_c]. Time in a Java program can easily be measured with
 the following two static methods in the `System` class.
 
 ....
@@ -627,6 +655,8 @@ finer than milliseconds; however, the level of accuracy it returns is
 again system dependent. The next example show how to use these methods
 to measure execution time.
 
+==== Begin Example: Measuring execution time
+
 Suppose we want to measure the execution time of a piece of Java code.
 For convenience, we can assume this code is contained in the `work()`
 method. The following code snippet measures the time to execute
@@ -641,44 +671,48 @@ System.out.println("Elapsed time: " + (end - start) + " ms");
 
 The output will give the execution time for `work()` measured in
 milliseconds. To get the execution time in nanoseconds, use the
-`System.nanoTime()` method instead. . ]Exercise .  
+`System.nanoTime()` method instead.
 
-'''''
+==== End Example
 
  +
 Now that we have the tools to measure execution time, we can measure
 speedup. The next few examples show the speedup (or lack of it) that we
-can achieve using a concurrent solution to a few simple problems. .
-]Exercise .
+can achieve using a concurrent solution to a few simple problems.
 
-Recall the concurrent program in Example . to evaluate a simple
-mathematical expression. This program uses two threads. We executed this
-multi-threaded program on an iMac computer with an Intel Core 2 Duo
-running at 2.16 Ghz. The execution time was measured at 1,660,000
-nanoseconds. We also wrote a simple sequential program to evaluate the
-same expression. It took 4,100 nanoseconds to execute this program on
-the same computer. Plugging in these values for latexmath:[$t_c$] and
-latexmath:[$t_s$], we can find the speedup.
+==== Begin Example: Math expression speedup
 
-latexmath:[\[\mbox{speedup}=\frac{t_s}{t_c} = \frac{4,100}{1,660,000}= 0.00246\]] +
+Recall the concurrent program in Example REF=example:Math expression
+threads to evaluate a simple mathematical expression. This program uses
+two threads. We executed this multi-threaded program on an iMac computer
+with an Intel Core 2 Duo running at 2.16 Ghz. The execution time was
+measured at 1,660,000 nanoseconds. We also wrote a simple sequential
+program to evaluate the same expression. It took 4,100 nanoseconds to
+execute this program on the same computer. Plugging in these values for
+latexmath:[t_c] and latexmath:[t_s], we can find the speedup.
+
+latexmath:[\mbox{speedup}=\frac{t_s}{t_c} = \frac{4,100}{1,660,000}= 0.00246] +
 This speedup is much less than 1. Although the result may be surprising,
 the concurrent program with two threads executes much slower than the
 sequential program. In this example, the cost of creating, running, and
 joining threads outweighed the benefits of concurrent calculation on two
-cores. . ]Exercise .  
+cores.
 
-'''''
+==== End Example
 
-In Example ., we introduced the problem of applying a function to every
-value in an array and then summing the results. Let’s say that we want
-to apply the sine function to each value. To solve this problem
-concurrently, we partition the array evenly among a number of threads,
-using the domain decomposition strategy. Each thread finds the sum of
-the sines of the values in its part of the array. One factor that
-determines whether or not we achieve speedup is the complexity of the
-function, in this case sine, that we apply. Although we may achieve
-speedup with sine, a simpler function such as doubling the value might
-not create enough work to justify the overhead of using threads.
+==== Begin Example: Array summation
+
+In Example REF=example:Array summation preview, we introduced the
+problem of applying a function to every value in an array and then
+summing the results. Let’s say that we want to apply the sine function
+to each value. To solve this problem concurrently, we partition the
+array evenly among a number of threads, using the domain decomposition
+strategy. Each thread finds the sum of the sines of the values in its
+part of the array. One factor that determines whether or not we achieve
+speedup is the complexity of the function, in this case sine, that we
+apply. Although we may achieve speedup with sine, a simpler function
+such as doubling the value might not create enough work to justify the
+overhead of using threads.
 
 We create class `SumThread` whose `run()` method sums the sines of those
 elements of the array in its assigned partition.
@@ -777,20 +811,22 @@ running total and iterates through each thread waiting for it to
 complete. When each thread is done, the main thread adds its value to
 the running total. If the main thread is interrupted while waiting for a
 thread to complete, the stack trace is printed. Otherwise, the final sum
-is printed out. . ]Exercise . . ]Exercise . . ]Exercise .  
+is printed out.
 
-'''''
+==== End Example
 
-In Example ., we discussed the importance of matrix operations in many
-applications. Now that we know the necessary Java syntax, we can write a
-concurrent program to multiply two square matrices latexmath:[$A$] and
-latexmath:[$B$] and compute the resultant matrix latexmath:[$C$]. If
-these matrices have latexmath:[$n$] rows and latexmath:[$n$] columns,
-the value at the latexmath:[$i$]^th^ row and latexmath:[$j$]^th^ column
-of latexmath:[$C$] is
+==== Begin Example: Matrix multiplication
 
-latexmath:[\[C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \hdots +
-A_{in}B_{nj}\]]
+In Example REF=example:Matrix multiplication preview, we discussed the
+importance of matrix operations in many applications. Now that we know
+the necessary Java syntax, we can write a concurrent program to multiply
+two square matrices latexmath:[A] and latexmath:[B] and compute the
+resultant matrix latexmath:[C]. If these matrices have latexmath:[n]
+rows and latexmath:[n] columns, the value at the latexmath:[i]^th^
+row and latexmath:[j]^th^ column of latexmath:[C] is
+
+latexmath:[C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \hdots +
+A_{in}B_{nj}]
 
 In Java, it is natural for us to store matrices as 2-dimensional arrays.
 To do this multiplication sequentially, the simplest approach uses three
@@ -813,9 +849,9 @@ multiplication. Below is the `MatrixThread` class which will compute a
 number of rows in the answer matrix `c`.
 
 The constructor for `MatrixThread` stores references to the arrays
-corresponding to matrices latexmath:[$A$], latexmath:[$B$], and
-latexmath:[$C$] as well as lower and upper bounds on the rows of
-latexmath:[$C$] to compute. The body of the `run()` method is identical
+corresponding to matrices latexmath:[A], latexmath:[B], and
+latexmath:[C] as well as lower and upper bounds on the rows of
+latexmath:[C] to compute. The body of the `run()` method is identical
 to the sequential solution except that its outermost loop runs only from
 `lower` to `upper` instead of through all the rows of the result. It is
 critical that each thread is assigned a set of rows that does not
@@ -868,13 +904,13 @@ matrix that has only been partially filled in.
 
 We completed the code for threaded matrix multiplication and executed it
 on an iMac computer running on an Intel running at 2.16 Ghz. The program
-was executed for matrices of different sizes (latexmath:[$n \times n$]).
+was executed for matrices of different sizes (latexmath:[n \times n]).
 For each size, the sequential and concurrent execution times in seconds
 and the corresponding speedup are listed in the following table.
 
 [cols="<,<,<,<",options="header",]
 |=======================================================================
-|Size (latexmath:[$n$]) |latexmath:[$t_s$] (s) |latexmath:[$t_c$] (s)
+|Size (latexmath:[n]) |latexmath:[t_s] (s) |latexmath:[t_c] (s)
 |Speedup
 |100 |0.013 |0.9 |0.014
 
@@ -883,14 +919,14 @@ and the corresponding speedup are listed in the following table.
 |1000 |15.6 |10.7 |1.45^*^
 |=======================================================================
 
-Only with latexmath:[$1000\times1000$] matrices did we see improved
+Only with latexmath:[1000\times1000] matrices did we see improved
 performance when using two threads. In that case, we achieved a speedup
 of 1.45, marked with an asterisk. In the other two cases, performance
-became worse. . ]Exercise . . ]Exercise .  
+became worse.
 
-'''''
+==== End Example
 
-=== concepts: Thread scheduling
+=== Concepts: Thread scheduling
 
 Now that we have seen how multiple threads can be used together, a
 number of questions should be coming to the forefront. Who decides when
@@ -942,8 +978,8 @@ threads, and both programs are complex mountains of code which try to
 balance many factors. If you create three threads, there is no guarantee
 that the first will run first, the second second, and the third third,
 not even if it happens that way the first 10 times you run the program.
-Exercise . shows that the pattern of thread execution can vary a lot. .
-]Exercise .
+Exercise REF=exercise:NumberedThread shows that the pattern of thread
+execution can vary a lot.
 
 In all the programs before this chapter, the same sequence of input
 would always produce the same sequence of output. Perhaps the biggest
@@ -989,10 +1025,9 @@ other thread when it has the correct value.
 We bring up polling partly because it has a historical importance to
 parallel programming, partly because it can be useful in solving some
 problems in this chapter, and partly because we want you to understand
-the reasons why we need better techniques for thread communication. .
-]Exercise .
+the reasons why we need better techniques for thread communication.
 
-=== syntax: Thread states
+=== Syntax: Thread states
 
 A widely used Java tool for manipulating scheduling is the
 `Thread.sleep()` method. This method can be called any time you want a
@@ -1010,9 +1045,11 @@ according to official documentation, the JVM does not *have* to do to
 anything when a `Thread.yield()` call happens. The Java specification
 does not demand a particular implementation. A JVM could ignore a
 `Thread.yield()` call completely, but most JVMs will move on to the next
-thread in the schedule. . ]Exercise . . ]Exercise .
+thread in the schedule.
 
-to
+.Thread states and transitions.
+image::thread-states.png[]
+
 
 Figure REF=figure:thread states shows the lifecycle of a thread. A
 thread begins its life in the New Thread state, after the constructor is
@@ -1052,9 +1089,11 @@ priorities because it increases platform dependence and because the
 effects are not always predictable. Be aware that priorities exist, but
 don’t use them unless and until you have a good reason.
 
+==== Begin Example: Military marching
+
 Let’s apply the ideas discussed above to a lighthearted example. You
-might be familiar with sound of soldiers marching: ``Left, Left, Left,
-Right, Left!'' We can design a thread that prints `Left` and another
+might be familiar with sound of soldiers marching: "`Left, Left, Left,
+Right, Left!`" We can design a thread that prints `Left` and another
 thread that prints `Right`. We can combine the two to print the correct
 sequence for marching and loop the whole thing 10 times so that we can
 see how accurately place the words. We want to use the scheduling tools
@@ -1123,11 +1162,11 @@ its own `done` to `false`.
 In short, coordinating two or more threads together is a difficult
 problem. None of the solutions we give here are fully acceptable. We
 introduce better tools for coordination and synchronization in
-Chapter REF=chapter:Synchronization.  
+Chapter REF=chapter:Synchronization.
 
-'''''
+==== End Example
 
-=== solution: Deadly virus
+=== Solution: Deadly virus
 
 Finally, we give the solution to the deadly virus problem. By this
 point, the threaded part of this problem should not seem very difficult.
@@ -1135,9 +1174,11 @@ It is simpler than some of the examples, such as matrix multiplication.
 We begin with the worker class `FactorThread` that can be spawned as a
 thread.
 
-[[program:FactorThread]][program:FactorThread]
-PROGRAM=ConcurrencyChapter/programs/FactorThread.java, CAPTION=Thread
-class used to find the sum of the two factors of a large odd composite.
+.Thread class used to find the sum of the two factors of a large odd composite.
+[source, java, linenums]
+----
+include::programs/FactorThread.java[]
+----
 
 The constructor for `FactorThread` takes an upper and lower bound,
 similar to `MatrixThread`. Once a `FactorThread` object has those
@@ -1150,10 +1191,11 @@ efficiency for this specific security problem. A program to find general
 prime factors would have to be more flexible. Next let us examine the
 driver program `Factor`.
 
-[[program:Factor]][program:Factor]
-PROGRAM=ConcurrencyChapter/programs/Factor.java, CAPTION=Driver class
-which creates threads to lower the average search time for the factors
-of a large odd composite.
+.Driver class which creates threads to lower the average search time for the factors of a large odd composite.
+[source, java, linenums]
+----
+include::programs/Factor.java[]
+----
 
 Static constants hold both the number to be factored and the number of
 threads. In the `main()` method, we create an array of threads for
@@ -1172,7 +1214,7 @@ search fruitlessly. If the program went on to do other work, we might
 need to let the other threads finish or even interrupt them. Don’t
 forget `join()` calls since they are usually very important.
 
-=== unspecified section category: Summary
+=== Summary
 
 In this chapter we have examined tasks and domains. We have explained
 two strategies to obtain a concurrent solution to a programming problem.
@@ -1195,55 +1237,48 @@ concurrent programs. Only a few of these have been introduced in this
 chapter. Subsequent chapters give additional tools to code more complex
 concurrent programs.
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-The `start()`, `run()`, and `join()` methods are essential parts of the
-process of using threads in Java. Explain the purpose of each method.
-
-What is the difference between extending the `Thread` class and
-implementing the `Runnable` interface? When should you use one over the
-other?
-
-How do the `Thread.sleep()` method and the `Thread.yield()` method each
-affect thread scheduling?
-
-Consider the expression in Example .. Suppose that the multiply and
+1.  <<exercise:thread methods>> The `start()`, `run()`, and `join()`
+methods are essential parts of the process of using threads in Java.
+Explain the purpose of each method.
+2.  <<exercise:Thread vs. Runnable>> What is the difference between
+extending the `Thread` class and implementing the `Runnable` interface?
+When should you use one over the other?
+3.  <<exercise:sleep and yield>> How do the `Thread.sleep()` method and
+the `Thread.yield()` method each affect thread scheduling?
+4.  <<exercise:math expression>> Consider the expression in
+Example REF=example:Math expression tasks. Suppose that the multiply and
 exponentiation operations require 1 and 10 time units, respectively.
 Compute the number of time units required to evaluate the expression as
 in Figure REF=figure:math evaluation(a) and (b).
-
-Suppose that a computer has one quadcore processor. Can the tasks in
-Examples . and . be further subdivided to improve performance on four
-cores? Why or why not?
-
-Consider the definition of speedup from Section REF=examples:Concurrency
-and speedup. Let’s assume you have a job 1,000,000 units in size. A
-thread can process 10,000 units of work every second. It takes an
-additional 100 units of work to create a new thread. What is the speedup
-if you have a dual-core processor and create 2 threads? What if you have
-a quadcore processor and create 4 threads? Or an 8-core processor and
-create 8 threads? You may assume that a thread does not need to
-communicate after it has been created.
-
-In which situations can speedup be smaller than the number of
-processors? Is it ever possible for speedup to be greater than the
-number of processors?
-
-Amdahl’s Law is a mathematical description of the maximum amount you can
-improve a system by only improving a part of it. One form of it states
-that the maximum speedup attainable in a parallel program is
-latexmath:[$\frac{1}{1 - P}$] where latexmath:[$P$] is the fraction of
-the program which can be parallelized to an arbitrary degree. If 30% of
-the work in a program can be fully parallelized but the rest is
-completely serial, what is the speedup with 2 processors? 4? 8? What
-implications does Amdahl’s Law have?
-
-Consider the following table of tasks:
-
+5.  <<exercise:multicore-exercise>> Suppose that a computer has one
+quadcore processor. Can the tasks in Examples REF=example:Video game
+tasks and REF=example:Math expression tasks be further subdivided to
+improve performance on four cores? Why or why not?
+6.  <<exercise:speedup>> Consider the definition of speedup from
+Section REF=examples:Concurrency and speedup. Let’s assume you have a
+job 1,000,000 units in size. A thread can process 10,000 units of work
+every second. It takes an additional 100 units of work to create a new
+thread. What is the speedup if you have a dual-core processor and create
+2 threads? What if you have a quadcore processor and create 4 threads?
+Or an 8-core processor and create 8 threads? You may assume that a
+thread does not need to communicate after it has been created.
+7.  <<exercise:speedup bounds>> In which situations can speedup be
+smaller than the number of processors? Is it ever possible for speedup
+to be greater than the number of processors?
+8.  <<exercise:Amdahl>> Amdahl’s Law is a mathematical description of
+the maximum amount you can improve a system by only improving a part of
+it. One form of it states that the maximum speedup attainable in a
+parallel program is latexmath:[\frac{1}{1 - P}] where latexmath:[P]
+is the fraction of the program which can be parallelized to an arbitrary
+degree. If 30% of the work in a program can be fully parallelized but
+the rest is completely serial, what is the speedup with 2 processors? 4?
+8? What implications does Amdahl’s Law have?
+9.  <<exercise:task parallelization>> Consider the following table of
+tasks:
++
++
 [cols="<,^,^,<",options="header",]
 |===========================================
 |*Task* |*Time* |*Concurrency* |*Dependency*
@@ -1253,7 +1288,7 @@ Consider the following table of tasks:
 |Cleaning Bathroom |30 |2 |-
 |Doing Homework |30 |1 |Cleaning Bedroom
 |===========================================
-
++
 In this table, the *Time* column gives the number of minutes a task
 takes to perform with a single person, the *Concurrency* column gives
 the maximum number of people who can be assigned to a task, and the
@@ -1265,49 +1300,48 @@ minimum amount of time needed to perform all tasks with only a single
 person? What is the minimum amount of time needed to perform all tasks
 with an unlimited number of people? What is the smallest number of
 people needed to achieve this minimum time?
-
-Consider the following code snippet.
-
+10. <<exercise:interleavings>> Consider the following code snippet.
++
 ....
 x = 13;
 x = x * 10;
 ....
-
++
 Consider this snippet as well.
-
++
 ....
 x = 7;
 x = x + x;
 ....
-
++
 If we assume that these two snippets of code are running on separate
 threads but that `x` is a shared variable, what are the possible values
 `x` could have after both snippets have run? Remember that the execution
 of these snippets can be interleaved in any way.
-
--0.5in *Programming Practice*
-
-Re-implement the array summing problem from Example . using polling
-instead of `join()` calls. Your program should not use a single call to
-`join()`. Polling is not an ideal way to solve this problem, but it is
-worth experimenting with the technique.
-
-Composers often work with multiple tracks of music. One track might
-contain solo vocals, another drums, a third one violins, and so on.
-After recording the entire take, a mix engineer might want to apply
-special effects such as an echo to one or more tracks.
-
++
+*Programming Practice*
+11. <<exercise:polling>> Re-implement the array summing problem from
+Example REF=example:Array summation using polling instead of `join()`
+calls. Your program should not use a single call to `join()`. Polling is
+not an ideal way to solve this problem, but it is worth experimenting
+with the technique.
+12. <<exercise:echo effect>> Composers often work with multiple tracks
+of music. One track might contain solo vocals, another drums, a third
+one violins, and so on. After recording the entire take, a mix engineer
+might want to apply special effects such as an echo to one or more
+tracks.
++
 To understand how to add echo to a track, suppose that the track
 consists of a list of audio samples. Each sample in a mono (not stereo)
 track can be stored as a `double` in an array. To create an echo effect,
 we combine the current value of an audio sample with a sample from a
 fixed time earlier. This time is called the _delay_ parameter. Varying
 the delay can produce long and short echoes.
-
++
 If the samples are stored in array `in` and the delay parameter is
 stored in variable `delay`, the following code snippet can be used to
 create array `out` which contains the sound with an echo.
-
++
 ....
 double[] out = new double[in.length + delay];
 //sound before echo starts
@@ -1320,90 +1354,89 @@ for( int i = delay; i < in.length; i++ )
 for( int i = in.length; i < out.length; i++ )
     out[i] = b*in[i - delay];
 ....
-
++
 Parameters `a` and `b` are used to control the nature of the echo. When
 `a` is `1` and `b` is `0`, there is no echo. When `a` is `0` and `b` is
 `1`, there is no mixing. Audio engineers will control the values of `a`
 and `b` to create the desired echo effect.
-
++
 Write a threaded program that computes the values in `out` in parallel
 for an arbitrary number of threads.
-
-Write a program which takes a number of minutes and seconds as input. In
-this program, implement a timer using `Thread.sleep()` calls. Each
-second, print the remaining time to the screen. How accurate is your
-timer?
-
-As you know, latexmath:[$\pi\approx
-3.1416$]. A more precise value can be found by writing a program which
+13. <<exercise:sleep timer>> Write a program which takes a number of
+minutes and seconds as input. In this program, implement a timer using
+`Thread.sleep()` calls. Each second, print the remaining time to the
+screen. How accurate is your timer?
+14. <<exercise:concurrent approximation>> As you know,
+latexmath:[\pi\approx
+3.1416]. A more precise value can be found by writing a program which
 approximates the area of a circle. The area of a circle can be
 approximated by summing up the area of rectangles filling curve of the
 arc of the circle. As the width of the rectangle goes to zero, the
 approximation becomes closer and closer to the true area. Recall that
-that height latexmath:[$y$] of a circle centered at the origin at any
-distance latexmath:[$x$] is given by latexmath:[$y = \sqrt{r^2 - x^2}$]
-where latexmath:[$r$] is the radius of the circle.
-
+that height latexmath:[y] of a circle centered at the origin at any
+distance latexmath:[x] is given by latexmath:[y = \sqrt{r^2 - x^2}]
+where latexmath:[r] is the radius of the circle.
++
 Write a parallel implementation of this problem which divides up
 portions of the arc of the circle among several threads and then sums
-the results after they all finish. By setting latexmath:[$r = 2$], you
-need only sum one quadrant of a circle to get latexmath:[$\pi$]. You
+the results after they all finish. By setting latexmath:[r = 2], you
+need only sum one quadrant of a circle to get latexmath:[\pi]. You
 will need to use a very small rectangle width to get an accurate answer.
 When your program finishes running, you can compare your value against
 `Math.PI` for accuracy.
-
--0.5in *Experiments*
-
-Use the `currentTimeMillis()` method to measure the time taken to
-execute a relatively long-running piece of Java code you have written.
-Execute your program several times and compare the execution time you
-obtain during different executions. Why do you think the execution times
-are different?
-
-Thread creation overhead is an important consideration in writing
-efficient parallel programs. Write a program which creates a large
-number of threads which do nothing. Test how long it takes to create and
-join various numbers of threads. See if you can determine how long a
-single thread creation operation takes on your system, on average.
-
-Create serial and concurrent implementations of matrix multiplication
-like those described in Example ..
-
++
+*Experiments*
+15. <<exercise:time-measurement>> Use the `currentTimeMillis()` method
+to measure the time taken to execute a relatively long-running piece of
+Java code you have written. Execute your program several times and
+compare the execution time you obtain during different executions. Why
+do you think the execution times are different?
+16. <<exercise:thread overhead>> Thread creation overhead is an
+important consideration in writing efficient parallel programs. Write a
+program which creates a large number of threads which do nothing. Test
+how long it takes to create and join various numbers of threads. See if
+you can determine how long a single thread creation operation takes on
+your system, on average.
+17. <<exercise:matrix multiply>> Create serial and concurrent
+implementations of matrix multiplication like those described in
+Example REF=example:Matrix multiplication.
 a.  Experiment with different matrix sizes and thread counts to see how
 the speedup performance changes. If possible, run your tests on machines
 with different numbers of cores or processors.
-b.  Given a machine with latexmath:[$k>1$] cores, what is the maximum
+b.  Given a machine with latexmath:[k>1] cores, what is the maximum
 speedup you can expect to obtain?
-
-Repeatedly run the code in Example . which creates several
+18. <<exercise:NumberedThread>> Repeatedly run the code in
+Example REF=example:Array of threads which creates several
 `NumberedThread` objects. Can you discover any patterns in the order
 that the threads print? Add a loop and some additional instrumentation
 to the `NumberedThread` class which will allow you to measure how long
 each thread runs before the next thread has a turn.
-
-Create serial and parallel implementations of the array summing problem
-solved in Example .. Experiment with different array sizes and thread
-counts to see how performance changes. How does the speedup differ from
-matrix multiply? What happens if you simply sum the numbers instead of
-taking the sine first?
-
-The solution to the array summing problem in Example . seems to use
-concurrency half-heartedly. After all the threads have computed their
-sums, the main thread sums up the partial sums sequentially.
-
+19. <<exercise:ArraySum>> Create serial and parallel implementations of
+the array summing problem solved in Example REF=example:Array summation.
+Experiment with different array sizes and thread counts to see how
+performance changes. How does the speedup differ from matrix multiply?
+What happens if you simply sum the numbers instead of taking the sine
+first?
+20. <<exercise:TreeSum>> The solution to the array summing problem in
+Example REF=example:Array summation seems to use concurrency
+half-heartedly. After all the threads have computed their sums, the main
+thread sums up the partial sums sequentially.
++
 An alternative approach is to sum up the partial sums concurrently. Once
 a thread has computed the sum of the sines of each partition, the sums
 of each pair of neighboring partitions should be merged into a single
 sum. The process can be repeated until the final sum has been computed.
 At each step, half of the remaining threads will have nothing left to do
 and will stop. The pattern of summing is like a tree which starts with
-latexmath:[$k$] threads working at the first stage,
-latexmath:[$\frac{k}{2}$] working at the second stage,
-latexmath:[$\frac{k}{4}$] working at the third, and so on, until a
+latexmath:[k] threads working at the first stage,
+latexmath:[\frac{k}{2}] working at the second stage,
+latexmath:[\frac{k}{4}] working at the third, and so on, until a
 single thread completes the summing process.
++
+.Example of concurrent tree-style summation with 8 threads.
+image::treesummation.png[]
 
-to
-
++
 Update the `run()` method in the `SumThread` class so that it adds its
 assigned elements as before and then adds its neighbors sum to its own.
 To do so, it must use the `join()` method to wait for the neighboring
@@ -1417,7 +1450,7 @@ Consequently, the main thread only needs to wait for thread 0. So that
 each thread can wait for other threads, the `threads` array will need to
 be a static field. Figure REF=figure:tree summation illustrates this
 process.
-
++
 Once you have implemented this design, test it against the original
 `SumThread` class to see how it performs. Restrict the number of threads
 you create to a power of 2 to make it easier to determine which threads

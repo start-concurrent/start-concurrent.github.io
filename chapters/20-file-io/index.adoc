@@ -1,7 +1,8 @@
 [[chapter:File_I/O]]
+:imagesdir: chapters/20-file-io/images
 == File I/O
 
-=== problem: A picture is worth 1,000 bytes
+=== Problem: A picture is worth 1,000 bytes
 
 If you are familiar with bitmap (bmp) files, you know that they can get
 very large. People often use a technique called data compression to
@@ -25,7 +26,7 @@ and which ones are actual bytes of data, we have to keep a count for
 every byte, even unrepeated ones. In this example, we went down from 15
 numbers to 10 numbers, a savings of a third. In the worst case, a file
 that has no repetition at all would actually double in size after being
-``compressed'' with this kind of RLE. Nevertheless, RLE compression is
+"`compressed`" with this kind of RLE. Nevertheless, RLE compression is
 used in practice and performs very well in some situations.
 
 Your job is to write a Java program that takes two arguments from the
@@ -53,7 +54,7 @@ Decompression simply reads the count then the byte value and writes the
 appropriate number of copies of the byte value into the decompressed
 file.
 
-=== concepts: File I/O
+=== Concepts: File I/O
 
 Before you can begin to tackle the problem of compressing, or even
 reading from and writing to, files, some background on files might be
@@ -140,7 +141,7 @@ different steps and create different objects depending on whether you
 want to do file I/O in the text or binary paradigms, but the overall
 process will be similar in either case.
 
-=== syntax: File operations in Java
+=== Syntax: File operations in Java
 
 ==== The `File` class
 
@@ -422,9 +423,11 @@ too difficult, but it seems cumbersome. The objects provide methods
 which elegantly allow you to read and write a whole object at a time. To
 do so, we need to define a new class.
 
-[[program:BaseballPlayer]][program:BaseballPlayer]
-PROGRAM=FileIOChapter/programs/BaseballPlayer.java, CAPTION=Serializable
-BaseballPlayer class.
+.Serializable BaseballPlayer class.
+[source, java, linenums]
+----
+include::programs/BaseballPlayer.java[]
+----
 
 The new class `BaseballPlayer` encapsulates the three pieces of
 information we want. Note that it also implements the interface
@@ -521,7 +524,9 @@ It is worth noting that `DataInputStream` and `DataOutputStream` objects
 can be used in place of `ObjectInputStream` and `ObjectOutputStream`
 objects if you only need to read and write primitive data.
 
-=== examples: File examples
+=== Examples: File examples
+
+==== Begin Example: Directory listing
 
 Let’s return to the `File` class and look at another example of how to
 use it. It is often useful to know the contents of a directory. At the
@@ -531,38 +536,44 @@ code, we can write a directory listing tool which lists all the files in
 a directory, the dates each was last modified, and whether or not a file
 is a directory.
 
-[[program:Directory]][program:Directory]
-PROGRAM=FileIOChapter/programs/Directory.java, CAPTION=Directory listing
-tool.
+.Directory listing tool.
+[source, java, linenums]
+----
+include::programs/Directory.java[]
+----
 
 As you can see, the code first creates a `File` object using `"."` to
 specify the current working directory. The `listFiles()` method returns
 an array of `File` objects which we then iterate over. We call
 `lastModified()` on each file to get its date, `isDirectory()` to see if
-it is a directory, and finally print the name given by `getName()`.  
+it is a directory, and finally print the name given by `getName()`.
 
-'''''
+==== End Example
+
+==== Begin Example: Radiuses stored in a file
 
 Now, let’s look at a data processing application of files. Let’s assume
 that there is a file called `radiuses.txt` which holds the radiuses of a
 number of circles formatted as text, one on each line of the file. It’s
 our job to read each radius, compute the area of the circle, and write
 those areas to a file called `areas.txt`, using the formula
-latexmath:[$A = \pi r^2$].
+latexmath:[A = \pi r^2].
 
-[[program:AreaFromRadiusText]][program:AreaFromRadiusText]
-PROGRAM=FileIOChapter/programs/AreaFromRadiusText.java, CAPTION=Program
-to read a list of radiuses from a text file and output their areas to
-another file.
+.Program to read a list of radiuses from a text file and output their areas to another file.
+[source, java, linenums]
+----
+include::programs/AreaFromRadiusText.java[]
+----
 
 The previous class did all of its input and output with text files. We
 will also implement this program to read from a binary file called
 `radiuses.bin` and write to a binary file called `areas.bin`.
 
-[[program:AreaFromRadiusBinary]][program:AreaFromRadiusBinary]
-PROGRAM=FileIOChapter/programs/AreaFromRadiusBinary.java,
-CAPTION=Program to read a list of radiuses from a binary file and output
-their areas to another file.
+.Program to read a list of radiuses from a binary file and output their areas to another file.
+[source, java, linenums]
+----
+include::programs/AreaFromRadiusBinary.java[]
+----
 
 There should be few surprises in this piece of code as only a few
 changes have been made so that `ObjectInputStream` and
@@ -570,11 +581,11 @@ changes have been made so that `ObjectInputStream` and
 input `while` loop is an infinite loop. The easiest way to see if there
 is any more data in a binary file is to keep reading until an
 `EOFException` is thrown. As you can see, we do nothing to handle this
-exception, because, in this case, it is just a signal to stop reading. 
+exception, because, in this case, it is just a signal to stop reading.
 
-'''''
+==== End Example
 
-=== solution: A picture is worth 1,000 bytes
+=== Solution: A picture is worth 1,000 bytes
 
 Now we will give the solution to the problem posed at the beginning of
 the chapter. First, let’s look at the class definition and `main()`
@@ -689,7 +700,7 @@ input file with a `.compress` extension stripped off. Then, it reads a
 count, reads a byte value, and writes the byte value as many times as
 the count specifies.
 
-=== concurrency: File I/O
+=== Concurrency: File I/O
 
 By now, you have seen threads behave in unpredictable ways because of
 the way they are reading and writing to shared variables. Well, isn’t a
@@ -708,10 +719,11 @@ series of numbers to a file called `concurrent.out`. The first thread
 prints the even numbers between 0 and 9,999 while the second thread
 prints the odd ones.
 
-[[program:ConcurrentFileAccess]][program:ConcurrentFileAccess]
-PROGRAM=FileIOChapter/programs/ConcurrentFileAccess.java,
-CAPTION=Program that spawns threads that print odd and even numbers to a
-file concurrently.
+.Program that spawns threads that print odd and even numbers to a file concurrently.
+[source, java, linenums]
+----
+include::programs/ConcurrentFileAccess.java[]
+----
 
 The code in this program should have no surprises. The `main()` method
 creates two `Thread` objects based on `ConcurrentFileAccess` objects,
@@ -782,94 +794,82 @@ interact with the same files that your program will use, Java provides a
 with everything file-related, `FileLock` is dependent on the underlying
 OS and may behave differently on different systems.
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-What is the difference between volatile and non-volatile memory? Which
-is often associated with files and why?
-
-What is the difference between text and binary files? What are the pros
-and cons of using each?
-
-Define compression ratio to be the size of the uncompressed data in
+1.  What is the difference between volatile and non-volatile memory?
+Which is often associated with files and why?
+2.  What is the difference between text and binary files? What are the
+pros and cons of using each?
+3.  Define compression ratio to be the size of the uncompressed data in
 bytes divided by the size of the compressed data in bytes. What is the
 theoretical maximum compression ratio you can get out of the RLE
 encoding we used? What is the theoretical lowest compression ratio you
 can get out of the RLE encoding we used?
-
-What is serialization in Java? What do you have to do to serialize an
-object?
-
-What kinds of objects cannot be serialized?
-
--0.5in *Programming Practice*
-
-Implement the RLE bitmap compression program using only
+4.  What is serialization in Java? What do you have to do to serialize
+an object?
+5.  What kinds of objects cannot be serialized?
++
+*Programming Practice*
+6.  Implement the RLE bitmap compression program using only
 `FileInputStream` and `FileOutputStream` for file input and output.
-
-Re-implement the maze solving program from Section REF=solution:Maze of
-doom to ask the user for a file instead of reading from standard input.
-
-An HTML file contains many tags such as `<p>`, which marks the beginning
-of a paragraph, and `</p>`, which marks the end of a paragraph. A lesser
-known feature of HTML is that ampersand (`&`) can mark special HTML
-entities used to produce symbols on a web page. For example, `&pi;` is
-the entity for the Greek letter latexmath:[$\pi$]. Because of these
-features of the language, raw text that is going to be marked up in HTML
-should not contain less than signs (`<`), greater than signs (`>`), or
-ampersands (`&`).
-
+7.  Re-implement the maze solving program from Section REF=solution:Maze
+of doom to ask the user for a file instead of reading from standard
+input.
+8.  An HTML file contains many tags such as `<p>`, which marks the
+beginning of a paragraph, and `</p>`, which marks the end of a
+paragraph. A lesser known feature of HTML is that ampersand (`&`) can
+mark special HTML entities used to produce symbols on a web page. For
+example, `&pi;` is the entity for the Greek letter latexmath:[\pi].
+Because of these features of the language, raw text that is going to be
+marked up in HTML should not contain less than signs (`<`), greater than
+signs (`>`), or ampersands (`&`).
++
 Write a program that reads in an input text file specified by the user
 and writes to an output text file also specified by the user. The output
 file should be exactly the same as the input file except that every
 occurrence of a less than sign should be replaced by `&lt;`, every
 occurrence of a greater than sign should be replaced by `&gt;`, and
 every occurrence of an ampersand should be replaced by `&amp;`.
-
-Write a program that prompts the user for an input text file. Open the
-file and read each word from the file, where a word is defined as any
-`String` made up only of upper and lower case letters. You can use the
-`next()` method in the `Scanner` class to break up text by whitespace,
-but your code will still need to examine the input character by
-character, ending a word when any punctuation or other characters are
-reached. Store each word (with a count of the number of times you find
-it) in a binary search tree such as those described in Example .. Then,
-traverse the tree, printing all the words found (and the number of times
-found) to the screen in alphabetical order.
-
-Expand the program from Exercise . so that it also prompts for a second
-file containing a dictionary in the form of a word list with one word on
-each line. Store the words from the dictionary in another binary search
-tree. Then, for each word in the larger document that you cannot find in
-the dictionary tree, add it to a third binary search tree. Finally,
-print out the contents of this third binary search tree to the screen,
-and you will have implemented a rudimentary spell checker. You can test
-the quality of your implementation by using a novel from Project
-Gutenberg (http://www.gutenberg.org/) and a dictionary file from an open
-source spell checker or from a Scrabble word list.
-
-Files can become corrupted when they are transferred over a network. It
-is common to make a _checksum_, a short code generated using the entire
-contents of a file. The checksum can be generated before and after file
-transmission. If both of the checksums match, there’s a good chance that
-there were no transmission errors. Of course, there can be problems
-sending checksums, but checksums are much smaller and therefore less
-likely to be corrupted. Modern checksums are often generated using
+9.  <<exercise:word list>> Write a program that prompts the user for an
+input text file. Open the file and read each word from the file, where a
+word is defined as any `String` made up only of upper and lower case
+letters. You can use the `next()` method in the `Scanner` class to break
+up text by whitespace, but your code will still need to examine the
+input character by character, ending a word when any punctuation or
+other characters are reached. Store each word (with a count of the
+number of times you find it) in a binary search tree such as those
+described in Example REF=example:Binary search tree. Then, traverse the
+tree, printing all the words found (and the number of times found) to
+the screen in alphabetical order.
+10. Expand the program from Exercise REF=exercise:word list so that it
+also prompts for a second file containing a dictionary in the form of a
+word list with one word on each line. Store the words from the
+dictionary in another binary search tree. Then, for each word in the
+larger document that you cannot find in the dictionary tree, add it to a
+third binary search tree. Finally, print out the contents of this third
+binary search tree to the screen, and you will have implemented a
+rudimentary spell checker. You can test the quality of your
+implementation by using a novel from Project Gutenberg
+(http://www.gutenberg.org/) and a dictionary file from an open source
+spell checker or from a Scrabble word list.
+11. Files can become corrupted when they are transferred over a network.
+It is common to make a _checksum_, a short code generated using the
+entire contents of a file. The checksum can be generated before and
+after file transmission. If both of the checksums match, there’s a good
+chance that there were no transmission errors. Of course, there can be
+problems sending checksums, but checksums are much smaller and therefore
+less likely to be corrupted. Modern checksums are often generated using
 cryptographic hash functions, which are more complex than we want to
 deal with here. An older checksum algorithm works in the following way.
 Although we use mathematical notation, the operations specified below
 are integer modulus and integer division.
-
 1.  Add up the values of all the bytes, storing this sum in a `long`
 variable
-2.  Set latexmath:[$sum = sum\mod 2^{32}$]
-3.  Let latexmath:[$r = (sum\mod 2^{16}) + (sum \div 2^{16})$]
-4.  Let latexmath:[$s = (r\mod 2^{16}) + (r \div 2^{16})$]
-5.  The final checksum is latexmath:[$s$]
-
+2.  Set latexmath:[sum = sum\mod 2^{32}]
+3.  Let latexmath:[r = (sum\mod 2^{16}) + (sum \div 2^{16})]
+4.  Let latexmath:[s = (r\mod 2^{16}) + (r \div 2^{16})]
+5.  The final checksum is latexmath:[s]
++
 Remember that finding powers of 2 is easy with bitwise shifts. Write a
 program that opens a file for binary reading using `FileInputStream` and
 outputs the checksum described. On Linux systems, you can check the
@@ -877,19 +877,18 @@ operation of your program with the `sum` utility, using the `-s` option.
 The following is an example of the command used on a file called
 `wombat.dat`. The first number in the output below it, `6892`, is the
 checksum.
-
++
 ....
 sum -s wombat.dat
 6892 213 wombat.dat
 ....
-
--0.5in *Experiments*
-
-Write the RLE bitmap compression program in parallel so that a file is
-evenly divided into as many pieces as you have threads, compressed, and
-then each compressed portion is output in the correct order. Compare the
-speed for 2, 4, and 8 threads to the sequential implementation. Are any
-of the threaded versions faster? Why or why not? Run some experiments to
-see how long it takes to read 1,000,000 bytes from a file compared to
-the time it takes to compress 1,000,000 bytes which are already stored
-in an array.
++
+*Experiments*
+12. Write the RLE bitmap compression program in parallel so that a file
+is evenly divided into as many pieces as you have threads, compressed,
+and then each compressed portion is output in the correct order. Compare
+the speed for 2, 4, and 8 threads to the sequential implementation. Are
+any of the threaded versions faster? Why or why not? Run some
+experiments to see how long it takes to read 1,000,000 bytes from a file
+compared to the time it takes to compress 1,000,000 bytes which are
+already stored in an array.

@@ -1,7 +1,8 @@
 [[chapter:Recursion]]
+:imagesdir: chapters/19-recursion/images
 == Recursion
 
-=== problem: Maze of doom
+=== Problem: Maze of doom
 
 The evil mastermind from Chapter REF=chapter:Concurrent Programming has
 returned with a new attempt at world domination. Since he now knows that
@@ -12,7 +13,9 @@ the maze floor plan, but now you must write a program to find a path
 through the maze so you can steal the deadly virus before the evil
 mastermind releases it on the world.
 
-to
+.Example of a maze to solve.
+image::maze.png[]
+
 
 Finding a path through a maze involves systematically exploring twists
 and turns, keeping track of where you’ve been, backtracking out of dead
@@ -31,7 +34,7 @@ additional data structures to store this additional information,
 _recursion_ is a solution technique that makes solving problems like
 this one surprisingly straightforward.
 
-=== concepts: Recursive problem solving
+=== Concepts: Recursive problem solving
 
 The idea that we use to solve this maze problem is called recursion.
 Imagine that you are in a maze and have the choice to go right, left, or
@@ -58,15 +61,15 @@ In the context of computer science and mathematics, recursion means
 describing some repetitive process in terms of itself. Many complex
 things can be described elegantly using recursion.
 
-Consider the question, ``How old are you now?'' If you were 27, you
-could answer, ``I am one year older than I was last year.'' If then
-asked, ``Well, how old were you last year?'' Again, you could answer,
-``I was one year older than I was the year before.'' Assuming that the
+Consider the question, "`How old are you now?`" If you were 27, you
+could answer, "`I am one year older than I was last year.`" If then
+asked, "`Well, how old were you last year?`" Again, you could answer,
+"`I was one year older than I was the year before.`" Assuming that the
 person who wanted to wanted to know your age was very patient, you could
 repeat this answer over and over, explaining that each year you have
 been one year older than the previous year. However, after asking you 27
 times about your age on the previous year, you would run out of years of
-life and be forced to answer, ``Zero years old.''
+life and be forced to answer, "`Zero years old.`"
 
 This absurd dialog shows an important feature of useful recursive
 definitions: They have at least one _base case_ and at least one
@@ -80,15 +83,15 @@ could only describe a finite set of things.
 In the example above, the base case is the age of zero years old. You
 have no age before that. The recursive case is any age greater than zero
 years old. We can use mathematical notation to describe your age in a
-given year. Here latexmath:[$age(year)$] is a function that gives the
-age you were during year latexmath:[$year$].
+given year. Here latexmath:[age(year)] is a function that gives the
+age you were during year latexmath:[year].
 
-latexmath:[\[age(year) =
+latexmath:[age(year) =
 \begin{cases} 0 & \text{\textbf{(Base Case)} if you were born in  $year$}
 \\
   1 + age(year-1) & \text{\textbf{(Recursive Case)} if you were born before
   $year$}
-\end{cases}\]]
+\end{cases}]
 
 To be meaningful, recursive cases should be defined in terms of simpler
 or smaller values. In English, it is equally correct to say that you are
@@ -96,7 +99,9 @@ now a year younger than you’ll be next year. Unfortunately, the age that
 you’ll be next year is not any closer to a base case, making that
 recursion useless.
 
-to
+.Recursive refinement generating a tree-like image.
+image::trees.png[]
+
 
 A recursive definition of your age suggests that recursion is all around
 us. It takes some work to write it down in formal notation, but
@@ -120,58 +125,63 @@ programming, there is a strong connection to mathematical principles.
 
 In mathematics, a _recursive definition_ is one that is defined in terms
 of itself. It is common to define functions and sequences (and also
-sets) recursively. Functions (such as latexmath:[$f(n)$]) are usually
+sets) recursively. Functions (such as latexmath:[f(n)]) are usually
 defined in relation to the same function with a smaller input (such as
-latexmath:[$f(n - 1)$]). Sequences (such as latexmath:[$s_n$]) are
+latexmath:[f(n - 1)]). Sequences (such as latexmath:[s_n]) are
 usually defined in relation to earlier elements in the sequence (such as
-latexmath:[$s_{n - 1}$]).
+latexmath:[s_{n - 1}]).
+
+==== Begin Example: Multiplication defined recursively
 
 Even very common functions can be defined recursively. Consider the
-multiplication latexmath:[$x \times y$]. This multiplication means
-repeatedly adding the latexmath:[$x$] a total of latexmath:[$y$] times.
-If latexmath:[$y$] is a positive integer, we can describe this
+multiplication latexmath:[x \times y]. This multiplication means
+repeatedly adding the latexmath:[x] a total of latexmath:[y] times.
+If latexmath:[y] is a positive integer, we can describe this
 multiplication with the following recursive definition. Note the base
 case and recursive case.
 
-latexmath:[\[x \times y =
+latexmath:[x \times y =
 \begin{cases} x & \text{\textbf{(Base Case)} if  $y = 1$}
 \\
 x + \left(x \times (y - 1)\right) & \text{\textbf{(Recursive Case)} if $y > 1$}
-\end{cases}\]]
+\end{cases}]
 
 Multiplication seems like such a basic operation that there would be no
 need to have such a definition. Yet mathematicians often use multiple
 equivalent definitions to prove results. Furthermore, this elementary
-definition provides intuition for creating more complex definitions. .
-]Exercise .  
+definition provides intuition for creating more complex definitions.
 
-'''''
+==== End Example
+
+==== Begin Example: Factorial defined recursively
 
 Another mathematical function with a natural recursive definition is the
-factorial function, often written latexmath:[$n!$]. The factorial
+factorial function, often written latexmath:[n!]. The factorial
 function is used heavily in probability and counting. The value of
-latexmath:[$n! = n
-\cdot(n - 1)\cdot(n - 2) \ldots 3\cdot \cdot 2 \cdot 1$]. Mathematicians
+latexmath:[n! = n
+\cdot(n - 1)\cdot(n - 2) \ldots 3\cdot \cdot 2 \cdot 1]. Mathematicians
 like recursive definitions because they are able to describe functions
-and sequences precisely without using ellipses (latexmath:[$\ldots$]).
+and sequences precisely without using ellipses (latexmath:[\ldots]).
 
-latexmath:[\[n! =
+latexmath:[n! =
 \begin{cases} 1 & \text{\textbf{(Base Case)} if  $n = 0$}
 \\
 n \cdot (n-1)! & \text{\textbf{(Recursive Case)} if $n>0$}
-\end{cases}\]]
+\end{cases}]
 
-Note that the base case gives latexmath:[$1$] as the answer when
-latexmath:[$n = 0$]. By convention latexmath:[$0! = 1$]. Thus, this
-definition correctly gives latexmath:[$0! = 1$],
-latexmath:[$1! = 1\cdot 0!
-= 1$], latexmath:[$2! = 2\cdot 1! = 2$],
-latexmath:[$3! = 3\cdot 2! = 6$], and so on.  
+Note that the base case gives latexmath:[1] as the answer when
+latexmath:[n = 0]. By convention latexmath:[0! = 1]. Thus, this
+definition correctly gives latexmath:[0! = 1],
+latexmath:[1! = 1\cdot 0!
+= 1], latexmath:[2! = 2\cdot 1! = 2],
+latexmath:[3! = 3\cdot 2! = 6], and so on.
 
-'''''
+==== End Example
+
+==== Begin Example: Fibonacci defined recursively
 
 The Fibonacci sequence is an infinite sequence of integers starting with
-1, 1, 2, 3, 5, 8, 13, 21, latexmath:[$\ldots$]. Each term after the two
+1, 1, 2, 3, 5, 8, 13, 21, latexmath:[\ldots]. Each term after the two
 initial 1s is the sum of the previous two terms in the sequence.
 Fibonacci has many interesting properties and crops up in surprisingly
 diverse areas of mathematics. It was originally used to model the growth
@@ -180,21 +190,21 @@ of rabbit populations.
 The Fibonacci sequence also has a natural recursive mathematical
 definition. Indeed, you may have noticed that we described each term as
 the sum of the two previous terms. We can formally define the
-latexmath:[$n$]^th^ Fibonacci number latexmath:[$F_n$] as follows,
-starting with latexmath:[$n=0$]. latexmath:[\[F_n=
+latexmath:[n]^th^ Fibonacci number latexmath:[F_n] as follows,
+starting with latexmath:[n=0]. latexmath:[F_n=
 \begin{cases} 1 & \text{\textbf{(Base
 Cases)} if  $n=0$ or  $n = 1$}
 \\
 F_{n-1}+F_{n-2} & \text{\textbf{(Recursive Case)} if $n>1$}
-\end{cases}\]]
+\end{cases}]
 
-Since the latexmath:[$F_n$] depends on the two previous terms, it is
+Since the latexmath:[F_n] depends on the two previous terms, it is
 necessary to have two base cases. The Fibonacci sequence is a special
 kind of Lucas sequence. Other Lucas sequences specify different values
 for the two base cases (and sometimes coefficients to multiply the
-previous terms by).  
+previous terms by).
 
-'''''
+==== End Example
 
 ==== Iteration vs. recursion
 
@@ -209,8 +219,8 @@ a sequence of one or more calls to other methods. We’re confident that
 such computations terminate because we start at the beginning and work
 to the end of a finite structure. But what if the structure is not a
 simple linear or multidimensional array? The path we’re trying to find
-through the maze is of unknown length and may not take a ``straight
-line'' through the array.
+through the maze is of unknown length and may not take a "`straight
+line`" through the array.
 
 A method may call other methods to complete its operation. For example,
 a method that sorts a list of `String` values calls another method to do
@@ -241,7 +251,7 @@ solution.
 Recursive methods are often surprisingly small given their complexity.
 Each recursive call only makes a single step forward in the process of
 solving the problem. In fact, it can appear that the problem is never
-solved. The code has something like a ``leap of faith'' inside of it.
+solved. The code has something like a "`leap of faith`" inside of it.
 Assuming that you can solve a smaller subproblem, how do you put the
 solutions together to solve the full problem? This assumption is the
 leap of faith, but it works out as long as the subproblems get broken
@@ -285,17 +295,21 @@ onto the call stack as the `main()` method calls the `factorial()`
 method, starting with the argument `4`. The `factorial()` method
 recursively calls itself with successively smaller values.
 
-to
+.Successive recursive method calls getting added to the call stack.
+image::recursivecalls.png[]
+
 
 Figure REF=figure:recursive returns shows the stack frames popping off
 the call stack as each call to `factorial()` returns. As the answers are
 returned, they are incorporated into the answer that is generated and
 returned to the next caller in the sequence until the final answer `24`
-(latexmath:[$4!$]) is returned to `main()`.
+(latexmath:[4!]) is returned to `main()`.
 
-to
+.Recursive methods returning results to their callers.
+image::recursivereturns.png[]
 
-=== syntax: Recursive methods
+
+=== Syntax: Recursive methods
 
 Unlike many *Syntax* sections in other chapters, there is no new Java
 syntax to introduce here. Any method that calls itself, directly or
@@ -345,7 +359,7 @@ With this information as background, we focus on examples for the rest
 of this section. Because recursion is a new way of thinking, approach
 these examples with an open mind. Many students have the experience that
 recursion makes no sense until they see the right example. Then, the way
-it works suddenly ``clicks.'' Do not be discouraged if recursion seems
+it works suddenly "`clicks.`" Do not be discouraged if recursion seems
 difficult at first.
 
 In this section, we work through examples of factorial computation,
@@ -354,15 +368,17 @@ These problems are mathematical in nature because the mathematical
 recursion is easy to model in code. The next section applies recursion
 to processing data structures.
 
+==== Begin Example: Factorial implemented recursively
+
 In our first example of a recursive implementation, we return to the
 factorial function. Recall the recursive definition that describes the
 function.
 
-latexmath:[\[n! =
+latexmath:[n! =
 \begin{cases} 1 & \text{\textbf{(Base Case)} if $n = 0$}
 \\
 n \cdot (n-1)! & \text{\textbf{(Recursive Case)} if $n>0$}
-\end{cases}\]]
+\end{cases}]
 
 By translating this mathematical definition almost directly into Java,
 we can generate a method that computes the factorial function.
@@ -379,18 +395,20 @@ we can generate a method that computes the factorial function.
 Note the base case and recursive case are exactly the same as in the
 recursive definition. The return type of the method is `long` because
 factorial grows so quickly that only the first few values are small
-enough to fit inside of an `int`.  
+enough to fit inside of an `int`.
 
-'''''
+==== End Example
+
+==== Begin Example: Fibonacci implemented recursively
 
 Let us return to the recursive definition of Fibonacci.
 
-latexmath:[\[F_n=
+latexmath:[F_n=
 \begin{cases} 1 & \text{\textbf{(Base
 Cases)} if  $n=0$ or $n = 1$}
 \\
 F_{n-1}+F_{n-2} & \text{\textbf{(Recursive Case)} if  $n>1$}
-\end{cases}\]]
+\end{cases}]
 
 Like factorial, this definition translates naturally into a recursive
 method in Java.
@@ -405,8 +423,7 @@ public static int fibonacci(int n) {
 ....
 
 One significant problem with this example is performance. In this case,
-the double recursion performs a great deal of redundant computation. .
-]Exercise .
+the double recursion performs a great deal of redundant computation.
 
 One technique for eliminating redundant computation in recursion is
 called _memoization_. Whenever the value for a subproblem is computed,
@@ -431,11 +448,13 @@ public static int fibonacci( int n, int[] results ) {
 }
 ....
 
-This change makes the computation of the latexmath:[$n$]^th^ Fibonacci
+This change makes the computation of the latexmath:[n]^th^ Fibonacci
 number much more efficient; however, even more efficient approaches are
-described in the exercises. . ]Exercise . . ]Exercise .  
+described in the exercises.
 
-'''''
+==== End Example
+
+==== Begin Example: Tower of Hanoi
 
 The famous Tower of Hanoi puzzle is another example commonly used to
 illustrate recursion. In this puzzle, there are three poles containing a
@@ -449,7 +468,9 @@ restrictions:
 1.  only one disk can be moved at a time
 2.  a larger disk can never be placed on top of a smaller disk
 
-to
+.Tower of Hanoi puzzle with 4 disks on the initial pole.
+image::hanoi.png[]
+
 
 The extra pole is used as a holder for intermediate moves. The idea
 behind the recursive solution follows.
@@ -458,26 +479,29 @@ Base Case:::
   Moving one disk is easy. Just move it from the pole it’s on to the
   destination pole.
 Recursive Case:::
-  In order to move latexmath:[$n > 1$] disks from one pole to another,
-  we can move latexmath:[$n - 1$] disks to an intermediate pole, move
-  the latexmath:[$n$]^th^ disk to the destination pole, then move the
-  latexmath:[$n - 1$] disks from the intermediate pole to the
+  In order to move latexmath:[n > 1] disks from one pole to another,
+  we can move latexmath:[n - 1] disks to an intermediate pole, move
+  the latexmath:[n]^th^ disk to the destination pole, then move the
+  latexmath:[n - 1] disks from the intermediate pole to the
   destination pole.
 
 The Tower of Hanoi solution in Java translates this outline into code.
 
-[[program:TowerOfHanoi]][program:TowerOfHanoi]
-PROGRAM=RecursionChapter/programs/TowerOfHanoi.java, CAPTION=A recursive
-solution to the Tower of Hanoi with four disks and poles named `'A'`,
-`'B'`, and `'C'`.
+.A recursive solution to the Tower of Hanoi with four disks and poles named `'A'`, `'B'`, and `'C'`.
+[source, java, linenums]
+----
+include::programs/TowerOfHanoi.java[]
+----
 
 A legend tells of monks that are solving the Tower of Hanoi puzzle with
 64 disks. The legend predicts that the world will end when they finish.
 Run the implementation above with different numbers of disks to see how
 long the sequence of moves is. Try small numbers of disks, since large
-numbers of disks takes a very long time.  
+numbers of disks takes a very long time.
 
-'''''
+==== End Example
+
+==== Begin Example: Exponentiation
 
 Both Fibonacci and the Tower of Hanoi have natural recursive structures.
 In the case of Fibonacci, one way to implement its natural recursive
@@ -487,18 +511,18 @@ excruciatingly long amount of time.
 
 However, we can apply recursion to many practical problems and get
 efficient solutions. Consider the problem of exponentiation, which looks
-trivial: Given a rational number latexmath:[$a$] and a positive integer
-latexmath:[$n$], find the value of latexmath:[$a^n$].
+trivial: Given a rational number latexmath:[a] and a positive integer
+latexmath:[n], find the value of latexmath:[a^n].
 
 It’s tempting to call `Math.pow(a, n)` or to use a short `for` loop to
 compute this value, but what if neither tool existed in Java? A simple
 recursive formulation can describe exponentiation.
 
-latexmath:[\[a^n =
+latexmath:[a^n =
 \begin{cases} a & \text{\textbf{(Base case)} if $n=1$}
 \\
 a \cdot a^{n - 1} & \text{\textbf{(Recursive case)} if $n>1$}
-\end{cases}\]]
+\end{cases}]
 
 As with factorial and Fibonacci, directly converting the recursive
 definition into Java syntax yields a method that computes the correct
@@ -514,29 +538,29 @@ public static double power(double a, int n) {
 ....
 
 Admittedly, this method only works for positive integer values of
-latexmath:[$n$]. Ignoring that limitation, what can we say about its
-efficiency? For any legal value of latexmath:[$n$], the method is called
-latexmath:[$n$] times. If latexmath:[$n$] has a small value, like 2 or
-3, the process is quick. But if latexmath:[$n$] is 1,000,000 or so, the
+latexmath:[n]. Ignoring that limitation, what can we say about its
+efficiency? For any legal value of latexmath:[n], the method is called
+latexmath:[n] times. If latexmath:[n] has a small value, like 2 or
+3, the process is quick. But if latexmath:[n] is 1,000,000 or so, the
 method might take a while to finish. Another problem is that stack size
 is limited. On most systems, the JVM crashes with a `StackOverflowError`
 if a method tries to call itself recursively a 1,000,000 times.
 
-If we limit latexmath:[$n$] to a power of 2, we can do something clever
+If we limit latexmath:[n] to a power of 2, we can do something clever
 that makes the method much more efficient with many fewer recursive
 calls. Consider this alternative recursion definition of exponentiation.
 
-latexmath:[\[a^n =
+latexmath:[a^n =
 \begin{cases} a & \text{\textbf{(Base Case)} if  $n=1$}
 \\
 \left(a^{\frac{n}{2}}\right)^2 & \text{\textbf{(Base Case)} if  $n>1$}
-\end{cases}\]]
+\end{cases}]
 
 Recalling basic rules of exponents,
-latexmath:[$a^n = \left(a^{\frac{n}{2}}\right)^2$], but what does that
+latexmath:[a^n = \left(a^{\frac{n}{2}}\right)^2], but what does that
 buy us? If we structure our method correctly, we cut the size of
-latexmath:[$n$] in half at each recursive step instead of only reducing
-latexmath:[$n$] by 1.
+latexmath:[n] in half at each recursive step instead of only reducing
+latexmath:[n] by 1.
 
 ....
 public static double power(double a, int n) {
@@ -551,40 +575,40 @@ public static double power(double a, int n) {
 
 Note that we only make the recursive call once and save it in `temp`. If
 we made two recursive calls, we would no longer be more efficient than
-the previous method. That version took latexmath:[$n$] recursive calls.
+the previous method. That version took latexmath:[n] recursive calls.
 How efficient is this version? The answer is the number of times you
-have to cut latexmath:[$n$] in half before you get 1. Let’s call that
-value latexmath:[$x$]. Recall that latexmath:[$n$] is a power of 2,
-meaning that latexmath:[$n = 2^k$] for some integer
-latexmath:[$k \geq 0$].
+have to cut latexmath:[n] in half before you get 1. Let’s call that
+value latexmath:[x]. Recall that latexmath:[n] is a power of 2,
+meaning that latexmath:[n = 2^k] for some integer
+latexmath:[k \geq 0].
 
-latexmath:[\[\begin{aligned}
+latexmath:[\begin{aligned}
 \left(\frac{1}{2}\right)^x \cdot n &= 1\\
 2^x\left(\frac{1}{2}\right)^x \cdot n &= 2^x\\
 n &= 2^x\\
 2^k &= 2^x\\
 k &= x\\
-\log_2 n &= x\\\end{aligned}\]]
+\log_2 n &= x\\\end{aligned}]
 
-In other words, the number of times you have to divide latexmath:[$n$]
-in half to get 1 is the logarithm base 2 of latexmath:[$n$], written
-latexmath:[$\log_2 n$]. The logarithm function is the inverse of
+In other words, the number of times you have to divide latexmath:[n]
+in half to get 1 is the logarithm base 2 of latexmath:[n], written
+latexmath:[\log_2 n]. The logarithm function is the inverse of
 exponentiation. It cuts any number down to size very quickly (just as
 exponentiation blows up the value of a number very quickly). For
-example, latexmath:[$2^{20} = 1,048,576$]. Thus,
-latexmath:[$\log_2 1,048,576 = 20$]. The original version of `power()`
+example, latexmath:[2^{20} = 1,048,576]. Thus,
+latexmath:[\log_2 1,048,576 = 20]. The original version of `power()`
 would have to make 1,048,576 calls to raise a number to that power. This
 second version would only have to make 20 calls.
 
-It is critical that latexmath:[$n$] is a power of 2 (1, 2, 4, 8, …),
-otherwise the process of repeatedly cutting latexmath:[$n$] in half
+It is critical that latexmath:[n] is a power of 2 (1, 2, 4, 8, …),
+otherwise the process of repeatedly cutting latexmath:[n] in half
 loses some data due to integer division. The problem is that, at some
-point in the recursion, the value of latexmath:[$n$] is odd unless you
+point in the recursion, the value of latexmath:[n] is odd unless you
 start with a power of 2. There is a way to extend this clever approach
-to all values of latexmath:[$n$], even and odd, but we leave it as an
-exercise. . ]Exercise .  
+to all values of latexmath:[n], even and odd, but we leave it as an
+exercise.
 
-'''''
+==== End Example
 
 Recursion offers elegant ways to compute mathematical functions like
 those we have explored in this section. Recursion also offers powerful
@@ -592,7 +616,7 @@ ways to manipulate data structures. As we show in the next section,
 recursive methods are especially well suited to use with recursive data
 structures.
 
-=== syntax: Recursive data structures
+=== Syntax: Recursive data structures
 
 Because recursion can be used to do anything that iteration can do, it
 is clear that data structures can be processed recursively. For example,
@@ -617,13 +641,15 @@ The recursion swaps the first element of the array (at index `0`) with
 the last (at index `array.length - 1`). Recursion continues until
 `position` has reached half the length of `array`. If execution
 continued past the halfway point, it would begin to swap elements that
-had already been swapped. . ]Exercise .
+had already been swapped.
 
 Although it is possible to reverse an array recursively, there is
 usually no advantage in doing so. We introduce bubble sort and selection
 sort in previous chapters, but neither of these algorithms is very fast.
 Many of the best sorting algorithms are recursive, as in the following
 example of merge sort.
+
+==== Begin Example: Merge sort
 
 Merge sort is an efficient sorting algorithm that is usually implemented
 recursively. The idea of the sort is to break a list of items in half
@@ -700,9 +726,9 @@ Sorting lists using the merge sort algorithm seems more complicated than
 using bubble sort or selection sort, but this additional complication
 pays dividends. For large lists, merge sort performs much faster than
 either of those sorts. In fact, it is comparable in speed to the best
-general sorting algorithms that are possible. . ]Exercise .  
+general sorting algorithms that are possible.
 
-'''''
+==== End Example
 
 Although recursive sorting algorithms are useful for arrays, recursion
 really shines when manipulating _recursive data structures_. A recursive
@@ -735,6 +761,8 @@ value. For example, in the last node of a linked list, the link field is
 `null`. Unsurprisingly, recursive methods are frequently used to
 manipulate recursive data structures.
 
+==== Begin Example: Recursive linked list size
+
 How would you get the size of a linked list? The implementation in
 Program REF=program:LinkedList keeps track of its size as it grows, but
 what if it didn’t? A standard way to count the elements in the list
@@ -743,10 +771,11 @@ with value zero. As long as the reference is not `null`, add one to the
 counter and set the reference to the next element on the list.
 Program REF=program:IterativeListSize counts the elements in this way.
 
-[[program:IterativeListSize]][program:IterativeListSize]
-PROGRAM=RecursionChapter/programs/IterativeListSize.java, CAPTION=Linked
-list implementation whose `size()` method counts its elements
-iteratively.
+.Linked list implementation whose `size()` method counts its elements iteratively.
+[source, java, linenums]
+----
+include::programs/IterativeListSize.java[]
+----
 
 An alternative way to count the number of elements in a linked list is
 to use the natural recursion of the linked list itself. We can say that
@@ -761,14 +790,15 @@ non-recursive method is called a _proxy method_. The recursive method
 requires access to the internals of the data structure. The proxy method
 calls the recursive method with the appropriate starting point (`head`),
 while providing a public way to get the list’s size without exposing its
-internals. . ]Exercise . . ]Exercise .
+internals.
 
-[[program:RecursiveListSize]][program:RecursiveListSize]
-PROGRAM=RecursionChapter/programs/RecursiveListSize.java, CAPTION=Linked
-list implementation with a recursive `size()` method for counting its
-elements. *FIX: RecursiveListSize program not available.*  
+.Linked list implementation with a recursive `size()` method for counting its elements.
+[source, java, linenums]
+----
+include::programs/RecursiveListSize.java[]
+----
 
-'''''
+==== End Example
 
 ==== Trees
 
@@ -794,7 +824,9 @@ nature, a tree has its root at the bottom and branches upward. Since the
 root is the starting point for a tree data structure, it is almost
 always drawn at the top.
 
-to
+.Visualization of a tree. The root is shown in light red. The leaves are shown in blue. The interior nodes are show in light purple.
+image::treevisualization.png[]
+
 
 Abstractly, a tree is either empty (the base case) or contains
 references to 0 or more other trees (the recursive case). Trees are very
@@ -802,10 +834,12 @@ useful for storing and retrieving sortable data efficiently. Some
 applications include dictionaries, catalogs, ordered lists, and any
 other sorted set of objects. For these purposes, we can define an
 abstract data type that includes operations such as `add()` and
-`find()`. . ]Exercise .
+`find()`.
 
 A special case of a tree that is used frequently is a _binary tree_, in
 which each node references at most two other trees.
+
+==== Begin Example: Binary search tree
 
 A _binary search tree_ is a binary tree with the following three
 properties.
@@ -834,16 +868,19 @@ object. The `Node` static nested class contains three fields.
 * `left`: a link to the left subtree
 * `right`: a link to the right subtree
 
-[[program:Tree]][program:Tree]
-PROGRAM=RecursionChapter/programs/Tree.java, CAPTION=A class that
-implements a simple binary search tree ADT for creating a sorted list of
-strings. *FIX: Tree program listing not available.*
+.A class that implements a simple binary search tree ADT for creating a sorted list of strings.
+[source, java, linenums]
+----
+include::programs/Tree.java[]
+----
 
 Figure REF=figure:tree classes shows a visualization of the contents of
 this implementation of a binary search tree. As with a linked list, an
-``X'' is used in place of arrows that point to `null`.
+"`X`" is used in place of arrows that point to `null`.
 
-to
+.Visualization of a tree implementation with classes.
+image::treeclasses.png[]
+
 
 The recursive `add()` method first checks to see if the current subtree
 is empty (`null`). If so, it creates a new `Node` and puts `value`
@@ -861,7 +898,7 @@ to `add()` was made with a left or a right subtree, the `left` or
 `right` link, respectively, of the parent `Node` is assigned the return
 value. If the call was made with `root`, the parent of the entire tree,
 the non-recursive `add()` method sets its value when the recursive
-`add()` returns. . ]Exercise . . ]Exercise .
+`add()` returns.
 
 The recursive `print()` method starts by walking down the left subtree.
 Those values are all alphabetically less than the value of the current
@@ -875,18 +912,19 @@ all to store a list of `String` values and then print them out in sorted
 order. Program REF=program:ReadAndSortStrings gives an example of this
 process using a `Tree` object for storage.
 
-[[program:ReadAndSortStrings]][program:ReadAndSortStrings]
-PROGRAM=RecursionChapter/programs/ReadAndSortStrings.java, CAPTION=A
-program to read `String` values, store them in a binary search tree, and
-print the results in sorted order.
+.A program to read `String` values, store them in a binary search tree, and print the results in sorted order.
+[source, java, linenums]
+----
+include::programs/ReadAndSortStrings.java[]
+----
 
 Binary search trees (and other trees, including heaps, tries, B-trees,
 and more) are fundamental data structures that have been studied
 heavily. Designing them to have efficient implementations that balance
 the size of their left and right subtrees is an important topic that is
-beyond the scope of this book.  
+beyond the scope of this book.
 
-'''''
+==== End Example
 
 ==== Generic dynamic data structures and recursion
 
@@ -894,25 +932,28 @@ Combining dynamic data structures and generics from the previous chapter
 and recursion from this chapter gives us the full power of generic
 dynamic data structures and recursive methods to process them.
 
+==== Begin Example: Binary search tree to hold integers
+
 Consider Program REF=program:IntegerTree, which implements a tree that
 stores values of type `Integer`. Although it would be more efficient to
 store `int` values, we use the `Integer` wrapper class to ease our
 eventual transition into a parameterized generic type.
 
-[[program:IntegerTree]][program:IntegerTree]
-PROGRAM=RecursionChapter/programs/IntegerTree.java, CAPTION=A variant of
-Program REF=program:Tree that stores`Integer` values instead of `String`
-values. *FIX: IntegerTree program listing not available.*
+.A variant of Program REF=program:Tree that stores`Integer` values instead of `String` values.
+[source, java, linenums]
+----
+include::programs/IntegerTree.java[]
+----
 
- 
-
-'''''
+==== End Example
 
 It is a waste to create class `IntegerTree`, which is identical to
 `Tree` except that the type `String` has been replaced by `Integer`. As
 in Chapter REF=chapter:Dynamic Data Structures, we want our data
 structures, recursive or otherwise, to hold any type. In this way, we
 can reuse code.
+
+==== Begin Example: Defining a generic binary search tree
 
 Program REF=program:GenericTree defines a generic version of the `Tree`
 class. This example is complicated by the fact that we need to be able
@@ -925,9 +966,11 @@ requirement complicates the generic syntax significantly but guarantees
 that any type that cannot be compared with itself is rejected at
 compile-time.
 
-[[program:GenericTree]][program:GenericTree]
-PROGRAM=RecursionChapter/programs/GenericTree.java, CAPTION=A class that
-implements a generic tree.
+.A class that implements a generic tree.
+[source, java, linenums]
+----
+include::programs/GenericTree.java[]
+----
 
 First, note that the recursive methods are no longer `static`. The
 generic syntax for keeping them `static` is unnecessarily complex. The
@@ -944,22 +987,26 @@ public interface Comparable<T> {
 The syntax for generics in Java with type bounds is complex, and we only
 scratch the surface here. The good news is that these subtleties are
 more important for people designing data structures and libraries and
-come up infrequently for programmers who are only using the libraries.  
+come up infrequently for programmers who are only using the libraries.
 
-'''''
+==== End Example
+
+==== Begin Example: Using a generic class
 
 Program REF=program:ReadAndSortGenerics uses the generic tree class to
 create two kinds of trees, a tree of `String` objects and a tree of
 `Integer` objects. Java library implementations of binary search trees
 are available as the `TreeSet` and `TreeMap` classes.
 
-[[program:ReadAndSortGenerics]][program:ReadAndSortGenerics]
-PROGRAM=RecursionChapter/programs/ReadAndSortGenerics.java,
-CAPTION=Program to create two trees with different underlying types.  
+.Program to create two trees with different underlying types.
+[source, java, linenums]
+----
+include::programs/ReadAndSortGenerics.java[]
+----
 
-'''''
+==== End Example
 
-=== solution: Maze of doom
+=== Solution: Maze of doom
 
 Our algorithm for solving the maze follows the conventional
 pencil-and-paper method: trial and error! We mark locations in the maze
@@ -1125,7 +1172,7 @@ path exists. Note that this solver has no guarantee of finding the
 *shortest* path through the maze, but if there is at least one path to
 the goal, it finds one.
 
-=== concurrency: Futures
+=== Concurrency: Futures
 
 This section does not deal explicitly with recursion, but it does deal
 with concurrency and methods in an interesting way. When we call a
@@ -1200,6 +1247,8 @@ wait for the future to finish executing.
 All of this messy syntax becomes clearer in the following example, which
 uses futures to compute the sum of the square roots of the first
 100,000,000 integers concurrently.
+
+==== Begin Example: Futures to sum square roots
 
 To use futures to sum the square roots of integers, we first need a
 worker class that implements `Callable`. Since the result of the sum of
@@ -1304,207 +1353,198 @@ unhandled exceptions.
 After all the values have been read and summed, we shut the
 `ExecutorService` down. If we had wanted, we could have submitted
 additional `Callable` objects to it to run more futures. Finally, we
-print out the result.  
+print out the result.
 
-'''''
+==== End Example
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-Example . gave a mathematical recursive definition for
-latexmath:[$x \times y$]. Give a similar recursive definition for
-latexmath:[$x + y$]. The structure is similar to the recursion to
+1.  <<exercise:recursive addition>> Example REF=example:Multiplication
+defined recursively gave a mathematical recursive definition for
+latexmath:[x \times y]. Give a similar recursive definition for
+latexmath:[x + y]. The structure is similar to the recursion to
 determine your current age given in Section REF=subsection:What is
 recursion?.
-
-In principle, every problem that can be solved with an iterative
+2.  In principle, every problem that can be solved with an iterative
 solution can be solved with a recursive one (and vice versa). However,
 the limited size of the call stack can present problems for recursive
 solutions with very deep recursion. Why? Conversely, are there any
 recursive solutions that are impossible to turn into iterative ones?
-
-Consider the first (non-memoized) recursive version of the Fibonacci
-method given in Example .. How many times is `fibonacci()` called with
-argument latexmath:[$1$] to compute `fibonacci(n)`? Instrument your
-program and count the number of calls for
-latexmath:[$n = 2, 3, 4 \ldots 20$].
-
-In the recursive `solve()` method in the `MazeSolver` program given in
-Section REF=solution:Maze of doom, the current location in the maze
+3.  <<exercise:inefficient Fibonacci>> Consider the first (non-memoized)
+recursive version of the Fibonacci method given in
+Example REF=example:Fibonacci implemented recursively. How many times is
+`fibonacci()` called with argument latexmath:[1] to compute
+`fibonacci(n)`? Instrument your program and count the number of calls
+for latexmath:[n = 2, 3, 4 \ldots 20].
+4.  In the recursive `solve()` method in the `MazeSolver` program given
+in Section REF=solution:Maze of doom, the current location in the maze
 array is is set to a blank character (`' '`) after no solution had been
 found. What value was in that location? How would the program behave if
 the value was not changed?
-
--0.5in *Programming Practice*
-
-Exercise . from Chapter REF=chapter:Methods challenges you to write a
-method to determine whether a `String` contains a palindrome. Recall
-that a palindrome (if punctuation and spaces are ignored) can be
-described as a `String` in which the first and last characters are
-equal, and all the characters in between form a palindrome. Write a
-recursive method to test if a `String` is a palindrome, using the
-following signature.
-
++
+*Programming Practice*
+5.  <<exercise:recursive palindromes>> Exercise REF=exercise:palindromes
+from Chapter REF=chapter:Methods challenges you to write a method to
+determine whether a `String` contains a palindrome. Recall that a
+palindrome (if punctuation and spaces are ignored) can be described as a
+`String` in which the first and last characters are equal, and all the
+characters in between form a palindrome. Write a recursive method to
+test if a `String` is a palindrome, using the following signature.
++
 ....
 public static boolean isPalindrome( String text, int start,
     int end )
 ....
-
++
 In this method, the `start` parameter is the index of the first
 character you are examining, and the `end` parameter is the index
 immediately after the last character you are examining. Thus, it would
 initially be called with a `String`, `0`, and the length of the
 `String`, as follows.
-
++
 ....
 boolean result =
     isPalindrome( "A man, a plan, a canal: Panama", 0, 30 );
 ....
-
-The efficient implementation of Fibonacci from Example . eliminates
-redundant computation through memoization, storing values in an array as
-they are found. It is possible to carry along the computations of the
-previous two Fibonacci numbers *without* the overhead of storing an
-array. Consider the following method signature.
-
+6.  <<exercise:Fibonacci without array>> The efficient implementation of
+Fibonacci from Example REF=example:Fibonacci implemented recursively
+eliminates redundant computation through memoization, storing values in
+an array as they are found. It is possible to carry along the
+computations of the previous two Fibonacci numbers *without* the
+overhead of storing an array. Consider the following method signature.
++
 ....
 public static int fibonacci(int previous, int current, int n)
 ....
-
++
 The next recursive call to the `fibonacci()` method passes in `n - 1`
 and suitably altered versions of `previous` and `current`. When `n`
 reaches `0`, the `current` parameter holds the value of the Fibonacci
 number you were originally looking for.
-
++
 The method would be called as follows for any value of `n`.
-
++
 ....
 int result = fibonacci( 0, 1, n );
 ....
-
++
 Complete the implementation of this recursive method.
-
-Write an implementation of fast exponentiation that works for even and
-odd latexmath:[$n$]. This implementation is exactly the same as the one
-given at the end of Example . except when latexmath:[$n$] is odd. Use
-the following recursive definition of exponentiation to guide your
+7.  <<exercise:efficient exponentiation>> Write an implementation of
+fast exponentiation that works for even and odd latexmath:[n]. This
+implementation is exactly the same as the one given at the end of
+Example REF=example:Exponentiation except when latexmath:[n] is odd.
+Use the following recursive definition of exponentiation to guide your
 implementation.
-
-latexmath:[\[a^n =
++
+latexmath:[a^n =
 \begin{cases} a & \text{\textbf{(Base Case)} if  $n=1$}
 \\
 \left(a^{\frac{n}{2}}\right)^2 & \text{\textbf{(Base Case)} if  $n>1$ and even}
 \\
 a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 & \text{\textbf{(Base Case)} if  $n>1$
 and odd}
-\end{cases}\]]
-
-Example . shows two implementations that can be used to find the
-latexmath:[$n$]^th^ Fibonacci number. With a little bit of math, it is
-possible to show that there is a closed-form equation that gives the
-latexmath:[$n$]^th^ Fibonacci number latexmath:[$F_n$] where
-latexmath:[$F_0 = F_1 = 1$].
-
-latexmath:[\[F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n+1}  -  \left(\frac{1 -
-\sqrt{5}}{2}\right)^{n+1}}{\sqrt{5}}\]]
-
+\end{cases}]
+8.  <<exercise:efficient Fibonacci>> Example REF=example:Fibonacci
+implemented recursively shows two implementations that can be used to
+find the latexmath:[n]^th^ Fibonacci number. With a little bit of
+math, it is possible to show that there is a closed-form equation that
+gives the latexmath:[n]^th^ Fibonacci number latexmath:[F_n] where
+latexmath:[F_0 = F_1 = 1].
++
+latexmath:[F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n+1}  -  \left(\frac{1 -
+\sqrt{5}}{2}\right)^{n+1}}{\sqrt{5}}]
++
 Although this math is a bit ugly, you can plug numbers into this
-equation and discover the value of latexmath:[$F_n$] quickly, provided
+equation and discover the value of latexmath:[F_n] quickly, provided
 that you have an efficient way to raise values to the
-latexmath:[$n$]^th^ power. Use the recursive algorithm for fast
-exponentation from Exercise . to make an implementation that finds the
-latexmath:[$n$]^th^ Fibonacci number *very* quickly.
-
+latexmath:[n]^th^ power. Use the recursive algorithm for fast
+exponentation from Exercise REF=exercise:efficient exponentiation to
+make an implementation that finds the latexmath:[n]^th^ Fibonacci
+number *very* quickly.
++
 Note that this approach uses real numbers (including
-latexmath:[$\sqrt{5}$]) that need to be represented as `double` values.
+latexmath:[\sqrt{5}]) that need to be represented as `double` values.
 There are exact methods that use fast exponentiation of integer matrices
 to do this computation without doing any floating-point arithmetic, but
 we do not go into those details here.
-
-Example . shows a way to calculate the size of a linked list
+9.  <<exercise:print linked list>> Example REF=example:Recursive linked
+list size shows a way to calculate the size of a linked list
 recursively. Add a recursive method called `print()` to the
 `RecursiveListSize` class that prints out the values in the linked list
 recursively, on each line.
-
-Expand the previous exercise to add another method called
-`reversePrint()` that prints out the values in the linked list the
-*opposite* order that they appear. It should take only a slight
-modification of the `print()` method you have already written.
-
-Create a recursive `find()` method (and a non-recursive proxy method to
-call it) for the `Tree` class given in Program REF=program:Tree. Its
-operation is similar to the `add()` method. If the subtree it is
-examining is empty (`null`), it should return `false`. If the value it
-is looking for is at the root of the current subtree, it should return
-`true`. These are the two base cases. If the value it is looking for
-comes earlier in the alphabet than the value at the root of the current
-subtree, it should look in the left subtree. If the value it is looking
-for comes later in the alphabet than the value at the root of the
-current subtree, it should look in the right subtree. These are the two
-recursive cases.
-
-The height of a binary tree is defined as the longest path from the root
-to any leaf node. Thus, the height of a tree with only a root node in it
-is 0. By convention, the height of an empty tree is -1.
-
+10. <<exercise:reverse print linked list>> Expand the previous exercise
+to add another method called `reversePrint()` that prints out the values
+in the linked list the *opposite* order that they appear. It should take
+only a slight modification of the `print()` method you have already
+written.
+11. <<exercise:tree find>> Create a recursive `find()` method (and a
+non-recursive proxy method to call it) for the `Tree` class given in
+Program REF=program:Tree. Its operation is similar to the `add()`
+method. If the subtree it is examining is empty (`null`), it should
+return `false`. If the value it is looking for is at the root of the
+current subtree, it should return `true`. These are the two base cases.
+If the value it is looking for comes earlier in the alphabet than the
+value at the root of the current subtree, it should look in the left
+subtree. If the value it is looking for comes later in the alphabet than
+the value at the root of the current subtree, it should look in the
+right subtree. These are the two recursive cases.
+12. <<exercise:tree height>> The height of a binary tree is defined as
+the longest path from the root to any leaf node. Thus, the height of a
+tree with only a root node in it is 0. By convention, the height of an
+empty tree is -1.
++
 Create a recursive `getHeight()` method (and a non-recursive proxy
 method to call it) for the `Tree` class given in
 Program REF=program:Tree. The base case is an empty tree (a `null`
 pointer), which has a height of -1. For the recursive case of a
 non-empty tree, its height is one more than the height of the larger of
 its two subtrees.
-
-Create an `interface` that describes a tree ADT. Modify the programs in
-Example . to use this `interface`.
-
--0.5in *Experiments*
-
-Write an iterative version of the factorial function and compare its
+13. <<exercise:setInterfaceExercise>> Create an `interface` that
+describes a tree ADT. Modify the programs in Example REF=example:Binary
+search tree to use this `interface`.
++
+*Experiments*
+14. Write an iterative version of the factorial function and compare its
 speed to the recursive version given in the text. Use the
 `System.currentTimeMillis()` or +
 `System.nanoTime()` methods before and after `for` loops that call the
 factorial methods 1,000,000 times each for random values.
-
-Write a program that generates four arrays of random `int` values with
-lengths 1,000, 10,000, 100,000, and 1,000,000. Make two additional
-copies of each array. Then, sort each of three copies of the array with
-the selection sort algorithm given in Example ., the bubble sort
-algorithm given in Section REF=problem:Sort it out, and the merge sort
-algorithm given in Example ., respectively. Use the
+15. <<exercise:sort timing>> Write a program that generates four arrays
+of random `int` values with lengths 1,000, 10,000, 100,000, and
+1,000,000. Make two additional copies of each array. Then, sort each of
+three copies of the array with the selection sort algorithm given in
+Example REF=example:Selection sort, the bubble sort algorithm given in
+Section REF=problem:Sort it out, and the merge sort algorithm given in
+Example REF=example:Merge sort, respectively. Use the
 `System.currentTimeMillis()` or `System.nanoTime()` methods to time each
 of the sorts. Note that both selection sort and bubble sort may take
 quite a while to sort an array of 1,000,000 elements.
-
++
 Run the program several times and find average values for each algorithm
 on each array size. Plot those times on a graph. The times needed to run
 selection sort and bubble sort should increase quadratically, but the
 time to run merge sort should increase linearithmically. In other words,
-an array length of latexmath:[$n$] should take time proportional to
-latexmath:[$n^2$] (multiplied by some constant) for selection sort and
+an array length of latexmath:[n] should take time proportional to
+latexmath:[n^2] (multiplied by some constant) for selection sort and
 bubble sort, but it should take time proportional to
-latexmath:[$n \log n$] (multiplied by some constant) for merge sort. For
+latexmath:[n \log n] (multiplied by some constant) for merge sort. For
 large arrays, the difference in time is significant.
-
-Investigate the performance of using recursion to compute Fibonacci
+16. Investigate the performance of using recursion to compute Fibonacci
 numbers. Implement the naive recursive solution, the memoization method,
 and an iterative solution similar to the memoization method. Use the
 `System.currentTimeMillis()` or `System.nanoTime()` methods to time the
 computations for large values of `n`. (*Warning:* It may take a very
 long time to compute the `n`^th^ Fibonacci number with the naive
 recursive solution.)
-
-Exercise . from Chapter REF=chapter:Arrays explains how binary search
-can be used to search for a value in a sorted array of values. The idea
-is to play a ``high-low'' game, first looking at the middle value. If
-the value is the one you’re looking for, you’re done. If it is too high,
-look in the lower half of the array. If it is too low, look in the upper
-half of the array. Implement binary search both iteratively and
-recursively. Populate an array with 100,000 `int` values between 1 and
-10,000,000 and sort it. Then, search for 1,000,000 random values
-generated betwee 1 and 10,000,000 using iterative binary search and then
-recursive binary search. Use the `System.currentTimeMillis()` or
-`System.nanoTime()` methods to time each process. Was the iterative or
-recursive approach faster? By how much?
+17. Exercise REF=exercise:binary search from Chapter REF=chapter:Arrays
+explains how binary search can be used to search for a value in a sorted
+array of values. The idea is to play a "`high-low`" game, first looking
+at the middle value. If the value is the one you’re looking for, you’re
+done. If it is too high, look in the lower half of the array. If it is
+too low, look in the upper half of the array. Implement binary search
+both iteratively and recursively. Populate an array with 100,000 `int`
+values between 1 and 10,000,000 and sort it. Then, search for 1,000,000
+random values generated betwee 1 and 10,000,000 using iterative binary
+search and then recursive binary search. Use the
+`System.currentTimeMillis()` or `System.nanoTime()` methods to time each
+process. Was the iterative or recursive approach faster? By how much?

@@ -1,7 +1,8 @@
 [[chapter:Problem_Solving_and_Programming]]
+:imagesdir: chapters/02-intro/images
 == Problem Solving and Programming
 
-=== problem: How to solve problems
+=== Problem: How to solve problems
 
 How do we solve problems in general? This question is the motivating
 problem (or meta-problem, even) for this chapter. In fact, this question
@@ -47,8 +48,8 @@ somewhere gave a bad instruction. This point is one of the most
 challenging aspects of programming a computer. How do you organize your
 thoughts so that you express to the computer exactly what you want it to
 do? If you give a person directions to a drug store, you might say,
-``Walk east for two blocks and then go into the third door on the
-right.'' The human will fill in all the necessary details: Stopping for
+"`Walk east for two blocks and then go into the third door on the
+right.`" The human will fill in all the necessary details: Stopping for
 traffic, watching out for construction, and so on. Given a robot body, a
 computer would do exactly what you say. The instructions never mentioned
 *opening* the door, and so a computer might walk right through the
@@ -64,9 +65,9 @@ language.
 
 Why can’t the instructions be given in English or some other natural
 language? If the previous example of a robot walking through a glass
-door didn’t convince you, consider the quote from Groucho Marx, ``One
+door didn’t convince you, consider the quote from Groucho Marx, "`One
 morning I shot an elephant in my pajamas. How he got into my pajamas,
-I’ll never know.''
+I’ll never know.`"
 
 Natural languages are filled with idioms, metaphors, puns, and other
 ambiguities. Good writers use these to improve their poetry and prose,
@@ -100,11 +101,11 @@ the following problem from physics as an example throughout this
 chapter.
 
 A rubber ball is dropped on a flat, hard surface from height
-latexmath:[$h$]. What is the maximum height the ball will reach after
-the latexmath:[$k^{\mathrm{th}}$] bounce? We will discuss the steps
+latexmath:[h]. What is the maximum height the ball will reach after
+the latexmath:[k^{\mathrm{th}}] bounce? We will discuss the steps
 needed to create a program to solve this problem in the next section.
 
-=== concepts: Developing software
+=== Concepts: Developing software
 
 ==== Software development lifecycle
 
@@ -134,7 +135,7 @@ someone who had traveled back into the past using a time machine).
 Even small details like these must be carefully considered to understand
 a problem fully. In industry, understanding the problem is often tied to
 a _requirements document_, in which a client lays out the features and
-functionality that the final program should have. The ``client'' could
+functionality that the final program should have. The "`client`" could
 also be a manager or executive officer of the company you work for who
 wants your development team to create a certain kind of program.
 Sometimes the client does not have a strong technical background and
@@ -239,11 +240,13 @@ stage in development. It is impossible to set the exact numbers, but
 some developers assume that it takes ten times as much effort to fix a
 problem at the current step than it would at the previous step.
 
+==== Begin Example: Rising costs of fixing an error
+
 Imagine that your company works on computer-aided design (CAD) software.
 The requirements document for a new program lists the formula for the
-area of a triangle as latexmath:[$base \times height$] when the real
-formula is latexmath:[$\frac{1}{2} base
-\times height$]. If that mistake were caught while understanding the
+area of a triangle as latexmath:[base \times height] when the real
+formula is latexmath:[\frac{1}{2} base
+\times height]. If that mistake were caught while understanding the
 problem, it would mean changing one line of text. Once the solution to
 the problem has been designed, there may be more references to the
 incorrect formula. Once the solution has been implemented, those
@@ -267,41 +270,45 @@ fixing it at the first phase would have required a few keystrokes and
 fixing it in the last phase would require additional development and
 testing with web servers distributing patches and e-mails and
 traditional letters apologizing for the mistake, a factor of 10,000
-could be a reasonable estimate.  
+could be a reasonable estimate.
 
-'''''
+==== End Example
 
 Now that we have a sense of the software development lifecycle, let’s
 look at an example using the sample ball bouncing problem to walk
 through a few steps.
 
+==== Begin Example: Ball bouncing problem and plan
+
 Recall the statement of the problem from the *Problem* section:
 
 A rubber ball is dropped on a flat, hard surface from height
-latexmath:[$h$]. What is the maximum height the ball will reach after
-the latexmath:[$k^{\mathrm{th}}$] bounce?
+latexmath:[h]. What is the maximum height the ball will reach after
+the latexmath:[k^{\mathrm{th}}] bounce?
 
 1.  *Understand the problem:* This problem requires an understanding of
 some physics principles. When a ball is dropped, the height of its first
 bounce depends on a factor known as the _coefficient of restitution_.
 +
-If latexmath:[$c$] is the coefficient of restitution, then the ball will
-bounce back the first time to a height of latexmath:[$h\times c$]. Then,
+If latexmath:[c] is the coefficient of restitution, then the ball will
+bounce back the first time to a height of latexmath:[h\times c]. Then,
 we can act as if the ball were being dropped from this new height when
 calculating the next bounce. Thus, it will bounce to a height of
-latexmath:[$h\times c^2$] the second time. By examining this pattern for
+latexmath:[h\times c^2] the second time. By examining this pattern for
 the third and fourth bounce, it becomes clear that the ball will bounce
-to a height of latexmath:[$h\times c^k$] on the
-latexmath:[$k^{\mathrm{th}}$] time. See Figure REF=bouncingBallFigure
+to a height of latexmath:[h\times c^k] on the
+latexmath:[k^{\mathrm{th}}] time. See Figure REF=bouncingBallFigure
 for a graphic description of this process.
 +
-We are assuming that latexmath:[$k > 0$] and that latexmath:[$c < 1$].
-Note that latexmath:[$c$] depends on many factors, such as the
+We are assuming that latexmath:[k > 0] and that latexmath:[c < 1].
+Note that latexmath:[c] depends on many factors, such as the
 elasticity of the ball and the properties of the floor on which the ball
-is dropped. However, if we know that we will be given latexmath:[$c$],
+is dropped. However, if we know that we will be given latexmath:[c],
 we don’t need to worry about any other details.
 +
-to
+.A ball is dropped from height latexmath:[h]. The ball rises to height latexmath:[h c] after the first bounce and to latexmath:[hc^2] after the second.
+image::bouncingBall.png[]
+
 2.  *Design a solution:* This problem is straightforward, but it’s
 always useful to practice good design. Remember that you’ve got to plan
 your input and output as well as the computation in a program. As
@@ -309,10 +316,10 @@ practice for more complicated problems, let’s break this problem down
 into smaller subproblems.
 +
 Subproblem 1:::
-  Get the values of latexmath:[$h$], latexmath:[$c$], and
-  latexmath:[$k$] from the user.
+  Get the values of latexmath:[h], latexmath:[c], and
+  latexmath:[k] from the user.
 Subproblem 2:::
-  Compute the height of the ball after the latexmath:[$k^{\mathrm{th}}$]
+  Compute the height of the ball after the latexmath:[k^{\mathrm{th}}]
   bounce.
 Subproblem 3:::
   Display the calculated height.
@@ -321,19 +328,21 @@ The solution to each of the three subproblems requires input and
 generates an output. Figure REF=subProblemRelationFigure shows how these
 solutions are connected. The first box in this figure represents the
 solution to subproblem 1. It asks a user to input values of parameters
-latexmath:[$h$], latexmath:[$c$], and latexmath:[$k$]. It sends these
+latexmath:[h], latexmath:[c], and latexmath:[k]. It sends these
 values to the next box, which represents a solution to subproblem 2.
-This second box computes the height of the ball after latexmath:[$k$]
+This second box computes the height of the ball after latexmath:[k]
 bounces and makes it available to the third box, which represents a
 solution to subproblem 3. This third box displays the calculated height.
 +
-to
+.Connections between solutions to the three subproblems in the bouncing ball problem.
+image::subProblemRelation.png[]
+
 
 Before we can continue on to Step 3, we need to learn some Java.
 Section REF=syntax:Java basics introduces you to the Java you’ll need to
-solve this problem.  
+solve this problem.
 
-'''''
+==== End Example
 
 ==== Acquiring a Java compiler
 
@@ -354,7 +363,7 @@ latest version (Jave SE 7 at the time of writing) of the Java Platform,
 Standard Edition JDK and install it.
 
 After having done so, you should be able to compile programs using the
-`javac` command, whose name is short for ``Java compiler.'' To do so,
+`javac` command, whose name is short for "`Java compiler.`" To do so,
 open a terminal window, also known as a command line interface or the
 console. To open the terminal in Windows, choose the Command Prompt
 option from the Start Menu or press Windows+R and type `cmd` into the
@@ -392,7 +401,7 @@ must first create a text file with your Java code in it. The world of
 programming is filled with many text editor applications whose only
 purpose is to make writing code easier. These editors are not like
 Microsoft Word: They are not used to format the text into paragraphs or
-apply bold or italics. Their output is a raw (``plain'') text file,
+apply bold or italics. Their output is a raw ("`plain`") text file,
 containing only unformatted characters, similar to the files created by
 Notepad. Many text editors, however, have advanced features useful for
 programmers, such as syntax highlighting (marking special words and
@@ -433,7 +442,7 @@ project that contains many related source code documents is a useful one
 and is very common in software engineering, but it is not a part of Java
 itself.
 
-=== syntax: Java basics
+=== Syntax: Java basics
 
 In this section, we start with the simplest Java programs and work up to
 the solution to the bouncing ball problem. Java was first released in
@@ -486,7 +495,7 @@ keyword `class` states that you are declaring a class. The name
 `Example` gives the name of the class. By convention, all class names
 start with a capital letter. The braces (`\{` and `\}`) mark the start
 and end of the contents of the class. Right now, our class contains
-nothing. . ]Exercise .
+nothing.
 
 This text should be saved in a file called `Example.java`. It is
 required that the name of the public class matches the file that it’s
@@ -715,24 +724,26 @@ value that is twice whatever the user entered. The next two examples
 illustrate how `Scanner` can be used to read input while solving
 problems. The first example shows how these elements can be applied to
 subproblem 1 of the bouncing ball problem, and the second example
-introduces and solves a new problem. . ]Exercise .
+introduces and solves a new problem.
+
+==== Begin Example: Command line input
 
 Subproblem 1 requires us to get the height, coefficient of restitution,
 and number of bounces from the user. Program REF=program:GetInputCLI
 shows a Java program to solve this subproblem.
 
-[[program:GetInputCLI]][program:GetInputCLI]
-PROGRAM=IntroChapter/programs/GetInputCLI.java, CAPTION=A Java program
-to get the height, coefficient of restitution, and number of bounces
-from the command line.
+.A Java program to get the height, coefficient of restitution, and number of bounces from the command line.
+[source, java, linenums]
+----
+include::programs/GetInputCLI.java[]
+----
 
 Unlike our earlier example, the first line of `GetInputCLI.java` is +
 `import java.util.*;`. Instead of just importing the `Scanner` class,
 this line imports all the classes in the `java.util` package. The
 asterisk (`*`) is known as a _wildcard_. The wildcard notation is
 convenient if you need to import several classes from a package or if
-you don’t know in advance the names of all the classes you’ll need. .
-]Exercise .
+you don’t know in advance the names of all the classes you’ll need.
 
 After the import comes the class declaration, creating a class called
 `GetInputCLI`. We put a `CLI` at the end of this class name to mark that
@@ -758,9 +769,10 @@ in the coefficient of restitution and then the number of bounces. If you
 compile and run this program, the execution should match the steps
 described. Note that it only reads in the values needed to solve the
 problem. We have not added the code to compute the answer or display it.
- 
 
-'''''
+==== End Example
+
+==== Begin Example: Input for distance computation
 
 Let’s write a program that takes as input the speed of a moving object
 and the time it has been moving. The goal is to compute and display the
@@ -777,9 +789,11 @@ Subproblem 3:::
 Program REF=program:Distance solves each of these subproblems in order,
 using the command-line input and output tools we have just discussed.
 
-[[program:Distance]][program:Distance]
-PROGRAM=IntroChapter/programs/Distance.java, CAPTION=Program to compute
-the distance a moving object travels.
+.Program to compute the distance a moving object travels.
+[source, java, linenums]
+----
+include::programs/Distance.java[]
+----
 
 The program starts with import statements, the class definition, and the
 definition of the `main()` method. At the beginning of the `main()`
@@ -797,9 +811,9 @@ traveled by multiplying `speed` by `time` and storing the result in
 `distance`. The last three lines of the `main()` method solve subproblem
 3 by outputting `"Distance traveled: "`, the computed distance, and
 `" miles."`. If you run the program, all three items are printed on the
-same line on the terminal.  
+same line on the terminal.
 
-'''''
+==== End Example
 
 ==== GUI input and output
 
@@ -860,7 +874,9 @@ public class Example {
 }
 ....
 
-to
+.Example of `showMessageDialog()` used for output.
+image::showMessageDialog.png[]
+
 
 One way to do input with a GUI uses the `showInputDialog()` method,
 which is also inside the `JOptionPane` class. The `showInputDialog()`
@@ -892,7 +908,9 @@ the last line of the program displays whatever word was entered with
 `showMessageDialog()`. Figure REF=figure:showInputDialog shows the
 resulting GUI as the user is entering input.
 
-to
+.Example of `showInputDialog()` used for input.
+image::showInputDialog.png[]
+
 
 Remember that the value returned from the `showInputDialog()` method is
 always text, that is, it always has type `String`. Although there are
@@ -933,14 +951,17 @@ The next example uses these two type conversion methods with methods
 from `JOptionPane` in a GUI-based solution to subproblem 1 of the
 bouncing ball problem.
 
+==== Begin Example: GUI input
+
 We can change the solution given in Program REF=program:GetInputCLI to
 use the GUI-based input tools in `JOptionPane`.
 Program REF=program:GetInputCLI this equivalent GUI-based Java program.
 
-[[program:GetInputGUI]][program:GetInputGUI]
-PROGRAM=IntroChapter/programs/GetInputGUI.java, CAPTION=Program to get
-the height, coefficient of restitution, and number of bounces using a
-GUI.
+.Program to get the height, coefficient of restitution, and number of bounces using a GUI.
+[source, java, linenums]
+----
+include::programs/GetInputGUI.java[]
+----
 
 The code in this program is very similar to
 Program REF=program:GetInputCLI until line REF=inputDialogLineOne. At
@@ -949,9 +970,9 @@ version of the height from the user. On the next line, we have to
 convert this `String` version into the `double` version that we store in
 the `height` variable. The next four lines read in the coefficient of
 restitution and the number of bounces and convert them to their
-appropriate numerical types.  
+appropriate numerical types.
 
-'''''
+==== End Example
 
 ==== A few operations
 
@@ -997,27 +1018,31 @@ double q = Math.sqrt(2.0);
 // Finds the square root of 2.0, approximately 1.4142136
 ....
 
+==== Begin Example: Compute height
+
 We compute the final height of the ball in subproblem 2 of the bouncing
 ball problem. To do so, we have to multiply the height by the
 coefficient of restitution raised to the power of the number of bounces.
 The following program does so, using the `Math.pow()` method.
 
-[[program:ComputeHeight]][program:ComputeHeight]
-PROGRAM=IntroChapter/programs/ComputeHeight.java, CAPTION=Program to
-compute height of a ball after bounces.
+.Program to compute height of a ball after bounces.
+[source, java, linenums]
+----
+include::programs/ComputeHeight.java[]
+----
 
 Program REF=program:ComputeHeight is only focusing on subproblem 2, but,
 if we want to test it, we need to supply some dummy values for `height`,
 `coefficient`, and `bounces`, since these are read in by the solution to
 subproblem 1. Likewise, the output statement on the last line of the
 `main()` method is just for testing purposes. The complete solution has
-more complex output.  
+more complex output.
 
-'''''
+==== End Example
 
 ===== `String` concatenation
 
-Just as we can add numbers together, we can also ``add'' pieces of text
+Just as we can add numbers together, we can also "`add`" pieces of text
 together. In Java, text has the type `String`. If you use the `+`
 operator between two values or variables of type `String`, the result is
 a new `String` that is the _concatenation_ of the two previous `String`
@@ -1045,14 +1070,18 @@ String text4 = 5 + " " + word1 + "es";
 // text4 will contain "5 tomatoes"
 ....
 
+==== Begin Example: Display height
+
 With `String` concatenation, subproblem 3 becomes a bit easier. We
 concatenate the results together with an appropriate message and then
 use the `System.out.println()` method for output. The following program
 does so.
 
-[[program:DisplayHeightCLI]][program:DisplayHeightCLI]
-PROGRAM=IntroChapter/programs/DisplayHeightCLI.java, CAPTION=Program to
-display height of a ball using the command line.
+.Program to display height of a ball using the command line.
+[source, java, linenums]
+----
+include::programs/DisplayHeightCLI.java[]
+----
 
 Program REF=program:DisplayHeightCLI is only focusing on subproblem 3,
 but, if we want to test it, we need to supply dummy values for `bounces`
@@ -1063,13 +1092,13 @@ The same concatenation can be used for GUI output as well. The only
 difference is the use of +
 `JOptionPane.showMessageDialog()` instead of `System.out.println()`.
 
-[[program:DisplayHeightGUI]][program:DisplayHeightGUI]
-PROGRAM=IntroChapter/programs/DisplayHeightGUI.java, CAPTION=Program to
-display height of a ball using a GUI.
+.Program to display height of a ball using a GUI.
+[source, java, linenums]
+----
+include::programs/DisplayHeightGUI.java[]
+----
 
- 
-
-'''''
+==== End Example
 
 ==== Java formatting
 
@@ -1235,8 +1264,8 @@ If you have a large block of text you want as a comment, you can create
 a block comment, which starts with a `/*` and continues until it reaches
 a `*/`.
 
-Beyond leaving messages for other programmers, you can also ``comment
-out'' existing code. By making Java code a comment, it no longer affects
+Beyond leaving messages for other programmers, you can also "`comment
+out`" existing code. By making Java code a comment, it no longer affects
 the program execution. This practice is very common when programmers
 want to remove or change some code but are reluctant to delete it until
 the new version of the code has been tested.
@@ -1274,7 +1303,7 @@ names and careful use of whitespace doesn’t require too much commenting.
 Never hesitate to comment, but always ask yourself if there is a way to
 write the code so clearly that a comment is unnecessary.
 
-=== solution: How to solve problems
+=== Solution: How to solve problems
 
 The problem solving steps given in Section REF=concepts:Developing
 software are sound, but they depend on being able to implement your
@@ -1286,9 +1315,9 @@ development lifecycle.
 
 ==== Bouncing ball solution (command line version)
 
-In Example . we made sure that we understood the problem and then formed
-a three-part plan to read in the input, compute the height of the
-bounce, and then output it.
+In Example REF=example:Ball bouncing problem and plan we made sure that
+we understood the problem and then formed a three-part plan to read in
+the input, compute the height of the bounce, and then output it.
 
 In Program REF=program:GetInputCLI, we implemented subproblem 1, reading
 the input from the command line. In Program REF=program:ComputeHeight,
@@ -1362,10 +1391,11 @@ Programs REF=program:GetInputCLI, REF=program:ComputeHeight, and
 REF=program:DisplayHeightGUI. The final program is below. It only
 differs from the command line version in a few details.
 
-[[program:BouncingBallGUI]][program:BouncingBallGUI]
-PROGRAM=IntroChapter/programs/BouncingBallGUI.java, CAPTION=Full program
-to compute the height of the final bounce of a ball and display the
-result with a GUI.
+.Full program to compute the height of the final bounce of a ball and display the result with a GUI.
+[source, java, linenums]
+----
+include::programs/BouncingBallGUI.java[]
+----
 
 ==== Testing and maintenance
 
@@ -1374,9 +1404,9 @@ lifecycle and often take more time and resources than the rest. However,
 we only discuss them briefly here.
 
 The ball bouncing problem is not complex. There are a few obvious things
-to test. We should pick a ``normal'' test case such as a height of 15
+to test. We should pick a "`normal`" test case such as a height of 15
 units, a coefficient of restitution of 0.3, and 10 bounces. The height
-should be latexmath:[$15\times 0.3^{10} = 0.0000885735$]. The result
+should be latexmath:[15\times 0.3^{10} = 0.0000885735]. The result
 computed by our program should be the same, ignoring floating point
 error. We can also check some boundary test cases. If the coefficient of
 restitution is 1, the ball should bounce back perfectly, reaching
@@ -1397,7 +1427,7 @@ Who are likely to be your clients? What are the kinds of bugs that are
 likely to creep into such a program? How would you provide bug-fixes and
 develop new features?
 
-=== concurrency: Solving problems in parallel
+=== Concurrency: Solving problems in parallel
 
 ==== Parallelism and concurrency
 
@@ -1446,7 +1476,9 @@ Document A and your colleague translates Document B. When both
 translations are complete, you merge the two, check the translation, and
 send the result to the world’s leaders.
 
-to
+.(a) Translation by one translator. Time latexmath:[t_s] gives the sequential time taken. (b) Translation by translators A and B. Times latexmath:[t_1], latexmath:[t_2], latexmath:[t_3], and latexmath:[t_4] give the times needed to do each component of the concurrent approach.
+image::documentTranslationFigure.png[]
+
 
 Translating the demands alone is a _sequential_ approach. In this
 context, sequential mean non-parallel. Translating the demands with two
@@ -1467,12 +1499,12 @@ divide up the document and merge it back together.
 
 Because we’re interested in the time the process takes, we have labeled
 different tasks in Figure REF=documentTranslationFigure with their
-running times. We let latexmath:[$t_s$] be the time for one person to
-complete the translation. The times latexmath:[$t_1$] through
-latexmath:[$t_4$] mark the times needed to complete tasks 1 through 4,
-indicated in Figure REF=documentTranslationFigure(b). Exercise . asks
-you to calculate these times for the sequential and concurrent
-approaches. . ]Exercise .
+running times. We let latexmath:[t_s] be the time for one person to
+complete the translation. The times latexmath:[t_1] through
+latexmath:[t_4] mark the times needed to complete tasks 1 through 4,
+indicated in Figure REF=documentTranslationFigure(b).
+Exercise REF=exercise:translationTimingExercise asks you to calculate
+these times for the sequential and concurrent approaches.
 
 ==== Kinds of concurrency
 
@@ -1490,12 +1522,16 @@ thing to different parts of the data. In task decomposition, each worker
 is assigned a different task that needs to be done. The following two
 examples explore each of these approaches.
 
+==== Begin Example: Domain decomposition
+
 Suppose we have an autonomous robot called the Room Rating Robot or
 R^3^. The R^3^ can measure the area of any home. Suppose that we want to
 use an R^3^ to measure the area of the home with two floors sketched in
 Figure REF=figure:floorPlan.
 
-to
+.A home with two floors.
+image::floorPlan.png[]
+
 
 One way to measure the area is to put an R^3^ at the entrance of the
 home on the first floor and give it the following instructions:
@@ -1521,9 +1557,9 @@ similar to the ones listed above for a sequential solution. When done,
 we add together the answers from R^3^A and R^3^B to get the total. This
 is a concurrent (and also parallel) approach for measuring the living
 area of a home with two floors. Using two robots in this way can speed
-up the time it takes to measure the area. . ]Exercise .  
+up the time it takes to measure the area.
 
-'''''
+==== End Example
 
 In the example above, the tasks are the same, i.e., measuring the area,
 but are performed on two different input domains, i.e., the floors.
@@ -1535,7 +1571,7 @@ Then, each processor (or robot in this example) performs the same task
 on each subdomain. When done, the final answer is found by combining the
 answers. Running the robots on each floor is purely parallel, but
 combining the answers is concurrent since some interaction between the
-robots is necessary. . ]Exercise .
+robots is necessary.
 
 Another way of solving a problem concurrently is to divide it into
 fundamentally different tasks. The tasks could be executed on different
@@ -1543,11 +1579,14 @@ processors and perhaps on different input domains. Eventually, some
 coordination of the tasks must be done to generate the final result. The
 next example illustrates such a division.
 
-Let’s expand the problem given in Example .. R^3^ robots can do more
-than just measure area. In addition to calculating the living area of a
-home, we want an R^3^ robot to check if the electrical outlets are in
-working condition. The robot should give us the area of the house as
-well as a list of electrical outlets that are not working.
+==== Begin Example: Task decomposition
+
+Let’s expand the problem given in Example REF=example:Domain
+decomposition. R^3^ robots can do more than just measure area. In
+addition to calculating the living area of a home, we want an R^3^ robot
+to check if the electrical outlets are in working condition. The robot
+should give us the area of the house as well as a list of electrical
+outlets that are not working.
 
 This problem can be solved in a sequential manner with just one robot.
 One way to do so would be for a robot to make a first pass through all
@@ -1562,11 +1601,11 @@ bump into each other while working, and that’s one of the difficulties
 of concurrency. The burden is on the programmer to give instructions so
 that the robots can avoid or recover from collisions. After the robots
 are done, we ask R^3^A for the living area of the house and R^3^B for a
-list of broken outlets. 
+list of broken outlets.
 
-'''''
+==== End Example
 
-=== unspecified section category: Summary
+=== Summary
 
 In this chapter, we introduced an approach for developing software to
 solve a problem with a computer. A number of examples illustrated how to
@@ -1575,7 +1614,7 @@ have given rough explanations of all the Java programs in this chapter,
 we encourage you to play with each program to expand its functionality.
 Several exercises prompt you to do just that. It is impossible to learn
 to program without actively practicing programming. Never be afraid of
-``breaking'' the program. Only by breaking it, changing it, and fixing
+"`breaking`" the program. Only by breaking it, changing it, and fixing
 it will your understanding grow.
 
 In addition to the software development lifecycle, we introduced several
@@ -1591,59 +1630,50 @@ Finally, we introduced the notions of sequential and concurrent
 solutions to problems and clarified the subtle difference between
 parallelism and concurrency.
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-When solving a problem using a computer, what problem is solved by the
-programmer and what problem is solved by the program written by the
-programmer? Are they the same?
-
-In Example ., we declared all variables to be of type `double`. How
-would the program behave differently if we had declared all the
+1.  <<exercise:problemSolvingExericise>> When solving a problem using a
+computer, what problem is solved by the programmer and what problem is
+solved by the program written by the programmer? Are they the same?
+2.  <<exercise:doubleTypeExercise>> In Example REF=example:Input for
+distance computation, we declared all variables to be of type `double`.
+How would the program behave differently if we had declared all the
 variables with type `int`?
-
-What is the purpose of the statement at
+3.  What is the purpose of the statement at
 line REF=createScannerGetInputDataObject in
 Program REF=program:GetInputCLI?
-
-Explain the difference between a declaration and an assignment
+4.  Explain the difference between a declaration and an assignment
 statement.
-
-Is the following statement from
-line REF=sampleDeclarationAndExecutableStatement of
+5.  <<exercise:statementCategorizationExercise>> Is the following
+statement from line REF=sampleDeclarationAndExecutableStatement of
 Program REF=program:BouncingBallGUI a declaration, an assignment, or a
 combination of the two?
-
++
 ....
 String response = JOptionPane.showInputDialog(
     null, enterHeight, title,
     JOptionPane.QUESTION_MESSAGE);
 ....
-
-GUIWhen would you prefer using the `JOptionPane` class for output over
+6.  <<exercise:textOutputGraphicalOutputComparison>> When would you
+prefer using the `JOptionPane` class for output over
 `System.out.print()`? When might you prefer `System.out.print()` to
 using `JOptionPane`?
-
-Review Program REF=program:BouncingBallGUI and identify all the Java
-keywords used in it.
-
-Try to recompile Program REF=program:BouncingBallGUI after removing the
-`import` statement at the top. Read and explain the error message
-generated by the compiler.
-
-Explain Concurrencythe difference between parallel and concurrent tasks.
-Give examples of tasks that are parallel but not concurrent, tasks that
-are concurrent but not parallel, and tasks that are both.
-
-Refer Concurrencyto Figure REF=documentTranslationFigure. Suppose that
-you and your colleague translate from English to Lellarapian at the rate
-of 200 words per hour. Suppose that the list of demands contains 10,000
-words.
-
-a.  Compute latexmath:[$t_s$], the time for you to translate the entire
+7.  <<exercise:keywordLabeling>> Review
+Program REF=program:BouncingBallGUI and identify all the Java keywords
+used in it.
+8.  <<exercise:importStatementExercise>> Try to recompile
+Program REF=program:BouncingBallGUI after removing the `import`
+statement at the top. Read and explain the error message generated by
+the compiler.
+9.  <<exercise:concurrentParallelExercise>> Explain the difference
+between parallel and concurrent tasks. Give examples of tasks that are
+parallel but not concurrent, tasks that are concurrent but not parallel,
+and tasks that are both.
+10. <<exercise:translationTimingExercise>> Refer to
+Figure REF=documentTranslationFigure. Suppose that you and your
+colleague translate from English to Lellarapian at the rate of 200 words
+per hour. Suppose that the list of demands contains 10,000 words.
+a.  Compute latexmath:[t_s], the time for you to translate the entire
 document alone, assuming that, after translation, you perform a final
 check at the rate of 500 words per hour.
 b.  Now assume that the task of splitting up the document and handing
@@ -1653,10 +1683,10 @@ with the one you translated takes another 15 minutes. After merging the
 two documents, you do a final check for correctness at a rate of 500
 words per hour. Calculate the total time to complete the translation
 using this concurrent approach. Let us refer to this time as
-latexmath:[$t_c$].
+latexmath:[t_c].
 c.  One way to calculate the speedup of a concurrent solution is to
 divide the sequential time by the concurrent time. In our case, the
-speedup is latexmath:[$t_s/t_c$]. Using the values you have computed in
+speedup is latexmath:[t_s/t_c]. Using the values you have computed in
 (a) and (b), calculate the speedup.
 d.  Suppose that you have a total of two colleagues willing to help you
 with the translation. Assuming that the three of you will perform the
@@ -1665,63 +1695,61 @@ unchanged, calculate the total time needed. Then, compute the speedup.
 e.  Now suppose that there are an unlimited number of people willing and
 able to help you with the translation. Will the speedup keep on
 increasing as you add more translators? Explain your answer.
-
-In Concurrency Example ., what aspect of a multicore system do the
-robots represent?
-
-In ConcurrencyExample ., suppose that you have two R^3^ robots
-available. You would like to use these to measure the living area of a
-single floor home. Suggest how two robots could be programmed to work
-concurrently to measure the living area faster than one.
-
--0.5in *Programming Practice*
-
-Write a program that prompts the user for three integers from the
-command line. Read each integer in using the `nextInt()` method of a
-`Scanner` object. Compute the sum of these values and print it to the
-screen using `System.out.print()` or `System.out.println()`.
-
-Expand the program from Exercise . so that it finds the average of the
-three numbers instead of the sum. (Hint: Try dividing by `3.0` instead
-of `3` to get an average with a fractional part. Then, store the result
-in a variable of type `double`.)
-
-Rewrite GUIyour solution to Exercise . so that it uses a
-`JOptionPane`-based GUI instead of `Scanner` and `System.out.print()`.
-
-Copy and paste Program REF=program:GetInputCLI into the Java IDE you
-prefer. Compile and run it and make sure that the program executes as
-intended. Then, add statements to prompt the user for the color of the
-ball and read it in. Store the color in a `String` value. Add an output
-statement that mentions the color of the ball.
-
-Rewrite GUIyour solution to Exercise . so that it uses a
-`JOptionPane`-based GUI instead of `Scanner` and `System.out.print()`.
-
-In Example ., we assumed that the speed is given in miles per hour and
-the time in hours. Change Program REF=program:Distance to compute the
-distance traveled by a moving object given its speed in miles per hour
-but time in seconds. You will need to perform a conversion from seconds
-to hours before you can find the distance.
-
-A program can use both a command line interface and a GUI to interact
-with a user. Write a program that uses the `Scanner` class to read a
-`String` value containing the user’s favorite food. Then display the
-name of the food using `JOptionPane`.
-
-Use the complete software development cycle to write a program that
+11. <<exercise:homeAreaCalculationAnalogyExercise>> In
+Example REF=example:Domain decomposition, what aspect of a multicore
+system do the robots represent?
+12. <<exercise:homeAreaCalculationExerciseDifferentHomeStructures>> In
+Example REF=example:Domain decomposition, suppose that you have two R^3^
+robots available. You would like to use these to measure the living area
+of a single floor home. Suggest how two robots could be programmed to
+work concurrently to measure the living area faster than one.
++
+*Programming Practice*
+13. <<exercise:scannerPractice>> Write a program that prompts the user
+for three integers from the command line. Read each integer in using the
+`nextInt()` method of a `Scanner` object. Compute the sum of these
+values and print it to the screen using `System.out.print()` or
+`System.out.println()`.
+14. <<exercise:scannerAverage>> Expand the program from
+Exercise REF=exercise:scannerPractice so that it finds the average of
+the three numbers instead of the sum. (Hint: Try dividing by `3.0`
+instead of `3` to get an average with a fractional part. Then, store the
+result in a variable of type `double`.)
+15. Rewrite your solution to Exercise REF=exercise:scannerAverage so
+that it uses a `JOptionPane`-based GUI instead of `Scanner` and
+`System.out.print()`.
+16. <<exercise:getInputDataExercise>> Copy and paste
+Program REF=program:GetInputCLI into the Java IDE you prefer. Compile
+and run it and make sure that the program executes as intended. Then,
+add statements to prompt the user for the color of the ball and read it
+in. Store the color in a `String` value. Add an output statement that
+mentions the color of the ball.
+17. Rewrite your solution to Exercise REF=exercise:getInputDataExercise
+so that it uses a `JOptionPane`-based GUI instead of `Scanner` and
+`System.out.print()`.
+18. <<exercise:distanceComputationExercise>> In
+Example REF=example:Input for distance computation, we assumed that the
+speed is given in miles per hour and the time in hours. Change
+Program REF=program:Distance to compute the distance traveled by a
+moving object given its speed in miles per hour but time in seconds. You
+will need to perform a conversion from seconds to hours before you can
+find the distance.
+19. <<exercise:stringInputExercise>> A program can use both a command
+line interface and a GUI to interact with a user. Write a program that
+uses the `Scanner` class to read a `String` value containing the user’s
+favorite food. Then display the name of the food using `JOptionPane`.
+20. Use the complete software development cycle to write a program that
 reads in the lengths of two legs of a right triangle and computes the
 length of its hypotenuse.
-
-1.  Make sure you understand the problem. How can you apply the
-Pythagorean formula (latexmath:[$a^2 + b^2 = c^2$]) to solve it?
-2.  Design a solution by listing the steps you will need to take to read
+a.  Make sure you understand the problem. How can you apply the
+Pythagorean formula (latexmath:[a^2 + b^2 = c^2]) to solve it?
+b.  Design a solution by listing the steps you will need to take to read
 in the appropriate values, find the answer, and then output it.
-3.  Implement the steps as a Java program.
-4.  Test the solution with several known values. For example, a right
+c.  Implement the steps as a Java program.
+d.  Test the solution with several known values. For example, a right
 triangle with legs of lengths 3 and 4 has a hypotenuse of length 5.
 Which values cause errors? How should your program react to those
 errors?
-5.  Consider what other features your program should have. If your
+e.  Consider what other features your program should have. If your
 intended audience is children who are learning geometry, should your
 error handling be different from an audience of architects?

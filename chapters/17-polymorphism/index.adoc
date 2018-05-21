@@ -1,7 +1,8 @@
 [[chapter:Polymorphism]]
+:imagesdir: chapters/17-polymorphism/images
 == Polymorphism
 
-=== problem: Banking account with a vengeance
+=== Problem: Banking account with a vengeance
 
 In Chapter REF=chapter:Synchronization, we introduced the
 `SynchronizedAccount` class that guarantees that checking the balance,
@@ -30,7 +31,7 @@ a name and a starting balance, the constructor for a `SavingsAccount`
 takes a `double` which gives the annual interest rate the account earns.
 Each month the balance is checked. If the balance of the account is
 greater than $0, the account earns interest corresponding to
-latexmath:[$\frac{1}{12}$] of the annual rate. However, if the balance
+latexmath:[\frac{1}{12}] of the annual rate. However, if the balance
 is below $1000, a $25 service fee is charged each month, regardless of
 how low the balance becomes.
 
@@ -42,7 +43,7 @@ we will discuss the full breadth of inheritance. The tools we discuss
 are intended to allow you to solve this extended bank account problem
 and indeed many other problems with as little code as possible.
 
-=== concepts: Polymorphism
+=== Concepts: Polymorphism
 
 Perhaps the most important use for inheritance is code reuse. When you
 can successfully reuse existing code, you are not just saving the time
@@ -159,7 +160,7 @@ array of 100 `RocketShip`s. But, in the second line, we try to store a
 it looks to the compiler like a `Vehicle` array. Doing so will compile
 but throw an `ArrayStoreException` at runtime.
 
-=== syntax: Inheritance tools in Java
+=== Syntax: Inheritance tools in Java
 
 So far, we have described polymorphism in Java with a conceptual focus.
 In our previous examples, the only language tool needed to use
@@ -517,10 +518,14 @@ works, tighten the requirements on the input (use a `Plum` instead of
 any `Fruit`), loosen the requirements on the output (throw fewer
 exceptions than were originally thrown), it will still work.
 
+==== Begin Example: More human than human
+
 Now we have a few additional examples in a somewhat larger class
 hierarchy.
 
-to
+.Animal class hierarchy.
+image::animals.png[]
+
 
 We begin with the abstract `Animal` class. This class gives a base
 definition for animals which includes whether the animal is alive,
@@ -546,9 +551,9 @@ constructor. Unfortunately, the default human state is not necessarily
 happiness.
 
 Finally, the `DavidBowie` class extends `Human` and is declared a final
-class because it really is impossible to add anything to David Bowie. 
+class because it really is impossible to add anything to David Bowie.
 
-'''''
+==== End Example
 
 You will notice that our examples have stretched fairly long in this
 chapter. It is difficult to give strong motivation for some aspects of
@@ -559,17 +564,21 @@ One of the best examples of the success of inheritance is the Java API
 itself. The standard Java library is very large and depends on
 inheritance a great deal.
 
-=== solution: Banking account with a vengeance
+=== Solution: Banking account with a vengeance
 
 Now we return to the specific problem given at the beginning of the
 chapter and give its solution. We have already given you the
 `BankAccount` abstract class which provides a lot of structure.
 
-to
+.Bank account class hierarchy.
+image::accounts.png[]
 
-[[program:CheckingAccount]][program:CheckingAccount]
-PROGRAM=PolymorphismChapter/programs/CheckingAccount.java,
-CAPTION=Subclass of `BankAccount` that models a normal checking account.
+
+.Subclass of `BankAccount` that models a normal checking account.
+[source, java, linenums]
+----
+include::programs/CheckingAccount.java[]
+----
 
 The most basic account is the `CheckingAccount`. As you recall from the
 `BankingAccount` class, the `getBalance()`, `deposit()`, and
@@ -596,10 +605,11 @@ Note that we do not use the constant `FEE` directly in `update()`.
 Instead, we call the `getFee()` method. The reason for this decision is
 due to the next class.
 
-[[program:DirectDepositAccount]][program:DirectDepositAccount]
-PROGRAM=PolymorphismChapter/programs/DirectDepositAccount.java,
-CAPTION=Subclass of `CheckingAccount` that models the behavior of
-accounts with direct deposits.
+.Subclass of `CheckingAccount` that models the behavior of accounts with direct deposits.
+[source, java, linenums]
+----
+include::programs/DirectDepositAccount.java[]
+----
 
 The `DirectDepositAccount` class extends the `CheckingAccount` class.
 Note that the `update()` method hasn’t been overridden. We have added
@@ -610,10 +620,11 @@ returns the fee from the `CheckingAccount`. Because of dynamic binding,
 the `update()` method defined in `CheckingAccount` will call this
 overridden `getFee()` method for `DirectDepositAccount` objects.
 
-[[program:SavingsAccount]][program:SavingsAccount]
-PROGRAM=PolymorphismChapter/programs/SavingsAccount.java,
-CAPTION=Subclass of `BankAccount` that models the behavior of a savings
-account.
+.Subclass of `BankAccount` that models the behavior of a savings account.
+[source, java, linenums]
+----
+include::programs/SavingsAccount.java[]
+----
 
 There should be few surprises in the last class, `SavingsAccount`. The
 biggest difference is that, in the `update()` method, we use a loop to
@@ -629,7 +640,7 @@ complicated tasks with a relatively small amount of code. At the same
 time, we preserved thread safety so that these accounts can be used in
 concurrent environments.
 
-=== concurrency: Atomic libraries
+=== Concurrency: Atomic libraries
 
 This chapter has discussed using polymorphism to reuse code. To solve
 the Bank Account with a Vengeance problem from the beginning of the
@@ -655,12 +666,16 @@ Program REF=program:RaceCondition that even an operation as simple as
 variable, some of those increments can get lost, causing the final value
 to be less than it should be.
 
+==== Begin Example: AtomicInteger
+
 We can use the `AtomicInteger` class to rewrite
 Program REF=program:RaceCondition so that no race condition occurs.
 
-[[program:NoRaceCondition]][program:NoRaceCondition]
-PROGRAM=PolymorphismChapter/programs/NoRaceCondition.java,
-CAPTION=Program to demonstrate the use of `AtomicInteger`.
+.Program to demonstrate the use of `AtomicInteger`.
+[source, java, linenums]
+----
+include::programs/NoRaceCondition.java[]
+----
 
 This program is identical to Program REF=program:RaceCondition, except
 that the type of `counter` has been changed from `int` to
@@ -668,9 +683,9 @@ that the type of `counter` has been changed from `int` to
 Consequently, the `++` operation was changed to an `incrementAndGet()`
 method call, and a `get()` method call was needed to get the final
 value. If you run this program, the final answer should always be
-1000000, no matter what. . ]Exercise .  
+1000000, no matter what.
 
-'''''
+==== End Example
 
 The `java.util.concurrent.atomic` package includes `AtomicBoolean` and
 `AtomicLong` as well as `AtomicInteger`. Likewise, the
@@ -690,18 +705,16 @@ ways to update an atomic variable execute in one step because of special
 instructions on the CPU. Since there is no waiting to acquire a lock or
 fighting over which thread has the lock, the operation is very fast.
 Many high performance concurrent applications depends on CAS
-implementations. . ]Exercise .
+implementations.
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-Consider the following two classes:
-
+1.  Consider the following two classes:
++
++
++
 Given the following snippet of code, what is the output?
-
++
 ....
 Sale sale = new Blowout();
 System.out.println( sale.discount );
@@ -711,15 +724,13 @@ System.out.println( blowout.discount );
 sale.setDiscount( 0.75 );
 System.out.println( sale.discount );
 ....
-
-What are the differences and similarities between abstract classes and
-interfaces?
-
-Assume that the `Corn`, `Carrot`, and `Potato` classes are all derived
-from `Vegetable`. Both `Carrot` and `Potato` classes have a `peel()`
-method, but `Corn` does not. Examine the following code and identify
-which line will cause an error and why.
-
+2.  What are the differences and similarities between abstract classes
+and interfaces?
+3.  Assume that the `Corn`, `Carrot`, and `Potato` classes are all
+derived from `Vegetable`. Both `Carrot` and `Potato` classes have a
+`peel()` method, but `Corn` does not. Examine the following code and
+identify which line will cause an error and why.
++
 ....
 Vegetable[] vegetables = new Vegetable[30];
 for( int i = 0; i < vegetables.length; i += 3 ) {
@@ -734,14 +745,12 @@ while( index >= 0 ) {
     potato.peel();
 }
 ....
-
-How many different meanings of the keyword `final` are there in Java,
-and what does each mean?
-
-Assume that `Quicksand` is a subclass of `Danger`.
-
+4.  How many different meanings of the keyword `final` are there in
+Java, and what does each mean?
+5.  Assume that `Quicksand` is a subclass of `Danger`.
++
 What is the output of the following code?
-
++
 ....
 Quicksand quicksand = new Quicksand();
 if( quicksand instanceof Danger ) {
@@ -754,15 +763,14 @@ if( quicksand instanceof Quicksand ) {
 if( quicksand.getClass() == Quicksand.class )
     System.out.printf( "You'll need to find a vine to escape!" );
 ....
-
--0.5in *Programming Practice*
-
-Implement a program to assess income tax on normal employees, students,
-and international students using a class hierarchy. Normal employees pay
-a 6.2% social security tax and a 1.45% Medicare tax every year, but
-neither kind of student pays these taxes. All three groups pay normal
-income tax according to the following table.
-
++
+*Programming Practice*
+6.  Implement a program to assess income tax on normal employees,
+students, and international students using a class hierarchy. Normal
+employees pay a 6.2% social security tax and a 1.45% Medicare tax every
+year, but neither kind of student pays these taxes. All three groups pay
+normal income tax according to the following table.
++
 [cols="^,^",options="header",]
 |=====================================
 |*Marginal Tax Rate* |*Income Bracket*
@@ -773,29 +781,27 @@ income tax according to the following table.
 |33% |$160,851- $349,700
 |35% |$349,701+
 |=====================================
-
++
 Tax is assessed at a given rate for every dollar in the range. For
 example, if someone makes $10,000, she pays 10% tax on the first $7,825
 of her income and 15% on the remaining $2,175. The exception is
 international students whose country has a treaty with the U.S. so that
 they do not have to pay tax on the first $50,000 of income.
-
-Refer to the sort given in Section REF=solution:Sort it out as the
+7.  Refer to the sort given in Section REF=solution:Sort it out as the
 solution to the Sort It Out problem. Add another `boolean` to the
 parameters of the sort which specifies whether the sort is ascending or
 descending. Make the needed changes throughout the code to add this
 functionality.
-
-Concurrency Again refer to the sort from Section REF=solution:Sort it
-out. The goal now is to parallelize the sort. Change the sort to work
-with `int` values then write some code which will generate an array of
-random `int` values. Design your code so that you can spawn
-latexmath:[$n$] threads. Partition the single array into latexmath:[$n$]
-arrays and map one partition to each thread. Use your bubble sort
-implementation to sort each partition. Finally, merge the arrays back
-together, in sorted order, into one final array. For now, just use one
-thread (ideally the main thread) to do the merge.
-
+8.  <<exercise:parallel bubble sort>> Again refer to the sort from
+Section REF=solution:Sort it out. The goal now is to parallelize the
+sort. Change the sort to work with `int` values then write some code
+which will generate an array of random `int` values. Design your code so
+that you can spawn latexmath:[n] threads. Partition the single array
+into latexmath:[n] arrays and map one partition to each thread. Use
+your bubble sort implementation to sort each partition. Finally, merge
+the arrays back together, in sorted order, into one final array. For
+now, just use one thread (ideally the main thread) to do the merge.
++
 The merge operation is a simple idea, but it is easy to make mistakes in
 implementation. The idea is to have three indexes, one for each of the
 two arrays you are merging and one for the result array. Always take the
@@ -804,26 +810,25 @@ two arrays and put it in the result. Then increment the index from the
 array you took the data from as well as the index of the result array.
 Make sure that you are careful not to go beyond the end of the arrays
 which are being merged.
-
-Re-implement the original `SynchronizedAccount` class from Example .
-using atomic classes. For simplicity, you can change the `balance` type
-from `double` to `AtomicInteger` since there is no `AtomicDouble` class.
-How much has this simplified the implementation? Is the `readers` field
-still necessary? Why or why not? Concurrency
-
--0.5in *Experiments*
-
-Once you have implemented the sort in parallel from Exercise ., time it
-against the sequential version. Try 2, 4, and 8 different threads,
-particularly if you have 8 cores. Be sure to create one random array and
-use the same array for both the parallel and sequential versions. Try
-array sizes of 1000, 100000, and 1000000. Did the performance increase
-as much as you expect? Concurrency
-
-Take Program REF=program:NoRaceCondition and increase `COUNT` to
-`100000000`. Run it several times and time how long it takes to run to
-completion. Concurrency
-
+9.  <<exercise:use atomics>> Re-implement the original
+`SynchronizedAccount` class from Example REF=example:Bank account using
+atomic classes. For simplicity, you can change the `balance` type from
+`double` to `AtomicInteger` since there is no `AtomicDouble` class. How
+much has this simplified the implementation? Is the `readers` field
+still necessary? Why or why not?
++
+*Experiments*
+10. Once you have implemented the sort in parallel from
+Exercise REF=exercise:parallel bubble sort, time it against the
+sequential version. Try 2, 4, and 8 different threads, particularly if
+you have 8 cores. Be sure to create one random array and use the same
+array for both the parallel and sequential versions. Try array sizes of
+1000, 100000, and 1000000. Did the performance increase as much as you
+expect?
+11. <<exercise:test atomics>> Take Program REF=program:NoRaceCondition
+and increase `COUNT` to `100000000`. Run it several times and time how
+long it takes to run to completion.
++
 Then, take Program REF=program:RaceCondition and increase its `COUNT` to
 `100000000` as well. Change the body of the `for` loop inside the
 `run()` method so that `count++;` is inside of a `synchronized` block
@@ -833,6 +838,6 @@ threads can see.) In this way, the increment will occur atomically,
 since only the thread that has acquired the `RaceCondition.class` lock
 will be able to do the operation. Now, run this modified program several
 times and time it.
-
++
 How different are the running times? They may be similar, depending on
 the implementation of locks and CAS on your OS and hardware platform.

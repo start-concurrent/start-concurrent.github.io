@@ -1,7 +1,8 @@
 [[chapter:Interfaces]]
+:imagesdir: chapters/10-interfaces/images
 == Interfaces
 
-=== problem: Sort it out
+=== Problem: Sort it out
 
 Defining classes as we did in Chapter REF=chapter:Classes provides us
 with useful tools. First, we can group related data together. Then, we
@@ -23,15 +24,15 @@ The subjects you are going to sort will be objects of type `Dog`, `Cat`,
 `Person`, and `Cheese`. All of these subjects will have some calendar
 age. Naturally, the age we are interested for a `Dog` is 7 times its
 calendar age. At the same time, because a cat has nine lives, we will
-use latexmath:[$\frac{1}{9}$] of its calendar age. The age we use for
+use latexmath:[\frac{1}{9}] of its calendar age. The age we use for
 `Person` and `Cheese` objects is simply their calendar age.
 
-As we discussed in Example ., sorting is one of the most fundamental
-things that computer scientists do. In that example, we introduced
-selection sort. Here we are going to use another sort called bubble
-sort. We are introducing bubble sort to expose you to another way to
-sort data. Although they are easy to understand, neither bubble sort nor
-selection sort are the fastest ways known to sort lists.
+As we discussed in Example REF=example:Selection sort, sorting is one of
+the most fundamental things that computer scientists do. In that
+example, we introduced selection sort. Here we are going to use another
+sort called bubble sort. We are introducing bubble sort to expose you to
+another way to sort data. Although they are easy to understand, neither
+bubble sort nor selection sort are the fastest ways known to sort lists.
 
 Bubble sort works by scanning through a list of items, a pair at a time,
 and swapping the elements of the pair if they are out of order. One scan
@@ -55,18 +56,20 @@ while( swapped ) {
 }
 ....
 
-===== Pitfall: Array out of bounds
+==== Begin Pitfall: Array out of bounds
 
 Note that index variable `i` stops before `array.length - 1` since we
 don’t want to get an +
 `ArrayIndexOutOfBoundsException` when looking at `array[i + 1]`.
+
+==== End Pitfall
 
 The only change needed to make a bubble sort work with lists of
 arbitrary objects (instead of just `int` values) is the `if` statement.
 Likewise, changing the greater than (`>`) to a less than (`<`) will
 change the sort from ascending to descending.
 
-=== concepts: Making a promise
+=== Concepts: Making a promise
 
 Knowing how to sort a list of items is half of the problem we want to
 solve. The other half is designing the classes so that sorting by either
@@ -90,7 +93,7 @@ need to sort by age and weight. Consequently, the ability to report age
 and weight are the two important capabilities that the objects we are
 sorting must have.
 
-=== syntax: Interfaces
+=== Syntax: Interfaces
 
 Declaring an interface is similar to declaring a class except that
 interfaces can only hold public abstract methods and constants. An
@@ -161,7 +164,7 @@ void checkBeforeStrum( Object unknown, Chord chord ) {
 }
 ....
 
-===== Pitfall: Interfaces cannot be instantiated
+==== Begin Pitfall: Interfaces cannot be instantiated
 
 It is tempting to try to create an object of an interface type. If you
 think about this carefully, it should be clear why this is impossible.
@@ -176,6 +179,8 @@ Guitarist guitarist = new Guitarist();
 We are permitted to make a reference to objects that implement
 `Guitarist`. We can make an array that holds such references. The
 interface itself, however, can never be instantiated.
+
+==== End Pitfall
 
 ==== Interfaces and `static`
 
@@ -199,6 +204,8 @@ since the purpose of an interface is to define a list of a requirements
 for what a class does rather than dealing with data values.
 Nevertheless, constants are allowed in interfaces, and the Java API does
 so in many cases.
+
+==== Begin Example: Supermarket pricing
 
 Interface names often include the suffix _-able_, for example,
 `Runnable`, `Callable`, and `Comparable`. This suffix is typical because
@@ -237,11 +244,11 @@ public static double getTotal( Priceable[] cart ) {
 Note that we can pass in `Bananas`, `Eggs`, `Water`, and many other
 kinds of objects in a `Priceable` array as long as they all implement
 this interface. Even though it is impossible to create an object with an
-interface type, we can make as many references to it as we want.  
+interface type, we can make as many references to it as we want.
 
-'''''
+==== End Example
 
-=== advanced: Local and anonymous classes
+=== Advanced: Local and anonymous classes
 
 If you have not read Section REF=advanced:Nested classes, you may want
 to look over that material to be sure that you understand what nested
@@ -269,174 +276,14 @@ as `public`, `private`, or `protected` applied to it.
 Consider the following method in which an `Ellipse` class is defined
 locally. Recall that an ellipse (or oval) has a major (long) axis and a
 minor (short) axis. The area of an ellipse is half its major axis times
-half its minor axis times latexmath:[$\pi$]. (Because the major and
+half its minor axis times latexmath:[\pi]. (Because the major and
 minor axes of a circle are its diameter, this formula becomes
-latexmath:[$\pi
-r^2$] in that case.)
+latexmath:[\pi
+r^2] in that case.)
 
-to [[figure:ellipse]][figure:ellipse]
+.image]  [[figure:ellipse]][figure:ellipse]  .... public static void createEllipse(double a1, double a2) {     class Ellipse {         private double axis1;         private double axis2;          public Ellipse( double axis1, double axis2 ) {             this.axis1 = axis1;             this.axis2 = axis2;         }          public double getArea() {             return Math.PI*0.5*axis1*0.5*axis2;         }     }      Ellipse e = new Ellipse(a1, a2);     System.out.println("The ellipse has area " + e.getArea()); } ....  This `Ellipse` class cannot be referred to by any other methods. Since an `Ellipse` class might be useful in other code, a top-level class would make more sense than this local class. For this reason, local classes are not commonly used.  However, we can make local classes more useful if they implement interfaces. Consider the following interface which can be implemented by any shape that returns its area.  The method below takes an array of `AreaGettable` objects and sums their areas.  .... public static double sumAreas( AreaGettable[] shapes ) {     double sum  = 0;     for( int i = 0; i < shapes.length; i++ )         sum += shapes[i].getArea();      return sum; } ....  If we create a local class that implements `AreaGettable`, we can use it in conjunction with the `sumAreas()` method. In the following method, we will expand the local `Ellipse` class in this way and fill an array with 100 `Ellipse` instances which can then be passed to `sumAreas()`.  .... public static void createEllipses() {     class Ellipse implements AreaGettable {         private double axis1;         private double axis2;          public Ellipse( double axis1, double axis2 ) {             this.axis1 = axis1;             this.axis2 = axis2;         }          public double getArea() {             return Math.PI*0.5*axis1*0.5*axis2;         }     }      AreaGettable[] ellipses = new AreaGettable[100];      for( int i = 0; i < 100; i++ )         ellipses[i] = new Ellipse(Math.random() * 25.0,             Math.random() * 25.0);      double sum = sumAreas( ellipses );     System.out.println("The total area is " + sum); } ....  Even though the `Ellipse` class had the `getArea()` method before, the compiler would not have allowed us to store `Ellipse` references in an `AreaGettable` array until we marked the `Ellipse` class as implementing `AreaGettable`. As in Example REF=example:Supermarket pricing, we used an array of the interface type.  [[subsection:_Anonymous_classes]] ==== Anonymous classes  This second `Ellipse` class is more useful since objects with its type can be passed to other methods as an `AreaGettable` reference, but declaring the class locally provides few benefits over a top-level class. Indeed, local classes are seldom preferable to top-level classes. Although anonymous classes behave like local classes, they conveniently can be created at any point.  An anonymous class has no name. It is created on the fly from some interface or parent class and can be stored into a reference with that type. In the following example, we modify the `createEllipses()` method so that it creates an anonymous class which behaves exactly like the `Ellipse` class and implements the `AreaGettable` interface.  .... public static void createEllipses() {     AreaGettable[] ellipses = new AreaGettable[100];      for( int i = 0; i < 100; i++ ) {         final double value1 = Math.random();         final double value2 = Math.random();          ellipses[i] = new AreaGettable() {             private double axis1 = value1;             private double axis2 = value2;              public double getArea() {                 return Math.PI*0.5*axis1*0.5*axis2;             }         };     }      double sum = sumAreas( ellipses );     System.out.println("The total area is " + sum); } ....  The syntax for creating an anonymous class is ugly. First, you use the `new` keyword followed by the name of the interface or parent class you want to create the anonymous class from. Next, you put the arguments to the parent class constructor inside of parentheses or leave empty parentheses for an interface. Finally, you open a set of braces and fill in the body for your anonymous class. When defining an anonymous class, the entire body is crammed into a single statement, and you will often need to complete that statement with a semicolon (`;`).  Anonymous classes do not have constructors. If you need a constructor, you will have to create a local class. Constructors are usually not necessary since both local and anonymous classes can see local variables and fields and use those to initialize values. Although any fields can be used, local variables must be marked `final` (as shown above) if their values will be used by local or anonymous classes. This restriction prevents local variables from being changed unpredictably by methods in the local class.  It may not be easy to see why anonymous classes are useful. Both the Java API and libraries written by other programmers have many methods that require parameters whose type implements a particular interface. Without anonymous classes, you would have to define a named class and instantiate it to supply such a method with an object with the required capabilities.  Using anonymous classes, you can create such an object in one step, right where you need it. This practice is commonly used for creating _listeners_ for GUIs. A listener is an object that does the right action when a particular event happens. If you need many different listeners in one program, it can be convenient to create anonymous classes that can handle each event rather than defining many named classes which each have a single, narrow purpose. We will use this technique in Chapter REF=chapter:Constructing Graphical User Interfaces.  === Solution: Sort it out  It is not difficult to move from totaling the value of items as we did in Example REF=example:Supermarket pricing to sorting them. Refer to the following class diagram as we explain our solution to the sorting problem posed at the beginning of the chapter. Dotted lines are used to show the implements relationship.  FIGto image:InterfacesChapter/figures/ageandweight[Sorting relationships
+image::ellipse.png[]
 
-....
-public static void createEllipse(double a1, double a2) {
-    class Ellipse {
-        private double axis1;
-        private double axis2;
-        
-        public Ellipse( double axis1, double axis2 ) {
-            this.axis1 = axis1;
-            this.axis2 = axis2;
-        }
-        
-        public double getArea() {
-            return Math.PI*0.5*axis1*0.5*axis2;
-        }       
-    }   
-    
-    Ellipse e = new Ellipse(a1, a2);
-    System.out.println("The ellipse has area " + e.getArea());
-}
-....
-
-This `Ellipse` class cannot be referred to by any other methods. Since
-an `Ellipse` class might be useful in other code, a top-level class
-would make more sense than this local class. For this reason, local
-classes are not commonly used.
-
-However, we can make local classes more useful if they implement
-interfaces. Consider the following interface which can be implemented by
-any shape that returns its area.
-
-The method below takes an array of `AreaGettable` objects and sums their
-areas.
-
-....
-public static double sumAreas( AreaGettable[] shapes ) {
-    double sum  = 0;
-    for( int i = 0; i < shapes.length; i++ )
-        sum += shapes[i].getArea();
-        
-    return sum;
-}
-....
-
-If we create a local class that implements `AreaGettable`, we can use it
-in conjunction with the `sumAreas()` method. In the following method, we
-will expand the local `Ellipse` class in this way and fill an array with
-100 `Ellipse` instances which can then be passed to `sumAreas()`.
-
-....
-public static void createEllipses() {
-    class Ellipse implements AreaGettable {
-        private double axis1;
-        private double axis2;
-        
-        public Ellipse( double axis1, double axis2 ) {
-            this.axis1 = axis1;
-            this.axis2 = axis2;
-        }
-        
-        public double getArea() {
-            return Math.PI*0.5*axis1*0.5*axis2;
-        }
-    }       
-    
-    AreaGettable[] ellipses = new AreaGettable[100];
-    
-    for( int i = 0; i < 100; i++ )
-        ellipses[i] = new Ellipse(Math.random() * 25.0,
-            Math.random() * 25.0);
-        
-    double sum = sumAreas( ellipses );
-    System.out.println("The total area is " + sum);
-}
-....
-
-Even though the `Ellipse` class had the `getArea()` method before, the
-compiler would not have allowed us to store `Ellipse` references in an
-`AreaGettable` array until we marked the `Ellipse` class as implementing
-`AreaGettable`. As in Example ., we used an array of the interface type.
-
-[[subsection:_Anonymous_classes]]
-==== Anonymous classes
-
-This second `Ellipse` class is more useful since objects with its type
-can be passed to other methods as an `AreaGettable` reference, but
-declaring the class locally provides few benefits over a top-level
-class. Indeed, local classes are seldom preferable to top-level classes.
-Although anonymous classes behave like local classes, they conveniently
-can be created at any point.
-
-An anonymous class has no name. It is created on the fly from some
-interface or parent class and can be stored into a reference with that
-type. In the following example, we modify the `createEllipses()` method
-so that it creates an anonymous class which behaves exactly like the
-`Ellipse` class and implements the `AreaGettable` interface.
-
-....
-public static void createEllipses() {
-    AreaGettable[] ellipses = new AreaGettable[100];
-    
-    for( int i = 0; i < 100; i++ ) {
-        final double value1 = Math.random();
-        final double value2 = Math.random();
-    
-        ellipses[i] = new AreaGettable() {
-            private double axis1 = value1;
-            private double axis2 = value2;
-            
-            public double getArea() {
-                return Math.PI*0.5*axis1*0.5*axis2;
-            }   
-        };
-    }
-        
-    double sum = sumAreas( ellipses );
-    System.out.println("The total area is " + sum);
-}
-....
-
-The syntax for creating an anonymous class is ugly. First, you use the
-`new` keyword followed by the name of the interface or parent class you
-want to create the anonymous class from. Next, you put the arguments to
-the parent class constructor inside of parentheses or leave empty
-parentheses for an interface. Finally, you open a set of braces and fill
-in the body for your anonymous class. When defining an anonymous class,
-the entire body is crammed into a single statement, and you will often
-need to complete that statement with a semicolon (`;`).
-
-Anonymous classes do not have constructors. If you need a constructor,
-you will have to create a local class. Constructors are usually not
-necessary since both local and anonymous classes can see local variables
-and fields and use those to initialize values. Although any fields can
-be used, local variables must be marked `final` (as shown above) if
-their values will be used by local or anonymous classes. This
-restriction prevents local variables from being changed unpredictably by
-methods in the local class.
-
-It may not be easy to see why anonymous classes are useful. Both the
-Java API and libraries written by other programmers have many methods
-that require parameters whose type implements a particular interface.
-Without anonymous classes, you would have to define a named class and
-instantiate it to supply such a method with an object with the required
-capabilities.
-
-Using anonymous classes, you can create such an object in one step,
-right where you need it. This practice is commonly used for creating
-_listeners_ for GUIs. A listener is an object that does the right action
-when a particular event happens. If you need many different listeners in
-one program, it can be convenient to create anonymous classes that can
-handle each event rather than defining many named classes which each
-have a single, narrow purpose. We will use this technique in
-Chapter REF=chapter:Constructing Graphical User Interfaces.
-
-=== solution: Sort it out
-
-It is not difficult to move from totaling the value of items as we did
-in Example . to sorting them. Refer to the following class diagram as we
-explain our solution to the sorting problem posed at the beginning of
-the chapter. Dotted lines are used to show the implements relationship.
-
-to
 
 We will start with the definitions of the two interfaces we will use to
 compare objects.
@@ -509,7 +356,7 @@ which can be implemented by any class which requires sorting. With Java
 type-safe, so we will not discuss how to use this interface until we
 cover generics in Chapter REF=chapter:Dynamic Data Structures.
 
-=== concurrency: Interfaces
+=== Concurrency: Interfaces
 
 As we discussed in Section REF=concepts:Making a promise, implementing
 an interface means making a promise to have public methods with the
@@ -552,29 +399,21 @@ you read (or write) the documentation carefully. Since there is no way
 to force programmers to use the `synchronized` keyword, the
 documentation may be the only guide.
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-What is the purpose of an interface?
-
-Why implement an interface when it puts additional requirements on a
+1.  What is the purpose of an interface?
+2.  Why implement an interface when it puts additional requirements on a
 class yet adds no functionality?
-
-Is it legal to have methods marked `private` or `protected` in an
+3.  Is it legal to have methods marked `private` or `protected` in an
 interface? Why did the designers of Java make this choice?
-
-What is the `instanceof` keyword used for? Why is it useful in the
+4.  What is the `instanceof` keyword used for? Why is it useful in the
 context of interfaces?
-
-What kind of programming error causes a `ClassCastException`?
-
-Create an interface called `ColorWavelengths` that only contains
+5.  What kind of programming error causes a `ClassCastException`?
+6.  Create an interface called `ColorWavelengths` that only contains
 constants storing the wavelengths in nanometers for each of the seven
 colors of light, as given below.
-
++
++
 [cols="^,^",options="header",]
 |======================
 |Color |Wavelength (nm)
@@ -586,16 +425,14 @@ colors of light, as given below.
 |Indigo |430
 |Violet |415
 |======================
-
-Write an interface called `Clock` that specifies the functionality a
+7.  Write an interface called `Clock` that specifies the functionality a
 clock should have. Remember that the classes that implement the clock
 may tell time in different ways (hourglass, water clock, mechanical
 movement, atomic clock), but they must share the basic functionality
 that you specify.
-
-There are four compiler errors in the following interface. Name each one
-and explain why it is an error.
-
+8.  There are four compiler errors in the following interface. Name each
+one and explain why it is an error.
++
 ....
 public interface Singable {
     public int SOPRANO = 1;
@@ -610,17 +447,16 @@ public interface Singable {
     public synchronized void tune( int frequency ); 
 }  
 ....
-
-Consider the interface defined below.
-
+9.  Consider the interface defined below.
++
 ....
 public interface Explodable {
     boolean explode( double megatons );
 }
 ....
-
++
 Which of the following classes properly implement `Explodable`?
-
++
 ....
 public class Dynamite implements Explodable {
     public boolean explode() {
@@ -649,59 +485,53 @@ public class Firecracker implements Explodable {
     }
 }
 ....
-
-Write a single class that correctly implements the following three
+10. Write a single class that correctly implements the following three
 interfaces.
-
++
 ....
 public interface Laughable {
     boolean laugh( int times );
 }
 ....
-
++
 ....
 public interface Cryable {
     void cry( int tears, boolean moaning );
 }
 ....
-
++
 ....
 public interface Shoutable {
     void laugh( double volume, String words );
 }
 ....
-
-If you are sorting a list of items latexmath:[$n$] elements long using
-bubble sort, what is the minimum number of passes you would need to be
-sure the list is sorted, assuming the worst possible ordering of items
-to start with? (Hint: Imagine the list is in backwards order.) What is
-the minimum number of passes if the list is already sorted?
-
--0.5in *Programming Practice*
-
-Add client code that randomly creates the objects needing sorting in the
-solution from Section REF=solution:Sort it out. Design and include
+11. If you are sorting a list of items latexmath:[n] elements long
+using bubble sort, what is the minimum number of passes you would need
+to be sure the list is sorted, assuming the worst possible ordering of
+items to start with? (Hint: Imagine the list is in backwards order.)
+What is the minimum number of passes if the list is already sorted?
+*Programming Practice*
+12. Add client code that randomly creates the objects needing sorting in
+the solution from Section REF=solution:Sort it out. Design and include
 additional classes `Wine` and `Tortoise` that both implement `Ageable`
 and `Weighable`. Add `toString()` methods to each class so that their
 contents can be easily output. Make sure that you print out the list of
 objects after sorting to test your implementation.
-
-Refer to the sort given as a solution in Section REF=solution:Sort it
-out. Add another `boolean` to the parameters of the sort which specifies
-whether the sort is ascending or descending. Make the needed changes
-throughout the code to add this functionality.
-
-After Concurrencylearning about threads in
+13. Refer to the sort given as a solution in Section REF=solution:Sort
+it out. Add another `boolean` to the parameters of the sort which
+specifies whether the sort is ascending or descending. Make the needed
+changes throughout the code to add this functionality.
+14. <<exercise:parallelBubbleSort>> After learning about threads in
 Chapter REF=chapter:Concurrent Programming, refer to the simple bubble
 sort from Section REF=problem:Sort it out. The goal is now to
 parallelize the sort. Write some code which will generate an array of
 random `int` values. Design your code so that you can spawn
-latexmath:[$n$] threads. Partition the single array into latexmath:[$n$]
+latexmath:[n] threads. Partition the single array into latexmath:[n]
 arrays and map one partition to each thread. Use your bubble sort
 implementation to sort each partition. Finally, merge the arrays back
 together, in sorted order, into one final array. For now, just use one
 thread (ideally the main thread) to do the merge.
-
++
 The merge operation is a simple idea, but it is easy to make mistakes in
 its implementation. The idea is to have three indexes, one for each of
 the two arrays you are merging and one for the result array. Always take
@@ -710,13 +540,12 @@ the two arrays and put it in the result. Then increment the index from
 the array you took the data from as well as the index of the result
 array. Make sure that you are careful not to go beyond the end of the
 arrays which are being merged.
-
--0.5in *Experiments*
-
-Once Concurrencyyou have implemented the sort in parallel from
-Exercise ., time it against the sequential version. Try two, four, and
-eight different threads. Be sure to create one random array and use
-copies of the same array for both the parallel and sequential versions.
-Be careful not to sort an array that is already sorted! Try array sizes
-of 1,000, 100,000, and 1,000,000. Did the performance increase? Was it
-as much as you expected?
++
+*Experiments*
+15. Once you have implemented the sort in parallel from
+Exercise REF=exercise:parallelBubbleSort, time it against the sequential
+version. Try two, four, and eight different threads. Be sure to create
+one random array and use copies of the same array for both the parallel
+and sequential versions. Be careful not to sort an array that is already
+sorted! Try array sizes of 1,000, 100,000, and 1,000,000. Did the
+performance increase? Was it as much as you expected?

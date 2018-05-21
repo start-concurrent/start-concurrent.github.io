@@ -1,7 +1,8 @@
 [[chapter:Exceptions]]
+:imagesdir: chapters/12-exceptions/images
 == Exceptions
 
-=== problem: Bank burglary
+=== Problem: Bank burglary
 
 Let’s consider a problem in which various aspects of a bank burglary are
 modeled as objects in Java. You want to write some code that will
@@ -60,7 +61,7 @@ exceptions which can be thrown by each of the methods.
 In order to deal with each of these possible errors, you need some
 special Java syntax.
 
-=== concepts: Error handling
+=== Concepts: Error handling
 
 As a rule, computer programs are filled with errors. Writing a program
 is a difficult and complex process. Even if a segment of code is free
@@ -88,7 +89,7 @@ after each method call, a large amount of error handling code must be
 mixed in with normal code. Doing so reduces code readability and makes
 it difficult to centralize error handling. Likewise, a numerical value
 can be difficult to deal with. A user may have to look it up to find out
-what kind of error it is. . ]Exercise .
+what kind of error it is.
 
 [[exceptions]]
 ==== Exceptions
@@ -112,7 +113,7 @@ loops are forms of local control flow, but exceptions give us the power
 of non-local control flow, able to jump back through any number of
 method calls.
 
-=== syntax: Exceptions in Java
+=== Syntax: Exceptions in Java
 
 In Java syntax, there are two important parts needed to use exceptions:
 throwing the exception when an error occurs and then handling that
@@ -251,7 +252,7 @@ common to use `e` as the identifier but you are allowed to call it any
 legal variable name. Usually, the kind of exception is all you need to
 know, but every exception is an object and has fields and methods.
 Particularly useful is the `getMessage()` method which can give
-additional information about the exception. . ]Exercise .
+additional information about the exception.
 
 ==== Catch or specify
 
@@ -284,13 +285,12 @@ when trying to open a file with an API call, it’s possible that no file
 with that name exists or that the user might not have permission to
 access it. A program should catch the corresponding exceptions and
 recover rather than crashing. Perhaps the program should prompt the user
-for a new name or explain that the required permission is not set. .
-]Exercise . . ]Exercise .
+for a new name or explain that the required permission is not set.
 
 In Chapter REF=chapter:Arrays, there were no executable statements in
 the `catch` block used with the +
 `Thread.sleep()` method. You should *never* write an empty `catch`
-block. Doing so allows errors to fail silently. . ]Exercise .
+block. Doing so allows errors to fail silently.
 
 We are allowed to put code that can throw a checked exception into a
 `try`-`catch` block, but there is another possibility. Java has a catch
@@ -298,7 +298,7 @@ or specify requirement, meaning that your code is required either to
 catch a checked exception or to specify that it has the potential for
 causing that exception. To specify that a method can throw certain
 exceptions, we use the `throws` keyword. Note that this is *not* the
-same as the `throw` keyword. . ]Exercise . . ]Exercise .
+same as the `throw` keyword.
 
 ....
 public static void sleepWithoutTry( int milliseconds ) throws InterruptedException {
@@ -339,7 +339,7 @@ The `finally` keyword is unusually powerful. If an exception is not
 caught and propagates up another level, the `finally` block will be
 executed before propagating the exception. Even a `return` statement
 will wait for a `finally` block to be executed before returning, leading
-to the following bizarre possibility. . ]Exercise . . ]Exercise .
+to the following bizarre possibility.
 
 ....
 public static boolean neverTrue() {
@@ -359,7 +359,7 @@ unusual semantics. Use them sparingly and only for careful cleanup
 operations when necessary to guarantee that some event occurs.
 
 Code in a `finally` block will execute *no matter what* unless the JVM
-exits or the thread in question terminates. . ]Exercise .
+exits or the thread in question terminates.
 
 ==== Customized exceptions
 
@@ -378,8 +378,7 @@ not. Children of `RuntimeException` are intended to indicate a bug in
 the program and children of `Error` are intended to indicate a system
 error. When creating your new exception, you don’t even have to create
 any methods, but it is wise to implement a default constructor and one
-that takes a `String` as an additional message. . ]Exercise . .
-]Exercise . . ]Exercise .
+that takes a `String` as an additional message.
 
 ....
 public class EndOfWorldException extends Exception {
@@ -404,6 +403,8 @@ exceptions are more useful in large systems with heavy API use. We will
 start with an example of a simple calculator that detects division by
 zero, then look at exceptions as a tool to detect array bounds problems,
 and end with a custom exception used with the `Color` class.
+
+==== Begin Example: Calculator with division by zero
 
 Here we will implement a quick calculator that reads input from the user
 in the form of *integer* *operator* *integer*, where *operator* is one
@@ -463,9 +464,11 @@ and print an appropriate message. This `try`-`catch` pair is situated
 inside the loop so that the input will continue even if there was a
 division by zero. We could achieve the same effect by using an `if`
 statement to test if the divisor is zero, but our solution allows easy
-extensions if there are other possible exceptions we want to catch. 
+extensions if there are other possible exceptions we want to catch.
 
-'''''
+==== End Example
+
+==== Begin Example: Array bounds
 
 Exceptions provide a lot of power. If we want, we can use the
 `ArrayOutOfBoundsException` as a crutch when we don’t want to think
@@ -506,14 +509,16 @@ sources. First, the programmer may not deeply understand the problem and
 may be careless about the solution. Second, there is a risk of hiding
 real exceptions that are generated because of real errors. Third, the
 code becomes difficult to read and unintuitive. Finally, excessive use
-of exceptions can negatively impact performance. . ]Exercise .  
+of exceptions can negatively impact performance.
 
-'''''
+==== End Example
+
+==== Begin Example: Color ranges
 
 The `Color` class provided by Java allows us to represent a color as a
 triple of red, green, and blue values with each value in the range
-latexmath:[$[0,255]$]. Using these three components, we can produce
-latexmath:[$256^3 = 16,777,216$] colors. If we were programming some
+latexmath:[[0,255]]. Using these three components, we can produce
+latexmath:[256^3 = 16,777,216] colors. If we were programming some
 image manipulation software, we might want to be able to increase the
 red, green, or blue values separately. If changing a value makes it
 larger than 255, we could throw an exception. Likewise, if changing a
@@ -622,11 +627,11 @@ caught. Following the `try`, there is a `catch` block for the
 will print out its exception, including the customized message inside.
 If an exception occurred, the value of `color` would remain unchanged
 because execution would have jumped to a `catch` block before the
-assignment could happen. 
+assignment could happen.
 
-'''''
+==== End Example
 
-=== solution: Bank burglary
+=== Solution: Bank burglary
 
 Here is our solution to the bank burglary problem. Although somewhat
 fanciful, the process could be expanded into a more serious simulation.
@@ -715,7 +720,7 @@ solution would be to check for each of these `null` cases or create more
 specific exceptions thrown by `findVault()` and `getLoot()` if either
 returns `null`.
 
-=== concurrency: Exceptions
+=== Concurrency: Exceptions
 
 Any thread in Java can throw an exception. That thread might be the main
 thread or it might be an extra one that you spawned yourself. (Or even
@@ -729,17 +734,19 @@ never caught, then what? If you have coded some of the examples in this
 chapter, you might think the entire program crashes, but only the thread
 throwing the exception dies.
 
+==== Begin Example: Multiple threads with exceptions
+
 In a program with a single thread, an exception thrown by the `main()`
 method will crash the program, completely halting execution. In a
 multi-threaded program, execution will continue on all threads that have
 not thrown exceptions. If even a single thread is executing, the program
 will run to completion before the JVM shuts down.
 
-[[program:CrazyThread]][program:CrazyThread]
-PROGRAM=ExceptionsChapter/programs/CrazyThread.java, CAPTION=This
-program spawns 10 threads. 9 out of 10 spawned threads as well as the
-main thread throw an exception and die. The remaining thread outputs the
-sum of the sines of 1 through 1,000,000.
+.This program spawns 10 threads. 9 out of 10 spawned threads as well as the main thread throw an exception and die. The remaining thread outputs the sum of the sines of 1 through 1,000,000.
+[source, java, linenums]
+----
+include::programs/CrazyThread.java[]
+----
 
 In the program given above, all of the threads except one will die
 because of the +
@@ -748,9 +755,9 @@ because of the +
 `catch` blocks. The thread with a `value` of 7 will complete its
 calculation and print it to the screen even though the main thread has
 died. For more information on how to spawn threads, refer to
-Chapter REF=chapter:Concurrent Programming.  
+Chapter REF=chapter:Concurrent Programming.
 
-'''''
+==== End Example
 
 This behavior can cause a program that never seems to finish. You might
 write a program that spawns a number of threads and does some work. Even
@@ -784,41 +791,33 @@ causing such an exception. Although we will generally leave the
 `InterruptedException` `catch` block empty in this book, threads written
 for production code should always handle interruptions gracefully.
 
-=== exercises: Exercises
+=== Exercises
 
-.
-
--0.5in *Conceptual Problems*
-
-What are the advantages of using exceptions instead of returning error
-codes?
-
-The keywords `final` and `finally`, as well as the `Object` method
-`finalize()`, are sometimes confused. What is the purpose of each one?
-
-What is the difference between the `throw` keyword and the `throws`
-keyword?
-
-Explain the catch or specify requirement of Java.
-
-What must be done differently when using methods that throw checked
-exceptions as compared to unchecked exceptions? How do the classes
-`Exception`, +
+1.  <<exercise:exceptions vs. error codes>> What are the advantages of
+using exceptions instead of returning error codes?
+2.  <<exercise:final and finally>> The keywords `final` and `finally`,
+as well as the `Object` method `finalize()`, are sometimes confused.
+What is the purpose of each one?
+3.  <<exercise:throws keyword>> What is the difference between the
+`throw` keyword and the `throws` keyword?
+4.  <<exercise:catch or specify>> Explain the catch or specify
+requirement of Java.
+5.  <<exercise:checked vs. unchecked>> What must be done differently
+when using methods that throw checked exceptions as compared to
+unchecked exceptions? How do the classes `Exception`, +
 `RuntimeException`, and `Error` play a role?
-
-For every program you write, you could choose to put the entire body of
-your `main()` method in a large `try` block with a `catch` block at the
-end that catches `Exception`. In this way, no exception would cause your
-program to crash. Why is this approach a bad programming decision?
-
-Why did the designers of Java choose to make `NullPointerException`
+6.  <<exercise:whole program in try>> For every program you write, you
+could choose to put the entire body of your `main()` method in a large
+`try` block with a `catch` block at the end that catches `Exception`. In
+this way, no exception would cause your program to crash. Why is this
+approach a bad programming decision?
+7.  Why did the designers of Java choose to make `NullPointerException`
 and +
 `ArithmeticException` unchecked exceptions even though this choice means
 that a program that unintentionally dereferences a `null` pointer or
 divides by zero will often crash.
-
-Consider the following two classes.
-
+8.  <<exercise:checked example>> Consider the following two classes.
++
 ....
 public class Trouble {
     public makeTrouble() {
@@ -832,12 +831,12 @@ public class Hazard {
     }
 }
 ....
-
++
 Class `Trouble` will compile, but class `Hazard` will not. Explain why
 and what could be done to make `Hazard` compile.
-
-What value will the following method always return and why?
-
+9.  <<exercise:finally returns>> What value will the following method
+always return and why?
++
 ....
 public static int magic( String value ) {
     try {
@@ -853,9 +852,9 @@ public static int magic( String value ) {
     }
 }
 ....
-
-Why will the following segment of code fail to compile?
-
+10. <<exercise:specific exceptions first>> Why will the following
+segment of code fail to compile?
++
 ....
 try{
     Thread.sleep(1000);
@@ -867,9 +866,9 @@ catch( InterruptedException e ) {
     System.out.println("Woke up early!");
 }
 ....
-
-Consider the following fragment of Java.
-
+11. <<exercise:multiple exceptions>> Consider the following fragment of
+Java.
++
 ....
 try {
     throw new NullPointerException();
@@ -878,41 +877,40 @@ finally {
     throw new ArrayIndexOutOfBoundsException();
 }
 ....
-
++
 This code is legal Java. It is possible to have a `finally` block after
 a `try` block without any `catch` blocks between them. However, only a
 single exception can be active at once. Which exception will propagate
 up from this code and why?
-
--0.5in *Programming Practice*
-
-The `NumberFormatException` exception is thrown whenever the +
++
+*Programming Practice*
+12. The <<exercise:calculator exceptions>> `NumberFormatException`
+exception is thrown whenever the +
 `Integer.parseInt()` method receives a poorly formatted `String`
 representation of an integer. Re-implement `QuickCalculator` to catch
 any `NumberFormatException` and give an appropriate message to the user.
-
-Refer to Exercise . from Chapter REF=chapter:Inheritance. Add to the
-basic mechanics of the simulation by designing two custom exceptions,
-`CollisionException` and `LightSpeedException`. These exceptions should
-be thrown, respectively, if two bodies collide or if the total magnitude
-of a body’s velocity exceeds the speed of light.
-
-Users often log onto systems by entering their user name and a password.
-Unfortunately, human beings are notoriously bad at picking passwords. In
-computer security, a tool called a _proactive password checker_ allows a
-user to pick a password but rejects the choice if it doesn’t meet
-certain criteria.
-
+13. <<exercise:celestial exceptions>> Refer to
+Exercise REF=exercise:celestial from Chapter REF=chapter:Inheritance.
+Add to the basic mechanics of the simulation by designing two custom
+exceptions, `CollisionException` and `LightSpeedException`. These
+exceptions should be thrown, respectively, if two bodies collide or if
+the total magnitude of a body’s velocity exceeds the speed of light.
+14. <<exercise:password checker>> Users often log onto systems by
+entering their user name and a password. Unfortunately, human beings are
+notoriously bad at picking passwords. In computer security, a tool
+called a _proactive password checker_ allows a user to pick a password
+but rejects the choice if it doesn’t meet certain criteria.
++
 Common criteria for a password are that it must be at least a certain
 length, must contain must contain uppercase and lowercase letters, must
 contain numerical digits, must contain symbols, cannot be the same as a
 list of words from a dictionary, and others.
-
++
 Write a short program with a `check()` method that takes a single
 `String` parameter giving a possible password. This method should throw
 an exception if the password does not meet the matching criteria listed
 below.
-
++
 [cols="<,<",options="header",]
 |==================================================================
 |*Password criteria* |*Exception*
@@ -921,23 +919,22 @@ below.
 |Contains at least one numerical digit |`NoDigitException`
 |Contains at least one symbol |`NoSymbolException`
 |==================================================================
-
++
 Your `main()` method should prompt the user to select a password and
 then pass it to the `check()` method. If the method throws an exception,
 you should catch it and print an appropriate error message. Otherwise,
 you should report to the user that the password is acceptable. Note that
 you will need to define each of the four exceptions as well.
-
--0.5in *Experiments*
-
-Throwing and catching exceptions is a useful tool for making robust
-programs in Java. However, the JVM machinery needed to implement such a
-powerful tool is complex. Create an array containing 100,000 random
-`int` values. First, sum all these variables up using a `for` loop and
-time how long it takes. Then, do the same thing, but, inside of the
-`for` loop, put a `try` block containing a simple division by zero
-instruction such as `x = 5 / 0;`. After the `try` block, put a `catch`
-block catching an +
++
+*Experiments*
+15. Throwing <<exercise:exception performance>> and catching exceptions
+is a useful tool for making robust programs in Java. However, the JVM
+machinery needed to implement such a powerful tool is complex. Create an
+array containing 100,000 random `int` values. First, sum all these
+variables up using a `for` loop and time how long it takes. Then, do the
+same thing, but, inside of the `for` loop, put a `try` block containing
+a simple division by zero instruction such as `x = 5 / 0;`. After the
+`try` block, put a `catch` block catching an +
 `ArithmeticException`. Time this version of the code. Again, you may
 wish to use `System.nanoTime()` to measure the time accurately. Was
 there a large difference in the time taken? Do your findings have any
