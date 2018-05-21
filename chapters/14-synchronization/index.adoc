@@ -1,0 +1,1207 @@
+[[chapter:Synchronization]]
+:imagesdir: chapters/14-synchronization/images
+== Synchronization
+
+=== Introduction
+
+Concurrent programs allow multiple threads to be scheduled and executed,
+but the programmer does not have a great deal of control over when
+threads execute. As explained in Section REF=concepts:Thread scheduling,
+the JVM and the underlying OS are responsible for scheduling threads
+onto processor cores.
+
+While writing a concurrent program, you have to ensure that the program
+will work correctly even though different executions of the same program
+will likely lead to different sequences of thread execution. The problem
+we introduce next illustrates why one thread execution sequence might be
+perfectly fine while another might lead to unexpected and incorrect
+behavior (and even people starving!)
+
+=== Problem: Dining philosophers
+
+Concurrency gives us the potential to make our programs faster but
+introduces a number of other problems. The way that threads interact can
+be unpredictable. Because they share memory, one thread can corrupt the
+value in another thread’s variables. We introduce synchronization tools
+in this chapter that can prevent threads from corrupting data, but these
+tools create new pitfalls. To explore these pitfalls, we give you
+another problem to solve.
+
+Imagine a number of philosophers sitting at a round table with plates
+that are periodically filled with rice. Between adjacent philosophers
+are single chopsticks so that there are exactly the same number of
+chopsticks as there are philosophers. These philosophers only think and
+eat. In order to eat, a philosopher must pick up both the chopstick on
+her left and the chopstick on her right. Figure REF=figure:dining shows
+an example of the situation.
+
+.Table for five dining philosophers.
+image::diners.png[]
+
+
+Your goal is to write a class called `DiningPhilosopher` which extends
+`Thread`. Each thread created in the `main()` method should be a
+philosopher who thinks for some random amount of time, then acquires the
+two necessary chopsticks and eats. No philosopher should starve. No
+philosophers should be stuck indefinitely fighting over chopsticks.
+
+Although this problem sounds simple, the solution is somewhat complex.
+Make sure that you understand the concepts and Java syntax in this
+chapter thoroughly before trying to implement your solution. It is
+important that no two philosophers try to use the same chopstick at the
+same time. Likewise, we need to avoid a situation where every
+philosopher is waiting for every other philosopher to give up a
+chopstick.
+
+=== Concepts: Thread interaction
+
+This dining philosopher problem highlights some difficulties which were
+emerging toward the end of the last chapter. In
+Exercise REF=exercise:interleavings two snippets of code could run
+concurrently and modify the same shared variable, potentially producing
+incorrect output. Because of the nondeterministic nature of scheduling,
+we have to assume that the code executing in two or more threads can be
+interleaved in any possible way. When the *result* of computation
+changes depending on the order of thread execution, it is called a _race
+condition_. Below is a simple example of a race condition in Java.
+
+.A short example of a race condition.
+[source, java, linenums]
+----
+include::programs/RaceCondition.java[]
+----
+
+This short (and pointless) class attempts to increment the variable
+`counter` until it reaches `1000000`. To illustrate the race condition,
+we have divided the work of incrementing `counter` evenly among a number
+of threads. If you run this program, the final value of `counter` will
+often not be `1000000`. Depending on which JVM, OS, and how many cores
+you have, you may never get `1000000`, and the answer you do get will
+vary a lot. On all systems, if you change the value of `THREADS` to `1`,
+the answer should always be correct.
+
+Looking at the code, the problem might not be obvious. Everything
+centers on the statement `counter++` in the `for` loop inside the
+`run()` method. But, this statement appears to execute in a single step!
+Each thread should increase the value of `counter` a total of
+`COUNT/THREADS` times, adding up to `1000000`. The trouble is that
+`counter++` is not a single step. Recall that `counter++` is shorthand
+for `counter = counter + 1`. To be even more explicit we could write it
+as follows.
+
+....
+temp = counter;
+counter = temp + 1;
+....
+
+One thread may get as far as storing `counter` into a temporary
+location, but then it runs out of time and the next thread in the
+schedule runs. If that is the case, this next thread may do a series of
+increments to `count` which are all overwritten when the first thread
+runs again. Because the first thread had an old value of `counter`
+stored in `temp`, adding 1 to `temp` has the effect of ignoring many
+increments. This situation can happen on a single processor with threads
+switching back and forth, but it is even more dangerous on a multicore
+system.
+
+The primary lesson here is that threads can switch between each other at
+any time with unpredictable effects. The secondary lesson is that the
+source code is too coarse-grained to show _atomic_ operations. An atomic
+operation is one which cannot be interrupted by a context switch to
+another thread. The actual code that the JVM runs is much lower level
+than source code.
+
+We can’t easily force a non-atomic operation to be atomic, but there are
+ways to restrict access to certain pieces of code under certain
+conditions. The name we give to a piece of code which should not be
+accessed by more than one thread at a time is a _critical section_. In
+the example above, the single line of code which increments `counter` is
+a critical section, and the error in the program would be removed if
+only one thread were able to run that line of code at a time.
+
+Protecting a critical section is done with _mutual exclusion_ tools.
+They are called mutual exclusion tools because they enforce the
+requirement that one thread executing a critical section excludes the
+possibility of another. There are many different techniques, algorithms,
+and language features in computer science which can be used to create
+mutual exclusion. Java relies heavily on a tool called a _monitor_ which
+hides some of the details of enforcing mutual exclusion from the user.
+Mutual exclusion is a deeply researched topic with many approaches other
+than monitors. If you plan to write concurrent programs in another
+language, you may need to brush up on the features provided by that
+language.
+
+=== Syntax: Thread synchronization
+
+==== The `synchronized` keyword
+
+In Java, the language feature which allows you to enforce mutual
+exclusion is the `synchronized` keyword. There are two ways to use this
+keyword: with a method or with an arbitrary block of code. In the method
+version, you add the `synchronized` modifier before the return type.
+Let’s imagine a class with a private `String` field called `message`
+which is set to be `"Will Robinson!"` by the constructor. Now, we define
+the following method.
+
+....
+public synchronized void danger() {
+    message = "Danger, " + message;
+}
+....
+
+If `danger()` is called five times from different threads, `message`
+will contain +
+`"Danger, Danger, Danger, Danger, Danger, Will Robinson!"` Without the
+`synchronized` keyword, `danger()` would suffer from a race condition
+similar to the one in `RaceCondition`. Some of the `String`
+concatenations might be overwritten by other calls to `danger()`. You
+would never have more than five copies of `"Danger, "` appended to the
+beginning of `message`, but you might have fewer.
+
+Any time a thread enters a piece of code protected by the `synchronized`
+keyword, it implicitly acquires a lock which only a single thread can
+hold. If another thread tries to access the code, it is forced to wait
+until the lock is released. This lock is _re-entrant_. Re-entrant means
+that, when a thread currently holds a lock and tries to get it again, it
+succeeds. This situation frequently occurs with synchronized methods
+which call other synchronized methods.
+
+Consider method `safety()` which does the "`opposite`" of `danger()`, by
+removing occurrences of `"Danger, "` from the beginning of `message`.
+
+....
+public synchronized void safety() {
+    if( message.startsWith("Danger, ") )
+        message = message.substring( 8 );
+}
+....
+
+Will the `danger()` and `safety()` methods play nicely together? In
+other words, will a thread be blocked from entering `safety()` if
+another thread is already in `danger()`? Yes! The locks in Java are
+connected to objects. When you use the `synchronized` keyword on a
+method, the object the method is being called on (whichever object
+`this` refers to inside the method) serves as the lock. Thus, only one
+thread can be inside of either of these methods. If you have 10
+synchronized methods in an object, only one of them can execute at a
+time in a given object.
+
+Perhaps this level of control is too restrictive. You may have six
+methods which conflict with each other and four others which conflict
+with each other but not the first six. Using `synchronized` in each
+method declaration would unnecessarily limit the amount of concurrency
+your program could have.
+
+Although it takes a little more work, using `synchronized` with a block
+of code allows more fine-grained control. The following version of
+`danger()` is equivalent to the earlier one.
+
+....
+public void danger() {
+    synchronized( this ) {
+        message = "Danger, " + message;
+    }
+}
+....
+
+Using `synchronized` on a block of code gives us more flexibility in two
+ways. First, we can choose exactly how much code we want to control,
+instead of the whole method. Second, we can choose which object we want
+to use for synchronization. For the block style, any arbitrary object
+can be used as a lock. Objects keep a list of threads which are waiting
+to get the lock and do all the other management needed to make the
+`synchronized` keyword work.
+
+If you have two critical sections which are unrelated to each other, you
+can use the fine-grained control the block style provides. First, you’ll
+need some objects to use as locks, probably declared so that they can
+easily be shared, perhaps as static fields of a class.
+
+....
+private static Object lock1 = new Object();
+private static Object lock2 = new Object();
+....
+
+Then, wherever you need control over concurrency, you use them as locks.
+
+....
+synchronized( lock1 ){
+    //do dangerous thing 1
+}
+
+//do safe things
+
+synchronized( lock2 ){
+    //do dangerous thing 2, unrelated to dangerous thing 1
+}
+....
+
+Since declaring a method with `synchronized` is equivalent to having its
+body enclosed in a block beginning with `synchronized(this)`, what about
+`static` methods? Can they be `synchronized`? Yes, they can. Whenever a
+class is loaded, Java creates an object of type `Class` which
+corresponds to that class. This object is what synchronized static
+methods inside the class will use as a lock. For example, a synchronized
+static method inside of the `Eggplant` class will lock on the object
+`Eggplant.class`.
+
+==== The `wait()` and `notify()` methods
+
+Protecting critical sections with the `synchronized` keyword is a
+powerful technique, and many other synchronization tools can be built
+using just this tool. However, efficiency demands a few more options.
+
+Sometimes a thread is waiting for another thread to finish a task so
+that it can process the results. Imagine one thread collecting votes
+while another one is waiting to count them. In this example, the
+counting thread must wait for all votes to be cast before it can begin
+counting. We could use a synchronized block and an indicator `boolean`
+called `votingComplete` to allow the collector thread to signal to the
+counting thread.
+
+....
+while( true ) {
+    synchronized( this ) {
+        if( votingComplete )
+            break;
+    }
+}
+countVotes();
+....
+
+What’s the problem with this design? Notice that the counting thread is
+running through the `while` loop over and over waiting for
+`votingComplete` to become `true`. On a single processor, the counting
+thread would slow down the job of the collecting thread which is trying
+to process all the votes. On a multicore system, the counting thread is
+still wasting CPU cycles that some other thread could use. This
+phenomenon is known as _busy waiting_, for obvious reasons.
+
+To combat this problem, Java provides the `wait()` method. When a thread
+is executing synchronized code, it can call `wait()`. Instead of busy
+waiting, a thread which has called `wait()` will be removed from the
+list of running threads. It will wait in a dormant state until someone
+comes along and notifies the thread that its waiting is done. If you
+recall the threadstate diagram from Chapter REF=chapter:Concurrent
+Programming, there is a Not Runnable state which threads enter by
+calling `sleep()`, calling `wait()`, or performing blocking I/O. Using
+`wait()`, we can rewrite the vote counting thread.
+
+....
+synchronized( this ) {
+    while( !votingComplete ) {
+        wait();
+    }
+}
+countVotes();
+....
+
+Notice that the `while` loop has moved inside the synchronized block.
+Doing so before might have kept our program from terminating: As long as
+the vote counting thread held the lock, the vote collecting thread would
+not be allowed to modify `votingComplete`. When a thread calls `wait()`,
+however, it gives up the corresponding lock it is holding until it wakes
+up and runs again. Why use the `while` loop at all, now? There is no
+guarantee that the condition you are waiting for is `true`. Many threads
+may be waiting on this particular lock. We use the `while` loop to check
+that `votingComplete` is `true` and wait again if it isn’t.
+
+In order to notify a waiting thread, the other thread calls the
+`notify()` method. Like `wait()`, `notify()` must be called within a
+synchronized block or method. Here is corresponding code the vote
+collecting thread would use to notify the counting thread that voting is
+complete.
+
+....
+// finish collecting votes
+synchronized( this ) {
+    votingComplete = true;
+    notifyAll();
+}
+....
+
+A call to `notify()` will wake up one thread waiting on the lock object.
+If there are many threads waiting, the method `notifyAll()` used above
+can be called to wake them all up. In practice, it is usually safer to
+call `notifyAll()`. If a particular condition changes and a single
+waiting thread is notified, that thread may need to notify the next
+waiting thread when it is done. If your code is not very carefully
+designed, some thread may end up waiting forever and never be notified
+if you only rely on `notify()`.
+
+==== Begin Example: Producer/consumer
+
+To illustrate the use of `wait()` and `notify()` calls inside of
+synchronized code, we give a simple solution to the producer/consumer
+problem below. This problem is a classic example in the concurrent
+programming world. Many times one thread (or a group of threads) is
+producing data, perhaps from some input operation. At the same time, one
+thread (or, again, potentially many threads) are taking these chunks of
+data and consuming them by performing some computational or output task.
+
+Every resource inside of a computer is finite. Producer/consumer
+problems often assume a bounded buffer which stores items from the
+producer until the consumer can take them away. Our solution does all
+synchronization on the buffer. Many different threads can share this
+buffer, but all accesses will be controlled.
+
+.An example of a synchronized buffer.
+[source, java, linenums]
+----
+include::programs/Buffer.java[]
+----
+
+When adding an item, producers enter the synchronized `addItem()`
+method. If `count` shows that the buffer is full, the producer must wait
+until the buffer has at least one open space. After adding an item to
+the buffer, the producer then notifies all waiting threads. The consumer
+does the mirror image in `removeItem()`. A consumer thread cannot
+consume anything if the buffer is empty and must then wait. After there
+is an object to consume, the consumer removes it and notifies all other
+threads.
+
+Both methods are synchronized, making access to the buffer completely
+sequential. Although it seems undesirable, sequential behavior is
+precisely what is needed for the producer/consumer problem. All
+synchronized code is a protection against unsafe concurrency. The goal
+is to minimize the amount of time spent in synchronized code and get
+threads back to concurrent execution as quickly as possible.
+
+==== End Example
+
+==== Begin Example: Bank account
+
+Although producer/consumer is a good model to keep in mind, there are
+other ways that reading and writing threads might interact. Consider the
+following programming problem, similar to one you might find in real
+life.
+
+As a rising star in a bank’s IT department, you have been given the job
+of creating a new bank account class called `SynchronizedAccount`. This
+class must have methods to support the following operations: deposit,
+withdraw, and check balance. Each method should print a status message
+to the screen on completion. Also, the method for withdraw should return
+`false` and do nothing if there are insufficient funds. Because the
+latest system is multi-threaded, these methods must be designed so that
+the bookkeeping is consistent even if many threads are accessing a
+single account. No money should magically appear or disappear.
+
+There is an additional challenge. To maximize concurrency,
+`SynchronizedAccount` should be synchronized differently for read and
+write accesses. Any number of threads should simultaneously be able to
+check the balance on an account, but only one thread can deposit or
+withdraw at a time.
+
+To solve this problem, our implementation of the class has a `balance`
+variable to record the balance, but it also has a `readers` variable to
+keep track of the number of threads which are reading from the account
+at any given time.
+
+[source,numberLines,java]
+----
+public class SynchronizedAccount {
+	private double balance = 0.0;	
+	private int readers = 0;	
+----
+
+Next, the `getBalance()` method is called by threads which wish to read
+the balance. Access to the `readers` variable is synchronized. But,
+after passing that first `synchronized` block, the code which stores the
+balance is not synchronized. In this way, multiple readers can access
+the data at the same time. For this example, the concurrency controls we
+have are overkill. The command `amount = balance` does not take a great
+deal of time. If it did, however, it would make sense for readers to
+execute it concurrently as we do. After reading the balance, this method
+decrements `readers`. If `readers` reaches 0, a call to `notifyAll()` is
+made, signaling that threads trying to deposit to or withdraw from the
+account can continue.
+
+[source,numberLines,java]
+----
+	public double getBalance()	throws InterruptedException {
+		double amount;		
+		synchronized( this ) {			
+			readers++;
+		}		
+		amount = balance;		
+		synchronized( this ) {
+			if( --readers == 0 )
+				notifyAll();
+		}		
+		return amount;		
+	}
+----
+
+The `deposit()` and `withdraw()` methods are wrappers for the
+`changeBalance()` method, which has all the interesting concurrency
+controls.
+
+[source,numberLines,java]
+----
+	public void deposit( double amount )
+		throws InterruptedException {
+		changeBalance( amount );
+		System.out.println("Deposited $" + amount + "." );
+	}
+	
+	public boolean withdraw( double amount )
+		throws InterruptedException {
+		boolean success = changeBalance( -amount );
+		if( success )
+			System.out.println("Withdrew $" + amount + "." );
+		else
+			System.out.println("Failed to withdraw $" +
+				amount + ": insufficient funds." );
+		return success;
+	}
+----
+
+The `changeBalance()` method is synchronized so that it can have
+exclusive access to the `readers` variable. As long as `readers` is
+greater than 0, this method will wait. Eventually, the readers should
+finish their job and notify the waiting writer which can finish changing
+the balance of the account.
+
+[source,numberLines,java]
+----
+	private synchronized boolean changeBalance( double amount )
+		throws InterruptedException {
+		boolean success;	
+		while( readers > 0 )
+				wait();			
+		if( success = (balance + amount > 0) )
+			balance += amount;		
+		return success;	
+	}
+}
+----
+
+==== End Example
+
+=== Pitfalls: Synchronization challenges
+
+As you can see from the dining philosophers problem, synchronization
+tools help us get the right answer but also create other difficulties.
+
+[[subsection:deadlock]]
+==== Deadlock
+
+_Deadlock_ is the situation when two or more threads are both waiting
+for the others to complete, forever. Some combination of locks or other
+synchronization tools has forced a blocking dependence onto a group of
+threads which will never be resolved.
+
+In the past, people have described four conditions which must exist for
+deadlock to happen.
+
+1.  Mutual Exclusion: Only one thread can access the resource (often a
+lock) at a time.
+2.  Hold and Wait: A thread holding a resource can ask for additional
+resources.
+3.  No Preemption: A thread holding a resource cannot be forced to
+release it by another thread.
+4.  Circular Wait: Two or more threads hold resources which make up a
+circular chain of dependency.
+
+==== Begin Example: Deadlock philosophers
+
+We illustrate deadlock with an example of how *not* to solve the dining
+philosophers problem. What if all the philosophers decided to pick up
+the chopstick on her right and then the chopstick on her left? If the
+timing was just right, each philosopher would be holding one chopstick
+in her right hand and be waiting forever for her neighbor on the left to
+give up a chopstick. No philosopher would ever be able to eat. Here is
+that scenario illustrated in code.
+
+[source,numberLines,java]
+----
+public class DeadlockPhilosopher extends Thread {
+	public static final int SEATS = 5; 
+	private static boolean[] chopsticks = new boolean[SEATS];	
+	private int seat;
+	
+	public DeadlockPhilosopher( int seat ) {
+		this.seat = seat;
+	}
+----
+
+After setting up the class and the constructor, things get interesting
+in the `run()` method. First a philosopher tries to get her left
+chopstick, then sleeps for 50 milliseconds, then tries to get her right
+chopstick. Without sleeping, this code would usually run just fine.
+Every once in a while, the philosophers would become deadlocked, but it
+would be hard to predict when. By introducing the sleep, we can all but
+guarantee that the philosophers will deadlock every time.
+
+[source,numberLines,java]
+----
+	public void run() {			
+		try	{ 
+			getChopstick( seat );			
+			Thread.sleep(50);		
+			getChopstick( seat - 1 );
+		}
+		catch( InterruptedException e ) {
+			e.printStackTrace();
+		}			
+		eat();
+	}
+----
+
+The remaining two methods are worth examining to see how the
+synchronization is done, but by getting the two chopsticks separately
+above, we have already gotten ourselves into trouble.
+
+[source,numberLines,java]
+----
+	private void getChopstick( int location )
+		throws InterruptedException {
+		if( location < 0 )
+			location += SEATS;
+		synchronized( chopsticks ) {
+			while( chopsticks[location] )
+				chopsticks.wait();
+			chopsticks[location] = true;
+		}		
+		System.out.println("Philosopher " + seat +
+			" picked up chopstick " + location + ".");
+	}
+	
+	private void eat() {
+		//done eating, put back chopsticks
+		synchronized( chopsticks ) {
+			chopsticks[seat] = false;			
+			if( seat == 0)
+				chopsticks[SEATS - 1] = false;
+			else
+				chopsticks[seat - 1] = false;							
+			chopsticks.notifyAll();
+		}
+	}
+}	
+----
+
+==== End Example
+
+==== Begin Example: Deadlock sum
+
+Here is another example of deadlock. We emphasize deadlock because it is
+one of the most common and problematic issues with using synchronization
+carelessly.
+
+Consider two threads which both need access to two separate resources.
+In our example, the two resources are random number generators. The goal
+of each of these threads is to acquire locks for the two shared random
+number generators, generate two random numbers each, and sum the numbers
+generated. (Note that locks are unnecessary for this problem anyway,
+because access to `Random` objects is synchronized.)
+
+[source,numberLines,java]
+----
+import java.util.Random;
+
+public class Deadlock extends Thread {
+	private static Random random1 = new Random();
+	private static Random random2 = new Random();	
+	private boolean reverse;
+	private int sum;
+----
+
+The class begins as expected, creating shared `static` `Random` objects
+`random1` and `random2`. Then, in the `main()` method, the main thread
+spawns two new threads, passing `true` to one and `false` to the other.
+
+[source,numberLines,java]
+----
+	public static void main(String[] args) {
+		Thread thread1 = new Deadlock( true );
+		Thread thread2 = new Deadlock( false );
+		thread1.start();
+		thread2.start();
+		try {
+			thread1.join();
+			thread2.join();
+		}
+		catch( InterruptedException e ) {
+			e.printStackTrace();
+		}					
+	}
+----
+
+Next, the mischief begins to unfold. One of the two threads stores
+`true` in its `reverse` field.
+
+[source,numberLines,java]
+----
+	public Deadlock( boolean reverse ) {
+		this.reverse = reverse;
+	}
+----
+
+Finally, we have the `run()` method where all the action happens. If the
+two running threads both acquire locks for `random1` and `random2` in
+the same order, everything would work out fine. However, the reversed
+thread locks on `random2` and then `random1`, with a `sleep()` in
+between. The non-reversed thread tries to lock on `random1` and then
+`random2`.
+
+[source,numberLines,java]
+----
+	public void run() {	
+		if( reverse ) {			
+	        synchronized(random2) {
+			  System.out.println(
+				"Reversed Thread: synchronized on random2");
+			  try{ Thread.sleep(50); }
+			  catch (InterruptedException e) {
+				  e.printStackTrace();
+			  }
+			  synchronized(random1) {
+			    System.out.println(
+					"Reversed Thread: synchronized on random1");			    
+			    sum = random1.nextInt() + random2.nextInt();			    
+			  }
+	        }
+	    }
+		else {			
+	        synchronized(random1) {
+			  System.out.println(
+				"Normal Thread: synchronized on random1");
+			  try { Thread.sleep(50); }
+			  catch (InterruptedException e) {
+				  e.printStackTrace();
+			  }
+			  synchronized(random2) {
+			    System.out.println(
+					"Normal Thread: synchronized on random2");			    
+			    sum = random1.nextInt() + random2.nextInt();			    
+			  }
+		        }
+		}
+	}
+}
+----
+
+If you run this code, it should invariably deadlock with `thread1`
+locked on `random2` and `thread2` locked on `random1`. No sane
+programmer would intentionally code the threads like this. In fact, the
+extra work we did to acquire the locks in opposite orders is exactly
+what causes the deadlock. For more complicated programs, there may be
+many different kinds of threads and many different resources. If two
+different threads (perhaps written by different programmers, even) need
+both resource A and resource B at the same time but try to acquire them
+in reverse order, this kind of deadlock can occur without such an
+obvious cause.
+
+For deadlock of this type, the circular wait condition can be broken by
+ordering the resources and always locking the resources in ascending
+order. Of course, this solution only works if there is some universal
+way of ordering the resources and the ordering is always followed by all
+code in the program.
+
+Ignoring the deadlock problems with the example above, it gives a nice
+example of the way Java intended synchronization to be done: when
+possible, use the resource you need as its own lock. Many other
+languages require programmers to create additional locks or semaphores
+to protect a given resource, but this approach causes problems if the
+same lock is not consistently used. Using the resource itself as a lock
+elegantly avoids this problem.
+
+==== End Example
+
+[[section:starvation_and_livelock]]
+==== Starvation and livelock
+
+_Starvation_ is another problem which can occur with careless use of
+synchronization tools. Starvation is a general term which covers any
+situation in which some thread never gets access to the resources it
+needs. Deadlock can be viewed as a special case of starvation since none
+of the threads which are deadlocking make progress.
+
+The dining philosophers problem was framed around the idea of eating
+with humorous intent. If a philosopher is never able to acquire
+chopsticks, that philosopher will quite literally starve.
+
+Starvation does not necessarily mean deadlock, however. Examine the
+implementation in Example REF=example:Bank account for the bank account.
+That solution is correct in the sense that it preserves mutual
+exclusion. No combination of balance checks, deposits, or withdrawals
+will cause the balance to be incorrect. Money will neither be created
+nor destroyed. A closer inspection reveals that the solution is not
+entirely fair. If a single thread is checking the balance, no other
+thread can make a deposit or a withdrawal. Balance checking threads
+could be coming and going constantly, incrementing and decrementing the
+`readers` variable, but if `readers` never goes down to zero, threads
+waiting to make deposits and withdrawals will wait forever.
+
+Another kind of starvation is _livelock_. In deadlock, two or more
+threads get stuck and wait forever, doing nothing. Livelock is similar
+except that the two threads keep executing code and waiting for some
+condition that never arrives. A classic example of livelock is two
+polite (but oddly predictable) people who are speaking with each other:
+Both happen to start talking at exactly the same moment and then stop to
+hear what the other has to say. After exactly one second, they both
+begin again and immediately stop. Lather, rinse, repeat.
+
+==== Begin Example: Livelock party preparations
+
+Imagine three friends who are going to a party. Each of them starts
+getting ready at different times. They follow the pattern of getting
+ready for a while, waiting for their friends to get ready, and then
+calling their friends to see if the other two are ready. If all three
+are ready, then the friends will leave. Unfortunately, if a friend calls
+and either of the other two aren’t ready, he’ll become frustrated and
+stop being ready. Perhaps he’ll realize that he’s got time to take a
+shower or get involved in some other activity for a while. After
+finishing that activity, he’ll become ready again and wait for his
+friends to become ready.
+
+If the timing is just right, the three friends will keep becoming ready,
+waiting for a while, and then becoming frustrated when they realize that
+their friends aren’t ready. Here is a rough simulation of this process
+in code.
+
+[source,numberLines,java]
+----
+public class Livelock extends Thread {
+	private static int totalReady = 0;
+	private static Object lock = new Object();	
+
+	public static void main(String[] args) {
+		Livelock friend1 = new Livelock();
+		Livelock friend2 = new Livelock();
+		Livelock friend3 = new Livelock();
+----
+
+The first few lines create a shared variable called `totalReady` which
+keeps track of the total number of friends ready. To avoid race
+conditions, a shared `Object` called `lock` will be used to control
+access to `totalReady`. Then, the `main()` method creates `Livelock`
+objects representing each of the friends.
+
+[source,numberLines,java]
+----
+		try {		
+			friend1.start();
+			Thread.sleep(100);
+			friend2.start();
+			Thread.sleep(100);
+			friend3.start();
+						
+			friend1.join();
+			friend2.join();
+			friend3.join();
+		}
+		catch( InterruptedException e ) {
+			e.printStackTrace();
+		}		
+		System.out.println("All ready!");
+	}
+----
+
+The rest of the `main()` method starts each of the threads representing
+the friends running, with a 100 millisecond delay before the next thread
+starts . Then, the `main()` method waits for them all to finish. If
+successful, it will print `All ready!` to the screen.
+
+[source,numberLines,java]
+----
+	public void run() {	
+		boolean done = false;
+	
+		try {		
+			while( !done ) {
+				Thread.sleep(75); //prepare for party		
+				synchronized( lock ) {
+					totalReady++;				
+				}					
+				Thread.sleep(75); //wait for friends
+				synchronized( lock ) {
+					if( totalReady >= 3 )
+						done = true;
+					else
+						totalReady--;
+				}
+			}
+		}
+		catch( InterruptedException e ) {
+			e.printStackTrace();
+		}
+	}
+}
+----
+
+In the `run()` method, each friend goes through a loop until the `done`
+variable is `true`. In this loop, an initial call to `Thread.sleep()`
+for 75 milliseconds represents preparing for the party. After that,
+`totalReady` is incremented by one. Then, the friend waits for another
+75 milliseconds. Finally, he checks to see if everyone else is ready by
+testing whether `totalReady` is `3`. If not, he decrements `totalReady`
+and repeats the process.
+
+At roughly 75 milliseconds into the simulation, the first friend becomes
+ready, but he doesn’t check with his friends until 150 milliseconds.
+Unfortunately, the second friend doesn’t become ready until 175
+milliseconds. He then checks with his friends at 225 milliseconds,
+around which time the first friend is becoming ready a second time.
+However, the third friend isn’t ready until 275 milliseconds. When he
+then checks at 350 milliseconds, the first friend isn’t ready anymore.
+On some systems the timing might drift such that the friends all become
+ready at the same time, but it could take a long, long while.
+
+In reality, human beings would not put off going to a party
+indefinitely. Some people would decide that it was too late to go.
+Others would go alone. Others would go over to their friends’ houses and
+demand to know what was taking so long. Computers are not nearly as
+sensible and must obey instructions, even if they cause useless
+repetitive patterns. Realistic examples of livelock are hard to show in
+a short amount of code, but they do crop up in real systems and can be
+very difficult to predict.
+
+==== End Example
+
+==== Sequential execution
+
+When designing a parallel program, you may notice that synchronization
+tools are necessary to get a correct answer. Then, when you run this
+parallel version and compare it to the sequential version, it runs no
+faster or, worse, runs slower than the sequential version. Too much zeal
+with synchronization tools may produce a program which gives the right
+answer but does not exploit any parallelism.
+
+For example, we can take the `run()` method from the parallel
+implementation of matrix multiply given in Example REF=example:Matrix
+multiplication and use the `synchronized` keyword to lock on the matrix
+itself.
+
+....
+public void run() {
+    synchronized( c ) {
+        for( int i = lower; i < upper; i++ )
+            for( int j = 0; j < c[i].length; j++ )
+                for( int k = 0; k < b.length; k++ )
+                    c[i][j] += a[i][k] * b[k][j];
+    }
+}
+....
+
+In this case, only a single thread would have access to the matrix at
+any given time, and all speedup would be lost.
+
+For this version of matrix multiply, no synchronization is needed. In
+the case of the producer/consumer problem, synchronization is necessary,
+and the only way to manage the buffer properly is to enforce sequential
+execution. Sometimes sequential execution cannot be avoided, but you
+should always know which pieces of code are truly executing in parallel
+and which are not if you hope to get the maximum amount of speedup. The
+`synchronized` keyword should be used whenever it is needed, but no
+more.
+
+==== Priority inversion
+
+In Chapter REF=chapter:Concurrent Programming we suggest that you use
+thread priorities rarely. Even good reasons to use priorities can be
+thwarted by _priority inversion_. In priority inversion, a lower
+priority thread holds a lock needed by a higher priority thread,
+potentially for a long time. Because the high priority thread cannot
+continue, the lower priority thread gets more CPU time, as if it were a
+high priority thread.
+
+Worse, if there are some medium priority threads in the system, the low
+priority thread may hold the lock needed by the high priority thread for
+even longer because those medium priority threads reduce the amount of
+CPU time the low priority thread has to finish its task.
+
+[[solution:dining_philosophers]]
+=== Solution: Dining philosophers
+
+Now we give our solution to the dining philosophers problem. Although
+deadlock was the key pitfall we were trying to avoid, many other issues
+can crop up in solutions to this problem. A single philosopher may be
+forced into starvation, or all philosophers may experience livelock
+through some pattern of picking up and putting down chopsticks which
+never quite works out. A very simple solution could allow the
+philosophers to eat, one by one, in order. Then, the philosophers would
+often and unnecessarily be waiting to eat, and the program would
+approach sequential execution.
+
+The key element that makes our solution work is that we force a
+philosopher to pick up two chopsticks atomically. The philosopher will
+either pick up both chopsticks or neither.
+
+[source,numberLines,java]
+----
+public class DiningPhilosopher extends Thread {
+	public static final int SEATS = 5; 
+	private static boolean[] chopsticks = new boolean[SEATS];	
+	private int seat;
+	
+	public DiningPhilosopher( int seat ) {
+		this.seat = seat;		
+	}
+----
+
+We begin with the same setup as the deadlocking version given in
+Section REF=subsection:deadlock. Unlike that example, we include a
+`main()` method here for completeness. In `main()`, we set all the
+chopsticks to `false` (unused), create and start a thread for each
+philosopher, and then wait for them to finish.
+
+[source,numberLines,java]
+----
+	public static void main(String args[]) {		
+		for( int i = 0; i < SEATS; i++ )
+			chopsticks[i] = false;
+		DiningPhilosopher[] philosophers =
+			new DiningPhilosopher[SEATS];		
+		for( int i = 0; i < SEATS; i++ ) {
+			philosophers[i] = new DiningPhilosopher( i );
+			philosophers[i].start();
+		}
+		try	{
+			for( int i = 0; i < SEATS; i++ )						
+				philosophers[i].join();			
+		}
+		catch( InterruptedException e ) {
+			e.printStackTrace();
+		}		
+		System.out.println("All philosophers done.");
+	}
+----
+
+This `run()` method is different from the deadlocking version but not in
+a way that prevents deadlock. We added the `for` loop so that you could
+see the philosophers eat and think many different times without
+problems. We also added the `think()` method to randomize the amount of
+time between eating so that each run of the program is less
+deterministic.
+
+[source,numberLines,java]
+----
+	public void run() {			
+		for( int i = 0; i < 100; i++ ) {
+			think();
+			getChopsticks();
+			eat();
+		}
+	}
+	
+	private void think() {
+		Random random = new Random();
+		try {
+			sleep( random.nextInt(20) + 10 );
+		}
+		catch( InterruptedException e ) {
+			e.printStackTrace();
+		}
+	}
+----
+
+The real place where deadlock is prevented is in the `getChopsticks()`
+method. The philosopher acquires the `chopsticks` lock and then picks up
+the two chopsticks she needs only if both are available. Otherwise, she
+waits.
+
+[source,numberLines,java]
+----
+	private void getChopsticks() {
+		int location1 = seat;
+		int location2;				
+		if( seat == 0 )
+			location2 = SEATS - 1;
+		else 
+			location2 = seat - 1;				
+		synchronized( chopsticks ) {
+			while( chopsticks[location1] 
+				|| chopsticks[location2] ) {
+				try {
+					chopsticks.wait();			
+				}
+				catch( InterruptedException e )	{
+					e.printStackTrace();
+				}								
+			}			
+			chopsticks[location1] = true;
+			chopsticks[location2] = true;
+		}		
+		System.out.println("Philosopher " + seat + 
+			" picked up chopsticks " + location1 + " and "
+			+ location2 + ".");
+	}
+----
+
+Finally, in the `eat()` method, the philosopher eats the rice. We would
+assume that some other computation would be done here in a realistic
+problem *before* entering the `synchronized` block. The eating itself
+does not require a lock. After eating is done, the lock is acquired to
+give back the chopsticks (hopefully after some cleaning), and then all
+waiting philosophers are notified that some chopsticks may have become
+available.
+
+[source,numberLines,java]
+----
+	private void eat() {
+		//eat rice first
+		synchronized( chopsticks ) {
+			chopsticks[seat] = false;			
+			if( seat == 0)
+				chopsticks[SEATS - 1] = false;
+			else
+				chopsticks[seat - 1] = false;				
+			chopsticks.notifyAll();
+		}
+	}
+}
+----
+
+Our solution prevents deadlock and livelock because some philosopher
+will get control of two chopsticks eventually, yet there are still
+issues. Note that each philosopher only eats and thinks 100 times. If,
+instead of philosophers sharing chopsticks, each thread were a server
+sharing network storage units, the program could run for an unspecified
+amount of time: days, weeks, even years. If starvation is happening to a
+particular philosopher in our program, the other philosophers will
+finish after 100 rounds, and the starved philosopher can catch up. If
+there were no limitation on the loop, a starving philosopher might never
+catch up.
+
+Even if you increase the number of iterations of the loop quite a lot,
+you would probably not see starvation of an individual thread because we
+are cheating in another way. Some unlucky sequence of chopstick accesses
+by two neighboring philosophers could starve the philosopher between
+them. By making the `think()` method wait a random amount of time, such
+a sequence will probably be interrupted. If all philosophers thought for
+exactly the same amount of time each turn, an unlucky pattern could
+repeat over and over. It is not unreasonable to believe that the amount
+of thinking a philosopher (or a server) will do at any given time will
+vary, but this kind of behavior will vary from system to system.
+
+It is very difficult to come up with a perfect answer to some
+synchronization problems. Such problems have been studied for many
+years, and research continues to find better solutions.
+
+=== Exercises
+
+1.  <<exercise:synchronized keyword>> What is the purpose of the
+`synchronized` keyword? How does it work?
+2.  <<exercise:constructor leak>> The language specification for Java
+makes it illegal to use the `synchronized` keyword on constructors.
+During the creation of an object, it is possible to _leak_ data to the
+outside world by adding a reference to the object under construction to
+some shared data structure. What’s the danger of leaking data in this
+way?
+3.  <<exercise:wait or notify without synchronized>> If you call
+`wait()` or `notify()` on an object, it must be inside of a block
+synchronized on the same object. If not, the code will compile, but an
+`IllegalMonitorStateException` may be thrown at run time. Why is it
+necessary to own the lock on an object before calling `wait()` or
+`notify()` on it?
+4.  <<exercise:notify vs. notifyAll>> Why is it safer to call
+`notifyAll()` than `notify()`? If it is generally safer to call
+`notifyAll()`, are there any scenarios in which there are good reasons
+to call `notify()`?
+5.  <<exercise:restaurant synchronization>> Imagine a simulation of a
+restaurant with many waiter and chef objects. The waiters must submit
+orders to the kitchen staff, and the chefs must divide the work among
+themselves. How would you design this system? How would information and
+food be passed from waiter to chef and chef to waiter? How would you
+synchronize the process?
+6.  <<exercise:race condition>> What is a race condition? Give a real
+life example of one.
+7.  <<exercise:per object lock>> Let’s reexamine the code that
+increments a variable with several threads from
+Section REF=concepts:Thread interaction. We can rewrite the `run()`
+method as follows.
++
+....
+public synchronized void run() {
+    for( int i = 0; i < COUNT / THREADS; i++ )
+        counter++;
+}
+....
++
+Will this change fix the race condition? Why or why not?
+8.  <<exercise:deadlock conditions>> Examine our deadlock example from
+Example REF=example:Deadlock sum. Explain why this example fulfills all
+four conditions for deadlock. Be specific about which threads and which
+resources are needed to show each condition.
+9.  <<exercise:priority inversion>> What is priority inversion? Why can
+a low priority thread holding a lock be particularly problematic?
++
+*Programming Practice*
+10. <<exercise:better producer/consumer>> In
+Example REF=example:Producer/consumer the `Buffer` class used to
+implement a solution to the producer/consumer problem only has a single
+lock. When the buffer is empty and a producer puts an item in it, both
+producers and consumers are woken up. A similar situation happens
+whenever the buffer is full and a consumer removes an item. Re-implement
+this solution with two locks so that a producer putting an item into an
+empty buffer only wakes up consumers and a consumer removing an item
+from a full buffer only wakes up producers.
+11. <<exercise:fair bank account>> In Example REF=example:Bank account
+we used the class `SynchronizedAccount` to solve a bank account problem.
+As we mention in Section REF=section:starvation and livelock, depositing
+and withdrawing threads can be starved out by a steady supply of balance
+checking threads. Add additional synchronization tools to
+`SynchronizedAccount` so that balance checking threads will take turns
+with depositing and withdrawing threads. If there are no depositing or
+withdrawing threads, make your implementation continue to allow an
+unlimited number of balance checking threads to read concurrently.
+12. <<exercise:philosophers with hunger>> The solution to the dining
+philosophers problem given in Section REF=solution:dining philosophers
+suffers from the problem that a philosopher could be starved by the two
+philosophers on either side of her, if she happened to get unlucky. Add
+variables to each philosopher which indicate hunger and the last time a
+philosopher has eaten. If a given philosopher is hungry and has not
+eaten for longer than her neighbor, her neighbor should not pick up the
+chopstick they share. Add synchronization tools to enforce this
+principle of fairness. Note that this solution should not cause
+deadlock. Although one philosopher may be waiting on another who is
+waiting on another and so on, *some* philosopher in the circle must have
+gone hungry the longest, breaking circular wait.
++
+*Experiments*
+13. <<exercise:time lock acquisition>> Critical sections can slow down
+your program by preventing parallel computation. However, the locks used
+to enforce critical sections can add extra delays on top of that. Design
+a simple experiment which repeatedly acquires a lock and does some
+simple operation. Test the running time with and without the lock. See
+if you can estimate the time needed to acquire a lock in Java on your
+system.
+14. <<exercise:thread time on CPU>> Design a program which
+experimentally determines how much time a thread is scheduled to spend
+running on a CPU before switching to the next thread. To do this, first
+create a tight loop which runs a large number of iterations, perhaps
+1,000,000 or more. Determine how much time it takes to run a single run
+of those iterations. Then, write an outer loop which runs the tight loop
+several times. Each iteration of the outer loop, test to see how much
+time has passed. When you encounter a large jump in time, typically at
+least 10 times the amount of time the tight loop usually takes to run to
+completion, record that time. If you run these loops in multiple threads
+and average the unusually long times together for each thread, you
+should be able to find out about how long each thread waits between
+runs. Using this information, you can estimate how much time each thread
+is allotted. Bear in mind that this is only an estimation. Some JVMs
+will change the amount of CPU time allotted to threads for various
+reasons. If you are on a multicore machine, it will be more difficult to
+interpret your data since some threads will be running concurrently.
+15. <<exercise:priority inversion experiment>> Create an experiment to
+investigate priority inversion in the following way.
+a.  Create two threads, setting the priority of the first to
+`MIN\_PRIORITY` and the priority of the second to `MAX\_PRIORITY`. Start
+the first thread running but wait 100 milliseconds before starting the
+second thread. The first thread should acquire a shared lock and then
+perform some lengthy process such as finding the sum of the sines of the
+first million integers. After it finishes its computation, it should
+release the lock, and print a message. The second thread should try to
+acquire the lock, print a message, and then release the lock. Time the
+process. Because the lock is held by the lower priority thread, the
+higher priority thread will have to wait until the other thread is done
+for it to finish.
+b.  Once you have a feel for the time it takes for these two threads to
+finish alone, create 10 more threads that must also perform a lot of
+computation. However, these threads do not try to acquire the lock. How
+much do they delay completion of the task? How does this delay relate to
+the number of cores in your processor? How much does the delay change if
+you set the priorities of these new threads to `MAX\_PRIORITY` or
+`MIN\_PRIORITY`?

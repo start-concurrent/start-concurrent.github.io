@@ -1,0 +1,843 @@
+[[chapter:Polymorphism]]
+:imagesdir: chapters/17-polymorphism/images
+== Polymorphism
+
+=== Problem: Banking account with a vengeance
+
+In Chapter REF=chapter:Synchronization, we introduced the
+`SynchronizedAccount` class that guarantees that checking the balance,
+making deposits, and making withdrawals will all be safe even in a
+multi-threaded environment. Unfortunately, `SynchronizedAccount` gives
+very few of the options a full bank account should have. The problem we
+present to you now is to create an entire line of bank accounts which
+all inherit from `SynchronizedAccount`. Because of inheritance, all
+accounts will at least have `getBalance()`, `deposit()`, and
+`withdraw()` methods.
+
+You must create three new account classes. The constructor for each
+class must take a `String` which gives the name of the person opening
+the account and `double` which gives the starting balance of the
+account. The first of these classes is `CheckingAccount`. The rules for
+the checking account implemented by this class are simply that the
+customer is charged $10 every month that the account is open. The second
+class is `DirectDepositAccount`. This account is very similar to the
+basic checking account except that an additional method
+`directDeposit()` has been added. On its own, `directDeposit()` appears
+to operate like `deposit()`; however, if a direct deposit has been made
+in the last month, no service fee will be charged to the account.
+
+The `SavingsAccount` class operates somewhat differently. In addition to
+a name and a starting balance, the constructor for a `SavingsAccount`
+takes a `double` which gives the annual interest rate the account earns.
+Each month the balance is checked. If the balance of the account is
+greater than $0, the account earns interest corresponding to
+latexmath:[\frac{1}{12}] of the annual rate. However, if the balance
+is below $1000, a $25 service fee is charged each month, regardless of
+how low the balance becomes.
+
+In Chapter REF=chapter:Inheritance you were exposed to concepts in
+inheritance. We are now returning to these concepts and exploring them
+further. In the first place, concurrency is on the table now, and you
+must be careful to keep your derived classes thread-safe. In the second,
+we will discuss the full breadth of inheritance. The tools we discuss
+are intended to allow you to solve this extended bank account problem
+and indeed many other problems with as little code as possible.
+
+=== Concepts: Polymorphism
+
+Perhaps the most important use for inheritance is code reuse. When you
+can successfully reuse existing code, you are not just saving the time
+of writing new code: You are also leveraging the quality and correctness
+of the existing code. For example, when you create your own class which
+extends `Thread`, you are confident that all the thread mechanisms work
+properly.
+
+You can reuse code by taking a class that does something you like, say
+the `Racecar` class, and enhance it in some way, perhaps so that it
+becomes the `TurboRacecar` class. If you use the `TurboRacecar` class on
+its own, your code reuse is through simple inheritance. If you use
+`TurboRacecar` objects with a `RaceTrack` class, which was written to
+take `Racecar` objects as input, you have entered the realm of
+_polymorphism_. Polymorphism means that the same method can be used on
+different types of objects without being rewritten. In Java,
+polymorphism works by allowing the programmer to use a derived class in
+any place where a base class could have been used.
+
+==== The is-a relationship
+
+Consider the two following class definitions:
+
+Now, imagine that a `RaceTrack` has an `addCar(Racecar car)` method
+which adds a `Racecar` to the list of cars on the track. When the cars
+begin racing, the `RaceTrack` object will query the cars to see how much
+horsepower they have. A `Racecar` object will return 700 when
+`getHorsepower()` is called, but a `TurboRacecar` will return 1100.
+
+Even through the `TurboRacecar` does not have an explicit
+`getTopSpeed()` method, it inherits one from `Racecar`. Like all derived
+classes in Java, `TurboRacecar` has all the methods and fields that
+`Racecar` does. This relationship is called an _is-a_ relationship
+because every `TurboRacecar` is a `Racecar` in the sense that you can
+use a `TurboRacecar` whenever a `Racecar` is required.
+
+==== Dynamic binding
+
+There is a little bit of magic that makes polymorphism work. When you
+compile your code, the `RaceTrack` doesn’t know which `getHorsePower()`
+method will eventually get called. Only at run time does it query the
+object in question and, if it is a `TurboRacecar`, use the overridden
+method that returns 1100. This feature of Java is called _dynamic
+binding_. Not every object oriented programming language supports
+dynamic binding. C++ actually allows the programmer to specify whether
+or not a method is dynamically bound.
+
+Only methods are dynamically bound in Java. Fields are _statically
+bound_. Consider the following re-definitions of `Racecar` and
+`TurboRacecar`.
+
+Assume that `RaceTrack` contains a method which prints out the
+horsepower of a `StaticRacecar` like so:
+
+....
+public void printHorsepower( StaticRacecar car ) {
+    System.out.print( car.HORSEPOWER );
+}
+....
+
+Even if you pass an object of type `StaticTurboRacecar`, the value 700
+will be printed out every time. In Java, all fields, whether normal,
+`static`, or `final` are statically bound.
+
+==== General vs. specific
+
+Another way to look at inheritance is as a statement of a specialization
+and generalization. A `TurboRacecar` is a specific kind of `Racecar`
+while a `Racecar` is a general category that `TurboRacecar` belongs to.
+
+The rules of Java say that you can always use a more specific version of
+a class than you need but never a more general one. You can use a
+`TurboRacecar` any time you need a `Racecar` but not the reverse. A
+square will do the job of a rectangle, but a rectangle will not always
+be suitable when a square is needed.
+
+Consider the following two classes:
+
+Here is a method that requires a `RocketShip` but only uses its
+`travel()` method.
+
+....
+public void takeVacation( RocketShip ship, String destination ) {
+    ship.travel( destination );
+}
+....
+
+It seems as though we should be able to pass any `Vehicle` to the
+`takeVacation()` method because the only method in `ship` used by
+`takeVacation()` is the `travel()` method. However, the programmer
+specified that the parameter should be a `RocketShip`, and Java plays it
+safe. Just because it looks like there won’t be a problem, Java isn’t
+going to take any chances on passing an overly general `Vehicle` when a
+`RocketShip` is required. If Java took chances, a problem could arise if
+the `takeVacation()` method was overridden by a method that did call
+`ship.blastOff()`.
+
+In summary, you can pass a `RocketShip` to a method which takes a
+`Vehicle` or store a `RocketShip` in an array of `Vehicles`, but not the
+reverse. Java usually gives a compile time error if you try to put
+something too general into a location that is too specific. There are,
+however, some situations which are so tricky that Java doesn’t catch the
+error until runtime. Arrays, specifically, can cause problems. Examine
+the following code snippet:
+
+....
+Vehicle[] transportation = new RocketShip[100];
+transportation[0] = new Vehicle();
+....
+
+On the first line, we are using a `Vehicle` array reference to store an
+array of 100 `RocketShip`s. But, in the second line, we try to store a
+`Vehicle` into an array that is really a `RocketShip` array, even though
+it looks to the compiler like a `Vehicle` array. Doing so will compile
+but throw an `ArrayStoreException` at runtime.
+
+=== Syntax: Inheritance tools in Java
+
+So far, we have described polymorphism in Java with a conceptual focus.
+In our previous examples, the only language tool needed to use
+polymorphism was the `extends` keyword which you are well familiar with
+by now. There are a number of other tools designed to help you structure
+class hierarchies and enforce design decisions.
+
+==== Abstract classes and methods
+
+One such tool is abstract classes. An abstract class is one which can
+never be instantiated. In order to use an abstract class, it is
+necessary to derive a class from it. To create an abstract class, you
+just need to add the `abstract` keyword to its definition, as in the
+following example.
+
+This class is useless for a number of reasons. For one thing, there’s no
+way to find out the value of `variable` except by printing it out.
+Furthermore, there’s no way to change the value of `variable` after the
+object has been created. Finally, since an abstract class cannot be
+instantiated, the following code snippet will not compile.
+
+....
+Useless thing = new Useless( 14 );
+....
+
+Instead, we must create a new class that extends `Useless`.
+
+Then, we can instantiate an object of type `Useful` and use it for
+something.
+
+....
+Useless item = new Useful( 14 );
+item.print();
+....
+
+Note that, in accordance with the rules of Java, we can store a more
+specific object of type `Useful` into more general reference of type
+`Useless`. Even though Java knows that the object it points to will
+never actually be a `Useless` object, it is perfectly legal to have a
+`Useless` reference. You can use abstract classes in this way to provide
+a base class with some fundamental fields and methods that all other
+classes in a particular hierarchy need. By using the keyword `abstract`,
+you are marking the class as template for other classes instead of a
+class that will be used directly.
+
+Methods can be abstract as well. If you have an abstract class, you can
+create a method header which describes a method that all non-abstract
+children classes must implement, as show below.
+
+This abstract class is supposed to be a template for classes which can
+produce some sequence of numbers. Note that there is no body for the
+`getNextValue()` method. It simply ends with a semicolon. Every
+non-abstract derived class must implement a `getNextValue()` method to
+produce the next number in the sequence. For example, we could implement
+an arithmetic or a geometric sequence as follows.
+
+The `Sequence` class does not specify *how* the sequence of numbers
+should be generated, but any derived class must implement the
+`getNextValue()` method in order to compile. By using an abstract class,
+we don’t have to create a base class which generates a meaningless
+sequence of numbers just for the sake of establishing the
+`getNextValue()` method.
+
+Here’s a more involved example of an abstract class that gives a first
+step toward solving the bank account with a vengeance problem posed at
+the beginning of the chapter.
+
+[source,numberLines,java]
+----
+import java.util.Calendar;
+----
+
+The first step is to import the `Calendar` class for some date stuff we
+are going to use later.
+
+[source,numberLines,java]
+----
+public abstract class BankAccount extends SynchronizedAccount {
+	private String name;
+	private Calendar lastAccess;
+	private int monthsPassed = 0;
+----
+
+We extend `SynchronizedAccount` and declare the new class to be
+abstract. In this example, we do not use any abstract methods, but,
+since each bank account has unique characteristics, we don’t want people
+to be able to create a generic `BankAccount`.
+
+[source,numberLines,java]
+----
+	public BankAccount( String name, double balance )
+		throws InterruptedException {
+		this.name = name;
+		changeBalance( balance );
+		lastAccess = Calendar.getInstance();		
+	}
+	
+	public String getName() { return name; }
+	
+	protected Calendar getLastAccess() { return lastAccess; }
+	
+	protected int getMonthsPassed() { return monthsPassed; }
+----
+
+The constructor and the accessors should be what you expect to see. Note
+that calling the static method `Calendar.getInstance()` is the correct
+way to get a `Calendar` object with the current date and time.
+
+[source,numberLines,java]
+----
+	public final double getBalance() throws InterruptedException {		
+		update();		
+		return super.getBalance();
+	}
+	
+	public final void deposit( double amount )
+		throws InterruptedException {
+		update();
+		super.deposit( amount );		
+	}
+	
+	public final boolean withdraw( double amount )
+		throws InterruptedException {
+		update();		
+		return super.withdraw(amount);
+	}
+----
+
+Then come the balance checking and changing methods. Each simply calls
+the parent methods after calling an `update()` method we discuss below.
+
+[source,numberLines,java]
+----
+	protected synchronized void update() throws InterruptedException {
+		Calendar current = Calendar.getInstance();
+		int months = 12*(current.get(Calendar.YEAR) -
+		getLastAccess().get(Calendar.YEAR)) +
+		(current.get(Calendar.MONTH) -
+		getLastAccess().get(Calendar.MONTH));
+		if( months > 0 ) {
+				lastAccess = current;
+				monthsPassed = months;
+		}
+	}
+}	
+----
+
+Other than adding `String` for a name associated with the account, the
+`update()` method is the other major addition made in `BankAccount`.
+Each time `update()` is called, the number of months since the last
+access is stored in the field `monthsPast` and the timestamp of the last
+access is stored in `lastAccess`. We didn’t need these time features
+before, but issues like earning interest or paying monthly service
+charges will make them necessary. This method is synchronized so that
+the two fields associated with the last access are updated atomically.
+
+==== Final classes and methods
+
+If you look at the previous example carefully, you will notice that the
+methods `getBalance()`, `deposit()`, and `withdraw()` were each declared
+with the keyword `final`. You have seen this keyword used to declare
+constants before. When applied to methods, `final` is philosophically
+similar (and almost the opposite of `abstract`). A method which is
+declared `final` cannot be overridden by child classes. If you are
+designing a class hierarchy and you want to lock a method into doing a
+specific thing and never changing, this is the way to do it.
+
+Like `abstract`, the keyword `final` can be applied to a class as well.
+If you want to prevent a class from being extended further, apply the
+`final` keyword to its definition. You may not find yourself using this
+feature of Java very often. It is primarily useful in situations where a
+large body of code has been designed to make use of a specific class.
+The designers of that specific class want to keep it exactly the way it
+is and prevent anything unexpected from happening.
+
+The most common example of a `final` class is the `String` class.
+Consider the following.
+
+....
+public class SuperString extends String {}
+....
+
+This code will give a compiler error. `String` is perfect the way it is
+(or so the Java designers have decided). There is no reason to restrict
+your code arbitrarily, but use of the `final` keyword for classes,
+methods, and especially to specify constants allows the compiler to do
+some performance optimizations that would otherwise be impossible.
+
+==== Casting
+
+If we shift the focus back to polymorphism, we have to admit that we
+have avoided one of the messier issues. It’s true that polymorphism
+gives us lots of power. For example, we can make a `Vehicle` array and
+store subclasses of `Vehicle` inside, like so:
+
+....
+Vehicle[] vehicles = new Vehicle[5];
+vehicles[0] = new Skateboard();
+vehicles[1] = new RocketShip();
+vehicles[2] = new SteamBoat();
+vehicles[3] = new Car();
+vehicles[4] = new Skateboard;
+....
+
+This process could be infinitely more complex. We could be reading data
+out of a file and dynamically creating different kinds of `Vehicle`
+objects. But, the final product of an array of `Vehicle` objects is the
+important thing. Now, we can run through the array with a loop and have
+the code magically work for each kind of `Vehicle`.
+
+....
+for( int i = 0; i < vehicles.length; i++ )
+    vehicles[i].travel( "Prague" );
+....
+
+Each `Vehicle` will travel to Prague as it should. The only trouble is
+that we have hidden some information. We know that `vehicles[1]` is a
+`RocketShip`, but we can’t treat it like one.
+
+....
+vehicles[1].blastOff();
+....
+
+This code will not compile.
+
+....
+RocketShip ship = vehicles[1];
+....
+
+This code will not compile either. In both cases, we must use an
+explicit cast to tell the compiler that the object really *is* a
+`RocketShip`.
+
+....
+RocketShip ship = (RocketShip)vehicles[1];
+((RocketShip)vehicles[1]).blastOff();
+....
+
+Both lines of code will work. The compiler is always conservative. It
+never makes guesses about the type of something. For example:
+
+....
+Vehicle ship = new RocketShip();
+ship.blastOff();
+....
+
+Even though `ship` *must* be a `RocketShip`, Java does not assume that.
+The compiler uses the reference type `Vehicle` to do the check and will
+refuse to compile. Casting allows us to use our human intellect to
+overcome the shortsightedness of the compiler. Human intellect is
+unfortunately flawed. What happens if you cast improperly?
+
+....
+Vehicle vehicle = new Skateboard();
+RocketShip ship = (RocketShip)vehicle;
+ship.blastOff();
+....
+
+In this example, we are trying to cast a `Skateboard` into a
+`RocketShip`. At compile time, no errors will be found. Because we use
+explicit casting, the compiler assumes that we, powerful human beings
+that we are, know what we are doing. The error will happen at runtime
+while executing the second line. Java will try to cast `vehicle` into a
+`RocketShip`, fail, and throw a `ClassCastException`.
+
+Java provides some additional tools to make casting easier. One of these
+is the `instanceof` keyword which can be used to test if an object is an
+instance of a particular class (or one of its derived classes). For
+example, we can make an object execute a special command if we know that
+the object is capable of it.
+
+....
+public void visitDenver( Vehicle vehicle ) {
+    if( vehicle instanceof RocketShip )
+        ((RocketShip)vehicle).blastOff();
+    vehicle.travel( "Denver" ); 
+}
+....
+
+Even inside the `if` statement where it must be the case that `vehicle`
+is a `RocketShip`, we still must perform an explicit cast. Sometimes
+`instanceof` is not precise enough. If you must be sure that the object
+in question is a specific class and not just one of its subclasses, you
+can use the `getClass()` method on any object and compare it to the
+static class object. Using this tool, we can rewrite the former example
+to be more specific.
+
+....
+public void visitDenver( Vehicle vehicle ) {
+    if( vehicle.getClass() ==  RocketShip.class )
+        ((RocketShip)vehicle).blastOff();
+    vehicle.travel( "Denver" ); 
+}
+....
+
+This version of the code will only call `blastOff()` for objects of
+class `RocketShip` and not for objects of a subclass like
+`FusionPoweredRocketShip`.
+
+[[subsection:Inheritance_and_exceptions]]
+==== Inheritance and exceptions
+
+Beyond `ClassCastException`s, there are a few other issues that come up
+when combining exceptions with inheritance. As you already know, an
+exception handler for a parent class will work for a child class. As
+such, when using multiple exception handlers, it is necessary to order
+them from most specific to most general in terms of class hierarchy.
+
+However, there is another subtle rule that is necessary to keep
+polymorphism functioning smoothly. Let’s consider a `Fruit` class with
+an `eat()` method that throws an `UnripeFruitException`.
+
+....
+public class Fruit {
+    public void eat() throws UnripeFruitException {
+        ...
+    }
+}
+....
+
+Almost any fruit can be unripe, and it is unpleasant to try to eat an
+unripe fruit. But, there are other things that can go wrong when eating
+fruit. Consider the `Plum` class derived from `Fruit`.
+
+....
+public class Plum extends Fruit {
+    public void eat() throws
+        UnripeFruitException, ChokingOnPitException {
+        ...
+    }
+}
+....
+
+In the `Plum` class, the `eat()` method has been overridden to tackle
+the special ways that eating a plum is different from eating fruit in
+general. When eating a plum, you can make a mistake and try to swallow
+the pit, throwing, it seems, a `ChokingOnPitException`. This scenario
+seems natural, but it is not allowed in Java.
+
+The principle behind polymorphism is that a more specialized version of
+something can be used in place of a more general version. Indeed, if you
+use a `Plum` in place of a `Fruit`, calling the `eat()` method is no
+problem. The problem happens if a `ChokingOnPitException` is thrown.
+Now, code which was designed for `Fruit` objects knows nothing about a
+`ChokingOnPitException`, so there is no way for such code to catch the
+exception and deal with the situation.
+
+There is nothing wrong with throwing exceptions on overridden methods.
+The rule is that the overriding method must throw a subset (not a proper
+subset, so it could be all of the original exceptions) of the exceptions
+that the overridden method throws. This rule is actually a concept
+called Hoare’s rule of consequence that pops up several places in
+programming languages. Essentially, if you start with something that
+works, tighten the requirements on the input (use a `Plum` instead of
+any `Fruit`), loosen the requirements on the output (throw fewer
+exceptions than were originally thrown), it will still work.
+
+==== Begin Example: More human than human
+
+Now we have a few additional examples in a somewhat larger class
+hierarchy.
+
+.Animal class hierarchy.
+image::animals.png[]
+
+
+We begin with the abstract `Animal` class. This class gives a base
+definition for animals which includes whether the animal is alive,
+whether the animal is happy, and whether it is warmblooded (declared
+`final` because an animal can’t switch between warmblooded and
+coldblooded).
+
+We then extend `Animal` into `Mammal`. All mammals are warmblooded,
+which is reflected in the constructor call to the base class. In
+addition, it is assumed that all mammals make some sound. Mammals also
+have well-defined genders, declared `final` because it cannot change
+once it has been set. Like `Animal`, `Mammal` is an abstract class, and
+any non-abstract subclass of `Mammal` must implement `makeSound()`.
+
+The `Platypus` class extends `Mammal` and adds the unusual things that a
+platypus can do: laying eggs (if female) and poisoning other animals (if
+male).
+
+The `Human` class also extends `Mammal`. Depending on the problem being
+solved, this class might warrant a great deal more specialization. Right
+now the main addition is taking happiness as an argument to the
+constructor. Unfortunately, the default human state is not necessarily
+happiness.
+
+Finally, the `DavidBowie` class extends `Human` and is declared a final
+class because it really is impossible to add anything to David Bowie.
+
+==== End Example
+
+You will notice that our examples have stretched fairly long in this
+chapter. It is difficult to give strong motivation for some aspects of
+inheritance and polymorphism without a large class hierarchy. These
+tools are designed to help organize large bodies of code and should
+become more useful as the size of the problem you are working on grows.
+One of the best examples of the success of inheritance is the Java API
+itself. The standard Java library is very large and depends on
+inheritance a great deal.
+
+=== Solution: Banking account with a vengeance
+
+Now we return to the specific problem given at the beginning of the
+chapter and give its solution. We have already given you the
+`BankAccount` abstract class which provides a lot of structure.
+
+.Bank account class hierarchy.
+image::accounts.png[]
+
+
+.Subclass of `BankAccount` that models a normal checking account.
+[source, java, linenums]
+----
+include::programs/CheckingAccount.java[]
+----
+
+The most basic account is the `CheckingAccount`. As you recall from the
+`BankingAccount` class, the `getBalance()`, `deposit()`, and
+`withdraw()` methods are all declared `final`. At first it seems as if
+there is no way to change these methods to add the $10 service charge.
+However, each of those methods calls the `update()` method first to take
+care of any bookkeeping. By overriding the `update()` method, we can
+easily add the service charge. The new `update()` method calls the
+parent `update()` to calculate the passage of time, then it changes the
+balance based on the number of months that have passed.
+
+The system we have adopted may seem unusual at first. Any time the
+balance is checked, deposited to, or withdrawn from, we call `update()`.
+By updating the account to reflect any months which may have passed
+before continuing on, we do not have to write code which periodically
+updates each bank account. Each bank account is only updated if needed.
+
+We were careful to mark `update()` as `synchronized`. Although the
+chance of an error happening is small, we make the update of the
+internal `Calendar` and the application of any fee atomic, just to be
+safe.
+
+Note that we do not use the constant `FEE` directly in `update()`.
+Instead, we call the `getFee()` method. The reason for this decision is
+due to the next class.
+
+.Subclass of `CheckingAccount` that models the behavior of accounts with direct deposits.
+[source, java, linenums]
+----
+include::programs/DirectDepositAccount.java[]
+----
+
+The `DirectDepositAccount` class extends the `CheckingAccount` class.
+Note that the `update()` method hasn’t been overridden. We have added
+another `Calendar` object to keep track of the last time a direct
+deposit was made. Then, we do override the `getFee()` method. If there
+has been a recent direct deposit, the fee is nothing, otherwise, it
+returns the fee from the `CheckingAccount`. Because of dynamic binding,
+the `update()` method defined in `CheckingAccount` will call this
+overridden `getFee()` method for `DirectDepositAccount` objects.
+
+.Subclass of `BankAccount` that models the behavior of a savings account.
+[source, java, linenums]
+----
+include::programs/SavingsAccount.java[]
+----
+
+There should be few surprises in the last class, `SavingsAccount`. The
+biggest difference is that, in the `update()` method, we use a loop to
+update the balance because the account could be gaining interest and
+also incurring fees. The interaction of the two operations may give a
+different result than applying each in a block for the backlog of
+months.
+
+This set of classes may not resemble the way a real, commercial-grade
+banking application works. Nevertheless, with inheritance and
+polymorphism we were able to create bank accounts which do some
+complicated tasks with a relatively small amount of code. At the same
+time, we preserved thread safety so that these accounts can be used in
+concurrent environments.
+
+=== Concurrency: Atomic libraries
+
+This chapter has discussed using polymorphism to reuse code. To solve
+the Bank Account with a Vengeance problem from the beginning of the
+chapter, we explored the process of extending several bank account
+classes to add additional features while working hard to maintain thread
+safety.
+
+Code can be reused by extending classes with child classes or by using
+instances of existing classes as fields. There is no single solution
+that is best for every case. As in the bank account examples, it can be
+difficult to know when to apply the `synchronized` keyword to methods.
+
+To lessen the load on the programmer, the Java API provides a library of
+atomic primitives in the +
+`java.util.concurrent.atomic` package. These are classes with certain
+operations that are guaranteed to execute atomically. For example, the
+`AtomicInteger` class encapsulates the functionality of an `int`
+variable with atomic accesses. One of its methods is
+`incrementAndGet()`, which will atomically increment its internal value
+by 1 and return the result. Recall from
+Program REF=program:RaceCondition that even an operation as simple as
+`++` is not atomic. If many different threads try to increment a single
+variable, some of those increments can get lost, causing the final value
+to be less than it should be.
+
+==== Begin Example: AtomicInteger
+
+We can use the `AtomicInteger` class to rewrite
+Program REF=program:RaceCondition so that no race condition occurs.
+
+.Program to demonstrate the use of `AtomicInteger`.
+[source, java, linenums]
+----
+include::programs/NoRaceCondition.java[]
+----
+
+This program is identical to Program REF=program:RaceCondition, except
+that the type of `counter` has been changed from `int` to
+`AtomicInteger` (and an appropriate `import` has been added).
+Consequently, the `++` operation was changed to an `incrementAndGet()`
+method call, and a `get()` method call was needed to get the final
+value. If you run this program, the final answer should always be
+1000000, no matter what.
+
+==== End Example
+
+The `java.util.concurrent.atomic` package includes `AtomicBoolean` and
+`AtomicLong` as well as `AtomicInteger`. Likewise, the
+`AtomicIntegerArray` and `AtomicLongArray` classes are included to
+perform atomic array accesses. For general purposes, the
+`AtomicReference<V>` class provides an atomic way to store a reference
+to any object. (The `<V>` is a generic type parameter, which will be
+discussed in Chapter REF=chapter:Dynamic Data Structures.)
+
+Although you could use the `synchronized` keyword to create each one of
+these classes yourself, the result would not be as efficient. The atomic
+classes use a special _lock-free_ mechanism. Unlike using the
+`synchronized` keyword which forces a thread to acquire a lock on a
+specific object, lock-free mechanisms are built on a _compare-and-swap_
+(CAS) hardware instruction. Thus, incrementing and the handful of other
+ways to update an atomic variable execute in one step because of special
+instructions on the CPU. Since there is no waiting to acquire a lock or
+fighting over which thread has the lock, the operation is very fast.
+Many high performance concurrent applications depends on CAS
+implementations.
+
+=== Exercises
+
+1.  Consider the following two classes:
++
++
++
+Given the following snippet of code, what is the output?
++
+....
+Sale sale = new Blowout();
+System.out.println( sale.discount );
+System.out.println( sale.getDiscount );
+Blowout blowout = (Blowout)sale;
+System.out.println( blowout.discount );
+sale.setDiscount( 0.75 );
+System.out.println( sale.discount );
+....
+2.  What are the differences and similarities between abstract classes
+and interfaces?
+3.  Assume that the `Corn`, `Carrot`, and `Potato` classes are all
+derived from `Vegetable`. Both `Carrot` and `Potato` classes have a
+`peel()` method, but `Corn` does not. Examine the following code and
+identify which line will cause an error and why.
++
+....
+Vegetable[] vegetables = new Vegetable[30];
+for( int i = 0; i < vegetables.length; i += 3 ) {
+    vegetables[i] = new Corn();
+    vegetables[i + 1] = new Carrot();
+    vegetables[i + 2] = new Potato();
+}
+int index = vegetables.length - 1;
+Potato potato;
+while( index >= 0 ) {
+    potato = (Potato)vegetable[index];
+    potato.peel();
+}
+....
+4.  How many different meanings of the keyword `final` are there in
+Java, and what does each mean?
+5.  Assume that `Quicksand` is a subclass of `Danger`.
++
+What is the output of the following code?
++
+....
+Quicksand quicksand = new Quicksand();
+if( quicksand instanceof Danger ) {
+    System.out.printf( "Run for your lives!" );
+if( quicksand.getClass() == Danger.class )
+    System.out.printf( "Run even faster!" );
+if( quicksand instanceof Quicksand ) {
+    System.out.printf( "The more you struggle," +
+    " the faster you'll sink!" );
+if( quicksand.getClass() == Quicksand.class )
+    System.out.printf( "You'll need to find a vine to escape!" );
+....
++
+*Programming Practice*
+6.  Implement a program to assess income tax on normal employees,
+students, and international students using a class hierarchy. Normal
+employees pay a 6.2% social security tax and a 1.45% Medicare tax every
+year, but neither kind of student pays these taxes. All three groups pay
+normal income tax according to the following table.
++
+[cols="^,^",options="header",]
+|=====================================
+|*Marginal Tax Rate* |*Income Bracket*
+|10% |$0 - $7,825
+|15% |$7,826 -$31,850
+|25% |$31,851 -$77,100
+|28% |$77,101- $160,850
+|33% |$160,851- $349,700
+|35% |$349,701+
+|=====================================
++
+Tax is assessed at a given rate for every dollar in the range. For
+example, if someone makes $10,000, she pays 10% tax on the first $7,825
+of her income and 15% on the remaining $2,175. The exception is
+international students whose country has a treaty with the U.S. so that
+they do not have to pay tax on the first $50,000 of income.
+7.  Refer to the sort given in Section REF=solution:Sort it out as the
+solution to the Sort It Out problem. Add another `boolean` to the
+parameters of the sort which specifies whether the sort is ascending or
+descending. Make the needed changes throughout the code to add this
+functionality.
+8.  <<exercise:parallel bubble sort>> Again refer to the sort from
+Section REF=solution:Sort it out. The goal now is to parallelize the
+sort. Change the sort to work with `int` values then write some code
+which will generate an array of random `int` values. Design your code so
+that you can spawn latexmath:[n] threads. Partition the single array
+into latexmath:[n] arrays and map one partition to each thread. Use
+your bubble sort implementation to sort each partition. Finally, merge
+the arrays back together, in sorted order, into one final array. For
+now, just use one thread (ideally the main thread) to do the merge.
++
+The merge operation is a simple idea, but it is easy to make mistakes in
+implementation. The idea is to have three indexes, one for each of the
+two arrays you are merging and one for the result array. Always take the
+smaller (or larger, if sorting in descending order) index value from the
+two arrays and put it in the result. Then increment the index from the
+array you took the data from as well as the index of the result array.
+Make sure that you are careful not to go beyond the end of the arrays
+which are being merged.
+9.  <<exercise:use atomics>> Re-implement the original
+`SynchronizedAccount` class from Example REF=example:Bank account using
+atomic classes. For simplicity, you can change the `balance` type from
+`double` to `AtomicInteger` since there is no `AtomicDouble` class. How
+much has this simplified the implementation? Is the `readers` field
+still necessary? Why or why not?
++
+*Experiments*
+10. Once you have implemented the sort in parallel from
+Exercise REF=exercise:parallel bubble sort, time it against the
+sequential version. Try 2, 4, and 8 different threads, particularly if
+you have 8 cores. Be sure to create one random array and use the same
+array for both the parallel and sequential versions. Try array sizes of
+1000, 100000, and 1000000. Did the performance increase as much as you
+expect?
+11. <<exercise:test atomics>> Take Program REF=program:NoRaceCondition
+and increase `COUNT` to `100000000`. Run it several times and time how
+long it takes to run to completion.
++
+Then, take Program REF=program:RaceCondition and increase its `COUNT` to
+`100000000` as well. Change the body of the `for` loop inside the
+`run()` method so that `count++;` is inside of a `synchronized` block
+that uses `RaceCondition.class` as the lock. (The choice of
+`RaceCondition.class` is arbitrary, but it is an object that all the
+threads can see.) In this way, the increment will occur atomically,
+since only the thread that has acquired the `RaceCondition.class` lock
+will be able to do the operation. Now, run this modified program several
+times and time it.
++
+How different are the running times? They may be similar, depending on
+the implementation of locks and CAS on your OS and hardware platform.

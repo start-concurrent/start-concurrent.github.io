@@ -1,0 +1,1313 @@
+[[chapter:Classes]]
+:imagesdir: chapters/09-classes/images
+== Classes
+
+=== Problem: Nested expressions
+
+How does the compiler check the Java code that you write and find
+errors? Syntax checking and type checking are involved processes that
+are key parts of compiler design. Compilers are some of the most complex
+programs of any kind, and building one is beyond the scope of the
+material covered in this book. However, we can get insight into some
+problems faced by compiler designers by considering the problem of
+correctly nested expressions.
+
+There are many rules for forming correct Java code, but it is always the
+case that grouping symbols (`(`, `)`, `[`, `]`, `{`, `}`) are correctly
+nested. Ignoring other symbols, we may find a section of code that
+contains the sequence `"( ) [ ]"`, but correctly written code never
+contains `"( [ ) ]"`.
+
+To be correctly nested, left and right parentheses must be balanced,
+left and right square brackets must be balanced, and left and right
+curly braces must be balanced. Furthermore, a correctly balanced set of
+parentheses can be nested inside of a correctly balanced set of square
+brackets or curly braces (and vice versa), but they cannot intersect as
+they do at the end of the previous paragraph. Table REF=table:nested
+expressions shows more examples of correctly and incorrectly nested
+expressions.
+
+.Correctly and incorrectly nested expressions.
+[cols="<,^,<",options="header",]
+|===========================================
+|Correctly Nested | |Incorrectly Nested
+|`""` | |`"("`
+|`"(){}" ` | |`"}{"`
+|`"((abc)){x}"` | |`"( a { b ) c }"`
+|`"({[z]})"` | |`"{abc("`
+|`"({xyz})({ijk}[123])"` | |`"{(333)888(})"`
+|===========================================
+
+But how can we examine an expression to see if it is correctly nested?
+The key to solving this problem is the idea of a _stack_. A stack is a
+simple data structure with three operations: _push_, _pop_, and _top_.
+The data structure is meant to behave like a stack of books or cups or
+any other physical objects. When you use the push operation, you are
+moving something to the top of the stack. When you use the pop
+operation, you are taking something off the top of the stack. The top
+operation is used to read what is at the top of the stack. In a stack,
+you can only read that very topmost item, as if all the other items were
+buried underneath it. A stack is known as a FILO (first in, last out) or
+a LIFO (last in, first out) data structure because, if you push a series
+of items onto the stack and then pop them all off the stack, they come
+off the stack in the reverse order from how they were added.
+
+Armed with an understanding of the stack, it is straightforward to see
+if an expression is nested correctly. Scan through each character in the
+input and follow these steps.
+
+1.  If it is a left parenthesis, left square bracket, or left curly
+brace, put it on the stack.
+2.  If it is a right parenthesis, right square bracket, or right curly
+brace, check that the top of the stack is its matching left half. If it
+is, pop the left half off the stack. If it isn’t (or if the stack is
+empty), the grouping symbols are either unbalanced or intersecting.
+Print an error and quit.
+3.  For any character that isn’t a grouping symbol, ignore it and move
+on.
+
+If you reach the end of input without an error, check to see if the
+stack is empty. If it is, then all of the left grouping symbols have
+been matched up with right grouping symbols. If not, there are left
+symbols left on the stack, and the expression isn’t correctly nested.
+
+=== Concepts: Object-oriented programming
+
+To solve the nested expressions problem, we need to create a stack data
+structure. Each element of the stack should be able to hold a `char`
+value term from an expression, where a term is an operator, operand, or
+a parenthesis (bracket or curly brace). Although we could get by using
+only the static methods we introduced in the previous chapter, a better
+tool can make programming easier.
+
+We are introducing these topics in a progression: First, all of our
+programs were a series of sequential instructions inside of a `main()`
+method. We added in selection statements and loops to solve more
+difficult problems. As our programs became more complicated, we started
+using additional static methods to divide the program into logical
+segments. Now, we are moving to fully object-oriented programming (OOP)
+in which data as well as code can be packaged into objects that interact
+with each other.
+
+OOP has been a controversial topic, particularly in the computer science
+education community. The most important thing to remember is that we are
+not throwing away any of the ideas we used before. We are continuing on
+a path toward making code safer and more reusable. Several other
+chapters in this book touch on important ideas in OOP such as
+inheritance and polymorphism. Below, we are going to focus on the
+basics, including the fundamentals of objects, encapsulation of data,
+and instance (non-static) methods.
+
+==== Objects
+
+You have already used objects, perhaps without realizing it. Every time
+you use a `String`, you are using an object. So far, we have created a
+class every time we have written a program. A class is a way to organize
+static methods, but a class is something more: a template for objects.
+Whenever you write a class, the potential to create specific objects
+exists.
+
+For a conceptual example, you can think of Human as a class and Albert
+Einstein as an object (or an _instance_) of that class. The class
+defines certain characteristics that all human beings have: name, date
+of birth, height, and so on. Then, the object has specific values for
+each one of those characteristics, such as Albert Einstein, March 14,
+1879, 175, and so on.
+
+.Example of a class serving as a template for an object.
+image::class.png[]
+
+
+This idea of a class as a template is key because it means that an
+object of a given type (from a given class) can be used anywhere that is
+appropriate for another object of that type. Later in the chapter, we
+create an object that performs the work of a stack, storing a number of
+other objects. If we design a library of code that can manipulate or use
+stack objects, we should be able to use this library countless times for
+countless different stack objects without changing the code. This kind
+of code reuse is one of the main goals of OOP.
+
+==== Encapsulation
+
+In order to guarantee that objects can be used in many different
+contexts safely, the data inside of the object must be protected. Java
+provides access modifiers so that code without appropriate permission
+cannot change or even read the data inside of an object.
+
+This feature is called _encapsulation_. One programmer may write the
+class file defining a type of object while another or many others write
+code that uses those objects. The programmers who use objects written by
+others do not need to understand the inner workings of those objects.
+Instead, they can treat each object as a "`black box`" with a list of
+actions that the object can do. Each action has a certain specified
+input and a certain specified output, but the internal functioning of
+the object is hidden.
+
+==== Instance methods
+
+These "`actions`" are methods, but not static ones. Static methods did
+not need an object in order to be called. Regular (instance) methods
+should be thought of as an action performed on (or by) a specific
+object. This action could be asking a question, such as inquiring what
+the name of an object of type Human is. This action could be telling the
+object to change itself, such as the case of pushing something onto a
+stack.
+
+One of the broadest definitions of an object is a collection of data and
+methods to access that data. We call the data inside of an object its
+_fields_ or instance data and the methods to access them _instance
+methods_. Static methods are used primarily to modularize large blocks
+of code into smaller functional units. However, instance methods are
+tightly coupled to the fields of an object and perform tasks that change
+the object or get information from it.
+
+=== Syntax: Classes in Java
+
+OOP concepts such as encapsulation may seem esoteric until you see them
+in practice. Remember, we just want to create some private data and then
+define a few carefully controlled ways that the data can be manipulated.
+First, we’ll describe how to declare fields, then explain how to write
+instance methods to manipulate that data, and finally give more details
+about protecting its privacy.
+
+==== Fields
+
+Fields in an object must be declared like any other data in Java. The
+type of a piece of data can be a primitive or reference type. Fields are
+also sometimes called member variables. You declare fields just like you
+would class variables, except without the `static` keyword. Here’s an
+example with the `Human` class.
+
+....
+public class Human {
+    private String name;
+    private String DOB;
+    private int height; //in cm
+}
+....
+
+With this definition, a `Human` object has three attributes: `name`,
+`DOB`, and `height`. Because the access modifier for each field is
+`private`, code outside of this class cannot change or even read the
+values. Note that this class cannot do anything yet. Also, note that
+this class does not contain a `main()` method. There is no way to run
+this class, but that’s fine. We can add a `main()` method, of course.
+
+....
+public class Human {
+    private String name;
+    private String DOB;
+    private int height; //in cm
+
+    public static void main(String[] args) {
+        name = "Albert Einstein";
+        DOB = "March 14, 1879";
+        height = 175;
+    }
+}
+....
+
+Now we have added a `main()` method, but our code does not compile.
+Since the `main()` method is a static method, it is not associated with
+any particular object. When we tell the `main()` method to change the
+fields, it does not know what object we are talking about. If we
+actually want to use an object, we’ll have to create one.
+
+.Example of a class encapsulating the attributes of a human being.
+[source, java, linenums]
+----
+include::programs/Human.java[]
+----
+
+The above code compiles because we have used the `new` keyword to create
+an object of type `Human` saved in a reference variable called
+`einstein`. With a `Human` object, we can set its fields using
+dot notation. With static methods and static variables, we used the name
+of the *class* followed by a dot, for instance methods and instance
+variables, we use the name of the *object* followed by a dot. Even
+though each of these fields is private, we can access them from `main()`
+because `main()` is inside the `Human` class. Code inside of another
+class could create a new `Human` object, but it could not change its
+fields.
+
+This juxtaposition of static and non-static fields and methods inside of
+a single class is confusing to many new Java programmers. The confusion
+seems to stem from the fact that the class (such as `Human`) is a
+template for objects but it is also a place to house other related code,
+such as static methods, including `main()`.
+
+Although the practice is discouraged, we mentioned in
+Section REF=subsection:class variables that class variables can be
+stored in the class itself. Every object has a distinct copy of each
+field, but there is only a single copy of each class variable that they
+all share. By using the keyword `static`, we could add a class variable
+called `population` to our `Human` class, since that is information
+connected to humans as a whole, not to any individual human being.
+
+....
+public class Human {
+    private String name;
+    private String DOB;
+    private int height; //in cm
+    private static double population = 7.023E9;
+}
+....
+
+We are using a `double` to represent the world’s population since the
+value is too big to fit in an `int` and is easily expressed in
+scientific notation. If several `Human` objects were created, they would
+have their own `name`, `DOB`, and `height` values, but the value for
+`population` would only be stored in the class.
+
+.Class variables (static fields) are stored with the class, not with individual objects.
+image::staticvalue.png[]
+
+
+==== Constructors
+
+To create a new object, you have to invoke a _constructor_, a special
+kind of method that can initialize the object. A constructor allows sets
+up the values inside an object when it is first created. Let’s consider
+a simple `Rectangle` class with only two fields: `length` and `width`,
+both of type `int`.
+
+....
+public class Rectangle {
+    private int length;
+    private int width;
+....
+
+One possible constructor for the class is given below.
+
+....
+    public Rectangle( int l, int w ) {
+        length = l;
+        width = w;
+    }
+....
+
+This constructor lets us set the width and length when the object is
+created. To do so, code could invoke the constructor using the `new`
+keyword.
+
+....
+Rectangle rectangle = new Rectangle(50, 20);
+....
+
+This code creates a new `Rectangle` object, with length 50 and width 20.
+Constructors are almost always `public`, otherwise it would be
+impossible for code outside of the `Rectangle` class to create a
+`Rectangle` object. Notice that the definition of the `Rectangle`
+constructor does not have a return type. A constructors is the only kind
+of method that does not have a return type. It is possible to have more
+than one constructor as well, just as other methods can be overloaded.
+For more information about overloaded methods, refer back to
+Section REF=subsubsection:Overloaded methods.
+
+....
+    public Rectangle( int value ) {
+        length = value;
+        width = value;
+    }
+....
+
+In the very same class, we could have this second constructor, allowing
+us to quickly and easily create a square. All classes have constructors,
+but some are not written explicitly. If you don’t type out a constructor
+for a class, a default one is automatically created. The default
+constructor takes no parameters and sets all the values inside the new
+object to defaults such as `null` and `0`. Once you do create a
+constructor, the default one is no longer provided. Thus, since our
+definition of the `Rectangle` class already contains two constructors,
+the following line would cause a compiler error if someone tries to use
+it in their code.
+
+....
+Rectangle defaultRectangle = new Rectangle();
+....
+
+Another important thing to consider with all instance methods is scope.
+Fields are visible inside of instance methods, but they can be hidden by
+parameters.
+
+....
+    public Rectangle( int length, int width ) {
+        length = length;
+        width = width;
+    }
+....
+
+This version of the two parameter `Rectangle` constructor compiles, but
+it does not properly initialize the values of the fields `length` and
+`width`. Instead, the parameters `length` and `width` are copied back
+into themselves for no reason. The designers of Java anticipated that it
+would be useful to refer to fields even in the presence of other
+variables with the same name. To do so, the `this` keyword can be used.
+Any field (or method) can be referred to by its object name, followed by
+a dot, followed by the name of that field or method. Since you don’t
+have a variable name to reference the object when you’re inside of it,
+the `this` keyword acts as a reference to the object.
+
+....
+    public Rectangle( int length, int width ) {
+        this.length = length;
+        this.width = width;
+    }
+....
+
+This version of the code functions correctly, since we have explicitly
+told Java to store the argument `length` into the field `length` inside
+the object pointed at by `this` and to do similarly for `width`.
+
+==== Methods
+
+Objects do not really come to life until you add instance methods. With
+the `Rectangle` class described above, any `Rectangle` objects created
+are not useful in other classes because it is impossible to access their
+data. Instead, we want to create a clear and usable relationship between
+the fields and the methods.
+
+There are many different kinds of methods, but two of the most important
+are accessors and mutators.
+
+===== Accessors
+
+We often want to read the data inside of various the objects. With our
+current definition of `Rectangle`, no code from an outside class can
+find out the length or width of the rectangle we are representing.
+
+_Accessor methods_ (or simply _accessors_) are designed for this task.
+By definition, an accessor allows us to read some data or get some
+information out of an object without making any changes to its fields.
+Accessors can be thought of as asking the object a question. The names
+of accessors often start with the word `get`.
+
+....
+    public int getLength() {
+        return length;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+....
+
+Here are two accessors methods that we would expect in the `Rectangle`
+class. The first returns the value of `length`, and the second returns
+the value of `width`. These methods only report information. They do not
+change the value of either variable. Their syntax should be
+self-explanatory. Each is declared to be `public` so that anyone can
+read the length and width of a rectangle. Both methods have a return
+type of `int` because that is the type used to store `length` and
+`width` inside a `Rectangle` object. Neither method has any parameters.
+An accessor does not have to be so simple. An accessor could return a
+value that needs to be computed from the underlying field data.
+
+....
+    public int getArea() {
+        return length*width;
+    }
+
+    public int getPerimeter() {
+        return 2*length + 2*width;
+    }
+....
+
+These accessors compute the area and perimeter, respectively, of the
+rectangle in question, even though that data is not stored directly in
+the `Rectangle` object.
+
+===== Mutators
+
+Some objects, such as `String` values, are _immutable_ objects, meaning
+that the data stored inside them cannot be changed after they have been
+created with a constructor. If you have ever thought that you were
+changing a `String`, you were actually creating a new `String` with the
+appropriate modifications. Most objects are mutable, however, and we use
+methods called _mutator methods_ (or simply _mutators_) to change their
+fields.
+
+Like accessors, mutators have no special syntax. The term is used to
+describe any methods that change the data inside of an object. For the
+`Rectangle` class, the only internal data we have is the `length` and
+`width` variables. Mutators for these might look as follows.
+
+....
+    public void setLength( int length ) {
+        this.length = length;
+    }
+
+    public void setWidth( int width ) {
+        this.width = width;
+    }
+....
+
+Just as the names for many accessors begin with `get`, the names for
+many mutators begin with `set`. Mutators often have a `void` return type
+because they are changing the object, not getting information back. Some
+mutators might have a return type that gives information about an error
+that occurred while trying to make a change. Note that we used the
+`this` keyword once again to distinguish each field from the method
+argument with the same name.
+
+You may have noticed that we use the machinery of a method to both get
+and set the `length` field, for example. Perhaps doing so seems
+needlessly complex. After all, if the `length` variable had been
+declared with the `public` modifier instead of the `private` modifier,
+we could get and set its value directly, without using methods. In
+response, let’s improve the mutators that set `length` and `width`.
+
+....
+    public void setLength( int length ) {
+        if( length > 0 )
+            this.length = length;
+    }
+
+    public void setWidth( int width ) {
+        if( width > 0 )
+            this.width = width;
+    }
+....
+
+With these better mutators, we can prevent a user from setting the
+values of `length` and `width` to negative numbers or zero, values that
+don’t make sense for dimensions of a rectangle. For more complicated
+objects, it becomes even more important to protect the values of the
+fields from malicious or mistaken users.
+
+[[subsection:Access_modifiers]]
+==== Access modifiers
+
+Hiding data is at the heart of the Java OOP model. There are four
+different levels of access that can be applied to fields and methods,
+whether static or not. They are `public`, `private`, `protected`, and
+package-private.
+
+===== `public` modifier
+
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+The `public` access modifier states that a variable or method can be
+accessed by any code, no matter what class contains it. Most methods
+should be `public` so that they can be used freely to interact with
+their object. Virtually no fields should be `public`. Constants (static
+or otherwise) are the most significant exception to this rule. Making
+constants `public` is usually not a problem since they cannot be changed
+by outside code anyway. In the `Rectangle` class, variables `length` and
+`width` are so simple that making them `public` is not unreasonable. If
+you have a field that can be changed at any time by any code to any
+value, you can leave that field `public`.
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+===== `private` modifier
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+This modifier states that a variable or method cannot be accessed by any
+code unless the code is contained in the same class. It is important to
+realize that the restriction is based on the *class*, not on the
+*object*. Code inside any `Rectangle` object can modify `private` values
+inside of any other `Rectangle` object or class. Most fields should be
+`private` so that outside code cannot modify them. Methods can be
+`private`, but these methods should be helper or utility methods used
+inside the class or object to divide up work.
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+===== `protected` modifier
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+This modifier states that a variable or method cannot be accessed by any
+code unless the code is contained in the same class, a subclass, or is
+in the same package. This level of access is more restrictive than
+`public` but less restrictive than `private` or default access. We
+discuss it further in the context of subclasses and inheritance in
+Chapter REF=chapter:Inheritance.
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+===== Package-private (no explicit modifier)
+
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+If you do not type an access modifier when you declare a field or
+method, that field or method is not `public`. Instead, it has the
+default or package-private access modifier applied to it. Fields or
+methods with this modifier can be accessed by any code that is in the
+same _package_ or directory. A package is yet another layer of
+organization that Java provides to group classes together. When you use
+an `import` statement, you can import an entire package of classes.
+There is no keyword for this access modifier. It is useful if you are
+designing a package containing classes that must be able to access each
+other’s fields or methods. For now, you should always give your fields
+and methods an explicit `public` or `private` (or sometimes `protected`)
+modifier. +
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+From least restrictive to most restrictive, the modifiers are `public`,
+`protected`, package-private, and `private`. Each additional level of
+restriction removes a single category of access. All fields and methods
+can be accessed by code from the same class. The following table gives
+the contexts outside the class that can access a field or method marked
+with each modifier.
+
+[cols=">,^,^,^",options="header",]
+|======================================================
+|*Modifier* |*Package* |*Subclass* |*Unrelated Classes*
+|`public` |Yes |Yes |Yes
+|`protected` |Yes |Yes |No
+|Package-private |Yes |No |No
+|`private` |No |No |No
+|======================================================
+
+=== Examples: Classes
+
+Although large and complex programs are needed to see the real benefits
+of OOP in Java, here are two short examples showing, respectively, how
+objects can be used to make a roster of students and compute the value
+of an expression in postfix notation.
+
+==== Begin Example: Student roster
+
+We are going to create a `Student` class so that we can store objects
+containing student roster information. Then, we’re going to create a
+client program that reads data from a user to create `Student` objects,
+sort them by GPA, and then print them out.
+
+[source,numberLines,java]
+----
+public class Student {
+	public static final String[] YEARS =
+	{"Freshman", "Sophomore", "Junior", "Senior"};
+	private String name;
+	private int year;
+	private double GPA;
+----
+
+We start by defining the `Student` class. First, there is a constant
+array of type `String`, giving the names of each of the four years.
+Next, the fields in the `Student` class store the name, year, and GPA of
+the student.
+
+[source,numberLines,java]
+----
+	public Student(String name, int year, double GPA) {
+		setName( name );
+		setYear( year );
+		setGPA( GPA );
+	}	
+----
+
+We have one constructor for this class, which takes in a `String`, an
+`int`, and a `double` corresponding to the name, year, and GPA of the
+student. The constructor then internally uses mutator methods to store
+the values into the fields. By doing so, we automatically take advantage
+of the error checking in the GPA mutator.
+
+[source,numberLines,java]
+----
+	public void setName(String name) { this.name = name; }	
+	public void setYear(int year) { this.year = year; }
+
+	public void setGPA(double GPA) {
+		if( GPA >= 0 && GPA <= 4.0 )
+			this.GPA = GPA;
+		else
+			System.out.println("Invalid GPA: " + GPA);		
+	}
+----
+
+These are the mutators corresponding to each of the three fields. The
+input for the name and year mutators are not checked, but the GPA
+mutator checks to make sure that the GPA value is in the proper range.
+
+[source,numberLines,java]
+----
+	public String getName() { return name; };
+	public int getYear() { return year; };
+	public double getGPA() { return GPA; };
+
+	public String toString() {
+		return name + "\t" + YEARS[year] +
+			"\t" + GPA;
+	}	
+}
+----
+
+Finally, these accessors allow the user to find out the name, year, or
+GPA of a given student. Every class in Java automatically has a
+`toString()` method that is called whenever an object is being printed
+out directly. We have changed this method to return the information in
+`Student` formatted as a `String`.
+
+Creating the `Student` class is only half the battle. We also must
+create client code to use it.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class StudentRoster {
+	public static void main(String[] args) {
+		Scanner in = new Scanner( System.in );		
+		Student[] roster = new Student[in.nextInt()];				
+		for( int i = 0; i < roster.length; i++ ) {
+			in.nextLine();			
+			roster[i] = new Student( in.nextLine(),
+				in.nextInt(), in.nextDouble() );
+		}
+		sort(roster);
+		for( int i = 0; i < roster.length; i++ )
+			System.out.println(roster[i]);
+	}
+----
+
+The `main()` method in the `StudentRoster` class begins by reading in
+the total number of students. Next, it makes an array of type `Student`
+of that length. Then, it repeatedly reads in a name, year, and GPA,
+creates a new `Student` object with those values, and stores it into the
+array. After creating all the `Student` objects, it sorts them with a
+method call and prints them out.
+
+One oddity in this code is the seemingly superfluous `in.nextLine()` in
+the first `for` loop. This line of code consumes a trailing newline
+character from previous input. Take it out and see how quickly the
+program malfunctions.
+
+[source,numberLines,java]
+----
+	public static void sort(Student[] roster) {
+		for( int i = 0; i < roster.length - 1; i++ ) {
+			int smallest = i;
+			for( int j = i + 1; j < roster.length; j++ )
+				if(roster[j].getGPA() < roster[smallest].getGPA())
+					smallest = j;
+			Student temp = roster[smallest];
+			roster[smallest] = roster[i];
+			roster[i] = temp;
+		}
+	}
+}
+----
+
+This `sort()` method is similar to others that you have seen. It
+implements selection sort in ascending order based on GPA.
+
+If you run this program, you will notice that it does not prompt the
+user for any input. This version of the code is designed for redirected
+input from a file. A more user friendly, interactive version should
+prompt the user clearly.
+
+Using OOP is not necessary to solve this problem. Instead of objects, we
+could have used three separate arrays holding the name, year, and GPA of
+each student, respectively. However, coordinating these arrays together
+would become tedious, particularly when sorting.
+
+==== End Example
+
+=== Advanced: Nested classes
+
+Inside of a class, you can define fields and methods, but what about
+other classes? Yes! Doing so creates a _nested class_. When you define a
+class inside of an outer class, it can access fields and methods in the
+outer class, even if they are marked `private`. Java allows a number of
+different ways to define a nested class. They are all useful, but each
+is subtly different. Some nested classes are tied to a specific object
+of the outer class while others are not.
+
+==== Static nested classes
+
+If you mark a nested class with the `static` keyword, you are creating a
+class whose objects are independent of any particular outer class
+object. Such a class is called a _static nested class_. Consider the
+following class definition.
+
+....
+public class Outer {
+    private int x;
+    private int y;
+
+    public static class Nested {
+        private int z;
+    }
+}
+....
+
+A static nested class is similar to a normal, top-level class with two
+differences. First, the full name of a nested class is the name of the
+outer class followed by a dot followed by the nested class name. Second,
+when given an outer class object, code in a static nested class can
+access and modify `private` (and `protected)`) data in the outer class
+object.
+
+.A static nested class object is allowed to access data from outer class objects even though there is no direct relationship between them.
+image::nested.png[]
+
+
+Static nested classes can be used when the class you need is only useful
+in connection with the outer class. Thus, nesting the class groups it
+with its outer class. We can create an instance of the nested class
+above as follows.
+
+....
+Outer.Nested nested = new Outer.Nested();
+....
+
+Because it is a static nested class, we do not need an instance of type
+`Outer` to create an instance of type `Outer.Nested`. If you compile
+`Outer.java`, it will create two files, `Outer.class` and
+`Outer$Nested.class`. The dollar sign (`$`) separates the names of each
+level of nested class in the file name. It is possible to nest classes
+inside of nested classes, producing another `.class` file with another
+dollar sign and the new class name appended.
+
+Note that static nested classes can be marked `public`, `private`,
+`protected`, or package-private (no explicit modifier). These access
+modifiers control which code can access or instantiate static nested
+classes using the sames access rules for fields and methods.
+
+==== Begin Example: Static nested class for testing
+
+One application for static nested classes is testing. You can write code
+that tests the functionality of your outer class, fiddling with its
+fields if needed. Then, because a separate `.class` file is created, you
+can deliver only the `.class` file for the outer class to your customer.
+
+Consider the `Square` class, similar to the `Rectangle` class given
+earlier.
+
+....
+public class Square {
+    private int side;
+
+    public Square( int side ) {
+        this.side = side;
+    }
+
+    public int getArea() {
+        return side*side;
+    }
+}
+....
+
+We could add a static nested class called `Test` to `Square` to test
+that its `getArea()` and `getPerimeter()` methods are working properly.
+The final code might be as follows.
+
+....
+public class Square {
+    private int side;
+
+    public Square( int side ) {
+        this.side = side;
+    }
+
+    public int getArea() {
+        return side*side;
+    }
+
+    public static class Test {
+        public static void main(String[] args) {
+            Square square = new Square(5);
+            System.out.print("Test 1: ");
+            if( square.getArea() == 25 )
+                System.out.println("Passed");
+            else
+                System.out.println("Failed");
+
+            square.side = 7;
+            System.out.print("Test 2: ");
+            if( square.getArea() == 49 )
+                System.out.println("Passed");
+            else
+                System.out.println("Failed");
+        }
+    }
+}
+....
+
+To run the tests, you would compile `Square.java` and then run the
+nested class by invoking `java Square$Test`. It is unwise to use the
+nested class to change the private fields in `square`, but we did so to
+show that it is allowed by Java. A better test would create a second
+`Square` object with a side of length 7.
+
+==== End Example
+
+==== Inner classes
+
+Another kind of nested class is an _inner class_. Unlike static nested
+classes, the objects of inner classes are associated with a particular
+object of the outer class. You can think of an inner class object living
+*inside* an outer class object. It is impossible to instantiate an inner
+class object without having an outer class object first. Consider the
+following class definition.
+
+....
+public class Outer {
+    private int a;
+
+    public class Inner {
+        private int b;
+        private int c;
+    }
+}
+....
+
+Every instance of `Inner` must be associated with an instance of
+`Outer`. To instantiate an inner class, you use the name of an outer
+class object, followed by a dot, followed by the `new` keyword, and then
+the name of the inner class. We can create an instance of the inner
+class above as follows.
+
+....
+Outer outer = new Outer();
+Outer.Inner inner = outer.new Inner();
+....
+
+This syntax looks confusing, but it makes `inner` an object that exists
+inside of `outer`. Thus, if there were methods defined in `Inner`, they
+could refer to field `a`, because every instance of `Inner` would be
+inside of an instance of `Outer` with a copy of `a`.
+
+The relationship between outer and inner objects is one to many. We can
+instantiate any number of inner class objects that all live inside of
+the same outer class object.
+
+.An inner class object is always associated with a specific outer class object.
+image::inner.png[]
+
+
+Another issue with inner classes (as opposed to static nested classes)
+is that they cannot contain static fields (except for constants) or
+methods. Since each instance of an inner class is tied to an instance of
+an outer class, the designers of Java thought that static fields and
+methods for an inner class really belong in the outer class.
+
+It is even possible to define a class *inside* a method, if that class
+is only referred to in the method. Such a class is called a _local
+class_. It is possible to create an unnamed local class on the fly as
+well. Such a class is called an _anonymous class_. Both local and
+anonymous classes are special kinds of inner classes. Because of the way
+they are created and used, we discuss them in Section REF=advanced:Local
+and anonymous classes
+
+==== Begin Example: Inner class objects as iterators
+
+If you create a data structure for other programmers to use, a useful
+feature is the ability to retrieve each item from the data structure in
+order. Different threads or methods might need to process these elements
+independently from each other. Each piece of code can be given an inner
+class object called an _iterator_ that can repeatedly get the next item
+in the data structure. Since instances of an inner class can read
+private data of the outer class, iterators can keep track of where they
+are inside the data structure. If outside code were allowed access to
+the data structure’s internals, it would violate encapsulation.
+Iterators are a very common application of inner classes.
+
+We can create a `SafeArray` class that only allows data to be written to
+its internal array if it falls in the legal range of indexes.
+
+....
+public class SafeArray {
+    private double[] data;
+
+    public SafeArray( int size ) {
+        data = new double[size];
+    }
+
+    public int set(int index, double value) {
+        if( index >= 0 && index < data.length )
+            data[index] = value;
+    }
+}
+....
+
+We could add an inner class called `Iterator` to `SafeArray` that allows
+us to process all the array values without knowing how many there are.
+This kind of behavior is useful for many dynamic data structures, as
+discussed in Chapter REF=chapter:Dynamic Data Structures.
+
+....
+public class SafeArray {
+    private double[] data;
+
+    public SafeArray( int size ) {
+        data = new double[size];
+    }
+
+    public void set(int index, double value) {
+        if( index >= 0 && index < data.length )
+            data[index] = value;
+    }
+
+    public class Iterator {
+        private int index = 0;
+
+        public boolean hasNext() {
+            return ( index < data.length );
+        }
+
+        public double getNext() {
+            if( index >= 0 && index < data.length )
+                return data[index++];
+            else
+                return Double.NaN;
+        }
+    }
+}
+....
+
+The following method uses the iterator we have defined to find the sum
+of the values in a `SafeArray` object.
+
+....
+public static findSum( SafeArray array ) {
+    double sum = 0;
+    SafeArray.Iterator iterator = array.new Iterator();
+
+    while( iterator.hasNext() )
+        sum += iterator.getNext();
+
+    return sum;
+}
+....
+
+==== End Example
+
+=== Solution: Nested expressions
+
+We now have enough knowledge to solve the nested expressions problem
+from the beginning of the chapter. Classes help us divide up the work of
+solving the problem. First, we need a stack class that can hold `char`
+values.
+
+.Simple stack class to hold symbols from an input expression.
+[source, java, linenums]
+----
+include::programs/SymbolStack.java[]
+----
+
+The `SymbolStack` class allows us to perform the push, pop, and top
+stack operations with methods of the same names. Its constructor takes a
+maximize size for the stack and allocates an array of that size. It also
+sets the `size` field to `0` so that we can keep track of how many
+things are in the stack (and consequently where the top is).
+
+The `push()` method stores an input `char` into the stack at location
+`size` and then increments `size`. The `pop()` method simply decrements
+`size`. It has no error checking to prevent a user from popping the
+stack once it is already empty. Finally, the `top()` method returns the
+value at the top of the stack, whose location is `size - 1`.
+`SymbolStack` also defines an `isEmpty()` method so that we can see if
+the stack is empty.
+
+Now we need the client code that read the input and interacts with the
+stack.
+
+[source,numberLines,java]
+----
+import java.util.*;
+
+public class NestedExpressions {
+	public static void main(String[] args) {		
+		Scanner in = new Scanner( System.in );
+		String input = in.nextLine();
+		SymbolStack stack = new SymbolStack(input.length());				
+		char symbol;	
+		boolean correct = true;
+----
+
+The `main()` method of this class reads in the input and creates a
+`SymbolStack` called `stack` with a maximum size of the input length. We
+know that the stack never needs to hold more than the total input. It
+also creates a `boolean` named `correct` to keep track of whether or not
+the input is correctly nested. We start by assuming that it is.
+
+[source,numberLines,java]
+----
+		for( int i = 0; i < input.length() && correct; i++ ) {
+			symbol = input.charAt(i);
+			switch( symbol ) {
+				case '(':
+				case '[':
+				case '{':
+					stack.push(symbol);
+					break;
+				case ')':
+					if(stack.isEmpty() || stack.top() != '(')
+						correct = false;
+					else
+						stack.pop();
+					break;
+				case ']':
+					if(stack.isEmpty() || stack.top() != '[')
+						correct = false;
+					else
+						stack.pop();
+					break;
+				case '}':
+					if(stack.isEmpty() || stack.top() != '{')
+						correct = false;
+					else
+						stack.pop();
+					break;
+			}
+		}
+----
+
+This `for` loop runs through each `char` in the input. If it is a left
+parenthesis, left square bracket, or left curly brace, it pushes the
+symbol onto the stack. If it is a right parenthesis, right square
+bracket, or right curly brace, it checks to see if the stack is empty.
+Because of short-circuit evaluation, the code does not even look at the
+top of the stack if it is empty. However, if the stack is not empty, it
+checks to see if the top matches the current symbol. If the stack is
+empty or its top does not match, `correct` is set to `false`. For
+efficiency, the loop stops early if `correct` is no longer `true`.
+
+[source,numberLines,java]
+----
+		if( !stack.isEmpty() ) //unmatched left symbols
+			correct = false;
+		
+		if( correct )
+			System.out.println("The input is correctly nested!");
+		else
+			System.out.println("The input is incorrectly nested!");
+	}
+}
+----
+
+After the input has been examined, we check to see if the stack is
+empty. If it isn’t, there must be some left symbols that were not
+matched with right symbols. In that case, we set `correct` to `false`.
+Finally, we print out whether the input is correctly or incorrectly
+nested based on the value of `correct`.
+
+=== Concurrency: Objects
+
+Nearly everything in Java is an object: arrays, lists, `String` values,
+colors, and even exceptions, which form Java’s error-handling system and
+is discussed in Chapter REF=chapter:Exceptions. Some critics of Java
+point out that `int`, `double`, and the other primitive types are not
+objects, forcing the programmer to adopt two different programming
+models. Regardless, threads are stored as objects as well. In
+Chapter REF=chapter:Concurrent Programming, we discuss how to create
+threads and the various methods that can be used to interact with them.
+
+However, objects of type `Thread` are not the only ones you deal with
+when writing concurrent programs. As we have just noted, most data in
+Java is encapsulated in an object. One of the deep reasons for using OOP
+is safety: We want the private data inside of an object to stay in a
+consistent state. Due to their inexplicable ability to get out of tight
+situations, one tradition holds that cats have nine lives. Because of
+their inquisitive nature, another tradition holds that curiosity killed
+the cat. Consider the class below that keeps track of the lives a cat
+has, losing one every time it becomes curious.
+
+==== Begin Example: Thread safety
+
+.Program to record the number of lives a cat has left. Each `Cat` object starts with 9, but loses one each time it uses its curiosity. If no more lives remain, an error message is output.
+[source, java, linenums]
+----
+include::programs/Cat.java[]
+----
+
+If the relationship between curiosity and mortality is the only feature
+of a cat you are trying to model, this class appears to function well.
+If the `useCuriosity()` method is invoked, it removes a life or prints
+an error message if the cat has run out of lives. In a single-threaded
+situation, this object would work perfectly. No cat would be able to
+lose more than 9 lives.
+
+In a multi-threaded situation, there is no telling when a thread might
+pause in executing the `useCuriosity()` method. If 100 threads all
+called `useCuriosity()`, each one might successfully pass the `if`
+statement on line REF=life check before any had decremented `lives`.
+Once past the check, nothing would prevent them from continuing on and
+decrementing `lives`, resulting in a cat who lost 100 lives, resulting
+in a total of -91 lives. Such a scenario makes no sense.
+
+In Chapter REF=chapter:Synchronization, we discuss how to prevent this
+problem, using the `synchronized` keyword to allow only a single thread
+at a time to execute the body of a method. The goal is to make
+`useCuriosity()` _thread-safe_, meaning that its behavior is consistent
+and correct no matter how many threads try to execute it at the same
+time.
+
+==== End Example
+
+As you work through this book and begin to write your own concurrent
+programs, we discuss ways to make them thread-safe. However, you are
+also a consumer of code written by other people. In multi-threaded
+environments, you may need to use library classes that are thread-safe.
+For example, `AtomicInteger` is a thread-safe class designed to store
+and manipulate `int` values. In Chapter REF=chapter:Dynamic Data
+Structures, we talk about the `ArrayList` and `Vector` classes, which
+are both used to hold variable length lists of objects. One of the few
+differences between them is that `ArrayList` is not thread-safe while
+`Vector` is. There is even the `Collections.synchronizedCollection()`
+method (and other similar methods), which takes a collection that is not
+thread-safe and returns a version of it that is.
+
+Java was intended to be multi-threaded from the very beginning, but
+concurrency was never the most important feature in the language. For
+that reason, the documentation does not clearly mark which methods are
+thread-safe. Usually, some of the paragraphs of description above the
+list of methods say that a class is "`synchronized`" if it is
+thread-safe. If it is not, the documentation may not mention anything.
+Careful attention is needed to be sure which classes and APIs are
+thread-safe.
+
+You may wonder why all classes are not thread-safe, but everything comes
+with a price. If a class is thread-safe, its methods are usually marked
+with the `synchronized` keyword. The JVM is relatively efficient about
+how it enforces that keyword, but the computational expense is not zero.
+Learn the libraries well, and use the right tools for the right job.
+
+=== Exercises
+
+1.  Explain the relationship between a class and an object.
+2.  What is the difference between a static method and an instance
+method?
+3.  What is the purpose of a constructor? Why is it impossible for a
+constructor to return a value? Why is it impossible for a constructor to
+be called multiple times on the same object?
+4.  A static method can be called directly from a instance method, but
+an instance method cannot be called directly from a static method. Why?
+5.  Describe the uses of accessor and mutator methods. Is it possible to
+create a method that is both an accessor and a mutator? Why or why not?
+6.  Why do we usually mark fields with the `private` keyword when it
+would be easier to make all fields `public`?
+7.  What is the meaning of the `this` keyword? When is it necessary to
+use it? When can it be ignored?
+8.  Consider the following class definitions.
++
+....
+public class A {
+    private int a;
+
+    public int get() {
+        return a;
+    }
+
+    public static void increment() {
+        a++;
+    }
+}
+
+public class B {
+    private int b;
+
+    public B(int value) {
+        b = value;
+    }
+
+    public A generate() {
+        A object = new A();
+        object.a = b;
+    }
+}
+....
++
+The field `a` is used three times in the previous code. Which of these
+uses cause a compiler error and why?
+9.  In Section REF=solution:Nested expressions, we gave a definition of
+`SymbolStack` that implements a simple stack using two fields, defined
+as followed:
++
+....
+private char[] symbols;
+private int size;
+....
++
+By calling the `top()` or `pop()` methods on an empty stack, it is
+possible to cause a program to crash. What additional problems could
+happen if `symbols` and `size` were declared `public` and malicious or
+poorly written code had access to the object?
+10. Consider the following class definition.
++
+....
+public class GroceryItem {
+    private String name;
+    private double price;
+
+    public GroceryItem( String text, double money ) {
+        String name = text;
+        double price = money;
+    }
+
+    public String getName() { return name; }
+    public String getPrice() { return price; }
+}
+....
++
+This class compiles, but its constructor does not function properly. Why
+not?
++
+*Programming Practice*
+11. OOP is often used when the data inside the object must maintain
+special relationships. Consider a clock with hours, minutes, and
+seconds. When the number of seconds reaches 60, the number of minutes is
+increased by 1, and the number of seconds is reset to 0. When the number
+of minutes reaches 60, the numer of hours is increased by 1, and the
+number of seconds is reset to 0. When the number of hours reaches 13, it
+is reset to 1. AM and PM switch whenever the number of hours reaches 12.
++
+Define a `Clock` class with private `int` fields `hours`, `minutes`, and
+`seconds` and a `boolean` field `PM`. Write a constructor that
+initializes `hours` to `12`, `minutes` and `seconds` to `0`, and `PM` to
+`false`. Write a mutator `increment()` that adds `1` to `seconds`. This
+mutator should correctly handle all the clock behavior described above.
+Write an accessor called `toString()` that returns a nicely formatted
+version of the time as a `String`. For example, the initial time would
+be returned as `"12:00:00 AM"`. Make sure you pad the output for
+`seconds` and `minutes` with an extra `"0"` if they are less than `10`.
+12. Draw on any of your hobbies to come up with a collection of items,
+whether those items are books you like to read, athletes you follow,
+music you collect, or anything else that is easy to classify. First
+create a class that can describe one of these items with three to five
+attributes. For example, the important attributes of a book might be
+author, title, genre, and page count. Each of these attributes should be
+stored as a `private` field and manipulated with `public` accessor and
+mutator methods.
++
+Using an array, create a database of these objects. Write methods that
+print out all objects that have a particular value for an attribute.
+Using the book example, your database program should let the user input
+that he or she is looking for all books whose author is
+`Alexandre Dumas`. You may wish to use input redirection so that you do
+not have to enter data about your objects repetitively.
+13. The `java.awt` package defines a class called `Point` that can be
+used to manipulate an latexmath:[(x,y)] pair in programs involving the
+Cartesian coordinate system. Create your own `Point` class with `int`
+values `x` and `y` as fields.
++
+Create one constructor that allows the user to specify values for `x`
+and `y` and a default constructor that takes no arguments and sets both
+`x` and `y` to `0`. Create accessors and mutators for `x` and `y`.
++
+Finally, create a method with the signature
+`public double distance( Point p )` that uses the distance formula
+latexmath:[\sqrt{(x_1 - x_2)^2+(y_1 - y_2)^2}] to find the distance
+between the current `Point` object and the `Point` object `p` passed in
+as an argument.
++
+Write client code that allows you to create two `Point` objects and test
+if the `distance()` method gives the right answer.
+14. Re-implement the solution from Section REF=solution:Nested
+expressions so that it performs its input and output with GUIs created
+using `JOptionPane`.
++
+*Experiments*
+15. Objects are great tools for solving problems, but there is some
+additional overhead associated with creating objects and calling
+methods.
++
+Write a piece of code that allocates an array of 10,000,000 `int`
+values. Iterate through that array, storing the value `i` into index
+`i`, and time the process using an OS `time` command. As you know, the
+`Integer` wrapper class allows us to store an `int` value in object
+form. Repeat the experiment, but, instead of `int` values, allocate an
+array to hold 10,000,000 `Integer` objects. Iterate through the array
+again, storing an `Integer` object into each index of the array. For
+index `i`, store a new `Integer` objected created by passing value `i`
+into its constructor. Compare the time taken to the previous time for
+`int` values. Do you think this is a reasonable way to estimate the time
+it takes to call a constructor and allocate a new object?

@@ -1,0 +1,551 @@
+[[chapter:Interfaces]]
+:imagesdir: chapters/10-interfaces/images
+== Interfaces
+
+=== Problem: Sort it out
+
+Defining classes as we did in Chapter REF=chapter:Classes provides us
+with useful tools. First, we can group related data together. Then, we
+can encapsulate that data so that it can only be changed in carefully
+controlled ways. But these ideas are only a fraction of the true power
+of object orientation that becomes apparent when we exploit
+relationships between different classes. Eventually, in
+Chapter REF=chapter:Inheritance, we will talk about hierarchical
+relationships, in which one class can be the parent of many other child
+classes. However, there is a simpler relationship that classes can
+share, the ability to do some specific action or answer some specific
+question. If we know that several different classes can all do the same
+things, we want to be able to treat them in a unified way. For example,
+imagine that you are writing code to aid laboratory analysis of the free
+radical content of a number of creatures and items. For this analysis it
+is necessary to sort the test subjects by weight and by age.
+
+The subjects you are going to sort will be objects of type `Dog`, `Cat`,
+`Person`, and `Cheese`. All of these subjects will have some calendar
+age. Naturally, the age we are interested for a `Dog` is 7 times its
+calendar age. At the same time, because a cat has nine lives, we will
+use latexmath:[\frac{1}{9}] of its calendar age. The age we use for
+`Person` and `Cheese` objects is simply their calendar age.
+
+As we discussed in Example REF=example:Selection sort, sorting is one of
+the most fundamental things that computer scientists do. In that
+example, we introduced selection sort. Here we are going to use another
+sort called bubble sort. We are introducing bubble sort to expose you to
+another way to sort data. Although they are easy to understand, neither
+bubble sort nor selection sort are the fastest ways known to sort lists.
+
+Bubble sort works by scanning through a list of items, a pair at a time,
+and swapping the elements of the pair if they are out of order. One scan
+through the list is called a _pass_. The algorithm keeps making passes
+until no consecutive pair of elements is out of order. Here is an
+implementation of bubble sort that sorts an array of `int` values in
+ascending order.
+
+....
+boolean swapped = true;
+int temp;
+while( swapped ) {
+    swapped = false;    
+    for( int i = 0; i < array.length - 1; i++ )
+        if( array[i] > array[i + 1] ) {
+            temp = array[i];
+            array[i] = array[i + 1];
+            array[i + 1] = temp;
+            swapped = true;
+        }   
+}
+....
+
+==== Begin Pitfall: Array out of bounds
+
+Note that index variable `i` stops before `array.length - 1` since we
+don’t want to get an +
+`ArrayIndexOutOfBoundsException` when looking at `array[i + 1]`.
+
+==== End Pitfall
+
+The only change needed to make a bubble sort work with lists of
+arbitrary objects (instead of just `int` values) is the `if` statement.
+Likewise, changing the greater than (`>`) to a less than (`<`) will
+change the sort from ascending to descending.
+
+=== Concepts: Making a promise
+
+Knowing how to sort a list of items is half of the problem we want to
+solve. The other half is designing the classes so that sorting by either
+age or weight is easy. And easy sorting is not enough: We want to follow
+good object oriented design so that sorting future classes will be easy
+as well.
+
+For these kinds of situations, Java has a feature called _interfaces_.
+An interface is a set of methods that a class must have in order to
+_implement_ that interface. If a class implements an interface, it is
+making a promise to have a version of each of the methods listed in the
+interface. It can choose to do anything it wants inside the body of each
+method, but it must have them to compile. Interfaces are also described
+as contracts, since a contract is a promise to do certain things. One
+reason that interfaces are so useful is because Java allows a class to
+implement any number of them.
+
+The purpose of an interface is to guarantee that a class has the
+capability to do something. In the case of this sorting problem, we will
+need to sort by age and weight. Consequently, the ability to report age
+and weight are the two important capabilities that the objects we are
+sorting must have.
+
+=== Syntax: Interfaces
+
+Declaring an interface is similar to declaring a class except that
+interfaces can only hold public abstract methods and constants. An
+_abstract method_ is one that does not have a body. Its return type,
+name, and parameters are given, but this information is concluded with a
+semicolon (`;`) instead of a method body. Because the purpose of an
+interface is to ensure a class has certain publicly available
+capabilities, all abstract methods and constants listed in an interface
+are assumed to be `public`. It is legal but needlessly cluttered to mark
+each method with `public`, and it is illegal to mark them with `private`
+or `protected`.
+
+Here is an interface for a guitar player that defines two abstract
+methods.
+
+Any class that implements this interface must have both of these
+methods, declared with the access modifier `public`, the same return
+types, and the same parameters. We could create a `RockGuitarist` class
+that implements `Guitarist` as follows.
+
+Or we can create a `ClassicalGuitarist` class. A classical guitarist is
+going to approach playing a chord or a melody differently from a rock
+guitarist. Java only requires that all the methods in the interface are
+implemented.
+
+Interfaces make our code more flexible because we can use a reference
+with an interface type to refer to any objects which implement that
+interface. In the following snippet of code we do this by creating 100
+`Guitarist` references, each of which randomly points to either a
+`RockGuitarist` or a `ClassicalGuitarist`.
+
+....
+Guitarist[] guitarists = new Guitarist[100];
+Random random = new Random();
+for( int i = 0; i < guitarists.length; i++ )
+    if( random.nextBoolean() )
+        guitarists[i] = new RockGuitarist();
+    else
+        guitarists[i] = new ClassicalGuitarist();
+....
+
+Mistakes in the use of interfaces should generally be caught at compile
+time. If you implement an interface with a class you are writing but
+forget (or misspell) a required method, the compiler will fail to
+compile that class. If you remember all of the required methods but
+forget to specify that your class implements a particular interface, the
+compiler will fail when you try to use that class in a place where that
+interface is required.
+
+If you have code that takes some arbitrary object as a parameter, you
+can determine if that object implements a particular interface by using
+the `instanceof` keyword. For example, the following method takes a
+`Chord` object and an object of type `Object`. The `Object` type is the
+most basic reference type there is. All reference types in Java can be
+treated as an `Object` type. Thus, a reference of type `Object` could
+point at any object of any type. In this case, if the `Object` turns out
+to implement the `Guitarist` interface, we can cast it to a `Guitarist`
+and use it to strum a chord.
+
+....
+void checkBeforeStrum( Object unknown, Chord chord ) {
+    if( unknown instanceof Guitarist ) {
+        Guitarist player = (Guitarist)unknown;
+        player.strumChord( chord );
+    }
+    else
+        System.out.println("That's not a guitarist!");
+}
+....
+
+==== Begin Pitfall: Interfaces cannot be instantiated
+
+It is tempting to try to create an object of an interface type. If you
+think about this carefully, it should be clear why this is impossible.
+An interface is a promise to do things, but it is not a class. It has no
+data nor methods to manipulate data. Thus, the following code will fail
+to compile.
+
+....
+Guitarist guitarist = new Guitarist();
+....
+
+We are permitted to make a reference to objects that implement
+`Guitarist`. We can make an array that holds such references. The
+interface itself, however, can never be instantiated.
+
+==== End Pitfall
+
+==== Interfaces and `static`
+
+When designing an interface, you cannot mark a method as `static`.
+Whether or not a method is `static` is considered by Java to be an
+implementation detail that is not suitable to specify in an interface.
+For example, even with `Chord` and `Melody` defined, the following
+interface fails to compile.
+
+The designers of Java decided that they did not want their language to
+function this way. Some languages like PHP allow the equivalent of
+static methods in interfaces.
+
+Neither fields nor class variables are allowed in interfaces either, but
+class constants are allowed. Thus, we could define `static` `final`
+values that might be useful to any class implementing an interface. With
+`Chord` and `Melody` defined, the following interface *will* compile.
+
+Many modern Java users object to the use of constants in interfaces,
+since the purpose of an interface is to define a list of a requirements
+for what a class does rather than dealing with data values.
+Nevertheless, constants are allowed in interfaces, and the Java API does
+so in many cases.
+
+==== Begin Example: Supermarket pricing
+
+Interface names often include the suffix _-able_, for example,
+`Runnable`, `Callable`, and `Comparable`. This suffix is typical because
+it reminds us that a class implementing an interface has some specific
+ability. Let’s consider an example in a supermarket in which the items
+could have very little in common with each other but they all have a
+price. We could define the interface `Priceable` as follows.
+
+If bananas cost $0.49 a pound, we can define the `Bananas` class as
+follows.
+
+If eggs are $1.50 for a dozen large eggs and $1.75 for a dozen extra
+large eggs, we can define the `Eggs` class as follows.
+
+Finally, if water is $0.99 a gallon, we can define the `Water` class as
+follows.
+
+Each class could be much more complicated, but the code shown is all
+that is needed to implement the `Priceable` interface. Even though there
+is no clear relationship between bananas, eggs, and water, a shopping
+cart filled with these items (and any others implementing the
+`Priceable` interface) could easily be totaled at the register. If we
+represent the shopping cart as an array of `Priceable` items, we could
+write a simple method to total the values like so.
+
+....
+public static double getTotal( Priceable[] cart ) {
+    double total = 0.0;
+    for( int i = 0; i < cart.length; i++ )
+        total += cart[i].getPrice();
+
+    return total;       
+}
+....
+
+Note that we can pass in `Bananas`, `Eggs`, `Water`, and many other
+kinds of objects in a `Priceable` array as long as they all implement
+this interface. Even though it is impossible to create an object with an
+interface type, we can make as many references to it as we want.
+
+==== End Example
+
+=== Advanced: Local and anonymous classes
+
+If you have not read Section REF=advanced:Nested classes, you may want
+to look over that material to be sure that you understand what nested
+classes and inner classes are. Recall that a normal inner class is
+declared inside of another class, but it is also legal to declare a
+class inside of a method. Such a class is called a _local class_. Under
+some circumstances, it is useful to create another kind of inner class
+that has no name. That kind of class is called an _anonymous class_.
+
+Both kinds of classes are inner classes. They can access fields and
+methods, even if they are marked `private`. Like other inner classes,
+they are not allowed to declare `static` variables other than constants.
+We bring up these kinds of classes in this chapter because they are
+commonly used to create a class with a narrow purpose that implements a
+required interface.
+
+==== Local classes
+
+A local class declaration looks like any other class declaration except
+that it occurs within a method. The name of a local class only has
+meaning inside the method where it is defined. Because the scope of the
+name is only the method, a local class cannot have access modifiers such
+as `public`, `private`, or `protected` applied to it.
+
+Consider the following method in which an `Ellipse` class is defined
+locally. Recall that an ellipse (or oval) has a major (long) axis and a
+minor (short) axis. The area of an ellipse is half its major axis times
+half its minor axis times latexmath:[\pi]. (Because the major and
+minor axes of a circle are its diameter, this formula becomes
+latexmath:[\pi
+r^2] in that case.)
+
+.image]  [[figure:ellipse]][figure:ellipse]  .... public static void createEllipse(double a1, double a2) {     class Ellipse {         private double axis1;         private double axis2;          public Ellipse( double axis1, double axis2 ) {             this.axis1 = axis1;             this.axis2 = axis2;         }          public double getArea() {             return Math.PI*0.5*axis1*0.5*axis2;         }     }      Ellipse e = new Ellipse(a1, a2);     System.out.println("The ellipse has area " + e.getArea()); } ....  This `Ellipse` class cannot be referred to by any other methods. Since an `Ellipse` class might be useful in other code, a top-level class would make more sense than this local class. For this reason, local classes are not commonly used.  However, we can make local classes more useful if they implement interfaces. Consider the following interface which can be implemented by any shape that returns its area.  The method below takes an array of `AreaGettable` objects and sums their areas.  .... public static double sumAreas( AreaGettable[] shapes ) {     double sum  = 0;     for( int i = 0; i < shapes.length; i++ )         sum += shapes[i].getArea();      return sum; } ....  If we create a local class that implements `AreaGettable`, we can use it in conjunction with the `sumAreas()` method. In the following method, we will expand the local `Ellipse` class in this way and fill an array with 100 `Ellipse` instances which can then be passed to `sumAreas()`.  .... public static void createEllipses() {     class Ellipse implements AreaGettable {         private double axis1;         private double axis2;          public Ellipse( double axis1, double axis2 ) {             this.axis1 = axis1;             this.axis2 = axis2;         }          public double getArea() {             return Math.PI*0.5*axis1*0.5*axis2;         }     }      AreaGettable[] ellipses = new AreaGettable[100];      for( int i = 0; i < 100; i++ )         ellipses[i] = new Ellipse(Math.random() * 25.0,             Math.random() * 25.0);      double sum = sumAreas( ellipses );     System.out.println("The total area is " + sum); } ....  Even though the `Ellipse` class had the `getArea()` method before, the compiler would not have allowed us to store `Ellipse` references in an `AreaGettable` array until we marked the `Ellipse` class as implementing `AreaGettable`. As in Example REF=example:Supermarket pricing, we used an array of the interface type.  [[subsection:_Anonymous_classes]] ==== Anonymous classes  This second `Ellipse` class is more useful since objects with its type can be passed to other methods as an `AreaGettable` reference, but declaring the class locally provides few benefits over a top-level class. Indeed, local classes are seldom preferable to top-level classes. Although anonymous classes behave like local classes, they conveniently can be created at any point.  An anonymous class has no name. It is created on the fly from some interface or parent class and can be stored into a reference with that type. In the following example, we modify the `createEllipses()` method so that it creates an anonymous class which behaves exactly like the `Ellipse` class and implements the `AreaGettable` interface.  .... public static void createEllipses() {     AreaGettable[] ellipses = new AreaGettable[100];      for( int i = 0; i < 100; i++ ) {         final double value1 = Math.random();         final double value2 = Math.random();          ellipses[i] = new AreaGettable() {             private double axis1 = value1;             private double axis2 = value2;              public double getArea() {                 return Math.PI*0.5*axis1*0.5*axis2;             }         };     }      double sum = sumAreas( ellipses );     System.out.println("The total area is " + sum); } ....  The syntax for creating an anonymous class is ugly. First, you use the `new` keyword followed by the name of the interface or parent class you want to create the anonymous class from. Next, you put the arguments to the parent class constructor inside of parentheses or leave empty parentheses for an interface. Finally, you open a set of braces and fill in the body for your anonymous class. When defining an anonymous class, the entire body is crammed into a single statement, and you will often need to complete that statement with a semicolon (`;`).  Anonymous classes do not have constructors. If you need a constructor, you will have to create a local class. Constructors are usually not necessary since both local and anonymous classes can see local variables and fields and use those to initialize values. Although any fields can be used, local variables must be marked `final` (as shown above) if their values will be used by local or anonymous classes. This restriction prevents local variables from being changed unpredictably by methods in the local class.  It may not be easy to see why anonymous classes are useful. Both the Java API and libraries written by other programmers have many methods that require parameters whose type implements a particular interface. Without anonymous classes, you would have to define a named class and instantiate it to supply such a method with an object with the required capabilities.  Using anonymous classes, you can create such an object in one step, right where you need it. This practice is commonly used for creating _listeners_ for GUIs. A listener is an object that does the right action when a particular event happens. If you need many different listeners in one program, it can be convenient to create anonymous classes that can handle each event rather than defining many named classes which each have a single, narrow purpose. We will use this technique in Chapter REF=chapter:Constructing Graphical User Interfaces.  === Solution: Sort it out  It is not difficult to move from totaling the value of items as we did in Example REF=example:Supermarket pricing to sorting them. Refer to the following class diagram as we explain our solution to the sorting problem posed at the beginning of the chapter. Dotted lines are used to show the implements relationship.  FIGto image:InterfacesChapter/figures/ageandweight[Sorting relationships
+image::ellipse.png[]
+
+
+We will start with the definitions of the two interfaces we will use to
+compare objects.
+
+Classes implementing these two interfaces will be able to give their age
+and weight independently. The next step is to create the `Dog`, `Cat`,
+`Person`, and `Cheese` classes which can do so.
+
+We’ll see in Chapter REF=chapter:Inheritance that the `Dog`, `Cat`, and
+`Person` classes could inherit from a common ancestor (such as
+`Creature` or `Mammal`) which implements the `Ageable` and `Weighable`
+interfaces. That design could reduce the total amount of code needed.
+For now, each class will have to implement both interfaces directly.
+
+With the classes in place, we can assume that client code will
+instantiate some objects and perform operations on them. All that is
+necessary is to write the method that will do the sorting. We can wrap
+the bubble code given earlier in a method body with only a few changes
+to generalize the sort beyond `int` values.
+
+....
+public void sort( Object[] array, boolean age ) {
+    boolean swapped = true;
+    Object temp;
+    while( swapped ) {
+        swapped = false;    
+        for( int i = 0; i < array.length - 1; i++ )
+            if( outOfOrder( array[i], array[i + 1], age ) {
+                temp = array[i];
+                array[i] = array[i + 1];
+                array[i + 1] = temp;
+                swapped = true;
+            }   
+    }
+}
+....
+
+In this method, the `boolean` `age` is `true` if we are sorting by age
+and `false` if we are sorting by weight. Note that the array and `temp`
+have the `Object` type. Recall that any object can be stored in a
+reference of type `Object`.
+
+The only other change we needed was to replace the greater-than
+comparison (`>`) with the `outOfOrder()` method, which we define below.
+
+....
+public boolean outOfOrder( Object o1, Object o2, boolean age ) {
+    if( age ) {
+        Ageable age1 = (Ageable)o1;
+        Ageable age2 = (Ageable)o2;
+        return age1.getAge() > age2.getAge();
+    }
+    else {  
+        Weighable weight1 = (Weighable)o1;
+        Weighable weight2 = (Weighable)o2;
+        return weight1.getWeight() > weight2.getWeight();
+    }
+}
+....
+
+Even though we have designed our program for objects that implement both
+the `Ageable` and `Weighable` interfaces, the compiler only sees
+`Object` references in the array. Thus, we must cast each object to the
+appropriate interface type to do the comparison. There is a danger that
+a user will pass in an array with objects which do not implement both
+`Ageable` and `Weighable`, causing a `ClassCastException`. To allow for
+universal sorting methods, the Java API defines a `Comparable` interface
+which can be implemented by any class which requires sorting. With Java
+5 and higher, the `Comparable` interface uses generics to be more
+type-safe, so we will not discuss how to use this interface until we
+cover generics in Chapter REF=chapter:Dynamic Data Structures.
+
+=== Concurrency: Interfaces
+
+As we discussed in Section REF=concepts:Making a promise, implementing
+an interface means making a promise to have public methods with the
+signatures specified in the interface definition. Making a promise seems
+only tangentially related to having multiple threads of execution.
+Indeed, interfaces and concurrency do not overlap a great deal, but
+there are two important areas where they affect one another.
+
+The first is that a special interface called the `Runnable` interface
+can be used to create new threads of execution. `Runnable` is a very
+simple interface, containing the single signature `void run()`. This
+means that any object with a `run()` method that takes no arguments and
+returns no values can be used to create a thread of execution. This
+makes intuitive sense. A regular program has a single starting place,
+the `main()` method. If we want to run additional threads, some method
+needs to be marked as a starting place for each one. For more
+information about using the `Runnable` interface, refer to
+Section REF=subsection:runnable.
+
+The second connection between interfaces and concurrency is more
+philosophical. What can you specify in an interface? The rules for
+interfaces in Java are relatively limited: You can require a class to
+have a public instance method with specific parameters and a specific
+return type. Java interfaces do not allow you to require a static
+method.
+
+In Chapter REF=chapter:Synchronization, we will discuss a key way to
+make classes thread-safe by using the +
+`synchronized` keyword. Like static, Java does not allow an interface to
+specify whether a method is synchronized. Thus, it is impossible to use
+an interface to guarantee that a method will be thread-safe.
+
+As with all interface usage, this restriction cuts both ways: If you are
+designing an interface, there is no way that you can guarantee that
+implementing classes use synchronized methods. On the other hand, if you
+are implementing an interface, the designer may hope that your class
+uses synchronized (or otherwise thread-safe) methods, but the interface
+cannot force you to do so. Whenever thread-safety is an issue, make sure
+you read (or write) the documentation carefully. Since there is no way
+to force programmers to use the `synchronized` keyword, the
+documentation may be the only guide.
+
+=== Exercises
+
+1.  What is the purpose of an interface?
+2.  Why implement an interface when it puts additional requirements on a
+class yet adds no functionality?
+3.  Is it legal to have methods marked `private` or `protected` in an
+interface? Why did the designers of Java make this choice?
+4.  What is the `instanceof` keyword used for? Why is it useful in the
+context of interfaces?
+5.  What kind of programming error causes a `ClassCastException`?
+6.  Create an interface called `ColorWavelengths` that only contains
+constants storing the wavelengths in nanometers for each of the seven
+colors of light, as given below.
++
++
+[cols="^,^",options="header",]
+|======================
+|Color |Wavelength (nm)
+|Red |680
+|Orange |605
+|Yellow |580
+|Green |545
+|Blue |473
+|Indigo |430
+|Violet |415
+|======================
+7.  Write an interface called `Clock` that specifies the functionality a
+clock should have. Remember that the classes that implement the clock
+may tell time in different ways (hourglass, water clock, mechanical
+movement, atomic clock), but they must share the basic functionality
+that you specify.
+8.  There are four compiler errors in the following interface. Name each
+one and explain why it is an error.
++
+....
+public interface Singable {
+    public int SOPRANO = 1;
+    public static int ALTO = 2;
+    
+    public void sing();
+    private String chant();
+    public boolean hasDeepVoice() {
+        return false;
+    }
+    public static boolean hasPerfectPitch();
+    public synchronized void tune( int frequency ); 
+}  
+....
+9.  Consider the interface defined below.
++
+....
+public interface Explodable {
+    boolean explode( double megatons );
+}
+....
++
+Which of the following classes properly implement `Explodable`?
++
+....
+public class Dynamite implements Explodable {
+    public boolean explode() {
+        System.out.println("BOOM!");
+        return true;
+    }
+}
+
+public class AtomicBomb implements Explodable {
+    public boolean explode( double size ) {
+        System.out.println("A huge " + size +
+            " megaton blast shakes the earth!");
+        return true;
+    }
+}
+
+public class Grenade {
+    public boolean explode( double megatons ) {
+        return true;
+    }
+}
+
+public class Firecracker implements Explodable {
+    private boolean explode( double megatons ) {
+        return (megatons < 0.0000001);
+    }
+}
+....
+10. Write a single class that correctly implements the following three
+interfaces.
++
+....
+public interface Laughable {
+    boolean laugh( int times );
+}
+....
++
+....
+public interface Cryable {
+    void cry( int tears, boolean moaning );
+}
+....
++
+....
+public interface Shoutable {
+    void laugh( double volume, String words );
+}
+....
+11. If you are sorting a list of items latexmath:[n] elements long
+using bubble sort, what is the minimum number of passes you would need
+to be sure the list is sorted, assuming the worst possible ordering of
+items to start with? (Hint: Imagine the list is in backwards order.)
+What is the minimum number of passes if the list is already sorted?
+*Programming Practice*
+12. Add client code that randomly creates the objects needing sorting in
+the solution from Section REF=solution:Sort it out. Design and include
+additional classes `Wine` and `Tortoise` that both implement `Ageable`
+and `Weighable`. Add `toString()` methods to each class so that their
+contents can be easily output. Make sure that you print out the list of
+objects after sorting to test your implementation.
+13. Refer to the sort given as a solution in Section REF=solution:Sort
+it out. Add another `boolean` to the parameters of the sort which
+specifies whether the sort is ascending or descending. Make the needed
+changes throughout the code to add this functionality.
+14. <<exercise:parallelBubbleSort>> After learning about threads in
+Chapter REF=chapter:Concurrent Programming, refer to the simple bubble
+sort from Section REF=problem:Sort it out. The goal is now to
+parallelize the sort. Write some code which will generate an array of
+random `int` values. Design your code so that you can spawn
+latexmath:[n] threads. Partition the single array into latexmath:[n]
+arrays and map one partition to each thread. Use your bubble sort
+implementation to sort each partition. Finally, merge the arrays back
+together, in sorted order, into one final array. For now, just use one
+thread (ideally the main thread) to do the merge.
++
+The merge operation is a simple idea, but it is easy to make mistakes in
+its implementation. The idea is to have three indexes, one for each of
+the two arrays you are merging and one for the result array. Always take
+the smaller (or larger, if sorting in descending order) index value from
+the two arrays and put it in the result. Then increment the index from
+the array you took the data from as well as the index of the result
+array. Make sure that you are careful not to go beyond the end of the
+arrays which are being merged.
++
+*Experiments*
+15. Once you have implemented the sort in parallel from
+Exercise REF=exercise:parallelBubbleSort, time it against the sequential
+version. Try two, four, and eight different threads. Be sure to create
+one random array and use copies of the same array for both the parallel
+and sequential versions. Be careful not to sort an array that is already
+sorted! Try array sizes of 1,000, 100,000, and 1,000,000. Did the
+performance increase? Was it as much as you expected?

@@ -1,0 +1,2027 @@
+[[chapter:Testing_and_Debugging]]
+:imagesdir: chapters/16-testing-and-debugging/images
+== Testing and Debugging
+
+[[section:Fixing_bugs]]
+=== Fixing bugs
+
+This chapter is about finding, fixing, and, more importantly, preventing
+bugs in software. This chapter is unique in that it is not based on
+clearly stated concrete problems with straightforward solutions. As it
+stands now, finding and fixing bugs in software, especially concurrent
+software, is a problem which no one has solved completely. The first
+half of this chapter will focus on common bugs and how to fix them. The
+second half will focus on design techniques for preventing bugs and
+testing to see if any hidden bugs remain in your code.
+
+==== Common sequential bugs
+
+We will begin with bugs commonly found in sequential programs, some of
+which have already been mentioned as common mistakes in previous
+chapters. We will not discuss syntax errors or any other errors which
+can be caught at compile time. Instead, all bugs discussed in this
+chapter are run-time bugs.
+
+There are an infinite number of possible bugs and so they cannot all be
+listed. Below are a few of the most common categories of bugs to affect
+beginner (and occasionally veteran) programmers.
+
+Precision Errors:::
+  Floating point numbers have limited precision inside of a computer.
+  Programs that assume infinite precision may break when real results
+  are slightly larger or smaller than expected.
+Overflow and Underflow:::
+  In some sense the cousin of precision in floating point types is the
+  limited range of values that integer types can take on. If the value
+  goes too high, it wraps back around and becomes a negative number. If
+  the values becomes too low, the opposite can happen.
+Casting Errors:::
+  Casting can have many subtle effects in a program. Sometimes
+  programmers divide two integers and forget that the result is an
+  integer. Incorrectly casting objects can lead to
+  `ClassCastException`s.
+Loop Errors:::
+  Loops are a favorite place for bugs to hide. Three of the most common
+  loop mistakes are:
+  +
+  * Off-by-one errors: The loop executes one more or one fewer time than
+  expected.
+  * Infinite loop: A classic. The loop continues executing until the
+  program runs out of memory or a user stops the program externally.
+  * Zero loop: The loop does not execute even once, even though the
+  programmer expected it to.
+Equivalence Testing Errors:::
+  If a programmer uses the `==` operator to compare two references, it
+  will be true only if the two references point at the same object.
+  Although doing so is occasionally necessary, the `equals()` method
+  should usually be used to compare the attributes of the objects
+  pointed at by the references.
+Array Errors:::
+  Arrays are often involved with loop errors. Two problems specific to
+  arrays are:
+  +
+  * Out of bounds: A math mistake or an off-by-one error could lead to
+  trying to access an element of an array that comes before element 0 or
+  after the last element.
+  * Uninitialized object arrays: Arrays of primitive data types can be
+  created and used instantly; however, arrays of object types are filled
+  with nulls until each element is assigned an object, often a new
+  object.
+Scope Errors:::
+  Some errors can be caused by a programmer’s misunderstanding about the
+  visibility of a variable.
+  +
+  * Shadowing variables: If a local variable is declared with the same
+  name as a field or class variable, changes within a method will be
+  made to that local variable. This principle is straightforward, but,
+  if a programmer does not notice the shadow declaration, the behavior
+  of the code can be very confusing.
+  * Reference vs. value: When primitive data is passed as an argument
+  into a method, its value is copied into the method, and the original
+  data is unchanged. When an object is passed as an argument into a
+  method, the reference is unchanged, but methods called on the object
+  can still affect it.
+Null Pointer Errors:::
+  By this point in your programming experience, you have almost
+  certainly experienced a `NullPointerException`. This is, in many ways,
+  a catch-all category, because a null reference is generally not due to
+  a simple typographical error. In the simplest case, a reference simply
+  has not been initialized with some default constructor, but more often
+  there is a logical error in the design of the code.
+
+=== Concepts: Approaches to debugging
+
+When you have discovered the existence of a bug, pinning down its cause
+can be difficult. There are a number of different techniques that are
+useful for narrowing down the possible problems.
+
+==== Assertions
+
+A common cause of program errors is an incorrect assumption by a
+programmer. A programmer can assume that the user will only enter
+positive numbers, that a library call will not throw any exceptions, or
+that a linked list is not empty. Some assumptions are reasonable, but it
+is important to make sure that they are correct.
+
+Using _assertions_ is a way to check some of your assumptions, often
+those surrounding a method call. In most languages, an assertion tests a
+condition. If that condition is true, nothing happens, but, if it is
+false, the program shuts down or an error or exception is thrown. Using
+assertion statements is particularly important with methods because you
+want to be sure that both your input and output are in the ranges you
+expect them to be.
+
+Java supports assertions natively, as we will discuss in the next
+section. However, virtually every language allows you to create your own
+assertions should they not be present as a language construct.
+
+==== Print statements
+
+Computer programs execute quickly. Even if they executed a million times
+more slowly no human is sensitive enough to decipher the flow of
+electrons inside the processor as a program executes. The simple truth
+is that we have no idea what is happening when our programs execute. We
+believe that we understand our programs well, and the output usually
+confirms that our program is doing what we imagine that it should be
+doing.
+
+If the output does not match what is expected, we may not have enough
+data to understand the problem. Since there have been programmers, they
+have been printing out additional debug information to find their
+errors. This technique can go a step beyond simple assertion statements
+because you can print out the values of the variables rather than just
+test to see if they are in a range.
+
+Once you have found the error in your code, it can be tedious to remove
+all of your debug statements. Some programmers use a special print
+command that can be turned off using a global variable or compiler
+option. Others send their output to `stderr` so that it doesn’t
+interfere with the legitimate output of the program. Much depends upon
+the system, the language, and the individual tastes of the programmer.
+
+==== Step-through execution
+
+With the rise of modern debugging environments, using print statements
+has lost some of its appeal. Most languages allow the programmer to run
+his or her program in a special debug mode in which it is possible to
+execute a single line of code at a time. These tools usually give the
+option of stepping over method calls or stepping into them, on a case by
+case basis.
+
+As the program executes, the programmer can inspect the values of the
+variables in the code. This method of debugging is excellent because it
+allows the programmer to watch the execution of the code at whatever
+pace he or she desires. Pinpointing problems becomes trivial if you know
+which variables you need to watch.
+
+Despite the power of this technique, it has critics. Some older
+programmers look down on these tools because they make beginning
+programmers lazier and, in some cases, less careful about writing code
+correctly in the first place. It should be noted that step-through
+execution modes are not available for every language and for every
+system. Some embedded software or operating system programming cannot be
+debugged on the real hardware in this way. Of course, most of these
+systems can be run in virtual environments that do allow step-through
+debugging.
+
+Even when step through debugging is available, there are difficulties
+that can limit its effectiveness. If the bug occurs sporadically,
+perhaps due to race conditions, a programmer may not know where to start
+looking. Certain data structures such as the `list` template in C++ may
+not be easily traversable using the inspection facilities of the
+debugger. Likewise, the bug or the source of the unexplained behavior
+could be buried in library code. The debugger does not always have
+access to library code for stepping through.
+
+==== Breakpoints
+
+Breakpoints are a feature of step-through debuggers designed to make
+them easier to use. A user can specify a particular line of code (with
+some restrictions) as being a place where the debugger should pause
+execution. Debuggers typically rely on at least one breakpoint in order
+to skip all the preliminary parts of the code and skip straight to the
+perceived trouble spot.
+
+Sometimes an error will predictably crop up after many thousands of
+iterations of a loop or unpredictably in the case of bugs dependent on
+race conditions or user input. For either of these cases, conditional
+breakpoints can be used to save the debugger a great deal of time.
+Rather than always pausing execution on a given line, a conditional
+breakpoint will only pause if a certain condition is met.
+
+=== Syntax: Java debugging tools
+
+==== Assertions
+
+As we mentioned before, many languages have assertions as a built-in
+language construct. In Java, there are two forms this feature takes. The
+simpler can be done by typing the following.
+
+....
+assert condition;
+....
+
+In this case, `condition` is a boolean value that is expected to be true
+for the program to function properly. The more complicated form of the
+feature can be used as follows.
+
+....
+assert condition : value;
+....
+
+This form adds a value that can be attached to the assertion to give the
+user more information about the problem. This value can be any primitive
+data type, any object type, or a statement that evaluates to one of the
+two.
+
+If you have never used an `assert` statement before, you might want to
+test it out by forcing an assertion to fail. You might try
+
+....
+int x = 5;
+assert (x < 4) : "x is too large!";
+....
+
+Then, if you compile your program and run it through the JVM, you will
+be shocked when *absolutely nothing happens*. Actually, some of you with
+older Java compilers may have heard complaints when you tried to
+compile. If you have a Java 1.3 compiler or earlier, it will treat
+`assert` like an identifier. Some old Java 1.4 compilers may also give
+warnings or require special flags to be set to compile. However, if you
+have an up to date compiler, the problem is that the JVM must have
+assertions enabled at runtime. Assertions are intended to be a special
+debugging tool and ignored otherwise. To turn run program
+`AssertionTest` with assertions enabled, type
+
+....
+java -ea AssertionTest
+....
+
+With this option, an exception should be thrown at runtime.
+
+....
+Exception in thread "main" java.lang.AssertionError: x is too large!
+....
+
+There are other options allowing you to enable or disable assertions for
+specific packages or classes.
+
+Now that you know how to use assertions, you need to know when they are
+a good idea. The Java Tutorials on the Oracle website suggest five
+situations where assertions are useful: internal invariants,
+control-flow invariants, preconditions for methods, postconditions for
+methods, and class invariants. _Internal invariants_ are those
+situations when you assume that reaching a certain place in your code,
+like the `else` branch of an `if` statement, will force a variable to
+have a certain value. For internal invariants, you assert that the
+variable has the expected value. A _control-flow invariant_ means that
+you assume that your code will always execute along a certain path. For
+control-flow invariants, you assert `false` if the JVM reaches a point
+in the code you expected it never would. _Method preconditions_ are
+those conditions you expect to be true about the state of objects or the
+input to a method before the method is called.
+
+The philosophy of Java is that `public` methods should _not_ have
+assertions used to test their preconditions. Instead, illegal input
+values for a `public` method should cause exceptions to be thrown, so
+that improper usage can always be dealt with. In contrast, _method
+postconditions_ are the states that various variables and objects should
+have at the end of a method call. Using assertions to check these values
+is fine, since they reflect an error on the part of whoever wrote the
+method. _Class invariants_ are conditions about the state of every
+instance of a class that should be true as long as the class is in a
+consistent state. Perhaps a method call rearranges the innards of an
+object, but, by the end of the method call, the object should be
+consistent again. You should use assertions to check class invariants at
+the end of every method that could make the object violate the
+invariants.
+
+Wonderful as assertions are, there are times when they should not be
+used. The key danger of assertions is that they are usually turned off.
+Thus, any statement that is part of an assertion should not have
+side-effects that are necessary for the normal operation of the program.
+For example, imagine that you have a object called `bacteria` that
+mutates periodically. The mutation returns `true` if successful and
+`false` if there was an unexpected error. You should *not* test for that
+failure inside an assert, as follows.
+
+....
+assert bacteria.mutate() : "Mutation failed!";
+....
+
+With assertions disabled, the `bacteria` object will no longer mutate.
+Instead, your assertion should test only the result of the computation.
+
+....
+boolean success = bacteria.mutate();
+assert success : "Mutation failed!";
+....
+
+As stated above, checking for bad input coming into `public` methods
+should not be done with assertions because turning off assertions will
+remove your error checking.
+
+==== Print statements
+
+Print statements are one of the most time-honored methods of debugging
+and remain a quick, dirty, yet effective means of finding errors. Java
+does not provide any special tools to make print statements easier to
+use for debugging. Some purists might argue that all of this kind of
+debugging which focuses on progressively narrowing own the location of a
+problem until the bad assumption, logical error, or typographical error
+can be found should be done only with assertions.
+
+Nevertheless, there are a few tips to make print statements a better
+debugging tool in Java. The first is the use of `System.err`. By now,
+you have used `System.out.print()` and `System.out.println()` so many
+times, you are probably tired of them. Any output method that can be
+used with `System.out` can also be used with `System.err`. For example,
+there is a `System.err.print()` and a `System.err.println()` method. If
+you simply run a program from the command line and watch the output, you
+should see no difference between using `System.out` and `System.err`.
+However, if you redirect the output of your program to a file using the
+`>` operator, only the `System.out` code will be sent to the file.
+Anything printed with `System.err` will be sent to the screen.
+Alternatively, you can redirect `System.err` to a file by using the `2>`
+operator. Using `System.err` makes it easier to separate legitimate
+output from error messages, but it also makes it easier to comment out
+your debug code by doing a find and replace on your code.
+
+A more extensive method for using print statements to debug is by
+defining your own class for printing. Every method in it can call a
+corresponding method in `System.out` or `System.err`. You can define a
+`boolean` value at the class level that determines whether or not
+methods in your debug printing class print or stay silent. When you want
+to change from debugging to your submission or retail version of the
+code, you can simply switch this value to `false`.
+
+A "`modernized`" method of using print statements is creating a simple
+GUI instead. In preparing materials for this textbook, we were
+occasionally frustrated by the fact that multiple threads can interfere
+with each other while printing on the screen: You can’t always tell
+which thread is printing which characters. By displaying the output of
+each thread in separate `JTextArea` or `JLabel` widgets on a simple GUI,
+you can disentangle the output of each thread.
+
+==== Step-through debugging in Java
+
+Since DrJava is a great educational tool and Eclipse is so widely used,
+we are going to review the step-through debugging features of each
+program. Similar tools are available with other IDE’s and for most
+languages.
+
+The debugger in DrJava is very simple. To enable the debugger, check the
+Debug Mode checkbox in the Debugger menu. Doing so should bring up a
+debugging pane in the DrJava window. In or out of debug mode, it should
+be possible to set breakpoints on any executable line of code, either by
+choosing the Toggle Breakpoint on Current Line command from the Debugger
+menu or by typing `Ctrl+B`. Once you have set at least one breakpoint,
+you can run the program. If a line with a breakpoint on it is reached,
+then the execution of the program will pause.
+
+In the debugging pane, there should now be a list of threads, with the
+one that hit the breakpoint highlighted. Having reached this point, the
+debugging pane has four buttons you can use to move through code:
+*Resume*, *Step Into*, *Step Over*, and *Step Out*. The *Resume* button
+allows the program to continue execution, until it hits another
+breakpoint. The *Step Into* button advances the execution of the program
+by one statement, moving into a method is there is a method call. The
+*Step Over* button also advances the execution of the program by one
+statement, but it skips over method calls. The *Step Out* button
+advances the execution of the program to the end of the current method
+and returns, popping the current method off the stack.
+
+In the debugging pane, there will be a Watches tab that allows you to
+find out the value of a given variable in local scope. All you need to
+do is type the variable’s name, and its value and type should be
+displayed. Next to the Threads tab, there should also be a Stack tab,
+showing the current method call stack.
+
+The Eclipse tools are similar but much more advanced. You can set
+breakpoints in Eclipse either by right clicking on the shaded bar
+immediately to the left of the line you are interested in or by
+selecting Toggle Breakpoint from the Run menu. To debug a program in
+Eclipse, right click on the file you wish to run in the Package Explorer
+and select Debug As Java Application. If your program is already set up
+to run, you can simply click the Debug button in the toolbar. Whenever
+you hit a breakpoint, Eclipse will switch to the Debug perspective if it
+is not already there. Once execution is suspended on a breakpoint, you
+can use commands nearly identical to the ones in DrJava. The commands
+Resume, Step Into, and Step Over from the Run menu are the same as
+DrJava versions, and Step Return is the equivalent of Step Out. Eclipse
+adds the useful command Run to Line, which will execute code until it
+reaches the specified line.
+
+By right-clicking on a breakpoint in Eclipse, you can access its
+properties. Though properties, you can specify that a breakpoint only
+halts execution when a specific condition is true or only for a specific
+thread. The more advanced debugging in Eclipse also provides more
+comprehensive variable watch and inspection options. Simply by hovering
+over a variable, its type and value are displayed. You can also inspect
+an object and traverse its fields. As with DrJava, you can explicitly
+watch variables, but local variables are also displayed by default.
+
+The difference between a good programmer and a bad programmer is often
+just experience. Having seen a bug before means you know to expect it in
+the future. There is no substitute for pulling your hair out over a bug
+for hours before finally squashing it, but we will give a few examples
+corresponding to the common bugs listed in Section REF=section:Fixing
+bugs.
+
+==== Begin Example: Precision errors
+
+Precision can cause some subtle errors, especially with `float` types.
+Here is an example of a program attributed to Cleve Moler that gives
+some estimation of the threshold for floating point precision. Note that
+`a` latexmath:[\approx 4/3], making `b` latexmath:[\approx 1/3], `c`
+latexmath:[\approx 1], and `d` latexmath:[\approx 0]. Nevertheless,
+the comparison `(d == 0.0)` in the `if` statement in this code will
+evaluate to `false`.
+
+....
+double a, b, c, d;
+
+a = 4.0 / 3.0;
+b = a - 1;
+c = b + b + b;
+d = c - 1;
+System.out.println(d);
+if( d == 0.0 )
+    System.out.println("Success!");
+....
+
+The output for this fragment is `-2.220446049250313E-16`. Computer
+scientists who specialize in numerical analysis have tricks for
+minimizing the amount of floating point error introduced, but awareness
+is an easy solution to these kinds of bugs. When testing for specific
+values of a floating point number, it is wise to test for a range rather
+than a single value. For example, the condition `(d == 0.0)` could be
+replaced by `(Math.abs(d) < 0.000001)`.
+
+==== End Example
+
+==== Begin Example: Overflow and underflow
+
+As you well know, the `int` and `long` types have limited bits for
+storage. If an arithmetic operation pushes the value of an `int`
+variable larger than `Integer.MAX_VALUE`, the variable will come full
+circle and become a negative number, usually with a large magnitude. The
+converse happens when a variable is pushed lower than the smallest value
+it can hold. These situations are called overflow and underflow,
+respectively, and Java throws no exceptions when they occur. Programmers
+who deal with large magnitude values in `int` or `long` types get used
+to underflow and overflow, and, when unexpected values are output by
+their programs, they are usually quick to pin down the problem variable.
+
+Overflow and underflow can cause much more subtle bugs when programmers
+forget the limited range of values for `byte` and `char` types. For
+example, a curious beginner programmer might want to print out a table
+of all of the possible values for `char`. Perhaps the programmer has
+forgotten the range of values a `char` can take. Perhaps surprisingly,
+the following loop does not terminate.
+
+....
+for( char letter = '\0'; letter < 100000; letter++ )
+    System.out.print( letter );
+....
+
+Each time `letter` reaches `Character.MAX_VALUE` which is `’\uFFFF’` or
+`65535` as a numerical value, the next increment pushes its value back
+to 0. These kinds of errors with `byte` and `char` values are most
+common when variables of those types are being used as numbers. Some
+examples are cryptography, low level file operations, and manipulation
+of multimedia data. The best solution is care and attention. It can help
+to store the values in variables with more bits such as `int` or `long`
+values, but care must still be taken to ensure that these values are
+within the appropriate range before storing them back into variables
+with a smaller number of bits.
+
+For example, color values in many image formats are stored as red, green
+blue values with a `byte` used for each of the three colors. In this
+system, the darkest color, black, is represented as `(0,0,0)`, i.e. zero
+values for each of the three `byte`s. At the same time, the lightest
+color, white, is represented conceptually as `(255,255,255)`. In
+principle, we can perform a very simple filter to increase contrast and
+lightness by simply doubling all the pixel values. Given red, green, and
+blue color values stored in three `byte` variables called `red`,
+`green`, and `blue`, a naive implementation of this filter might be as
+follows.
+
+....
+red *= 2;
+green *= 2;
+blue *= 2;
+....
+
+In Java, this code would not work. The first problem is that, even
+though image standards are written with color values between 0 and 255,
+Java `byte` values are *signed*. The web standard for the color purple
+has red, green, and blue values of `(128,0,128)`. Since Java `byte`
+values are signed, printing the `byte` values for each component of
+purple directly will actually print `(-128,0,-128)`. Multiplying the
+green value by 2 is clearly still 0. However, multiplying -128 by 2 as a
+`byte` value is -256 which underflows back to 0. Thus, "`brightening`"
+purple actually turns it into `(0,0,0)`, black. Properly applying the
+filter to a `byte` requires a conversion to the `int` type, masking out
+the sign bit, scaling by 2, capping the values at 255, and then casting
+back into a `byte`. Despite the complicated description, the code is not
+too unwieldy.
+
+....
+red = (byte)Math.min( 255, 2*(red & 0xFF)); //bitwise AND automatically upcasts
+to int green = (byte)Math.min( 255, 2*(green & 0xFF));
+blue = (byte)Math.min( 255, 2*(blue & 0xFF));
+....
+
+==== End Example
+
+==== Begin Example: Casting errors
+
+The previous example about scaling color component values is an
+excellent example of the dangers of casting. Someone can easily forget
+that the implicit cast to convert a `byte` to an `int` always uses a
+signed conversion. Likewise, the explicit cast needed to store an `int`
+into a `byte` will cheerfully convert any arbitrarily large `int` into a
+`byte`, even though the final value might not be expected by the
+programmer.
+
+Many other casting errors crop up commonly. The most classic example
+might be muddling floating point and integer types.
+
+....
+int x = 5;
+int y = 3;
+double value = 2.0*(x/y);
+....
+
+Above, it is easy for a programmer to forget that the division of `x`
+and `y` is integer division. After all, the `2.0` is right there,
+causing an implicit cast to `double`. Of course, this cast happens after
+the division, and the answer stored into `value` is `2.0` and not the
+`3.3333333333333335` that the programmer might have expected.
+
+Newer programmers sometimes forget that an explicit cast from a floating
+point type to an integer type always uses truncation, never rounding.
+
+....
+int three = (int)2.99999;
+....
+
+This assignment will always store `2` into `three`. The `Math.round()`
+method or some other additional step is needed to perform rounding.
+
+Casting errors are not limited to primitive data types. Object casting
+will be discussed at length in Chapter REF=chapter:Polymorphism. The
+biggest danger there is an incorrect explicit upcast.
+
+....
+Fruit snack = new ChiliPepper();
+Apple apple = (Apple)snack;
+....
+
+In a botanical sense, a chili pepper is indeed a fruit and its parallel
+Java class is apparently a child of the `Fruit` class. For some reason,
+the programmer thought that the only `Fruit` that would be pointed at by
+a `snack` reference would be of type `Apple`. Instead of a mouth on
+fire, the programmer gets a `ClassCastException`. This two line example
+is so simple that it should never come up in serious programming. A much
+more common example is an array or linked-list whose type is some
+superclass of the item you generally expect to be in there. If a large
+team is working on a body of code which such a list in it, half of the
+team might expect the list to contain only `Apple` objects while the
+other expected only `ChiliPepper` objects. The use of generics,
+discussed in Chapter REF=chapter:Dynamic Data Structures, can reduce the
+number of casting errors of this kind, but some applications require a
+list to hold many different types with a common superclass. In those
+cases, some amount of explicit (and therefore dangerous) casting will
+usually be necessary when retrieving the objects from the list.
+
+==== End Example
+
+Loops give Java much of its expressive power and unsurprisingly give it
+much of its power to express incorrect as well as correct code. We are
+just going to mention a few of the most common loop errors.
+
+==== Begin Example: Off-by-one errors
+
+Computer scientists often use zero-based counting. This departure from
+"`normal`" practices is just one source of loops that iterate one time
+more or less than they should. A good rule of thumb is, if you want to
+iterate latexmath:[n] times, start at 0 and go up to but not including
+latexmath:[n]. Alternatively, if you have a reason not to be
+zero-based, you can start at 1 and go up to and including
+latexmath:[n].
+
+....
+for( int i = 1; i < 50; i++ )
+    System.out.println("Question " + i + ".");
+....
+
+Perhaps you want to make a template for an exam. Instead of being
+zero-based, you start at 1 because most exams do not have a Question 0.
+Unfortunately, you have gotten so used to use a strictly less than for
+your ending condition, you forget to change it. You only get 49
+questions printed out. If your only purpose is making an exam, you can
+catch your mistake and move on. If you are writing a program that
+dispenses a quantity of heart medication into a patient’s IV in a
+hospital, one iteration too few or too many could cause the patient to
+get too little of the drug to make a difference or too much of the drug
+to be safe.
+
+Input is another tricky area when it comes to being off by one.
+
+....
+int i = 0;
+double sum = 0;
+int count = 0;
+Scanner scanner = new Scanner( System.in );
+while( i >= 0 ) {
+    sum += i;
+    System.out.print("Enter an integer (negative to quit): ");
+    i = scanner.nextInt();
+    count++;
+}
+System.out.println("Average: " + (sum / count));
+....
+
+This fragment of code appears to be a perfectly innocent loop that finds
+the average of the numbers entered by a user. The loop uses a sentinel
+value so that the user simply enters a negative number when all the
+numbers have been entered. The value of `sum` is updated before the user
+enters a value; thus, the harmless `0` from the declaration of `i` is
+included but the final negative number entered to leave the loop is not.
+Unfortunately, the value of `count` is incremented for every turn of the
+loop, even the extra one for the negative number. To combat this
+problem, an `if` statement could be used inside of the loop or `count`
+could simply be initialized to `-1`. The mistake is a simple one, but it
+doesn’t jump out at you unless you trace a few executions. What is most
+insidious is that, especially for large sets of input numbers, the error
+is going to be small. Catching this kind of bug will be discussed more
+throughly in the second half of this chapter, dealing with testing.
+
+==== End Example
+
+==== Begin Example: Infinite loops
+
+Infinite loops come in many different flavors, from the `char` overflow
+example earlier to traversing a linked-list which has a cycle in it.
+Many infinite loops are caused by simple typographical errors. Perhaps
+the most classic is:
+
+....
+int i = 1;
+while( i <= 100 );
+{
+    System.out.println(i);
+    i++;
+}
+....
+
+It’s usually a beginning programmer who leaves a semicolon at the end of
+the `while` header, but even veterans can get a little enthusiastic
+about semicolons. Often a programmer confronted with such a bug (which
+causes no ouput, in this case) will scour the body of the loop for some
+clue as to why it isn’t advancing yet never carefully scrutinizing the
+condition. An extra semicolon the end of a `for` loop header will
+usually cause an error but will usually *not* cause an infinite loop.
+
+....
+public double average(int[] array) {
+    double sum = 0;
+    int count = 0;
+    for( int i = 0; i < 100; i++ ) {
+        sum += array[i];
+        count++;
+        if( i == 0 )
+            i--;
+    }
+    return sum / count;
+}
+....
+
+This example is the kind that might be too confusing to appear in a
+textbook, but nearly everyone has written worse code while learning to
+program. We could suppose that this method is meant to average the
+values in an array, but, for some reason, zero valued entries are not to
+be counted. The student probably meant to have the following `if`
+statement:
+
+....
+        if( array[i] == 0 )
+            count--;
+....
+
+Those two small changes turn the method into a working but slightly
+inelegant solution. When debugging remember that index variables in
+`for` loops can get changed in the body of the loop and change the
+expected behavior. Generally it is a bad idea to change the value of an
+index variable anywhere other than the header of a `for` loop, but there
+are times when doing so gives the cleanest solution.
+
+Many loop errors are caused by a bad header. Getting the an inequality
+backwards or switching increment and decrement will usually make a loop
+that runs a very long time or not at all. We’ll see the second
+possibility just a little later.
+
+....
+for (i = 10; i > 0; i++) {
+  System.out.println(i + "!");
+}
+System.out.println("Blast-off!");
+....
+
+In this case, the programmer clearly wanted to count *down* from 10 to
+1, but after so much incrementing, he or she forgot to make `i`
+decrement. As a result, the value of `i` increases for a very long (but
+not infinite) time, until it overflows.
+
+==== End Example
+
+==== Begin Example: Zero loops
+
+On the other end of the spectrum, a bad condition can make a loop
+execute zero times on `for` and `while` loops. For some input, doing so
+might be intended behavior. In other cases, no input will ever cause the
+loop to execute.
+
+....
+int i = 0;
+double sum = 0;
+int count = -1;
+Scanner scanner = new Scanner( System.in );
+while( i > 0 ) {
+    sum += i;
+    System.out.print("Enter an integer (negative to quit): ");
+    i = scanner.nextInt();
+    count++;
+}
+System.out.println("Average: " + (sum / count));
+....
+
+We have just returned to our earlier example of averaging a set of
+numbers input by the user. This time we have intialized `count` to be -1
+to avoid the off-by-one error, but we have also changed the inequality
+of the `while` loop from greater than or equal to strictly greater. As a
+consequence, the loop is never entered because the zero, the initial
+value of `i`, is too small.
+
+....
+public static boolean isPrime( int n ) {
+    for( int i = 1; i < n; i++ ) {
+        if( n % i == 0 )
+            return false;
+    }
+}
+....
+
+Here is a simple method intended to test the number `n` for primality.
+Unfortunately, the programmer started the index `i` at 1 instead of 2.
+As a consequence, this loop will only run once before finding that every
+number is divisible by 1. True, this is not a loop that executes zero
+times, but only once is still just as wrong.
+
+....
+public static boolean isPrime( int n ) {
+    for( int i = 2; i < n; i++ ) {
+        if( n % i == 0 )
+            return false;
+        else
+            return true;
+    }
+}
+....
+
+This example is very similar code, trying to solve the same problem.
+Again, the loop only runs once because the programmer forgot that
+finding a single case when a number is not evenly divisible by another
+number does not make it prime. Many, many beginning programmers make
+this mistake when asked to solve this problem. Perhaps some insight
+about the nature of bugs can be gained from this example. By the time a
+student writes a program of this kind, he or she should have a fair idea
+of how `for` loops and `if` statements work. Likewise, the student will
+have a fair understanding of the notion of primality. Yet, in the
+process of combining the ideas together, it is easy to get sloppy and
+write code that gives some semblance of being correct without being.
+
+==== End Example
+
+==== Begin Example: Equivalence testing errors
+
+Equivalence is tricky in Java. Very inexperienced programmers confuse
+the `=` operator with the `==` operator, but using the `==` operator to
+test for equivalence between two references causes more (and subtler)
+problems. Comparing two references with the `==` operator will evaluate
+to `true` if and only if the two references point at the exact same
+object.
+
+....
+String string1 = new String("Test");
+String string2 = new String("Test");
+if( string1 == string2 )
+    System.out.println("Identical");
+else
+    System.out.println("Different");
+....
+
+Because these two `String` references point to two different `String`
+objects, which happen to have identical contents, the `==` returns
+`false` and the output is `Different`. With `String` objects this matter
+is further confused by a Java optimization called `String` pooling.
+
+....
+String string1 = "Test";
+String string2 = "Test";
+if( string1 == string2 )
+    System.out.println("Identical");
+else
+    System.out.println("Different");
+....
+
+Because Java keeps a pool of existing `String` values, only one copy of
+`"Test"` is in the pool, and both `string1` and `string2` point to it.
+Thus, this second fragment of code prints `Identical`. Because of
+`String` pooling, programmers can write code which can work in some
+situations and fail in other, if it is dependent on the `==` operator.
+
+For `String` objects as well as almost every reference type, it is
+almost always the case that the `equals()` method should be used to test
+for comparison instead of the `==` operator. There are a few instances
+when it is necessary to know if two references really and truly do refer
+to the same location in memory, but these instances should be a tiny
+minority.
+
+That said, the `equals()` method is not bullet-proof. With `String`
+objects and most of the rest of the Java API, you can expect very good
+behavior from the `equals()` method. However, if you create your own
+class, you are expected to implement the `equals()` method. By default,
+the `equals()` method inherited from `Object` only does an equality test
+using `==`.
+
+Properly implementing the `equals()` method takes care and thought. If
+your class contains references to other custom classes, you must be
+certain that they also properly implement their own `equals()` methods.
+Likewise, to conform to Java standards, a custom `equals()` method
+should also imply that you implement a custom `hashCode()` method so
+that objects that are equivalent with `equals()` give the same hash
+value. It seems nit-picky to mention this, but many real-world
+applications depend on the efficient and correct operation of hash
+tables.
+
+==== End Example
+
+==== Array errors
+
+Any time you have a large collection of data, there are always
+opportunities for bugs. With catastrophic array bugs, Java usually gives
+very good exceptions that will point you to the line number. Once you
+have gotten to this point, the bug should be obvious. The biggest
+difficulties arise when some unusual course of events is responsible for
+the bug cropping up and you have to reconstruct what it is.
+
+==== Begin Example: Out of bounds
+
+We have all experienced an `ArrayIndexOutOfBoundsException`. Either a
+little carelessness with our indexes or a mistake about the size of the
+array can lead us to try to access an element that isn’t in the array.
+In the C language, a negative index is sometimes a legal location but
+never in Java. It is very common to go just slightly beyond the bounds
+of the array, particularly with a loop.
+
+....
+int[] array = new int[100];
+for(int i = 0; i <= 100; i++ )
+    array[i] = i;
+....
+
+In this example, the last iteration of the loop will access index `100`
+when `array` only goes up to index `99`.
+
+The causes for going out of bounds can be more subtle. We can imagine an
+array of linked lists used as a hashtable, perhaps for storing words in
+a dictionary. If we want to hash based on the first letter of the word,
+we could have an array of length 26. Consider the following helper
+method used to add a new `String` to the hashtable.
+
+....
+public void add(String word) {
+    int index = word.toLowerCase().charAt(0) - 'a';
+    list[index].add( word );
+}
+....
+
+We can assume that the `add()` method for a given linked list works
+properly, but we may already have caused other problems. For one thing,
+we assumed that `word` began with either an upper or lower case letter.
+We are depending on other code to check the input and throw out words
+like `"\$1"` or `"-isms"`. Incidentally, we are also assuming that
+`word` has at least one character in it. Even if we expect the input to
+the method to be error free, some error checking is always safe.
+
+==== End Example
+
+==== Begin Example: Uninitialized object arrays
+
+Another simple mistake that can occur with arrays is failing to
+initialize an object array. With a primitive data type like `int`,
+creating an array with 1,000 elements automatically allocates enough
+space to hold those elements and even initializes each one to a default
+value, zero in the case of an `int`. With an object data type, however,
+each element of the array is just a reference to `null` until it is
+initialized.
+
+....
+Hippopotamus[] hippos = new Hippopotamus[15];
+hippos[3].feed();
+....
+
+This example causes a `NullPointerException`. New programmers are often
+confused by this error because, if they are expecting an error, they are
+expecting the exception to say something about the array. For more
+experienced programmers, this kind of mistake is usually more of a
+forehead-slapping, how-silly-of-me-to-forget error than a mind-numbing
+puzzler that will take hours to debug. It is probably just a matter of
+instantiating each element in the array before you try to feed those
+hungry, hungry hippos.
+
+==== End Example
+
+....
+Hippopotamus[] hippos = new Hippopotamus[15];
+for( int i = 0; i < hippos.length; i++ )
+    hippos[i] = new Hippopotamus();
+hippos[3].feed();
+....
+
+==== Scope errors
+
+We don’t have variables in real life, and, as a consequence, out
+intuition about them is sometimes wrong. Which variable you are
+accessing at any given time can appear obvious, even if it really isn’t.
+
+==== Begin Example: Shadowing variables
+
+Java allows variables in different scopes to be declared with the same
+identifier. If the scopes are two separate methods, then they will never
+interfere with each other. However, if one scope encloses another, the
+inner variable will _shadow_ or hide the outer variable.
+
+In this example, the field `darkness` is being shadowed by the local
+variable `darkness` in the `deepen()` method. It appears that the
+programmer wanted to increase the field `darkness` by the amount passed
+into the parameter `darkness` and failed to notice that both variables
+had the same name. As a consequence, the parameter `darkness` will
+double itself and then never be used again while the field `darkness`
+will never increase. This kind of bug could go uncaught for a long while
+until a programmer notices that the `Shadow` object is not increasing in
+darkness no matter how many times it is told to.
+
+This kind of mistake is also common in constructors, since it is
+reasonable to give a certain parameter a name similar to the field it is
+about to initialize. Some programmers explicitly prefix all fields with
+`this` even though it is often redundant. Three additions of `this` will
+fix the problem in the preceding example.
+
+....
+    public void deepen( int darkness ) {
+        this.darkness += darkness;
+        if( this.darkness > 100 )
+            this.darkness = 100;
+    }
+....
+
+In Java, scope is also defined in terms of classes and their parent
+classes. A parent class variable can be shadowed by a child class
+variable of the same name.
+
+This example looks like a simple case of inheritance, but whoever wrote
+the `BraggingBodybuilder` class seems to have mistakenly included the
+field `strength` again. As a consequence, any `BraggingBodybuilder` will
+always brag that his or her strength is 10, even when code sets his or
+her strength to other values. When strength is tested, it will use the
+`strength` field from the superclass `Bodybuilder` which is set by the
+`setStrength()` method. Sometimes similar behavior is desired, but it
+seems to be accidental here. When classes have large numbers of fields,
+making such a mistake becomes easier.
+
+[source,numberLines]
+----
+Bodybuilder builder = new BraggingBodybuilder();
+builder.strength = 15;/*@\label{line:strength=15}@*/
+BraggingBodybuilder bragger = (BraggingBodybuilder)builder;
+bragger.brag();
+bragger.strength = 20;/*@\label{line:strength=20}@*/
+bragger.brag();
+----
+
+Dynamic and static binding complicate this scope problem further. This
+fragment of code using the class definitions above highlights these
+complications. Because fields are statically bound to the class of the
+object, the `strength` field for `Bodybuilder` will be set to 15 on line
+REF=line:strength=15, and the `strength` field for `BraggingBodybuilder`
+will be set to 20 on line REF=line:strength=20. Thus, the first call to
+`brag()` will print out `My strength is 10!`, but the second call will
+print out `My strength is 20!`.
+
+==== End Example
+
+==== Begin Example: Reference vs. value
+
+The final category of scope error we will talk about occurs because of
+confusion between passing by reference and passing by value when using
+methods. Everything variable in Java is passed by value. However, when
+that value is itself a reference, it is possible to change the values
+that it references.
+
+....
+public void increaseMagnitude( int number ) {
+    number *= 10;
+}
+....
+
+A novice Java programmer might write a method like the above, expecting
+the value of `number` to increase by 10 in the calling code. Some
+languages like Perl use call by reference as default. Other languages
+like C++ and C# allow the user to mark certain parameters as call by
+reference. Programmers comfortable with such languages may be confused
+about the workings of Java.
+
+On the other hand, becoming used to the pass by reference style of Java
+can cause other errors.
+
+....
+public void increaseMagnitude( int[] numbers ) {
+    numbers[0] *= 10;
+}
+....
+
+In this similar example, the 0 index element of `numbers` is increased
+by a factor of 10. Unlike the previous code, the increase in the value
+of that element will affect the array passed in by the calling code. The
+values in the array are shared by the `increaseMagnitude()` method and
+the calling code. The same phenomenon can be observed with the fields of
+objects whose references are passed into a method.
+
+==== End Example
+
+==== Null pointer errors
+
+Null pointer errors usually raise a `NullPointerException` in Java. This
+category of errors is something of a catch-all that could happen for
+many different reasons, some of which have already been mentioned.
+Because of loop errors, some variables might not be initialized. A
+`NullPointerException` could be raised because the elements of an object
+array have not be initialized. Scope problems could cause a reference to
+be null if the programmer was mistakenly updating another reference,
+leaving the reference in question uninitialized.
+
+Though common, it is very difficult to give a blanket explanation for
+why most null pointer errors happen. Usually there is some fundamental
+error in program logic. Linked lists and tree structures that rely on
+null references to mark the end of a list or an empty child node are
+especially susceptible to these errors.
+
+One significant source of errors is careless usage of method parameters.
+A programmer may pass in objects that do not conform to the expectations
+of the method or even null references instead of objects. Well written
+methods, particularly library calls, should be designed to throw an
+appropriate exception when this happens. Poorly designed code may
+blindly use a null reference without checking it first, causing a
+`NullPointerException`.
+
+=== Concurrency: Parallel bugs
+
+We will only briefly discuss parallel bugs here because we have already
+gone into depth about the dangers of parallel programming in
+Chapter REF=chapter:Synchronization. Except in the case of deadlocks and
+livelocks, the real trouble with parallel bugs is that they make the
+appearance of ordinary sequential bugs become nondeterministic.
+
+==== Race conditions
+
+A race condition describes the situation when the output of a program is
+dependent on the timing of the execution of two or more threads. Because
+of the complexity of the JVM and the OS and the fact that many other
+processes may be running and interacting, it is usually impossible to
+determine how two threads will be scheduled. As a consequence, if the
+output of the program depends on unpredictable timing, the output will
+also be unpredictable.
+
+In Java, the way that race conditions usually impact the program is
+through some variable shared between multiple threads. When the schedule
+of threads becomes unpredictable, the changes made to this variable can
+come out of sequence, and its value becomes unpredictable. Incorrect
+output means that your program has a bug, but the most frustrating
+aspect of race conditions is that they are nondeterministic. Your
+program could sometimes have the right answer and sometimes not. Your
+program could always have the wrong answer, but not always the same one.
+The truly insidious issue with race conditions is that they will usually
+cause errors only a tiny percentage of the time. Thus, rigorous testing
+such as we will discuss in the second half of this chapter is necessary
+to even be aware that a race condition is occurring.
+
+==== Deadlocks and livelocks
+
+Both deadlocks and livelocks describe situations in which some part of
+your program will stop making progress because of thread interaction. In
+the case of deadlock, there will be some circular wait in which thread A
+is waiting for thread B which is waiting, directly or indirectly, on
+thread A. In the case of livelock, some repetitive pattern of waiting
+for a condition that will never be satisfied is still going on, but the
+threads continue to use CPU time and are not simply waiting.
+
+If your program reaches a deadlock state, it will not terminate. If
+threads updating a GUI become deadlocked, your windows may freeze.
+Typically, deadlocks are nondeterministic and occur only some of the
+time. Like all race conditions, they can be difficult to detect and
+duplicate. In fact, `Thread.stop()`, `Thread.suspend()`, and
+`Thread.resume()`, three seemingly useful and fundamental methods that
+were originally part of the Java `Thread` class, have been deprecated
+because they are deadlock prone.
+
+==== Sequential execution
+
+One bug which is impossible to achieve in non-parallel code is
+sequential execution. This situation arises when, usually due to overuse
+of synchronization tools, parallel code runs sequentially. Each segment
+of code, instead of running in parallel, is forced to wait for another
+to complete. A certain amount of serial execution is necessary to
+maintain program correctness and avoid race conditions, but Amdahl’s Law
+gives a rigid, mathematical characterization of how easily speedup can
+be lost if the serial execution takes up large portions of the code.
+Because setting up threads and using other concurrency tools does have
+some overheard, a parallel program executing sequentially can even run
+more slowly than a completely sequential version.
+
+Because programs are usually parallelized for the sake of speedup, it is
+possible to time sections of programs to see how well you have
+parallelized them. Sequential execution due to synchronization tools is
+only one of the many problems that can cause slow execution. The threads
+may be competing for a limited resource such as an I/O device or may be
+fighting over a small section of memory, causing cache misses. Tuning
+applications for maximum performance requires an expert understanding of
+the concurrency issues within software as well as the underlying OS and
+hardware characteristics. For now, it’s enough to be aware of the risk
+of sequential execution and be as careful as possible when applying
+locks and other synchronization tools.
+
+=== Finding and avoiding bugs
+
+What would you do if you wanted to design a system for administering a
+dose of radiation to a specific location on a patient to help treat them
+for cancer? Depending on the specification of the problem, you might
+need to control various voltage sources, read data from various sensors,
+and create a terminal interface or a GUI. With a well designed
+specification, you could probably apply your knowledge of loops and
+control structures to some API and provide a software solution that met
+requirements.
+
+But, how would you know that it worked? Sure, you could run a series of
+tests, but how many tests would it take for you to be convinced that it
+worked perfectly? What if your grade was dependent on it working without
+a single error? Or your job? Or your life?
+
+You have probably already faced the stress of trying to get a program to
+work as well as possible for the sake of your grade. It is not such a
+far cry to imagine your job being on the line if you make a mistake as a
+professional programmer. But, what about your life? Perhaps you will
+never put your life in the hands of code you write, but odds are that
+you have already put your life in the hands of someone else’s code.
+Software controls airplanes, automobiles, medical equipment, and
+countless other applications where a bug in the code could actually
+result in loss of human life.
+
+Sadly, there have been cases when such bugs have surfaced with deadly
+consequences. One of the most famous examples of the dangers of badly
+written software is the Therac-25. The Therac-25 was a machine designed
+to deliver therapeutic radiation for medical purposes. Between 1985 and
+1987, use of the Therac-25 caused at least six incidents of massive
+radiation overdoses, leading to at least three deaths.
+
+Like most failures of this scope, there was more than a single cause
+behind the Therac-25 tragedies. For one thing, the machines did give an
+error code. However, the user manual did not explain the error code, and
+the technicians were not trained to deal with the errors. Even when
+patients complained about pain caused by the machine, the technicians
+and even the manufacturers of the Therac-25 were confident that the
+machine was operating correctly because neither of the previous models,
+the Therac-6 and the Therac-20, had suffered any problems.
+Overconfidence has played a significant role in many of the worst
+systems failures, including the devastating Chernobyl disaster.
+
+Ignoring the human errors, a number of software errors were also
+responsible for the Therac-25 overdoses. The overdoses occurred when
+technicians made incorrect keystrokes giving confusing instructions to
+the Therac-25 about which mode of operation it should be in. In this
+situation, the machine would operate with a high-power beam but without
+the beam spreader that was necessary for its safe operation. The
+designers ignored the possibility that this series of keystrokes would
+happen. Also, a race condition was involved in this bug since it
+depended on one task that set up the equipment and another that received
+input from the technician. This race condition was never caught because
+only technicians with long practice could work fast enough to cause the
+bug. Finally, a counter was incremented for use as a flag variable, but
+arithmetic overflow occasionally caused this flag to have the wrong
+value.
+
+In the remaining half of this chapter, we will discuss a number of
+testing methodologies and design strategies to minimize errors in
+software.
+
+=== Concepts: Design, implementation, and testing
+
+Unfortunately, there is no foolproof way to design software. There are
+many researchers who work to design new languages and new development
+tools that limit certain kinds of mistakes, but it is impossible to
+design a language as powerful as C or Java which will also prevent all
+software bugs. A consequence of the halting problem, a fundamental
+concept in the theory of computation, is that there is no way to design
+a test that will detect all potential infinite loops (or infinite
+recursion) for all programs.
+
+With careful design, implementation, and testing, most errors can
+reduced almost to nothingness. In the following subsections, we will
+discuss these three aspects of programming and how you can apply them to
+writing better programs.
+
+==== Design
+
+We have remarked in the past that good design pays off ten-fold in
+implementation, and that payoff continues to increase by factors of ten
+as you move on to testing and eventually deployment.
+
+One of the first design decisions you may have to make is choice of
+language. Some languages are better designed for certain tasks than
+others. For example, languages like Ada have been carefully designed to
+minimize programming mistakes such as mis-matched `else` blocks. Many
+functional languages like ML are designed so that memory errors such as
+a `NullPointerException` are impossible. Even Java has taken clear steps
+to avoid some of the errors possible in C and other languages that allow
+pointer arithmetic, such as bus errors. However, many other factors such
+as portability, compatibility, and speed will affect your language
+decision.
+
+If you are working in industry, you may be given a specification from
+your client or your supervisors. As you design the software needed to
+meet the specification, you may use UML diagrams to map out the classes
+and interactions you plan to implement in your program.
+
+There are many questions you may ask yourself as you design your
+solution. Will your solution be compatible with the system and future
+changes made in the system? Is it easy to add features to your solution?
+Does your solution deal gracefully with mistakes in user input or
+external hardware and software failures? Is your code easy to maintain,
+particularly by future programmers who were not involved in its initial
+development. Are the components of the system modular? Can they be
+worked on, tested, and upgraded independently? Are the components of
+your system designed well enough to be reused for other applications?
+Are the elements of your system secure from malicious attacks? Finally,
+is it easy for the user to work with your software?
+
+Each one of these questions is related to a separate sub-field in
+software engineering. It may be impossible to address them all
+completely, but different applications will have different priorities.
+One method for OO software engineering uses _design patterns_. The idea
+behind design patterns is that most classes share some common design
+principles with a large category of classes. By naming and recognizing
+each category, you can apply the same rules to designing new classes
+from a category you are already familiar with. Each category is called a
+design pattern. Java uses design patterns extensively in its API.
+Describing design patterns in greater depth is beyond the scope of this
+book, but you may want to consult the Gang of Four’s excellent book
+_Design Patterns_.
+
+Another important idea in design is _design by contract_. Although this
+is also a rich, complex area of software engineering, the idea can be
+applied to methods in a straightforward way. For each method, you have a
+formal explanation of what its input should be, what its output should
+be, and what else can be changed in the process. For some languages and
+some segments of code, it is possible to prove that a given method does
+exactly what it is supposed to do. Nevertheless, Donald Knuth, a giant
+in computer science, is famous for having said, "Beware of bugs in the
+above code; I have only proved it correct, not tried it."
+
+==== Implementation
+
+When the time comes to actually implement your design, there are a
+number of other techniques you can use to minimize errors in this phase.
+One interesting technique is _pair programming_, in which two
+programmers sit at a single computer and work together. Ideally, one
+programmer is thinking about the immediate problems posed by the next
+few lines of code while the other is thinking about the larger context
+of the program. Two sets of eyes is always beneficial when looking at
+something as detailed and confusing as a computer program.
+
+In keeping with the theme of having more than one set of eyes looking at
+a program, it is generally recognized that it is useful to have the
+individuals who test the software be independent from those who develop
+it. By keeping the testers separate, they are not infected by the
+assumptions and biases that the developers have made while writing the
+software. Some communication between the two groups is necessary, but
+there is a lot of value in black box testing, which we will explain in
+the next subsection.
+
+Another piece of general advice is to rely on standard libraries as much
+as possible. Reinventing your own libraries is partly a waste of time
+and partly dangerous because your own libraries have not undergone as
+much testing as the standard ones. Likewise, it makes your code less
+portable. Some expert developers may need to write special libraries for
+speed or memory efficiency, but they are the exception, not the rule.
+
+There are a number of Java specific implementation guidelines. People
+have written entire books about good software engineering in Java, and
+so we will only give a few obvious pointers.
+
+Although it is tempting to do so when working under time pressure, never
+write empty exception handlers. Doing so swallows exceptions blindly,
+giving the user no idea what the errors in his or her program are. By
+the same token, always make your exception handlers as narrow as
+possible. Simply putting a `catch( Exception e )` at the end of any
+`try`-block has one of two possible outcomes: In one case your handler
+is vague and the user is informed that a general error of some kind has
+occurred. In the other your handler is more precise than it has a right
+to be. You might have assumed that a file I/O error was most likely to
+occur and always report that failure. Instead, an
+`ArrayOutOfBoundsException` could happen and be mistakenly reported as a
+file I/O problem.
+
+You should test the input to any public methods you write and throw a
+pre-determined exception if the input is invalid. Never use assertions
+to test input to public methods. In fact, you should never depend on
+assertions to catch errors since they must be turned on in the JVM to
+have effect. Assertions are great for debugging code before it is
+released but have little or no value in the field.
+
+==== Testing
+
+Once you have designed and implemented your program (or perhaps even
+during the process of implementation), you should test it to see if it
+behaves as expected and required. The most common form of software
+testing done by students is a form of a _smoke test_. A smoke test is a
+basic test of functionality. Such a test should simply run through the
+major features of a program and verify that they seem to work under
+ordinary circumstances. Often a student will barely finish the program
+before the deadline and be unable to perform anything but the most basic
+tests.
+
+Smoke tests are useful because it is pointless to test the finer details
+of a system that is clearly broken, but the software engineering
+industry uses many other kinds of testing to ensure that a given piece
+of software meets its specification. We will briefly cover three broad
+areas of testing: black box testing, white box testing, and regression
+testing.
+
+===== Black-box testing
+
+Black box testing assumes that the tester knows nothing about the
+internal mechanisms of the software he or she is testing. The software
+is viewed as a "black box" that only has inputs and outputs. The tester
+chooses some subset of the possible inputs and tests to see if the
+output matches the specification.
+
+For simple programs with very little input, it may be possible to test
+*all* possible input values, but doing so is impractical for most
+programs. A short list of techniques for determining the appropriate set
+of input values for black box testing follows.
+
+Equivalence Partitioning:::
+  The idea behind equivalence partitioning is that large ranges of data
+  may be functionally equivalent from the point of view of causing
+  errors. If a tester can run a test for one element from a range of
+  data, then the entire range can be tested quickly. To perform this
+  kind of testing, the tester must partition data into ranges that
+  function differently. The partition created is usually not really a
+  partition in a mathematical sense as the sub-domains are overlapping.
+  This is one reason why equilvalence partitioning is also referred to
+  as _subdomain_ testing.
+  +
+  For example, a program controlling the temperature of the water in an
+  aquarium may have legal input ranges between 32F and 212F. However, if
+  the program warms the water when it is below 75F and cools it when it
+  is above 90F, then values below 0, values from 0 to 74, values from 75
+  to 90, values from 91 to 212, and values above 212 all constitute
+  different partitions.
+Boundary Value Analysis:::
+  Once inputs have been partitioned into equivalent ranges, testers can
+  focus on those values which are near the boundary of those ranges. For
+  example, an input containing a person’s age may be allowed to range
+  between 0 and 150. The values -1, 0, 1, 149, 150, and 151 are good
+  candidates for input from the perspective of boundary value analysis.
+  As with equivalence partitioning, boundary value analysis is useful
+  not only for the boundaries between valid and invalid data but also
+  for the boundaries between any input ranges with different program
+  behavior such as the boundaries separating the five ranges of values
+  for the aquarium thermostat program described above.
+All-Pairs Testing:::
+  Most software bugs are triggered by a single piece of input. Some
+  harder to discover bug require two separate piece of input to have
+  specific values at the same time before they manifest. With each
+  increase in the number of different inputs that must each have
+  specific values at the same time to cause a bug, the bug becomes
+  increasingly difficult to track down but also increasingly unlikely to
+  exist. It may be possible to test all possible values for a given
+  input but impossible to test all possible values for all inputs at the
+  same time. All-pairs testing is a compromise between these two
+  extremes that tests all possible pairs of inputs.
+Fuzz Testing:::
+  The concept behind fuzz testing is to use large amounts of invalid,
+  unlikely, or random data as input to a program. Although this kind of
+  testing is used only to test the reliability and robustness of a
+  program receiving unexpected input, it has a number of advantages. One
+  significant advantage of fuzz testing is that it is quick and easy to
+  design test cases. Another is that it makes no assumptions about the
+  program behavior, catching errors that might never occur to a human
+  being.
+
+===== White-box testing
+
+The philosophy of white box is the opposite of black box testing. When
+using white box testing techniques, the tester has access to the program
+internals. The tester should employ techniques to test every possible
+path that execution can take through the code. Traversing a particular
+path of execution through a program is called _exercising_ that path.
+
+In order to exercise every possible path, it is necessary to force each
+conditional statement to be true and false on some path. Some
+combinations of true and false may be impossible, but, ignoring this
+fact, a program with latexmath:[n] independent conditionals would
+require latexmath:[2^n] runs to test them all. Because of the large
+number of possible execution paths, white box testing generally tries to
+maximize coverage over metrics that are not quite so demanding.
+
+Method coverage is the percentage of methods that are called by test
+cases at least once. Ideally, this number is 100%. Statement coverage is
+the percentage of statements that are executed by test cases. Again,
+this number should be as close to 100% as possible. Branch coverage is
+the percentage of conditionals that have been executed on both their
+true and false branches. Getting total coverage here is difficult, but
+good testing can come close.
+
+As with black box testing, equivalence partitioning and boundary value
+methods can be used to reduce the total number of test cases. Also, it
+is important to test those parts of your programs reached only in error
+conditions in addition to normal operation.
+
+===== Regression testing
+
+Regression testing is a form of testing that is not often necessary for
+student code because they are small projects. The motivating idea behind
+this kind of testing is that, in the act of fixing a bug or adding a
+feature, existing code can be broken. Thus, even after a system has been
+thoroughly tested, small changes or additions require the entire system
+to be retested. As the size of a program grows, the chance of unintended
+consequences increases, along with the value of performing regression
+testing.
+
+Regression testing can incorporate both black and white box testing.
+Doing regression testing could simply mean running all the existing
+tests over again. At the very minimum, each time a test uncovers a bug,
+that test should be added to the test suite used after each build of the
+program. The use of regression testing also implies that regular testing
+is being done on your code. Regular testing gives developers the
+opportunity to track changes in other aspects of their program such as
+memory usage, run time, and other non-functional issues.
+
+=== Syntax: Java testing tools
+
+There is an open-source tool for testing Java called JUnit testing.
+There are other testing tools for Java, and there are a wide array of
+tools for testing software in virtually any language. We cover JUnit
+here because it is widely accepted as a standard Java testing tool and
+because it is open-source. First, we’ll explain how to use JUnit, and
+then we’ll discuss some of the tools available to help test concurrent
+software.
+
+==== JUnit testing
+
+JUnit testing is used for unit testing Java. Unit testing is the process
+testing of separate software components that will eventually work
+together. By testing them individually, debugging can be done before
+interactions between different components make it more difficult to find
+the underlying bug. After unit testing comes integration testing to test
+how the components work together. Finally, system testing is the testing
+of the complete, integrated system against its specifications.
+
+===== Annotations
+
+Our coverage of JUnit testing is based on JUnit 4. This version of JUnit
+simplifies the syntax of creating JUnit tests, but it also relies on
+_annotations_. Annotations are additional information written into Java
+code that affects how the compiler or run-time system treats the code.
+They are like comments, but they can affect code execution or
+compilation, though usually indirectly. Applying an annotation to a
+method is called _decorating_. A class, a method, a variable, a package,
+or even an individual method parameter can be decorated.
+
+Three annotations are built into the language: `@Deprecated`,
+`@Override`, and `@SuppressWarnings`. If a method is decorated with
+`@Deprecated`, it is deprecated and included only for backwards
+compatibility. The compiler will give a warning if you call deprecated
+code such as the following.
+
+....
+@Deprecated
+public void oldMethod() {
+    ...
+}
+....
+
+Many methods in the extensive Java API are deprecated, like
+`Thread.suspend()` due to its inherent deadlock risk. As of Java 5 when
+annotations were introduced, these methods were all decorated with
+`@Deprecated`. The `@Override` annotation marks a method that is
+overriding superclass method, causing a compiler error if the method is
+not correctly overriding some superclass method. The `@SuppressWarnings`
+annotation allows certain warning messages to be suppressed, like using
+deprecated code if you really have to.
+
+===== Basic JUnit syntax
+
+First of all, JUnit is not a part of the standard Java API. To use it,
+you should download the latest jar file from http://www.junit.org and
+add the path to that jar file to your class path. To access the JUnit
+facilities in your code, you need the following import.
+
+....
+import org.junit.*;
+....
+
+Then, you need to set up a testing class just like you would any other
+class. The key difference is that each method in the testing class is
+designed to test some functionality of a code component. For example,
+let’s imagine that we want to test certain functionality of the Java
+`Math` library such as the `ceil()`, `pow()`, and `sin()` methods.
+
+To do so, we create a class called `MathTest` with three methods inside
+of it called `ceil()`, `pow()`, and `sin()`. We will use each method to
+test the functionality of the three methods that, respectively, have the
+same names. There is no requirement to name the methods any particular
+way. Tests in JUnit do not have to test single method calls. They could
+test any functional aspect of an object or class. Nevertheless, for
+documentation reasons it is wise to give the test methods names that
+reflect what is being tested.
+
+So, where do annotations come in? The header for the `ceil()` method
+would be as follows.
+
+....
+@Test
+public void ceil()
+....
+
+The only thing necessary to use a method in a JUnit test is to annotate
+it with `@Test`. It is also necessary to make any function used for
+testing `public` with a `void` return type and no parameters. Otherwise,
+the JUnit framework will crash when you try to run the tests. Each
+method with a `@Test` annotation is run once by JUnit, but JUnit cannot
+supply any arguments to them. They should be self-contained tests
+without any outside input.
+
+The exception to this rule is that you can perform some set up for the
+tests and then some clean up afterwards. Any method decorated with
+`@Before` will be run before *every* test, and any method decorated with
+`@After` will be run after *every* test. If you have some set up or
+clean up that is expensive to run, you can use the annotations
+`@BeforeClass` or `@AfterClass` to decorate a static method that is run
+once before or after all the tests.
+
+So far we have talked about the major aspects of writing a JUnit test
+class except for the actual test. How does the JUnit test report a
+success or a failure to the tester? As you would expect in Java, we use
+the exception handling mechanism to indicate failures. If the test
+method returns normally, the test is considered a success. If an
+unhandled exception or error is thrown by the method, the test is
+considered a failure. One of the most common ways of implementing this
+is by using a form of assertions.
+
+Of course, you could simply add an `assert` into the test code, then
+enable assertions while running the test, but this approach means that
+your tests could all incorrectly pass if you forget to enable
+assertions. Instead, use the following import.
+
+....
+import static org.junit.Assert.*;
+....
+
+With this static import, you will have access to many static methods
+that provide useful assertion functionality. The simplest of these is
+`assertTrue()`, which is essentially equivalent to an `assert` without
+requiring assertions to be enabled. For example, we could code the body
+of the `ceil()` test method as follows.
+
+....
+@Test
+public void ceil() {
+    assertTrue( 4 == Math.ceil(3.1) );
+}
+....
+
+Another useful method is `assertEquals()` (and its close cousin
+`assertArrayEquals()`) which takes two parameters and throws an
+`AssertionError` if the two are not equal. There are overloaded versions
+of this method for `long` and `Object` types. Note that the preferred
+`assertEquals()` method for the `double` type takes three parameters,
+including an epsilon threshold in case the values don’t match exactly.
+
+==== Begin Example: JUnit math testing
+
+Using these methods, we can finally write a complete (though very
+simple) implementation of `MathTest.java`.
+
+.A simple testing suite.
+[source, java, linenums]
+----
+include::programs/MathTest.java[]
+----
+
+Note that the `setUp()` method is extremely trivial here, and no clean
+up is needed. JUnit has many other powerful features that allow you to
+run suites of tests or repeated tests with specific parameterized
+values, but we are only going to introduce one more feature here. In an
+ideal world, you are actually developing tests as you develop code.
+Sometimes, in fact, you might have completed a test for a specific
+feature before you have finished implementing it. Or, perhaps a feature
+in your program is broken at the moment, but you want to continue
+running tests on the rest of the features.
+
+==== End Example
+
+In these cases and others, it is useful to turn off a particular test
+temporarily. To do this, you add the annotation `@Ignore` before the
+`@Test` annotation. In parentheses after the `@Ignore` annotation, you
+should ideally put in parentheses a `String` giving the reason why the
+test is being ignored.
+
+===== Running JUnit
+
+Once you have created your JUnit test classes, you will want to run
+them. There are tools built into IDE’s like Eclipse to make this easier,
+but the command line is always an option. As we said before, you need to
+include the JUnit jar file in your classpath. You can either do this
+permanently, by adding it to a `CLASSPATH` environment variable in a way
+dependent on your OS, or for a particular run of a Java tool. Assuming
+that you haven’t added the jar file to your classpath permanently, let’s
+say that you are using JUnit 4.5 from a jar file called `junit-4.5.jar`
+that can be found in `C:\ Utilities\Java\JUnit\`. To compile `MathTest`,
+you would type:O
+
+[multiblock footnote omitted]
+
+....
+javac -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar MathTest.java}
+....
+
+To actually run the code, you still need to include `junit-4.5.jar` in
+your classpath, but you also need to invoke the test runner called
+`org.junit.runner.JUnitCore` as follows:
+
+....
+java -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar
+    org.junit.runner.JUnitCore MathTest
+....
+
+If you had multiple test classes, you could just list them all after
+`org.junit.runner.JUnitCore` and all the methods marked `@Test` in them
+would be run. Note that methods without an `@Test` decoration will not
+be run as tests, but there is no rule against having them. In this way,
+you can use un-decorated methods as helper methods for your test
+methods.
+
+When you run JUnit tests, you should see the version number of JUnit
+used, a dot printed out for each test, the amount of time taken, and
+then something like `OK (3 tests)` if all of your tests ran without an
+error. If there is an error, it will list each error, probably with a
+long stack trace showing the propagation of the exception.
+
+=== Concurrency: Testing tools
+
+In this section, we describe some tools that exist specifically to help
+you catch those bugs that are present as a direct result of concurrency.
+You have probably noticed that this section is quite short, and that
+shortness reflects the shortage of good tools available. The design of
+concurrent debugging and testing tools is still an open research topic.
+As always, the nondeterminism of concurrency makes bugs difficult to pin
+down. You could run a JUnit test 1,000,000 times and never see a
+peculiar race condition bug. From a brute force perspective, we could
+try to test all possible interleavings of thread execution, but this
+approach is not practical for large programs because the number of
+interleavings grows exponentially. Nevertheless, some research has
+focused on attacking the problem from this direction.
+
+==== ConTest
+
+One tool that uses this idea is ConTest from IBM. The way the JVM
+normally works makes some interleavings more likely than others. If the
+correct output is very likely and the incorrect is very unlikely, it is
+easy for you to believe that your program works correctly. ConTest is a
+tool that _instruments_ class files after they have been compiled by
+Java. When it instruments these files, it adds extra method calls into
+concurrent code designed to introduce some randomness into the system.
+By introducing `sleep()` and `yield()` methods in random places, the JVM
+can be forced into producing interleavings that would otherwise be
+unusual. The designers of ConTest have used heuristics so that ConTest
+adds this randomness in "`smart`" locations designed to maximize unusual
+interleavings and catch bugs.
+
+ConTest is not a panacea. Although it can reveal bugs that are very
+rare, it still must be combined with strong testing methodologies so
+that those bugs can be caught when they appear. Another difficulty with
+using ConTest is that it cannot tell you where the problem happened or
+when it is likely to happen under normal circumstances. You are still
+dependent on your test design to reveal the source of the problem.
+Finally, ConTest cannot guarantee every possible ordering. Very rare
+bugs may not manifest even after thousands of runs with ConTest
+instrumented code. For more information about ConTest, visit
+`http://www.ibm.com/developerworks/java/library/j-contest.html`.
+
+==== Concutest
+
+We hope we have convinced you of the value of using JUnit testing to
+unit test your programs. Of course, JUnit has several limitations when
+it comes to concurrent programs. JUnit uses exceptions to report failed
+test cases. Unfortunately, JUnit only reports exceptions from the main
+thread, not from any child threads that may be spawned. ConcJUnit allows
+exceptions thrown by child threads to be reported and also forces all
+child threads to join with the main thread.
+
+In this way, it will be clear if any errors happened while a child
+thread was being executed, either causing an exception to be thrown or
+causing a child thread to fail to rejoin the main thread.
+
+ConcJUnit is part of a larger suite of tools called *Concutest*
+maintained at +
+http://www.cs.rice.edu/~mgricken/research/concutest/. Concutest includes
+Thread Checker, a tool that allows programmers to use annotations to
+test thread invariants. The Concutest project is also developing a
+Schedule-Based Execution environment to allow programmers to test
+programs using specific sets of concurrent interleavings.
+
+==== Intel tools
+
+There are many other industry tools for debugging and optimizing
+threaded programs. Intel produces software such as the Intel Thread
+Checker to find concurrent errors as well as the Intel Vtune Performance
+Analyzer and Intel Thread Profiler to help tune threaded programs. These
+products from Intel, like many concurrency tools, are focused on C/C++
+and Fortran platforms. Historically, concurrency has been centered in
+the high performance and scientific computing markets. Java, in
+contrast, has been perceived as a slow language, more suited for desktop
+applications. As the role of concurrency continues to evolve, so will
+the tools to help programmers.
+
+=== Examples: Testing a class
+
+The larger the system, the more critical testing becomes. We do not have
+the space to give or explain a complex testing example, but we can give
+you another example of JUnit testing.
+
+==== Begin Example: A broken class
+
+We are going to rely on an example from physics and create a
+`PointCharge` class that has a certain charge and a specific location in
+3D space. We are also going to introduce some errors into the class.
+Because the class is so simple, the errors should be obvious.
+Nevertheless, we have picked errors that are reasonable to make.
+
+.Example physics class with errors.
+[source, java, linenums]
+----
+include::programs/PointCharge.java[]
+----
+
+The `PointCharge` class has the expected constructor and then a method
+to determine distance to another `PointCharge`. This method in turn
+relies on a private helper method that can compute distance to an
+arbitrary latexmath:[x], latexmath:[y], and latexmath:[z]
+location. Finally, the "`important`" work done by the class are in
+determining the scalar force between two charges and the magnitude of
+the electric field due to the charge at some location. Recall from
+physics that the force latexmath:[F] between two charges
+latexmath:[q_1] and latexmath:[q_2] is
+latexmath:[k_\mathrm{e} \frac{q_1q_2}{r^2}] where
+latexmath:[k_\mathrm{e}] is the proportionality constant
+latexmath:[8.9875517873681764 \times 10^9 \ \mathrm{N  \cdot m^2 \cdot C^{-2}}]
+and latexmath:[r] is the distance between the charges. Likewise the
+electric field latexmath:[E] at a given location due to a charge
+latexmath:[q] is latexmath:[k_\mathrm{e} \frac{q}{r^2}].
+
+==== End Example
+
+==== Begin Example: Testing the distance methods
+
+Let’s come up with a test for the `distance()` methods first. We’re
+going to need some other `PointCharge`s. Let’s make 4 altogether: one at
+the origin and three one meter along each positive axis. We can create
+these charges in a set up method. While we’re at it, we’ll give them a
+variety of positive and negative charges.
+
+....
+@Before
+public void setUp() {
+    charge1 = new PointCharge( 1, 0, 0, 0 );
+    charge2 = new PointCharge( 2, 1, 0, 0 );
+    charge3 = new PointCharge( -1, 0, 1, 0 );
+    charge4 = new PointCharge( 0, 0, 0, 1 );
+}
+....
+
+To test the `distance()` method thoroughly, we will check the distance
+from `charge1` to all the other charges as well as `charge2` to
+`charge3`.
+
+....
+@Test
+public void distance() {
+    assertEquals( 1.0, charge1.distance(charge2), 0.001 );
+    assertEquals( 1.0, charge1.distance(charge3), 0.001 );
+    assertEquals( 1.0, charge1.distance(charge4), 0.001 );
+    assertEquals( Math.sqrt(2.0), charge2.distance(charge3), 0.001 );
+}
+....
+
+The distances between `charge1` and the other three should be 1, and the
+distance between `charge2` and `charge3` should be about
+latexmath:[\sqrt{2}]. Yet, when we run this test with JUnit, the test
+fails. We get:
+
+....
+java.lang.AssertionError: expected:<1.0> but was:<1.4142135623730951>
+....
+
+for the second assertion in the method. But why? If we comb through the
+`distance()` methods in `PointCharge`, they all look correct. The
+problem must be deeper. `PointCharge` does not have accessor methods for
+its location, and so we can’t test those. Checking the constructor, we
+find the culprit: `this.z = y;`, a simple cut and paste error.
+
+With the `distance()` methods working, we can test other things. We are
+going to run a similar test for `scalarForce()` generated by plugging in
+appropriate values into the equation for latexmath:[F].
+
+....
+@Test
+public void scalarForce() {
+    assertEquals( 2*PointCharge.K, charge1.scalarForce(charge2), 0.001 );
+    assertEquals( -PointCharge.K, charge1.scalarForce(charge3), 0.001 );
+    assertEquals( 0.0, charge1.scalarForce(charge4), 0.000001 );
+    assertEquals( -PointCharge.K, charge2.scalarForce(charge3), 0.001 );
+}
+....
+
+When we run this test with JUnit, the last assertion fails. We get the
+following output.
+
+....
+java.lang.AssertionError: expected:<-8.987551787368176E9>
+    but was:<-1.797510357473635E10>
+....
+
+A close inspection reveals that the actual value is about twice the
+expected value. Where does this extra factor of 2 come from? Scanning
+the code for `scalarForce()`, we find `return K*charge*p.charge/r*r;`
+
+We forgot parentheses and messed up our equation. What we really wanted
+was `return K*charge*p.charge/(r*r);`
+
+The most striking thing about this example is that three test cases
+passed! Perhaps that means that we were choosing values that were too
+simple, but it also illustrates the importance of serious testing.
+
+==== End Example
+
+==== Begin Example: Testing the field magnitude method
+
+Finally, let’s test the value of the `fieldMagnitude()` method. For
+simplicity, we’ll test the field at the locations of `charge1`,
+`charge3`, and `charge4` with respect to `charge2`.
+
+This time the first assertion fails. We get the following output.
+
+....
+java.lang.AssertionError: expected:<1.797510357473635E10> but was:<2.0>
+....
+
+`2.0` seems like a very strange result when we were expecting a value
+with an order of magnitude 10 times larger. Perhaps the constant was
+omitted? Yes, our version of `fieldMagnitude()` left off a factor of
+`K`. Once we fix that, our code finally produces the `OK (3 tests)` we
+have been waiting to see from JUnit. Why didn’t we fail the assertions
+after the first one? Because of the exception handling mechanism, each
+JUnit test method stops once a failure has happened.
+
+==== End Example
+
+Here is the fully corrected version of `PointCharge` renamed
+`FixedPointCharge`.
+
+.Corrected version of `PointCharge`.
+[source, java, linenums]
+----
+include::programs/FixedPointCharge.java[]
+----
+
+And, for easy readability, here is the full JUnit test class
+`TestPointCharge`. Note that you will have to change the name
+`PointCharge` to `FixedPointCharge` if you want to test the corrected
+class.
+
+.Class for testing `PointCharge`.
+[source, java, linenums]
+----
+include::programs/TestPointCharge.java[]
+----
+
+=== Exercises
+
+1.  What is the purpose of the `assert` keyword in Java? What steps must
+be taken for it to be active?
+2.  What is the value of `j` after the following statements are
+executed?
++
+....
+int j = 1;
+int i;
+for( i = 0; i < 10; i++ );
+    j += i;
+....
++
+Assuming the programmer made an error, what category of programming
+error does it fall under?
+3.  The following loop is intended to print out all possible `byte`
+values. What is the conceptual error made in the following loop? How
+many times will it execute?
++
+....
+for( byte value = 0; value < 256; ++value )
+    System.out.println("Byte: " + value);
+....
+4.  What are all the possible run-time errors that could occur in this
+method that reverses a section of an array?
++
+....
+public void reverse( Object[] array, int start, int end ) {
+    Object temp;
+    end--;  //up to but not including end
+    while( start < end ) {
+        temp = array[start];
+        array[start] = array[end];
+        array[end] = temp;
+        start++;
+        end--;
+    }
+}
+....
++
+What checks could be added to catch these errors?
+5.  Consider the following definition of a stack that holds `int`
+values.
++
+....
+public class IntegerStack {
+    private static Node {
+        public int data;
+        public Node next;
+    }
+
+    private Node head = null;
+
+    public void push( int value ) {
+        Node temp = new Node();
+        temp.data = value;
+        temp.next = head;
+        head = temp;
+    }
+
+    public void pop() { head = head.next; }
+    public int top() { return head.data; }
+    public boolean empty() { return head == null; }
+}
+....
++
+What exceptions could be thrown when using this class? Where could they
+be thrown?
+6.  This question sometimes comes up in job interviews. Imagine that you
+have a simple singly linked list such as the one described in
+Chapter REF=chapter:Dynamic Data Structures. What if there is a loop in
+the list such that the last element in the list points to an earlier
+element in the list? For this reason, a simple traversal of the list
+will go on forever. How could you detect such a problem during program
+execution?
+7.  What is the difference between black box testing and white box
+testing? What kinds of bugs are more likely to be caught by black box
+testing? By white box testing?
+8.  The Microsoft Zune is a portable media player in competition with
+the Apple iPod. The first generation Zune 30 received negative publicity
+because many of them froze on December 31, 2008 due to a leap year bug.
+It is possible to find segments of the source code that caused this
+problem on the Internet. Essentially, the clock code for the Zune
+behaved correctly on any day of the year numbered 365 or lower.
+Likewise, when the day was greater than 366, it would correctly move to
+the next year and reset the day counter. When day was exactly 366,
+however, the Zune became stuck in an infinite loop. What kind of testing
+should Microsoft have done to prevent this bug?
++
+*Programming Practice*
+9.  Apply JUnit testing to the last major assignment you did in class.
+What bugs did you uncover?
++
+*Experiments*
+10. James Gosling’s original specification for Java contained
+assertions, but they were not included until Java 1.4. One of the
+concerns about an assertion mechanism is the additional time required to
+process the assertions. Time a program of at least moderate length
+before adding `assert` statements to its methods. If you use `assert`
+statements to check method input and output thoroughly, you should see a
+slight decrease in performance when assertions are enabled. When
+disabled, you should see almost none. How great is the performance hit?
+11. Take another look at your last programming assignment. Calculate the
+number of branches based on `if` and `switch` statements and compute 2
+raised to that power. Time your program executing once under normal
+circumstances. Multiply that time by the number of different
+possibilities you would need to exercise every possible combination of
+branches in your program. How long would it take?
+12. Take a concurrent program you have written that relies on explicit
+synchronization mechanisms for correctness. Remove all synchronization
+tools and run the code many times, testing for race conditions. Then,
+instrument the code with ConTest and run it many more times. Do you see
+increased variety in output with ConTest? Was it easier to find race
+conditions?
