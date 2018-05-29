@@ -4,7 +4,7 @@
 
 === Problem: Banking account with a vengeance
 
-In Chapter REF=chapter:Synchronization, we introduced the
+In Chapter <<chapter:Synchronization>>, we introduced the
 `SynchronizedAccount` class that guarantees that checking the balance,
 making deposits, and making withdrawals will all be safe even in a
 multi-threaded environment. Unfortunately, `SynchronizedAccount` gives
@@ -35,7 +35,7 @@ latexmath:[\frac{1}{12}] of the annual rate. However, if the balance
 is below $1000, a $25 service fee is charged each month, regardless of
 how low the balance becomes.
 
-In Chapter REF=chapter:Inheritance you were exposed to concepts in
+In Chapter <<chapter:Inheritance>> you were exposed to concepts in
 inheritance. We are now returning to these concepts and exploring them
 further. In the first place, concurrency is on the table now, and you
 must be careful to keep your derived classes thread-safe. In the second,
@@ -661,7 +661,7 @@ operations that are guaranteed to execute atomically. For example, the
 variable with atomic accesses. One of its methods is
 `incrementAndGet()`, which will atomically increment its internal value
 by 1 and return the result. Recall from
-Program REF=program:RaceCondition that even an operation as simple as
+Program <<program:RaceCondition>> that even an operation as simple as
 `++` is not atomic. If many different threads try to increment a single
 variable, some of those increments can get lost, causing the final value
 to be less than it should be.
@@ -669,7 +669,7 @@ to be less than it should be.
 ==== Begin Example: AtomicInteger
 
 We can use the `AtomicInteger` class to rewrite
-Program REF=program:RaceCondition so that no race condition occurs.
+Program <<program:RaceCondition>> so that no race condition occurs.
 
 .Program to demonstrate the use of `AtomicInteger`.
 [source, java, linenums]
@@ -677,7 +677,7 @@ Program REF=program:RaceCondition so that no race condition occurs.
 include::programs/NoRaceCondition.java[]
 ----
 
-This program is identical to Program REF=program:RaceCondition, except
+This program is identical to Program <<program:RaceCondition>>, except
 that the type of `counter` has been changed from `int` to
 `AtomicInteger` (and an appropriate `import` has been added).
 Consequently, the `++` operation was changed to an `incrementAndGet()`
@@ -693,7 +693,7 @@ The `java.util.concurrent.atomic` package includes `AtomicBoolean` and
 perform atomic array accesses. For general purposes, the
 `AtomicReference<V>` class provides an atomic way to store a reference
 to any object. (The `<V>` is a generic type parameter, which will be
-discussed in Chapter REF=chapter:Dynamic Data Structures.)
+discussed in Chapter <<chapter:Dynamic_Data_Structures>>.)
 
 Although you could use the `synchronized` keyword to create each one of
 these classes yourself, the result would not be as efficient. The atomic
@@ -787,13 +787,13 @@ example, if someone makes $10,000, she pays 10% tax on the first $7,825
 of her income and 15% on the remaining $2,175. The exception is
 international students whose country has a treaty with the U.S. so that
 they do not have to pay tax on the first $50,000 of income.
-7.  Refer to the sort given in Section REF=solution:Sort it out as the
+7.  Refer to the sort given in Section <<solution:Sort_it_out>> as the
 solution to the Sort It Out problem. Add another `boolean` to the
 parameters of the sort which specifies whether the sort is ascending or
 descending. Make the needed changes throughout the code to add this
 functionality.
-8.  <<exercise:parallel bubble sort>> Again refer to the sort from
-Section REF=solution:Sort it out. The goal now is to parallelize the
+8.  <<exercise:parallel_bubble_sort>> Again refer to the sort from
+Section <<solution:Sort_it_out>>. The goal now is to parallelize the
 sort. Change the sort to work with `int` values then write some code
 which will generate an array of random `int` values. Design your code so
 that you can spawn latexmath:[n] threads. Partition the single array
@@ -810,8 +810,8 @@ two arrays and put it in the result. Then increment the index from the
 array you took the data from as well as the index of the result array.
 Make sure that you are careful not to go beyond the end of the arrays
 which are being merged.
-9.  <<exercise:use atomics>> Re-implement the original
-`SynchronizedAccount` class from Example REF=example:Bank account using
+9.  <<exercise:use_atomics>> Re-implement the original
+`SynchronizedAccount` class from Example <<example:Bank_account>> using
 atomic classes. For simplicity, you can change the `balance` type from
 `double` to `AtomicInteger` since there is no `AtomicDouble` class. How
 much has this simplified the implementation? Is the `readers` field
@@ -819,17 +819,17 @@ still necessary? Why or why not?
 +
 *Experiments*
 10. Once you have implemented the sort in parallel from
-Exercise REF=exercise:parallel bubble sort, time it against the
+Exercise <<exercise:parallel_bubble_sort>>, time it against the
 sequential version. Try 2, 4, and 8 different threads, particularly if
 you have 8 cores. Be sure to create one random array and use the same
 array for both the parallel and sequential versions. Try array sizes of
 1000, 100000, and 1000000. Did the performance increase as much as you
 expect?
-11. <<exercise:test atomics>> Take Program REF=program:NoRaceCondition
+11. <<exercise:test_atomics>> Take Program <<program:NoRaceCondition>>
 and increase `COUNT` to `100000000`. Run it several times and time how
 long it takes to run to completion.
 +
-Then, take Program REF=program:RaceCondition and increase its `COUNT` to
+Then, take Program <<program:RaceCondition>> and increase its `COUNT` to
 `100000000` as well. Change the body of the `for` loop inside the
 `run()` method so that `count++;` is inside of a `synchronized` block
 that uses `RaceCondition.class` as the lock. (The choice of

@@ -6,7 +6,7 @@
 
 Concurrent programs allow multiple threads to be scheduled and executed,
 but the programmer does not have a great deal of control over when
-threads execute. As explained in Section REF=concepts:Thread scheduling,
+threads execute. As explained in Section <<concepts:Thread_scheduling>>,
 the JVM and the underlying OS are responsible for scheduling threads
 onto processor cores.
 
@@ -32,7 +32,7 @@ that are periodically filled with rice. Between adjacent philosophers
 are single chopsticks so that there are exactly the same number of
 chopsticks as there are philosophers. These philosophers only think and
 eat. In order to eat, a philosopher must pick up both the chopstick on
-her left and the chopstick on her right. Figure REF=figure:dining shows
+her left and the chopstick on her right. Figure <<figure:dining>> shows
 an example of the situation.
 
 .Table for five dining philosophers.
@@ -57,7 +57,7 @@ chopstick.
 
 This dining philosopher problem highlights some difficulties which were
 emerging toward the end of the last chapter. In
-Exercise REF=exercise:interleavings two snippets of code could run
+Exercise <<exercise:interleavings>> two snippets of code could run
 concurrently and modify the same shared variable, potentially producing
 incorrect output. Because of the nondeterministic nature of scheduling,
 we have to assume that the code executing in two or more threads can be
@@ -282,8 +282,8 @@ is executing synchronized code, it can call `wait()`. Instead of busy
 waiting, a thread which has called `wait()` will be removed from the
 list of running threads. It will wait in a dormant state until someone
 comes along and notifies the thread that its waiting is done. If you
-recall the threadstate diagram from Chapter REF=chapter:Concurrent
-Programming, there is a Not Runnable state which threads enter by
+recall the threadstate diagram from Chapter <<chapter:Concurrent
+Programming>>, there is a Not Runnable state which threads enter by
 calling `sleep()`, calling `wait()`, or performing blocking I/O. Using
 `wait()`, we can rewrite the vote counting thread.
 
@@ -723,7 +723,7 @@ with humorous intent. If a philosopher is never able to acquire
 chopsticks, that philosopher will quite literally starve.
 
 Starvation does not necessarily mean deadlock, however. Examine the
-implementation in Example REF=example:Bank account for the bank account.
+implementation in Example <<example:Bank_account>> for the bank account.
 That solution is correct in the sense that it preserves mutual
 exclusion. No combination of balance checks, deposits, or withdrawals
 will cause the balance to be incorrect. Money will neither be created
@@ -870,9 +870,9 @@ with synchronization tools may produce a program which gives the right
 answer but does not exploit any parallelism.
 
 For example, we can take the `run()` method from the parallel
-implementation of matrix multiply given in Example REF=example:Matrix
-multiplication and use the `synchronized` keyword to lock on the matrix
-itself.
+implementation of matrix multiply given in Example <<example:Matrix
+multiplication>> and use the `synchronized` keyword to lock on the
+matrix itself.
 
 ....
 public void run() {
@@ -899,7 +899,7 @@ more.
 
 ==== Priority inversion
 
-In Chapter REF=chapter:Concurrent Programming we suggest that you use
+In Chapter <<chapter:Concurrent_Programming>> we suggest that you use
 thread priorities rarely. Even good reasons to use priorities can be
 thwarted by _priority inversion_. In priority inversion, a lower
 priority thread holds a lock needed by a higher priority thread,
@@ -942,7 +942,7 @@ public class DiningPhilosopher extends Thread {
 ----
 
 We begin with the same setup as the deadlocking version given in
-Section REF=subsection:deadlock. Unlike that example, we include a
+Section <<subsection:deadlock>>. Unlike that example, we include a
 `main()` method here for completeness. In `main()`, we set all the
 chopsticks to `false` (unused), create and start a thread for each
 philosopher, and then wait for them to finish.
@@ -1082,35 +1082,35 @@ years, and research continues to find better solutions.
 
 === Exercises
 
-1.  <<exercise:synchronized keyword>> What is the purpose of the
+1.  <<exercise:synchronized_keyword>> What is the purpose of the
 `synchronized` keyword? How does it work?
-2.  <<exercise:constructor leak>> The language specification for Java
+2.  <<exercise:constructor_leak>> The language specification for Java
 makes it illegal to use the `synchronized` keyword on constructors.
 During the creation of an object, it is possible to _leak_ data to the
 outside world by adding a reference to the object under construction to
 some shared data structure. What’s the danger of leaking data in this
 way?
-3.  <<exercise:wait or notify without synchronized>> If you call
+3.  <<exercise:wait_or_notify_without_synchronized>> If you call
 `wait()` or `notify()` on an object, it must be inside of a block
 synchronized on the same object. If not, the code will compile, but an
 `IllegalMonitorStateException` may be thrown at run time. Why is it
 necessary to own the lock on an object before calling `wait()` or
 `notify()` on it?
-4.  <<exercise:notify vs. notifyAll>> Why is it safer to call
+4.  <<exercise:notify_vs._notifyAll>> Why is it safer to call
 `notifyAll()` than `notify()`? If it is generally safer to call
 `notifyAll()`, are there any scenarios in which there are good reasons
 to call `notify()`?
-5.  <<exercise:restaurant synchronization>> Imagine a simulation of a
+5.  <<exercise:restaurant_synchronization>> Imagine a simulation of a
 restaurant with many waiter and chef objects. The waiters must submit
 orders to the kitchen staff, and the chefs must divide the work among
 themselves. How would you design this system? How would information and
 food be passed from waiter to chef and chef to waiter? How would you
 synchronize the process?
-6.  <<exercise:race condition>> What is a race condition? Give a real
+6.  <<exercise:race_condition>> What is a race condition? Give a real
 life example of one.
-7.  <<exercise:per object lock>> Let’s reexamine the code that
+7.  <<exercise:per_object_lock>> Let’s reexamine the code that
 increments a variable with several threads from
-Section REF=concepts:Thread interaction. We can rewrite the `run()`
+Section <<concepts:Thread_interaction>>. We can rewrite the `run()`
 method as follows.
 +
 ....
@@ -1121,16 +1121,16 @@ public synchronized void run() {
 ....
 +
 Will this change fix the race condition? Why or why not?
-8.  <<exercise:deadlock conditions>> Examine our deadlock example from
-Example REF=example:Deadlock sum. Explain why this example fulfills all
+8.  <<exercise:deadlock_conditions>> Examine our deadlock example from
+Example <<example:Deadlock_sum>>. Explain why this example fulfills all
 four conditions for deadlock. Be specific about which threads and which
 resources are needed to show each condition.
-9.  <<exercise:priority inversion>> What is priority inversion? Why can
+9.  <<exercise:priority_inversion>> What is priority inversion? Why can
 a low priority thread holding a lock be particularly problematic?
 +
 *Programming Practice*
-10. <<exercise:better producer/consumer>> In
-Example REF=example:Producer/consumer the `Buffer` class used to
+10. <<exercise:better_producer/consumer>> In
+Example <<example:Producer/consumer>> the `Buffer` class used to
 implement a solution to the producer/consumer problem only has a single
 lock. When the buffer is empty and a producer puts an item in it, both
 producers and consumers are woken up. A similar situation happens
@@ -1138,17 +1138,17 @@ whenever the buffer is full and a consumer removes an item. Re-implement
 this solution with two locks so that a producer putting an item into an
 empty buffer only wakes up consumers and a consumer removing an item
 from a full buffer only wakes up producers.
-11. <<exercise:fair bank account>> In Example REF=example:Bank account
+11. <<exercise:fair_bank_account>> In Example <<example:Bank_account>>
 we used the class `SynchronizedAccount` to solve a bank account problem.
-As we mention in Section REF=section:starvation and livelock, depositing
+As we mention in Section <<section:starvation_and_livelock>>, depositing
 and withdrawing threads can be starved out by a steady supply of balance
 checking threads. Add additional synchronization tools to
 `SynchronizedAccount` so that balance checking threads will take turns
 with depositing and withdrawing threads. If there are no depositing or
 withdrawing threads, make your implementation continue to allow an
 unlimited number of balance checking threads to read concurrently.
-12. <<exercise:philosophers with hunger>> The solution to the dining
-philosophers problem given in Section REF=solution:dining philosophers
+12. <<exercise:philosophers_with_hunger>> The solution to the dining
+philosophers problem given in Section <<solution:dining_philosophers>>
 suffers from the problem that a philosopher could be starved by the two
 philosophers on either side of her, if she happened to get unlucky. Add
 variables to each philosopher which indicate hunger and the last time a
@@ -1161,14 +1161,14 @@ waiting on another and so on, *some* philosopher in the circle must have
 gone hungry the longest, breaking circular wait.
 +
 *Experiments*
-13. <<exercise:time lock acquisition>> Critical sections can slow down
+13. <<exercise:time_lock_acquisition>> Critical sections can slow down
 your program by preventing parallel computation. However, the locks used
 to enforce critical sections can add extra delays on top of that. Design
 a simple experiment which repeatedly acquires a lock and does some
 simple operation. Test the running time with and without the lock. See
 if you can estimate the time needed to acquire a lock in Java on your
 system.
-14. <<exercise:thread time on CPU>> Design a program which
+14. <<exercise:thread_time_on_CPU>> Design a program which
 experimentally determines how much time a thread is scheduled to spend
 running on a CPU before switching to the next thread. To do this, first
 create a tight loop which runs a large number of iterations, perhaps
@@ -1185,7 +1185,7 @@ is allotted. Bear in mind that this is only an estimation. Some JVMs
 will change the amount of CPU time allotted to threads for various
 reasons. If you are on a multicore machine, it will be more difficult to
 interpret your data since some threads will be running concurrently.
-15. <<exercise:priority inversion experiment>> Create an experiment to
+15. <<exercise:priority_inversion_experiment>> Create an experiment to
 investigate priority inversion in the following way.
 a.  Create two threads, setting the priority of the first to
 `MIN\_PRIORITY` and the priority of the second to `MAX\_PRIORITY`. Start
