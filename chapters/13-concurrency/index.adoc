@@ -399,6 +399,10 @@ created by instances of these classes compute, respectively, the two
 subexpressions in Figure <<figure:tasks_in_threads>>(b) and save the
 computed values.
 
+SPGMFILE: Thread1.java
+
+SPGMFILE: Thread2.java
+
 The `run()` method in each thread above computes a subexpression and
 saves its value. We show how these threads can be executed to solve the
 math expression problem in Example <<example:Math_expression_threads>>.
@@ -484,6 +488,8 @@ completion. When the two threads complete their execution, we can ask
 each for its computed value. The main thread then prints the product of
 these values, which is the result of the expression we want to evaluate.
 
+SPGMFILE: MathExpression.java
+
 We want to make it absolutely clear when threads are created, start
 executing, and finish. These details are crucial for the finer points of
 concurrent Java programming. In Figure <<figure:tasks_in_threads>>, it
@@ -529,6 +535,8 @@ sums them up within a given range. If multiple instances of this class
 are executed as separate threads, each one can sum up different parts of
 an array.
 
+SPGMFILE: Summer.java
+
 This class is very similar to one that inherits from `Thread`. Imagine
 for a moment that the code following `Summer` is `extends Thread`
 instead of `implements Runnable`. The key thing a class derived from
@@ -570,6 +578,8 @@ with the features you want.
 In domain decomposition, we often need to create multiple threads, all
 from the same class. As an example, consider the following thread
 declaration.
+
+SPGMFILE: NumberedThread.java
 
 Now suppose that we want to create 10 thread objects of type
 `NumberedThread`, start them, and then wait for them to complete.
@@ -849,6 +859,8 @@ create a `Thread` subclass which will do some part of the matrix
 multiplication. Below is the `MatrixThread` class which will compute a
 number of rows in the answer matrix `c`.
 
+SPGMFILE: MatrixThread.java
+
 The constructor for `MatrixThread` stores references to the arrays
 corresponding to matrices latexmath:[A], latexmath:[B], and
 latexmath:[C] as well as lower and upper bounds on the rows of
@@ -1101,14 +1113,20 @@ see how accurately place the words. We want to use the scheduling tools
 discussed above to get the timing right. Let’s try `Thread.sleep()`
 first.
 
+SPGMFILE: LeftThread.java
+
 Class `LeftThread` has a `for` loop which prints out `Left` three times,
 waits for 10 milliseconds, prints out `Left` again, then repeats.
+
+SPGMFILE: RightThread.java
 
 Class `RightThread` waits for 5 milliseconds to get synchronized, then
 has a `for` loop which prints out `Right`, waits for 10 milliseconds,
 and repeats. The driver program below creates a thread for each of these
 classes and then starts them. If you run this program, you should see 10
 lines of `Left Left Left Right Left`, but there are a few problems.
+
+SPGMFILE: MilitaryMarching.java
 
 The first problem is that we have to wait some amount of time between
 calls. We could shorten the `Thread.sleep()` calls, but there are limits
@@ -1118,6 +1136,10 @@ times, you may see a `Right` out of place once in a while. If you
 increase the repetitions of the `for` loops to a larger number, the
 errors are more likely. Whether or not you see errors is somewhat system
 dependent. We can try `Thread.yield()` instead of `Thread.sleep()`.
+
+SPGMFILE: LeftYieldThread.java
+
+SPGMFILE: RightYieldThread.java
 
 These new versions of the two classes have essentially replaced calls to
 `Thread.sleep()` with calls to `Thread.yield()`. Without the need for
@@ -1137,6 +1159,10 @@ the mark. To do this, we need state variables inside of each class to
 keep track of whether or not it is done. Each thread needs a reference
 to the other thread to make queries, and the driver program must be
 updated to add these in before starting the threads.
+
+SPGMFILE: LeftPollingThread.java
+
+SPGMFILE: RightPollingThread.java
 
 Whether single core or multicore, this solution will always give the
 right output. Or it should. Java experts will point out that we are
@@ -1278,7 +1304,6 @@ the rest is completely serial, what is the speedup with 2 processors? 4?
 8? What implications does Amdahl’s Law have?
 9.  <<exercise:task_parallelization>> Consider the following table of
 tasks:
-+
 +
 [cols="<,^,^,<",options="header",]
 |===========================================
