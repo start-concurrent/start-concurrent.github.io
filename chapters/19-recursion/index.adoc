@@ -1041,23 +1041,11 @@ process. And the scout’s scouts. And so on. There is, in fact, only one
 method and instead of calling a scout method to investigate each of the
 squares in the four directions, you call yourself recursively.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.Scanner;
-
-public class MazeSolver {
-	private char[][] maze;
-	private int rows, columns;
-
-	public static void main( String[] args ) {
-		MazeSolver solver = new MazeSolver();
-		if( solver.solve(0, 0) )/*@\label{mazeRCall}@*/
-			System.out.println("\nSolved!");
-		else
-			System.out.println("\nNot solvable!");
-		solver.print();/*@\label{mazeRPrint}@*/
-	}	
+include::programs/MazeSolver.java[lines=1..14]
 ----
+
 
 The `MazeSolver` class needs a two-dimensional array of `char` values to
 store a representation of the maze. Likewise, it is convenient to store
@@ -1069,23 +1057,11 @@ appropriate message depending on whether or not the maze was solved.
 Finally, it prints out the maze, which includes a path marked with `'*'`
 symbols if the maze is solvable.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public MazeSolver() {
-		Scanner in = new Scanner(System.in);
-		rows = in.nextInt();
-		columns = in.nextInt();
-		in.nextLine();
-		maze = new char[rows][columns];
-		for( int row = 0; row < rows; row++ ) {
-			String line = in.nextLine();
-			System.out.println(line);
-			for (int column = 0; column < columns; column++) {
-				maze[row][column] = line.charAt(column);
-			}
-		}
-	}
+include::programs/MazeSolver.java[lines=16..29]
 ----
+
 
 The constructor for `MazeSolver` creates a `Scanner`. It assumes that
 the file describing the maze is redirected from standard input, although
@@ -1097,43 +1073,21 @@ through the file, storing each line of `char` values into this array. As
 it reads, it prints out each line to the screen, showing the initial
 (unsolved) maze.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void print() {
-		for( int row = 0; row < rows; row++ ) {
-			for (int column = 0; column < columns; column++)
-				System.out.print(maze[row][column]);
-			System.out.println();
-		}
-	}
+include::programs/MazeSolver.java[lines=31..37]
 ----
+
 
 The `print()` method is a utility method that prints out the maze. It
 iterates through each row, printing out the values for the columns in
 that row.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public boolean solve( int row, int column ) {/*@\label{mazeRBegin}@*/
-		if( row < 0 || column < 0 || row >= rows || column >= columns)/*@\label{mazeROutside}@*/
-			return false;
-		else if( maze[row][column] == 'E' )/*@\label{mazeRDone}@*/
-			return true;
-		else if( maze[row][column] != ' ')/*@\label{mazeRBlocked}@*/
-			return false;
-		else {
-			maze[row][column] = '*';
-			if( solve(row - 1, column) || solve(row + 1, column) ||/*@\label{mazeRRecursive}@*/
-				solve(row, column - 1) || solve(row, column + 1) )
-				return true;
-			else {
-				maze[row][column] = ' ';/*@\label{mazeRBlank}@*/
-				return false;
-			}
-		}
-	}
-}
+include::programs/MazeSolver.java[lines=39..57]
 ----
+
 
 The heart of the solution is the recursive method `solve()`. The
 `solve()` method takes two parameters, `row` and `column`, and tries to
@@ -1258,7 +1212,11 @@ square roots is a `double`, it must implement `Callable<Double>`. Recall
 that primitive types such as `double` cannot be used as generic type
 parameters, requiring us to use wrapper classes in those cases.
 
-SPGMFILE: RootSummer.java
+[source, java, linenums]
+----
+include::programs/RootSummer.java[]
+----
+
 
 `RootSummer` is a simple worker class that takes a `min` and a `max`
 value in its constructor. Its `call()` method sums the square roots of
@@ -1269,23 +1227,11 @@ interface.
 Of course, we need another class to create the `ExecutorService`, start
 the futures running, and collect the results.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.concurrent.*;
-import java.util.ArrayList;
+include::programs/RootFutures.java[lines=1..14]
+----
 
-public class RootFutures {
-	private static final int THREADS = 10;
-	private static final int N = 100000000;
-	private static final int FUTURES = 1000;
-	
-	public static void main( String[] args ) {
-		ArrayList<Future<Double>> futures =
-			new ArrayList<Future<Double>>(FUTURES);		
-		ExecutorService executor =
-			Executors.newFixedThreadPool(THREADS);
-		int work = N / FUTURES;
-----
 
 The first part of `RootFutures` is setup. The imports give us the
 concurrency tools we need and a list to store our futures in. We have
@@ -1303,16 +1249,11 @@ create an `ExecutorService` with a thread pool of size `THREADS`.
 Finally, we find the amount of work done by each future by dividing `N`
 by `FUTURES`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		System.out.println("Creating futures...");
-		for( int i = 0; i < FUTURES; i++ ) {
-			Callable<Double> summer =
-				new RootSummer( 1 + i*work, 1 + (i + 1)*work );
-			Future<Double> future = executor.submit( summer );
-			futures.add( future );
-		}
+include::programs/RootFutures.java[lines=16..22]
 ----
+
 
 In this section of code, we create each future and start it running.
 First, we instantiate a `RootSummer` object with the appropriate bounds
@@ -1321,26 +1262,11 @@ for the work it’s going to compute. Then, we supply that object to the
 object. We could have saved a line of code by storing this return value
 directly into the list `futures`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		System.out.println("Getting results from futures...");
-		double sum = 0;
-		for( Future<Double> future : futures ) {
-			try {
-				sum += future.get();
-			}
-			catch( InterruptedException e ) {
-				e.printStackTrace();
-			}
-			catch (ExecutionException e) {
-				e.printStackTrace();
-			}
-		}
-		executor.shutdown();
-		System.out.println("The sum of square roots is: " + sum);		
-	}
-}
+include::programs/RootFutures.java[lines=24..40]
 ----
+
 
 All that remains is to collect the values from each future. We iterate
 through the list of futures with a for-each loop and add the return
