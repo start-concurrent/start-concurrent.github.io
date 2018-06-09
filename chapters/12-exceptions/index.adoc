@@ -413,47 +413,21 @@ will perform the appropriate operation and output the answer, but we
 will use exception handling to avoid killing the program when a division
 by zero occurs.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/QuickCalculator.java[lines=1..14]
+----
 
-public class QuickCalculator {
-	public static void main(String[] args){
-		Scanner in = new Scanner(System.in);		
-		int a, b, answer = 0;
-		char operator;
-		String[] terms;
-		String line = in.nextLine().trim().toLowerCase();
-		while( !line.equals("quit") ) {
-			terms = line.split(" ");
-			a = Integer.parseInt(terms[0]);
-			operator = terms[1].charAt(0);
-			b = Integer.parseInt(terms[2]);
-----
 
 By this point, the `main()` method has set up a system to read a line of
 input from a user, test to see if it is the sentinel value `"quit"`, and
 then parsing it into two `int` values and a `char` otherwise.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-			try{
-				switch( operator ) {
-					case '+': answer = a + b; break;
-					case '-': answer = a - b; break;
-					case '*': answer = a * b; break;
-					case '/': answer = a / b; break;
-				}
-				System.out.println("Answer: " + answer);
-			}
-			catch( ArithmeticException e ) {
-				System.out.println("You can't divide by 0!");
-			}
-			line = in.nextLine().trim().toLowerCase();
-		}
-	}
-}
+include::programs/QuickCalculator.java[lines=15..30]
 ----
+
 
 Here we have a `try` block enclosing the code where the operations
 occur. Inside the `switch` statement, the code will blindly perform
@@ -684,22 +658,11 @@ With the exceptions defined, we can assume that the `Bank` class and the
 wrong. Thus, we can make a `Henchman`class who can try to do the heist
 and react appropriately if there is a problem.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class Henchman {
-	public void burgle( Bank bank ) {
-		try {
-			bank.disableAlarm();
-			bank.breakIn();
-			Vault vault = bank.findVault();
+include::programs/Henchman.java[lines=1..13]
+----
 
-			vault.open();
-			Loot loot = vault.getLoot();
-			loot.carryAway();
-			
-			System.out.println("We got " + loot + "!");
-		}
-----
 
 To burgle a bank, one must create a `Henchman` object then pass a `Bank`
 object into its `burgle()` method. The method will try to disable the
@@ -709,33 +672,11 @@ successfully, the method will print out a `String` version of the loot.
 All of this code is inside of a `try` block. If an exception is thrown
 at any point, the following `catch` blocks will deal with it.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		catch( BurglarAlarmException e ) {
-			System.out.println("I set off the burglar because "
-					+ e.getMessage());
-			System.out.println("I had to run away.");
-		}
-		catch( WatchmanException e ) {
-			System.out.println("A watchman caught me because "
-					+ e.getMessage());
-			System.out.println("Please bail me out of jail.");
-		}
-		catch( LockPickFailException e ) {
-			System.out.println("I couldn't pick the vault lock.");
-			System.out.println("No loot for us.");
-		}
-		catch( LootTooHeavyException e ) {
-			System.out.println("The loot was too heavy to carry.");
-			System.out.println("No loot for us.");
-		}
-		catch( NullPointerException e ) {
-			System.out.println("The vault was hidden or empty.");
-			System.out.println("No loot for us.");
-		}
-	}
-}
+include::programs/Henchman.java[lines=14..37]
 ----
+
 
 If a `BurglarAlarmException` happens, the henchman is forced to run
 away. If a `WatchmanException` happens, the henchman is caught and must

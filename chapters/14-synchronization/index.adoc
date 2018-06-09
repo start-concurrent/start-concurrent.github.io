@@ -397,12 +397,11 @@ variable to record the balance, but it also has a `readers` variable to
 keep track of the number of threads which are reading from the account
 at any given time.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class SynchronizedAccount {
-	private double balance = 0.0;	
-	private int readers = 0;	
+include::programs/SynchronizedAccount.java[lines=1..3]
 ----
+
 
 Next, the `getBalance()` method is called by threads which wish to read
 the balance. Access to the `readers` variable is synchronized. But,
@@ -416,45 +415,21 @@ decrements `readers`. If `readers` reaches 0, a call to `notifyAll()` is
 made, signaling that threads trying to deposit to or withdraw from the
 account can continue.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public double getBalance()	throws InterruptedException {
-		double amount;		
-		synchronized( this ) {			
-			readers++;
-		}		
-		amount = balance;		
-		synchronized( this ) {
-			if( --readers == 0 )
-				notifyAll();
-		}		
-		return amount;		
-	}
+include::programs/SynchronizedAccount.java[lines=5..16]
 ----
+
 
 The `deposit()` and `withdraw()` methods are wrappers for the
 `changeBalance()` method, which has all the interesting concurrency
 controls.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void deposit( double amount )
-		throws InterruptedException {
-		changeBalance( amount );
-		System.out.println("Deposited $" + amount + "." );
-	}
-	
-	public boolean withdraw( double amount )
-		throws InterruptedException {
-		boolean success = changeBalance( -amount );
-		if( success )
-			System.out.println("Withdrew $" + amount + "." );
-		else
-			System.out.println("Failed to withdraw $" +
-				amount + ": insufficient funds." );
-		return success;
-	}
+include::programs/SynchronizedAccount.java[lines=18..33]
 ----
+
 
 The `changeBalance()` method is synchronized so that it can have
 exclusive access to the `readers` variable. As long as `readers` is
@@ -462,19 +437,11 @@ greater than 0, this method will wait. Eventually, the readers should
 finish their job and notify the waiting writer which can finish changing
 the balance of the account.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private synchronized boolean changeBalance( double amount )
-		throws InterruptedException {
-		boolean success;	
-		while( readers > 0 )
-				wait();			
-		if( success = (balance + amount > 0) )
-			balance += amount;		
-		return success;	
-	}
-}
+include::programs/SynchronizedAccount.java[lines=35..44]
 ----
+
 
 ==== End Example
 
@@ -513,17 +480,11 @@ in her right hand and be waiting forever for her neighbor on the left to
 give up a chopstick. No philosopher would ever be able to eat. Here is
 that scenario illustrated in code.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class DeadlockPhilosopher extends Thread {
-	public static final int SEATS = 5; 
-	private static boolean[] chopsticks = new boolean[SEATS];	
-	private int seat;
-	
-	public DeadlockPhilosopher( int seat ) {
-		this.seat = seat;
-	}
+include::programs/DeadlockPhilosopher.java[lines=1..8]
 ----
+
 
 After setting up the class and the constructor, things get interesting
 in the `run()` method. First a philosopher tries to get her left
@@ -533,53 +494,21 @@ Every once in a while, the philosophers would become deadlocked, but it
 would be hard to predict when. By introducing the sleep, we can all but
 guarantee that the philosophers will deadlock every time.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void run() {			
-		try	{ 
-			getChopstick( seat );			
-			Thread.sleep(50);		
-			getChopstick( seat - 1 );
-		}
-		catch( InterruptedException e ) {
-			e.printStackTrace();
-		}			
-		eat();
-	}
+include::programs/DeadlockPhilosopher.java[lines=10..20]
 ----
+
 
 The remaining two methods are worth examining to see how the
 synchronization is done, but by getting the two chopsticks separately
 above, we have already gotten ourselves into trouble.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private void getChopstick( int location )
-		throws InterruptedException {
-		if( location < 0 )
-			location += SEATS;
-		synchronized( chopsticks ) {
-			while( chopsticks[location] )
-				chopsticks.wait();
-			chopsticks[location] = true;
-		}		
-		System.out.println("Philosopher " + seat +
-			" picked up chopstick " + location + ".");
-	}
-	
-	private void eat() {
-		//done eating, put back chopsticks
-		synchronized( chopsticks ) {
-			chopsticks[seat] = false;			
-			if( seat == 0)
-				chopsticks[SEATS - 1] = false;
-			else
-				chopsticks[seat - 1] = false;							
-			chopsticks.notifyAll();
-		}
-	}
-}	
+include::programs/DeadlockPhilosopher.java[lines=22..46]
 ----
+
 
 ==== End Example
 
@@ -596,47 +525,30 @@ number generators, generate two random numbers each, and sum the numbers
 generated. (Note that locks are unnecessary for this problem anyway,
 because access to `Random` objects is synchronized.)
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.Random;
+include::programs/Deadlock.java[lines=1..7]
+----
 
-public class Deadlock extends Thread {
-	private static Random random1 = new Random();
-	private static Random random2 = new Random();	
-	private boolean reverse;
-	private int sum;
-----
 
 The class begins as expected, creating shared `static` `Random` objects
 `random1` and `random2`. Then, in the `main()` method, the main thread
 spawns two new threads, passing `true` to one and `false` to the other.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void main(String[] args) {
-		Thread thread1 = new Deadlock( true );
-		Thread thread2 = new Deadlock( false );
-		thread1.start();
-		thread2.start();
-		try {
-			thread1.join();
-			thread2.join();
-		}
-		catch( InterruptedException e ) {
-			e.printStackTrace();
-		}					
-	}
+include::programs/Deadlock.java[lines=9..21]
 ----
+
 
 Next, the mischief begins to unfold. One of the two threads stores
 `true` in its `reverse` field.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public Deadlock( boolean reverse ) {
-		this.reverse = reverse;
-	}
+include::programs/Deadlock.java[lines=23..25]
 ----
+
 
 Finally, we have the `run()` method where all the action happens. If the
 two running threads both acquire locks for `random1` and `random2` in
@@ -645,42 +557,11 @@ thread locks on `random2` and then `random1`, with a `sleep()` in
 between. The non-reversed thread tries to lock on `random1` and then
 `random2`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void run() {	
-		if( reverse ) {			
-	        synchronized(random2) {
-			  System.out.println(
-				"Reversed Thread: synchronized on random2");
-			  try{ Thread.sleep(50); }
-			  catch (InterruptedException e) {
-				  e.printStackTrace();
-			  }
-			  synchronized(random1) {
-			    System.out.println(
-					"Reversed Thread: synchronized on random1");			    
-			    sum = random1.nextInt() + random2.nextInt();			    
-			  }
-	        }
-	    }
-		else {			
-	        synchronized(random1) {
-			  System.out.println(
-				"Normal Thread: synchronized on random1");
-			  try { Thread.sleep(50); }
-			  catch (InterruptedException e) {
-				  e.printStackTrace();
-			  }
-			  synchronized(random2) {
-			    System.out.println(
-					"Normal Thread: synchronized on random2");			    
-			    sum = random1.nextInt() + random2.nextInt();			    
-			  }
-		        }
-		}
-	}
-}
+include::programs/Deadlock.java[lines=27..59]
 ----
+
 
 If you run this code, it should invariably deadlock with `thread1`
 locked on `random2` and `thread2` locked on `random1`. No sane
@@ -761,17 +642,11 @@ waiting for a while, and then becoming frustrated when they realize that
 their friends aren’t ready. Here is a rough simulation of this process
 in code.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class Livelock extends Thread {
-	private static int totalReady = 0;
-	private static Object lock = new Object();	
+include::programs/Livelock.java[lines=1..8]
+----
 
-	public static void main(String[] args) {
-		Livelock friend1 = new Livelock();
-		Livelock friend2 = new Livelock();
-		Livelock friend3 = new Livelock();
-----
 
 The first few lines create a shared variable called `totalReady` which
 keeps track of the total number of friends ready. To avoid race
@@ -779,57 +654,22 @@ conditions, a shared `Object` called `lock` will be used to control
 access to `totalReady`. Then, the `main()` method creates `Livelock`
 objects representing each of the friends.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		try {		
-			friend1.start();
-			Thread.sleep(100);
-			friend2.start();
-			Thread.sleep(100);
-			friend3.start();
-						
-			friend1.join();
-			friend2.join();
-			friend3.join();
-		}
-		catch( InterruptedException e ) {
-			e.printStackTrace();
-		}		
-		System.out.println("All ready!");
-	}
+include::programs/Livelock.java[lines=10..25]
 ----
+
 
 The rest of the `main()` method starts each of the threads representing
 the friends running, with a 100 millisecond delay before the next thread
 starts . Then, the `main()` method waits for them all to finish. If
 successful, it will print `All ready!` to the screen.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void run() {	
-		boolean done = false;
-	
-		try {		
-			while( !done ) {
-				Thread.sleep(75); //prepare for party		
-				synchronized( lock ) {
-					totalReady++;				
-				}					
-				Thread.sleep(75); //wait for friends
-				synchronized( lock ) {
-					if( totalReady >= 3 )
-						done = true;
-					else
-						totalReady--;
-				}
-			}
-		}
-		catch( InterruptedException e ) {
-			e.printStackTrace();
-		}
-	}
-}
+include::programs/Livelock.java[lines=27..49]
 ----
+
 
 In the `run()` method, each friend goes through a loop until the `done`
 variable is `true`. In this loop, an initial call to `Thread.sleep()`
@@ -929,17 +769,11 @@ The key element that makes our solution work is that we force a
 philosopher to pick up two chopsticks atomically. The philosopher will
 either pick up both chopsticks or neither.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class DiningPhilosopher extends Thread {
-	public static final int SEATS = 5; 
-	private static boolean[] chopsticks = new boolean[SEATS];	
-	private int seat;
-	
-	public DiningPhilosopher( int seat ) {
-		this.seat = seat;		
-	}
+include::programs/DiningPhilosopher.java[lines=1..8]
 ----
+
 
 We begin with the same setup as the deadlocking version given in
 Section <<subsection:deadlock>>. Unlike that example, we include a
@@ -947,27 +781,11 @@ Section <<subsection:deadlock>>. Unlike that example, we include a
 chopsticks to `false` (unused), create and start a thread for each
 philosopher, and then wait for them to finish.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void main(String args[]) {		
-		for( int i = 0; i < SEATS; i++ )
-			chopsticks[i] = false;
-		DiningPhilosopher[] philosophers =
-			new DiningPhilosopher[SEATS];		
-		for( int i = 0; i < SEATS; i++ ) {
-			philosophers[i] = new DiningPhilosopher( i );
-			philosophers[i].start();
-		}
-		try	{
-			for( int i = 0; i < SEATS; i++ )						
-				philosophers[i].join();			
-		}
-		catch( InterruptedException e ) {
-			e.printStackTrace();
-		}		
-		System.out.println("All philosophers done.");
-	}
+include::programs/DiningPhilosopher.java[lines=10..27]
 ----
+
 
 This `run()` method is different from the deadlocking version but not in
 a way that prevents deadlock. We added the `for` loop so that you could
@@ -976,59 +794,22 @@ problems. We also added the `think()` method to randomize the amount of
 time between eating so that each run of the program is less
 deterministic.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void run() {			
-		for( int i = 0; i < 100; i++ ) {
-			think();
-			getChopsticks();
-			eat();
-		}
-	}
-	
-	private void think() {
-		Random random = new Random();
-		try {
-			sleep( random.nextInt(20) + 10 );
-		}
-		catch( InterruptedException e ) {
-			e.printStackTrace();
-		}
-	}
+include::programs/DiningPhilosopher.java[lines=29..45]
 ----
+
 
 The real place where deadlock is prevented is in the `getChopsticks()`
 method. The philosopher acquires the `chopsticks` lock and then picks up
 the two chopsticks she needs only if both are available. Otherwise, she
 waits.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private void getChopsticks() {
-		int location1 = seat;
-		int location2;				
-		if( seat == 0 )
-			location2 = SEATS - 1;
-		else 
-			location2 = seat - 1;				
-		synchronized( chopsticks ) {
-			while( chopsticks[location1] 
-				|| chopsticks[location2] ) {
-				try {
-					chopsticks.wait();			
-				}
-				catch( InterruptedException e )	{
-					e.printStackTrace();
-				}								
-			}			
-			chopsticks[location1] = true;
-			chopsticks[location2] = true;
-		}		
-		System.out.println("Philosopher " + seat + 
-			" picked up chopsticks " + location1 + " and "
-			+ location2 + ".");
-	}
+include::programs/DiningPhilosopher.java[lines=47..70]
 ----
+
 
 Finally, in the `eat()` method, the philosopher eats the rice. We would
 assume that some other computation would be done here in a realistic
@@ -1038,21 +819,11 @@ give back the chopsticks (hopefully after some cleaning), and then all
 waiting philosophers are notified that some chopsticks may have become
 available.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private void eat() {
-		//eat rice first
-		synchronized( chopsticks ) {
-			chopsticks[seat] = false;			
-			if( seat == 0)
-				chopsticks[SEATS - 1] = false;
-			else
-				chopsticks[seat - 1] = false;				
-			chopsticks.notifyAll();
-		}
-	}
-}
+include::programs/DiningPhilosopher.java[lines=72..83]
 ----
+
 
 Our solution prevents deadlock and livelock because some philosopher
 will get control of two chopsticks eventually, yet there are still

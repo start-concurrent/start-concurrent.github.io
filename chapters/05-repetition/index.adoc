@@ -1031,38 +1031,21 @@ only enters valid DNA sequences containing the letters A, C, G, and T.
 We begin our code with the standard `import` statement and class
 definition.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/DNASearch.java[lines=1..8]
+----
 
-public class DNASearch {
-	public static void main(String[] args) {				
-		Scanner in = new Scanner( System.in );	
-		String sequence, subsequence;
-		boolean valid;
-		char c;
-----
 
 The `main()` method instantiates a `Scanner` object and declares both of
 the `String` variables we’ll need to store the DNA sequences. The method
 also declares a `boolean` and a `char` we will use for input checking.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		do {
-			System.out.print(
-				"Enter the DNA sequence you wish to search in: ");
-			sequence = in.next().toUpperCase();
-			valid = true;
-			for(int i = 0; i < sequence.length() && valid; i++) {				
-				c = sequence.charAt(i);
-				if( c != 'A' && c != 'C' && c != 'G' && c != 'T') {
-					System.out.println("Invalid DNA sequence!");
-					valid = false;
-				}
-			}
-		} while( !valid );
+include::programs/DNASearch.java[lines=10..22]
 ----
+
 
 Next, the user is prompted for a DNA sequence to search in. This
 `String` stored in `sequence` is converted to upper case just in case
@@ -1074,41 +1057,20 @@ prompt and gets a new `String` for `sequence` from the user. This outer
 `do-while` loop continues as long as the user keeps entering invalid DNA
 sequences.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		do {		
-			System.out.print(
-				"Enter the subsequence you wish to search for: ");
-			subsequence  = in.next().toUpperCase();
-			valid = true;
-			for(int i = 0; i < subsequence.length() && valid; i++) {				
-				c = subsequence.charAt(i);
-				if( c != 'A' && c != 'C' && c != 'G' && c != 'T') {
-					System.out.println("Invalid DNA sequence!");
-					valid = false;
-				}
-			}
-		} while( !valid );
+include::programs/DNASearch.java[lines=24..36]
 ----
+
 
 The code used to input `subsequence` while doing error checking is
 virtually identical to the code to input `sequence`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		int found = 0;
-		for( int i = 0; i < sequence.length() -
-			subsequence.length() + 1; i++ ) {			
-			for( int j = 0; j < subsequence.length(); j++ ) {
-				if(subsequence.charAt(j) != sequence.charAt(i + j))
-					break;
-				if( j == subsequence.length() - 1 ) { //matches
-					System.out.println("Match found at index " + i);
-					found++;
-				}
-			}
-		}
+include::programs/DNASearch.java[lines=38..49]
 ----
+
 
 The actual workhorse of the search is found in these nested `for` loops.
 The outer loop iterates through every index in `sequence`, until it
@@ -1137,15 +1099,11 @@ and increment the `found` counter.
 If you know the `String` class well, you can use the `indexOf()` method
 to replace the inner `for` loop. We leave that approach as an exercise.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		if( found == 1 )
-			System.out.println("One match found.");
-		else
-			System.out.println(found + " matches found.");
-	}
-}
+include::programs/DNASearch.java[lines=51..56]
 ----
+
 
 Finally, we print out the total number of matches found. In order to
 avoid awkward output like `1 matches found.`, we used an `if`-`else` to

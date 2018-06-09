@@ -569,29 +569,22 @@ containing student roster information. Then, we’re going to create a
 client program that reads data from a user to create `Student` objects,
 sort them by GPA, and then print them out.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class Student {
-	public static final String[] YEARS =
-	{"Freshman", "Sophomore", "Junior", "Senior"};
-	private String name;
-	private int year;
-	private double GPA;
+include::programs/Student.java[lines=1..6]
 ----
+
 
 We start by defining the `Student` class. First, there is a constant
 array of type `String`, giving the names of each of the four years.
 Next, the fields in the `Student` class store the name, year, and GPA of
 the student.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public Student(String name, int year, double GPA) {
-		setName( name );
-		setYear( year );
-		setGPA( GPA );
-	}	
+include::programs/Student.java[lines=8..12]
 ----
+
 
 We have one constructor for this class, which takes in a `String`, an
 `int`, and a `double` corresponding to the name, year, and GPA of the
@@ -599,35 +592,21 @@ student. The constructor then internally uses mutator methods to store
 the values into the fields. By doing so, we automatically take advantage
 of the error checking in the GPA mutator.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void setName(String name) { this.name = name; }	
-	public void setYear(int year) { this.year = year; }
+include::programs/Student.java[lines=14..22]
+----
 
-	public void setGPA(double GPA) {
-		if( GPA >= 0 && GPA <= 4.0 )
-			this.GPA = GPA;
-		else
-			System.out.println("Invalid GPA: " + GPA);		
-	}
-----
 
 These are the mutators corresponding to each of the three fields. The
 input for the name and year mutators are not checked, but the GPA
 mutator checks to make sure that the GPA value is in the proper range.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public String getName() { return name; };
-	public int getYear() { return year; };
-	public double getGPA() { return GPA; };
+include::programs/Student.java[lines=24..32]
+----
 
-	public String toString() {
-		return name + "\t" + YEARS[year] +
-			"\t" + GPA;
-	}	
-}
-----
 
 Finally, these accessors allow the user to find out the name, year, or
 GPA of a given student. Every class in Java automatically has a
@@ -638,24 +617,11 @@ out directly. We have changed this method to return the information in
 Creating the `Student` class is only half the battle. We also must
 create client code to use it.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/StudentRoster.java[lines=1..15]
+----
 
-public class StudentRoster {
-	public static void main(String[] args) {
-		Scanner in = new Scanner( System.in );		
-		Student[] roster = new Student[in.nextInt()];				
-		for( int i = 0; i < roster.length; i++ ) {
-			in.nextLine();			
-			roster[i] = new Student( in.nextLine(),
-				in.nextInt(), in.nextDouble() );
-		}
-		sort(roster);
-		for( int i = 0; i < roster.length; i++ )
-			System.out.println(roster[i]);
-	}
-----
 
 The `main()` method in the `StudentRoster` class begins by reading in
 the total number of students. Next, it makes an array of type `Student`
@@ -669,21 +635,11 @@ the first `for` loop. This line of code consumes a trailing newline
 character from previous input. Take it out and see how quickly the
 program malfunctions.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void sort(Student[] roster) {
-		for( int i = 0; i < roster.length - 1; i++ ) {
-			int smallest = i;
-			for( int j = i + 1; j < roster.length; j++ )
-				if(roster[j].getGPA() < roster[smallest].getGPA())
-					smallest = j;
-			Student temp = roster[smallest];
-			roster[smallest] = roster[i];
-			roster[i] = temp;
-		}
-	}
-}
+include::programs/StudentRoster.java[lines=17..28]
 ----
+
 
 This `sort()` method is similar to others that you have seen. It
 implements selection sort in ascending order based on GPA.
@@ -1000,18 +956,11 @@ the stack is empty.
 Now we need the client code that read the input and interacts with the
 stack.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/NestedExpressions.java[lines=1..9]
+----
 
-public class NestedExpressions {
-	public static void main(String[] args) {		
-		Scanner in = new Scanner( System.in );
-		String input = in.nextLine();
-		SymbolStack stack = new SymbolStack(input.length());				
-		char symbol;	
-		boolean correct = true;
-----
 
 The `main()` method of this class reads in the input and creates a
 `SymbolStack` called `stack` with a maximum size of the input length. We
@@ -1019,37 +968,11 @@ know that the stack never needs to hold more than the total input. It
 also creates a `boolean` named `correct` to keep track of whether or not
 the input is correctly nested. We start by assuming that it is.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		for( int i = 0; i < input.length() && correct; i++ ) {
-			symbol = input.charAt(i);
-			switch( symbol ) {
-				case '(':
-				case '[':
-				case '{':
-					stack.push(symbol);
-					break;
-				case ')':
-					if(stack.isEmpty() || stack.top() != '(')
-						correct = false;
-					else
-						stack.pop();
-					break;
-				case ']':
-					if(stack.isEmpty() || stack.top() != '[')
-						correct = false;
-					else
-						stack.pop();
-					break;
-				case '}':
-					if(stack.isEmpty() || stack.top() != '{')
-						correct = false;
-					else
-						stack.pop();
-					break;
-			}
-		}
+include::programs/NestedExpressions.java[lines=10..37]
 ----
+
 
 This `for` loop runs through each `char` in the input. If it is a left
 parenthesis, left square bracket, or left curly brace, it pushes the
@@ -1061,18 +984,11 @@ checks to see if the top matches the current symbol. If the stack is
 empty or its top does not match, `correct` is set to `false`. For
 efficiency, the loop stops early if `correct` is no longer `true`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		if( !stack.isEmpty() ) //unmatched left symbols
-			correct = false;
-		
-		if( correct )
-			System.out.println("The input is correctly nested!");
-		else
-			System.out.println("The input is incorrectly nested!");
-	}
-}
+include::programs/NestedExpressions.java[lines=39..47]
 ----
+
 
 After the input has been examined, we check to see if the stack is
 empty. If it isn’t, there must be some left symbols that were not

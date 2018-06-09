@@ -479,30 +479,11 @@ each do a specific task. We hope that the way a method works is
 intuitively clear to you. If not, the next chapter explains them in
 detail.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import javax.swing.*;
+include::programs/CodonExtractor.java[lines=1..21]
+----
 
-public class CodonExtractor {
-	public static void main(String [] args) {       
-		int continueProgram;
-        do {
-        	// Read DNA sequence
-            String input = JOptionPane.showInputDialog(
-            		"Enter a DNA sequence");/*@\label{DNAInputLine}@*/
-            input = input.toUpperCase(); // Make upper case
-			String message = "Do you want to continue?";
-            if( isValid(input) ) // Check for validity 
-                displayCodons(input); // Find codons
-            else
-				message = "Invalid DNA Sequence.\n" + message;
-			continueProgram = JOptionPane.showConfirmDialog(
-				null, message, "Alert", JOptionPane.YES_NO_OPTION);            
-        } while(continueProgram == JOptionPane.YES_OPTION);
-        JOptionPane.showMessageDialog(null,
-        	"Thanks for using the Codon Extractor!");  
-    }
-----
 
 The `main()` method contains a `do-while` loop that allows the user to
 enter sequences repeatedly. The `showInputDialog()` method makes an
@@ -517,18 +498,11 @@ method to creating a confirm dialog, asking the user if he or she wants
 to continue entering sequences. The loop will continue as long as the
 return value is `JOptionPane.YES_OPTION`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-    public static boolean isValid( String DNA ) {
-        String validBases = "ACGT";                
-        for( int i = 0; i < DNA.length(); i++) {
-			char base = DNA.charAt(i);
-            if( validBases.indexOf( base ) == -1 )			
-				return false; //base not in "ACGT"
-        }        
-        return true;
-    }
+include::programs/CodonExtractor.java[lines=23..31]
 ----
+
 
 The `isValid()` method checks to see if the DNA contains only the
 letters representing the four bases. To do this, we use the Java
@@ -536,28 +510,11 @@ letters representing the four bases. To do this, we use the Java
 checking to see where they can be found in `"ACGT"`. If the index
 returned is -1, the character was not found, and the DNA is invalid.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-    public static void displayCodons(String DNA) {                
-        String message = "";
-		// Get as many complete codons as possible
-        for (int i = 0; i < DNA.length() - 2; i += 3)
-            message += "\n" + DNA.substring(i, i + 3);
-		// 1-2 bases might be left over
-        int remaining = DNA.length() % 3;        
-        if( remaining == 1 )
-            message += "\n"+ DNA.substring(DNA.length() - 1,
-            	DNA.length()) + "**"; 
-        else if( remaining == 2 )
-            message += "\n"+ DNA.substring(DNA.length() - 2,
-            	DNA.length()) + "*";
-        message = "DNA length: " + DNA.length() +
-        	"\n\nCodons: " + message;
-        JOptionPane.showMessageDialog(null, message,
-        	"Codons in DNA", JOptionPane.INFORMATION_MESSAGE);/*@\label{codonDisplayLine2}@*/   
-    }
-}
+include::programs/CodonExtractor.java[lines=33..51]
 ----
+
 
 In the `displayCodons()` method, we display the individual codons to the
 user. We build a large `String` with newlines separating each codon. To

@@ -1184,20 +1184,11 @@ user as well as respond to the user’s input. We begin with the `import`
 statement that is necessary to use both the `Scanner` and `Random` class
 and then define the `MontyHall` class.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/MontyHall.java[lines=1..11]
+----
 
-public class MontyHall {
-	public static void main(String[] args) {
-		Random random = new Random();
-		int winner = random.nextInt(3);		
-		Scanner in = new Scanner( System.in );
-		System.out.print("Choose a door (enter 0, 1, or 2): ");
-		int choice = in.nextInt();
-		int alternative;
-		int open;
-----
 
 In the `main()` method we first decide which of the three doors is the
 winner. To do so, we instantiate a `Random` object and use it to
@@ -1210,35 +1201,11 @@ and read the choice. Finally, we declare two more `int` values to keep
 track of which door to open and which door is the alternative that the
 user can choose to change over to.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		if( choice == winner ) {			
-			int low;
-			int high;
-			if( choice ==  0 ) { 
-				low = 1;
-				high = 2;
-			}
-			else if( choice == 1 ) {
-				low = 0;
-				high = 2;
-			}
-			else { //choice == 2
-				low = 0;
-				high = 1;
-			}	
-			//randomly choose between other two doors
-			double threshold = random.nextDouble();
-			if( threshold < 0.5 ) {
-				alternative = low;
-				open = high;
-			}
-			else {
-				alternative = high;
-				open = low;
-			}			
-		}
+include::programs/MontyHall.java[lines=13..38]
 ----
+
 
 Now we have to navigate a complicated series of decisions. In this
 segment of code, we are tackling the possibility that the user happened
@@ -1250,30 +1217,11 @@ is less than 0.5, we keep the lower numbered door as an alternative
 choice for the user and open the higher numbered door. If the random
 number is greater than or equal to 0.5, we do the opposite.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		else {
-			alternative = winner;
-			if( choice == 0 ) {
-				if( winner == 1 )					
-					open = 2;				
-				else
-					open = 1;				
-			}
-			else if( choice == 1 ) {
-				if( winner == 0 )					
-					open = 2;				
-				else
-					open = 0;				
-			}
-			else { //choice == 2 
-				if( winner == 0 )						
-					open = 1;				
-				else
-					open = 0;				
-			}			
-		}
+include::programs/MontyHall.java[lines=39..59]
 ----
+
 
 This `else` block covers the case that the player did not pick the
 winning door the first time. Unlike the previous code segment, we no
@@ -1284,24 +1232,11 @@ braces surrounding the blocks for each of the braces surrounding the
 blocks for each of the three possible values of `choice` are not
 necessary but are included for readability.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		System.out.println("We have opened Door " + open + 
-			", and there is junk behind it!");
-		System.out.print("Do you want to change to Door " + 
-			alternative + " from Door " + choice +
-			"? (Enter 'y' or 'n'): ");
-		String change = in.next();		
-		if( change.equals("y") )
-			choice = alternative;
-		System.out.println("You chose Door " + choice);
-		if( choice == winner )
-			System.out.println("You win a pile of gold!");
-		else
-			System.out.println("You win a pile of junk.");
-	}
-}
+include::programs/MontyHall.java[lines=60..74]
 ----
+
 
 This final segment of code informs the user which door has been opened
 and prompts the user to change his or her decision. Depending on the

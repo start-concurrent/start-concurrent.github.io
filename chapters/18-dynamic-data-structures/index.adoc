@@ -1098,31 +1098,22 @@ methods and fields to the earlier definition, taking nothing away. In
 this way, we should be able to use the `Term` class for both infix to
 postfix conversion and postfix calculation.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class Term {	
-	private int value;	
-	private char operator;
-	private boolean isOperator;
+include::programs/Term.java[lines=1..4]
 ----
+
 
 Here we have augmented the earlier `Term` class by adding two more
 fields, a `char` called `operator` to hold an operator and a `boolean`
 called `isOperator` to keep track of whether or not our `Term` object
 holds an operator or an operand.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public Term( int value ) {
-		this.value = value;
-		isOperator = false;
-	}
-	
-	public Term( char operator ) {
-		this.operator = operator;
-		isOperator = true;
-	}
+include::programs/Term.java[lines=6..14]
 ----
+
 
 We now have two constructors. The first one takes an `int` value and
 stores it into `value`, setting `isOperator` to `false` to indicate that
@@ -1131,12 +1122,11 @@ the `Term` object must be an operand. The second constructor takes a
 `true` to indicate that the `Term` object must be an operator (such as
 `+`, `-`,`*`, or `/`).
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public int getValue() {	return value; }	
-	public char getOperator() { return operator; }			
-	public boolean isOperator() { return isOperator; }	
+include::programs/Term.java[lines=16..18]
 ----
+
 
 These three accessors give back the operand value, the operator
 character, and whether or not the object is an operator, respectively.
@@ -1147,24 +1137,11 @@ the `Term` is an operator or not. This design opens up the possibility
 that some code will call the wrong accessor method and get a useless
 default value.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public boolean greaterOrEqual(Term term) {
-		if( isOperator() )
-			switch( operator ) {			
-				case '*':
-				case '/': return true;				
-				case '+':
-				case '-':
-				return (term.operator != '*' &&
-						term.operator != '/');
-				default: return false;
-			}		
-		else
-			return false;
-	}
-}
+include::programs/Term.java[lines=20..34]
 ----
+
 
 The most complicated addition to the `Term` class is the
 `greaterOrEqual()` method, which takes in another `Term` object. This
@@ -1184,51 +1161,22 @@ to be compared. We use exactly the same `TermStack` class from
 Example <<example:Postfix_computation>> for our stack. All that remains
 is the client code that parses the input.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/InfixToPostfix.java[lines=1..9]
+----
 
-public class InfixToPostfix {
-	public static void main(String[] args) {		
-		Scanner in = new Scanner( System.in );
-		String expression = in.nextLine();
-		TermStack stack = new TermStack(expression.length());
-		String postfix = "";		
-		char term;	
-----
 
 The `main()` method of this class reads in the input expression and
 creates a `TermStack` called `stack` with a maximum size of the length
 of the expression. We also declare a `String` called `postfix` to hold
 the output.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		for( int i = 0; i < expression.length(); i++ ) {
-			term = expression.charAt(i);
-			if( term >= '0' && term <= '9' )
-				postfix += term;		
-			else if( term == '(' )
-					stack.push( new Term( term ));
-			else if( term == ')' ) {
-				while( stack.top().getOperator() != '(' ) {
-					postfix += stack.top().getOperator();
-					stack.pop();
-				}
-				stack.pop(); //pop off the '('
-			}
-			else if( term == '*' || term == '/' ||
-				 term == '+' || term == '-' ) {
-				Term operator = new Term( term );
-				while( stack.size() > 0 &&
-					stack.top().greaterOrEqual( operator ) ) {
-					postfix += stack.top().getOperator();
-					stack.pop();
-				}
-				stack.push( operator );
-			}					
-		}
+include::programs/InfixToPostfix.java[lines=10..33]
 ----
+
 
 This `for` loop runs through each `char` in the input expression and
 applies the four rules given in the description of the infix conversion
@@ -1241,16 +1189,11 @@ as long as it has a precedence greater than or equal to the new
 operator. The complexity of doing this precedence comparison is now
 tucked away inside of the `Term` class.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		while( stack.size() > 0 ) {
-			postfix += stack.top().getOperator();
-			stack.pop();
-		}		
-		System.out.println(postfix);
-	}
-}
+include::programs/InfixToPostfix.java[lines=35..41]
 ----
+
 
 After the input has all been consumed, we pop all the elements off the
 stack and add them to the output. Finally, we print the output. The

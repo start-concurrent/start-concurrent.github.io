@@ -580,42 +580,22 @@ of closed polygon, using an array of `Point` objects. The `Point` class
 is a way to package up `x` and `y` values of type `int`. Each coordinate
 in the array gives the next vertex of the polygon.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.awt.*;
-
-public class Polygon {
-	protected Point[] points;
-
-	public Polygon( Point[] points ) {
-		this.points = points;
-	}
+include::programs/Polygon.java[lines=1..8]
 ----
+
 
 The `import` statement allows us to use the `Point` class as well as the
 `Graphics` class. Our array of type `Point` is declared `protected` so
 that the child classes we want to create can access it directly. The
 constructor takes an array of type `Point` and stores it.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public double getPerimeter() {
-		double perimeter = 0.0;
-		for( int i = 0; i < points.length - 1; i++ )
-			perimeter += points[i].distance(points[i + 1]);
-		perimeter += points[0].distance(points[points.length - 1]);
-		return perimeter;
-	}
+include::programs/Polygon.java[lines=10..25]
+----
 
-	public void draw( Graphics g ) {
-		for( int i = 0; i < points.length - 1; i++ )
-			g.drawLine(points[i].x, points[i].y,
-				points[i+1].x, points[i+1].y);
-		g.drawLine(points[0].x, points[0].y, points[points.length
-			- 1].x, points[points.length - 1].y);
-	}
-}
-----
 
 The number of things that can be done with this very general `Polygon`
 class are limited. The `getPerimeter()` method can determine the length
@@ -632,23 +612,11 @@ latexmath:[y] values *increase* going downward, not upward.
 With this basic parent class defined, we can design a `Triangle` class
 as a child of it.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.awt.*;
+include::programs/Triangle.java[lines=1..14]
+----
 
-public class Triangle extends Polygon {
-	public Triangle( int x1, int y1, int x2, int y2,
-		int x3, int y3 ) {
-		super( toPointArray( x1, y1, x2, y2, x3, y3 ) );
-	}
-	
-	protected static Point[] toPointArray( int x1, int y1,
-		int x2, int y2, int x3, int y3 ) {
-		Point[] array = {new Point(x1, y1), new Point(x2, y2),
-			new Point(x3, y3)};
-		return array;
-	}
-----
 
 Again, the `import` statement is for the `Point` class. One reasonable
 constructor to make a triangle would take in six values, giving the
@@ -661,20 +629,11 @@ thing in the argument list of the `super` constructor, but it would have
 looked messier. The `toPointArray()` is `protected` because there is no
 reason to let external code have access to it.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public String getType() {
-		double a = points[0].distance(points[1]);
-		double b = points[1].distance(points[2]);
-		double c = points[2].distance(points[0]);
-		if( a == b && b == c )
-			return "Equilateral";
-		if( a == b || b == c || a == c )
-			return "Isosceles";
-		return "Scalene";
-	}
-}
+include::programs/Triangle.java[lines=16..26]
 ----
+
 
 Finally, the `getType()` method allows us to do something specific with
 triangles. We can use the `distance()` method from the `Point` class to
@@ -820,72 +779,31 @@ logical binary operator would be quick.
 
 The client code that uses these classes to simulate a circuit follows.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/BooleanCircuit.java[lines=1..9]
+----
 
-public class BooleanCircuit {
-	public static void main(String[] args) {
-		Scanner in = new Scanner( System.in );
-		int count = in.nextInt();
-		Gate[] gates = new Gate[count];
-		String name;
-		int value;
-----
 
 First we have the `import` needed for `Scanner`. Next, we read in the
 total number of gates and create an array of type `Gate` of that length
 and declare a few useful temporary variables.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		// Create gates
-		for( int i = 0; i < count; i++ ) {
-			name = in.next().toUpperCase();
-			if( name.equals("true") )
-				gates[i] = new True();
-			else if( name.equals("false") )
-				gates[i] = new False();
-			else if( name.equals("AND") )
-				gates[i] = new And();
-			else if( name.equals("OR") )
-				gates[i] = new Or();
-			else if( name.equals("XOR") )
-				gates[i] = new Xor();
-			else if( name.equals("NOT") )
-				gates[i] = new Not();
-			else if( name.equals("OUTPUT") ) {
-				value = in.nextInt();
-				gates[i] = new Output( value );
-			}
-		}		
+include::programs/BooleanCircuit.java[lines=11..30]
 ----
+
 
 Then, we parse the input, creating an appropriate gate based on the name
 read in. In the case of an OUTPUT gate, we must also read in a number so
 that we can identify which OUTPUT gate is which later.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		//connect gates
-		while( in.hasNextInt() ) {
-			value = in.nextInt();
-			name = gates[value].getName();
-			if( name.equals("AND") || name.equals("OR") ||
-				name.equals("XOR") ) {
-				BinaryOperator operator =
-					(BinaryOperator)gates[value];
-				operator.setOperand1( gates[in.nextInt()] );
-				operator.setOperand2( gates[in.nextInt()] );
-			}
-			else if( name.equals("NOT") ||
-				name.startsWith("OUTPUT") ) {
-				UnaryOperator operator =
-					(UnaryOperator)gates[value];
-				operator.setInput( gates[in.nextInt()] );
-			}
-		}
+include::programs/BooleanCircuit.java[lines=32..49]
 ----
+
 
 As long as there is remaining input, we read in an index. Based on the
 name of the gate at that index in the array, we either read in two more
@@ -893,15 +811,11 @@ indexes (for binary operators) or just a single additional index (for
 unary operators). In either case, we set the input or inputs of the
 operator to the gate or gates at those indexes.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		// Compute output
-		for( int i = 0; i < count; i++ )
-		  if( gates[i].getName().startsWith("OUTPUT") )
-			System.out.println( gates[i] );
-	  }
-}
+include::programs/BooleanCircuit.java[lines=51..56]
 ----
+
 
 Finally, the simulation of the circuit is absurdly simple. We look
 through array until we find a gate whose name starts with `"OUTPUT"`.
