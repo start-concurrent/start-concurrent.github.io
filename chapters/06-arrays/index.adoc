@@ -655,20 +655,11 @@ searches for the smallest value inside of an outer loop, we can write a
 program that does selection sort of `int` values input by the user as
 follows.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/SelectionSort.java[lines=1..11]
+----
 
-public class SelectionSort {
-	public static void main(String[] args) {
-		Scanner in = new Scanner( System.in );
-		int n = in.nextInt();
-		int[] values = new int[n];
-		int smallest;
-		int temp;
-		for( int i = 0; i < values.length; i++ )
-			values[i] = in.nextInt();
-----
 
 This program is not very long, but there’s a lot going on. After
 instantiating a `Scanner`, we read in the total number of values the
@@ -678,18 +669,11 @@ are going to store so that we can instantiate our array with the
 appropriate length. Then, we read each value into the array using the
 first `for` loop.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		for( int i = 0; i < n - 1; i++ ) {
-			smallest = i;
-			for( int j = i + 1; j < n; j++ )
-				if( values[j] < values[smallest] )
-					smallest = j;
-			temp = values[smallest];
-			values[smallest] = values[i];
-			values[i] = temp;
-		}
+include::programs/SelectionSort.java[lines=12..20]
 ----
+
 
 The next `for` loop is where the actual sort happens. We start at index
 `0` and then try to find the smallest value to be put in that spot.
@@ -707,14 +691,11 @@ corresponding element with the element at `i`, the spot in the array we
 are trying to fill. The three lines after the inner `for` loop are a
 simple swap to do exactly that.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		System.out.print("The sorted list is: ");
-		for( int i = 0; i < values.length; i++ )
-			System.out.print(values[i] + " ");
-	}
-}
+include::programs/SelectionSort.java[lines=21..25]
 ----
+
 
 After all the sorting is done, the final `for` loop prints out the newly
 sorted list. This program gives no prompts for user input, so it is well
@@ -748,20 +729,11 @@ time. Right now, we can only redirect input from a single file and so we
 are forced to put the list of words at the top of the file, followed by
 the text we want to search through.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/WordCount.java[lines=1..11]
+----
 
-public class WordCount {
-	public static void main(String[] args) {
-		Scanner in = new Scanner( System.in );
-		int n = in.nextInt();
-		String[] words = new String[n];
-		int[] counts = new int[n];	
-		String temp;	
-		for( int i = 0; i < words.length; i++ )
-			words[i] = in.next().toLowerCase();
-----
 
 As in the last example, this program begins by reading in the length of
 the list of words. Then, it instantiates the `String` array `words` to
@@ -770,18 +742,11 @@ to keep track of the number of times each word is found. By default,
 each element in `counts` is initialized to `0`. The first `for` loop in
 the program reads in each word and stores it into the array `words`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		while( in.hasNext() ) {
-			temp = in.next().toLowerCase();			
-			for( int i = 0; i < n; i++ )
-				if( temp.equals( words[i] )) {
-					counts[i]++;
-					break;	
-				}			
-		}
-		System.out.println("The word counts are: ");
+include::programs/WordCount.java[lines=12..20]
 ----
+
 
 The `while` loop reads in each word from the text following the list and
 stores it in a variable called `temp`. Then, it loops through `words`
@@ -789,13 +754,11 @@ and tests to see if `temp` matches any of the elements in the list. If
 it does, it increases the value of the element of `counts` that has the
 same index and breaks out of the inner `for` loop.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		for( int i = 0; i < words.length; i++ )
-			System.out.println(words[i] + " " + counts[i]);
-	}
-}
+include::programs/WordCount.java[lines=21..24]
 ----
+
 
 After all the words in the text have been processed, the final `for`
 loop prints out each word from the list, along with its counts.
@@ -903,37 +866,22 @@ Below we give the solution to this statistics problem. Several different
 tasks are combined here, but each of them should be reasonably easy to
 solve after the previous examples.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/Statistics.java[lines=1..9]
+----
 
-public class Statistics {
-	public static void main(String[] args) {
-		Scanner in = new Scanner( System.in );
-		int n = in.nextInt();		
-		int[] scores = new int[n];					
-		for( int i = 0; i < n; i++ )
-			scores[i] = in.nextInt();
-----
 
 In our solution, the `main()` method begins by reading in the total
 number of scores and declaring an `int` array of that length named
 `scores`. Then, we read in each of the scores and store them into
 `scores`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		int max = scores[0];
-		int min = scores[0];
-		int sum = scores[0];
-		for( int i = 1; i < n; i++ ) {
-			if( scores[i] > max )
-				max = scores[i];
-			if( scores[i] < min )
-				min = scores[i];
-			sum += scores[i];
-		}
+include::programs/Statistics.java[lines=10..19]
 ----
+
 
 Here we declare variables `max`, `min`, and `sum` to hold, respectively,
 the maximum, minimum, and sum of the elements in the array. Then, we set
@@ -948,26 +896,21 @@ up to `scores.length - 1`, we must include the value at index `0` in
 `sum`. Alternatively, we could have set `sum` to `0` and started the
 `for` loop at `i = 0`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		double mean = ((double)sum)/n;
-		System.out.println("Maximum:\t\t" + max);
-		System.out.println("Minimum:\t\t" + min);
-		System.out.println("Mean:\t\t\t" + mean);
+include::programs/Statistics.java[lines=20..23]
 ----
+
 
 In this short snippet of code, we compute the mean, being careful to
 store it into a variable of type `double`, and then print out the three
 statistics we have already computed.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		double variance = 0;
-		for( int i = 0; i < n; i++ )
-			variance += (scores[i] - mean)*(scores[i] - mean);
-		variance /= (n - 1);		
-		System.out.println("Standard Deviation:\t" + Math.sqrt(variance));
+include::programs/Statistics.java[lines=24..28]
 ----
+
 
 At this point, we use the mean we have already computed to find the
 sample standard deviation. Following the formula for sample standard
@@ -978,27 +921,11 @@ translate them to 0 to `n - 1` because of zero-based array numbering.
 Dividing the total by `n - 1` gives the sample variance. Then, the
 square root of the variance is the standard deviation.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		int temp;
-		for( int i = 0; i < n - 1; i++ ) {
-			min = i;
-			for( int j = i + 1; j < n; j++ )
-				if( scores[j] < scores[min] )
-					min = j;
-			temp = scores[min];
-			scores[min] = scores[i];
-			scores[i] = temp;
-		}
-		double median;
-		if( n % 2 == 0 )
-			median = (scores[n/2] + scores[n/2 + 1])/2.0;
-		else
-			median = scores[n/2];
-		System.out.println("Median:\t\t\t" + median);
-	}
-}
+include::programs/Statistics.java[lines=29..46]
 ----
+
 
 To find the median, we use our selection sort code. Note that we have
 reused the variable `min` to hold the smallest value found so far,
@@ -1674,22 +1601,11 @@ checkers, chess, or Go. Our program will catch any attempt to play on a
 location that has already been played and will determine the winner, if
 there is one.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/TicTacToe.java[lines=1..13]
+----
 
-public class TicTacToe {
-	public static void main(String[] args) {
-		Scanner in = new Scanner( System.in );
-		char[][] board = new char[3][3];
-		for( int i = 0; i < board.length; i++ )
-			for( int j = 0; j < board[0].length; j++ )
-				board[i][j] = ' ';
-		boolean turn = true;
-		boolean gameOver = false;
-		int row, column, moves = 0;
-		char shape;
-----
 
 Games often give rise to complex programs, since rules that are
 intuitively obvious to humans may be difficult to state explicitly in
@@ -1703,30 +1619,11 @@ another to keep track of whether the game is over or not. Finally, we
 declare variables to hold the row, the column, the number of moves that
 have been made so far and the current shape (`'X'` or `'O'`).
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		while( !gameOver ) {
-			shape = turn ? 'X' : 'O';
-			System.out.print(shape + "'s turn.  Enter row(0-2): ");
-			row = in.nextInt();
-			System.out.print("Enter column(0-2): ");
-			column = in.nextInt();
-			if( board[row][column] != ' ' )
-				System.out.println("Illegal move");
-			else {	
-				board[row][column] = shape;	
-				moves++;			
-				turn = !turn;
-				//print board
-				System.out.println(board[0][0] + "|" 
-						 + board[0][1] + "|" + board[0][2]);
-				System.out.println("-----");
-				System.out.println(board[1][0] + "|" 
-						 + board[1][1] + "|" + board[1][2]);
-				System.out.println("-----");
-				System.out.println(board[2][0] + "|" 
-						 + board[2][1] + "|" + board[2][2] + "\n");				
+include::programs/TicTacToe.java[lines=15..35]
 ----
+
 
 The core of the game is a `while` loop that runs until `gameOver`
 becomes `true`. The first line of the body of this loop is an obscure
@@ -1758,38 +1655,12 @@ If a user tries to place a move at row 5 column 3, our program will try
 to do so and crash. Four additional clauses in the `if` statement could
 be used to add bounds checking.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-				//check rows
-				for( int i = 0; i < board.length; i++ )
-					if( board[i][0] == shape && board[i][1] == shape
-						&& board[i][2] == shape )
-						gameOver = true;
-				//check columns
-				for( int i = 0; i < board[0].length; i++ )
-					if( board[0][i] == shape && board[1][i] == shape
-						&& board[2][i] == shape )
-						gameOver = true;
-				//check diagonals
-				if( board[0][0] == shape && board[1][1] == shape
-					&& board[2][2] == shape )
-					gameOver = true;
-				if( board[0][2] == shape && board[1][1] == shape
-					&& board[2][0] == shape )
-					gameOver = true;			
-				if( gameOver )
-					System.out.println(shape + " wins!");
-				else if( moves == 9 ){
-					gameOver = true;			
-					System.out.println("Tie game!");		
-				}				
-			}
-		}
-	}
-}
+include::programs/TicTacToe.java[lines=36..62 *FIX: Tic Tac Toe partial program]
 ----
 
-*FIX: Tic Tac Toe partial program listing (lines 36-62) not available.*
+listing (lines 36-62) not available.*
 
 Perhaps the trickiest part of our Tic Tac Toe program is checking for a
 win. First we check each row to see if it contains three in a row. Then,
@@ -1947,20 +1818,11 @@ Here we present our solution to the Conway’s Game of Life simulation.
 Our program is designed to run the simulation with 24 rows and 80
 columns, although it would be easy to change those dimensions.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class Life {
-	public static void main(String[] args) {
-		final int ROWS = 24;		
-		final int COLUMNS = 80;		
-		final int GENERATIONS = 500;
-		boolean[][] board = new boolean[ROWS][COLUMNS];
-		boolean[][] temp = new boolean[ROWS][COLUMNS];
-		boolean[][] swap;
-		for( int row = 0; row < ROWS; row++ )
-			for( int column = 0; column < COLUMNS; column++ )
-				board[row][column] = (Math.random() > 0.9);
+include::programs/Life.java[lines=1..11]
 ----
+
 
 The `main()` method of our program starts by defining `ROWS`, `COLUMNS`,
 and +
@@ -1973,31 +1835,11 @@ will use to swap `board` and `temp`. We randomly fill the board, making
 10% of the cells living. Again, you may wish to play with this number to
 see how the patterns in the simulation are affected.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		int total;
-		for( int generation = 0; generation < GENERATIONS;
-			generation++ ) {
-			for( int row = 0; row < ROWS; row++ )
-				for( int column = 0; column < COLUMNS; column++ ) {
-					total = 0;
-					for( int i = Math.max(row - 1, 0);
-						 i < Math.min(row + 2, ROWS); i++ )
-						for( int j = Math.max(column-1, 0); 
-							j < Math.min(column+2, COLUMNS); j++ )
-							if( (i != row || j != column )
-								&& board[i][j] )
-								total++;
-					if( board[row][column] ) 
-						temp[row][column] = (total == 2 || 
-						total == 3);
-					else
-						temp[row][column] = (total == 3);
-				}
-			swap = board;
-			board = temp;
-			temp = swap;
+include::programs/Life.java[lines=12..33]
 ----
+
 
 The `for` loop at the beginning of this segment of code runs once for
 each generation we simulate. The two nested `for` loops examine each
@@ -2023,24 +1865,11 @@ out the old array stored in `board` instead of swapping it with `temp`,
 but then we would have to create a new array for `temp` each time, which
 is less efficient.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-			for( int i = 0; i < 100; i++ )
-				System.out.println();					
-			for( int row = 0; row < ROWS; row++ ) {
-				for( int column = 0; column < COLUMNS; column++ )
-					if( board[row][column] )
-						System.out.print("*");
-					else
-						System.out.print(" ");
-				System.out.println();
-			}			
-			try { Thread.sleep(100); }
-			catch( InterruptedException e ) {}
-		}
-	}
-}
+include::programs/Life.java[lines=34..48]
 ----
+
 
 The first `for` loop in this segment prints 100 blank lines to clear the
 screen, as we explained earlier. The two nested `for` loops print out

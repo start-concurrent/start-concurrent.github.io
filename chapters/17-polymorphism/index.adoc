@@ -294,85 +294,50 @@ Here’s a more involved example of an abstract class that gives a first
 step toward solving the bank account with a vengeance problem posed at
 the beginning of the chapter.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.Calendar;
+include::programs/BankAccount.java[lines=1..1]
 ----
+
 
 The first step is to import the `Calendar` class for some date stuff we
 are going to use later.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public abstract class BankAccount extends SynchronizedAccount {
-	private String name;
-	private Calendar lastAccess;
-	private int monthsPassed = 0;
+include::programs/BankAccount.java[lines=3..6]
 ----
+
 
 We extend `SynchronizedAccount` and declare the new class to be
 abstract. In this example, we do not use any abstract methods, but,
 since each bank account has unique characteristics, we don’t want people
 to be able to create a generic `BankAccount`.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public BankAccount( String name, double balance )
-		throws InterruptedException {
-		this.name = name;
-		changeBalance( balance );
-		lastAccess = Calendar.getInstance();		
-	}
-	
-	public String getName() { return name; }
-	
-	protected Calendar getLastAccess() { return lastAccess; }
-	
-	protected int getMonthsPassed() { return monthsPassed; }
+include::programs/BankAccount.java[lines=8..19]
 ----
+
 
 The constructor and the accessors should be what you expect to see. Note
 that calling the static method `Calendar.getInstance()` is the correct
 way to get a `Calendar` object with the current date and time.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public final double getBalance() throws InterruptedException {		
-		update();		
-		return super.getBalance();
-	}
-	
-	public final void deposit( double amount )
-		throws InterruptedException {
-		update();
-		super.deposit( amount );		
-	}
-	
-	public final boolean withdraw( double amount )
-		throws InterruptedException {
-		update();		
-		return super.withdraw(amount);
-	}
+include::programs/BankAccount.java[lines=21..36]
 ----
+
 
 Then come the balance checking and changing methods. Each simply calls
 the parent methods after calling an `update()` method we discuss below.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	protected synchronized void update() throws InterruptedException {
-		Calendar current = Calendar.getInstance();
-		int months = 12*(current.get(Calendar.YEAR) -
-		getLastAccess().get(Calendar.YEAR)) +
-		(current.get(Calendar.MONTH) -
-		getLastAccess().get(Calendar.MONTH));
-		if( months > 0 ) {
-				lastAccess = current;
-				monthsPassed = months;
-		}
-	}
-}	
+include::programs/BankAccount.java[lines=38..49]
 ----
+
 
 Other than adding `String` for a name associated with the account, the
 `update()` method is the other major addition made in `BankAccount`.
