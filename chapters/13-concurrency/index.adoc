@@ -403,9 +403,17 @@ created by instances of these classes compute, respectively, the two
 subexpressions in Figure <<figure:tasks_in_threads>>(b) and save the
 computed values.
 
-SPGMFILE: Thread1.java
+[source, java, linenums]
+----
+include::programs/Thread1.java[]
+----
 
-SPGMFILE: Thread2.java
+
+[source, java, linenums]
+----
+include::programs/Thread2.java[]
+----
+
 
 The `run()` method in each thread above computes a subexpression and
 saves its value. We show how these threads can be executed to solve the
@@ -492,7 +500,11 @@ completion. When the two threads complete their execution, we can ask
 each for its computed value. The main thread then prints the product of
 these values, which is the result of the expression we want to evaluate.
 
-SPGMFILE: MathExpression.java
+[source, java, linenums]
+----
+include::programs/MathExpression.java[]
+----
+
 
 We want to make it absolutely clear when threads are created, start
 executing, and finish. These details are crucial for the finer points of
@@ -540,7 +552,11 @@ sums them up within a given range. If multiple instances of this class
 are executed as separate threads, each one can sum up different parts of
 an array.
 
-SPGMFILE: Summer.java
+[source, java, linenums]
+----
+include::programs/Summer.java[]
+----
+
 
 This class is very similar to one that inherits from `Thread`. Imagine
 for a moment that the code following `Summer` is `extends Thread`
@@ -584,7 +600,11 @@ In domain decomposition, we often need to create multiple threads, all
 from the same class. As an example, consider the following thread
 declaration.
 
-SPGMFILE: NumberedThread.java
+[source, java, linenums]
+----
+include::programs/NumberedThread.java[]
+----
+
 
 Now suppose that we want to create 10 thread objects of type
 `NumberedThread`, start them, and then wait for them to complete.
@@ -733,23 +753,11 @@ overhead of using threads.
 We create class `SumThread` whose `run()` method sums the sines of those
 elements of the array in its assigned partition.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.Random;
+include::programs/SumThread.java[lines=1..14]
+----
 
-public class SumThread extends Thread {
-	private static double[] data;	
-	private double sum = 0.0;		
-	private int lower;
-	private int upper;	
-	public static final int SIZE = 1000000;	
-	public static final int THREADS = 8;
-	
-	public SumThread( int lower, int upper ) {		
-		this.lower = lower;
-		this.upper = upper;		
-	}
-----
 
 First, we set up all the fields that the class will need. We fix the
 array size at 1,000,000 and the number of threads at 8, but these values
@@ -758,41 +766,22 @@ could easily be changed or read as input instead. In its constructor, a
 ranges we discuss, the lower bound is inclusive though the upper bound
 is exclusive.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void run() {
-		for( int i = lower; i < upper; i++ )
-			sum += Math.sin(data[i]);
-	}
+include::programs/SumThread.java[lines=16..21]
+----
 
-	public double getSum() { return sum; }
-----
 
 In the `for` loop of the `run()` method, the `SumThread` finds the sine
 of each number in its array partition and adds that value to its running
 sum. The `getSum()` method is an accessor that allows the running sum to
 be retrieved.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void main( String[] args ) {	
-		data = new double[SIZE];
-		Random random = new Random();
-		int start = 0;	
-		for( int i = 0; i < SIZE; i++ )
-			data[i] = random.nextDouble();	
-		SumThread threads = new SumThread[THREADS];
-		int quotient = data.length / THREADS;
-		int remainder = data.length % THREADS;			
-		for( int i = 0; i < THREADS; i++ ) {
-			int work = quotient;
-			if( i < remainder )
-				work++;
-			threads[i] = new SumThread( start, start + work );
-			threads[i].start();
-			start += work;
-		}	
+include::programs/SumThread.java[lines=23..39]
 ----
+
 
 The `main()` method begins by instantiating the array and filling it
 with random values. Note that the array is a static field so that it can
@@ -805,22 +794,11 @@ to threads. If the length of the array is not divisible by the number of
 threads, simple division isn’t enough. After creating each thread, its
 `start()` method is called.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		double sum = 0.0;
-		try	{ 
-			for( int i = 0; i < THREADS; i++ ) {
-				thread[i].join();
-				sum += thread[i].getSum();
-			}
-			System.out.println("Sum: " + threads[0].getSum());
-		}
-		catch( InterruptedException e )	{
-			e.printStackTrace();
-		}
-	}	
-}
+include::programs/SumThread.java[lines=41..53]
 ----
+
 
 After the threads have started working, the main thread creates its own
 running total and iterates through each thread waiting for it to
@@ -864,7 +842,11 @@ create a `Thread` subclass which will do some part of the matrix
 multiplication. Below is the `MatrixThread` class which will compute a
 number of rows in the answer matrix `c`.
 
-SPGMFILE: MatrixThread.java
+[source, java, linenums]
+----
+include::programs/MatrixThread.java[]
+----
+
 
 The constructor for `MatrixThread` stores references to the arrays
 corresponding to matrices latexmath:[A], latexmath:[B], and
@@ -1119,12 +1101,20 @@ see how accurately place the words. We want to use the scheduling tools
 discussed above to get the timing right. Let’s try `Thread.sleep()`
 first.
 
-SPGMFILE: LeftThread.java
+[source, java, linenums]
+----
+include::programs/LeftThread.java[]
+----
+
 
 Class `LeftThread` has a `for` loop which prints out `Left` three times,
 waits for 10 milliseconds, prints out `Left` again, then repeats.
 
-SPGMFILE: RightThread.java
+[source, java, linenums]
+----
+include::programs/RightThread.java[]
+----
+
 
 Class `RightThread` waits for 5 milliseconds to get synchronized, then
 has a `for` loop which prints out `Right`, waits for 10 milliseconds,
@@ -1132,7 +1122,11 @@ and repeats. The driver program below creates a thread for each of these
 classes and then starts them. If you run this program, you should see 10
 lines of `Left Left Left Right Left`, but there are a few problems.
 
-SPGMFILE: MilitaryMarching.java
+[source, java, linenums]
+----
+include::programs/MilitaryMarching.java[]
+----
+
 
 The first problem is that we have to wait some amount of time between
 calls. We could shorten the `Thread.sleep()` calls, but there are limits
@@ -1143,9 +1137,17 @@ increase the repetitions of the `for` loops to a larger number, the
 errors are more likely. Whether or not you see errors is somewhat system
 dependent. We can try `Thread.yield()` instead of `Thread.sleep()`.
 
-SPGMFILE: LeftYieldThread.java
+[source, java, linenums]
+----
+include::programs/LeftYieldThread.java[]
+----
 
-SPGMFILE: RightYieldThread.java
+
+[source, java, linenums]
+----
+include::programs/RightYieldThread.java[]
+----
+
 
 These new versions of the two classes have essentially replaced calls to
 `Thread.sleep()` with calls to `Thread.yield()`. Without the need for
@@ -1166,9 +1168,17 @@ keep track of whether or not it is done. Each thread needs a reference
 to the other thread to make queries, and the driver program must be
 updated to add these in before starting the threads.
 
-SPGMFILE: LeftPollingThread.java
+[source, java, linenums]
+----
+include::programs/LeftPollingThread.java[]
+----
 
-SPGMFILE: RightPollingThread.java
+
+[source, java, linenums]
+----
+include::programs/RightPollingThread.java[]
+----
+
 
 Whether single core or multicore, this solution will always give the
 right output. Or it should. Java experts will point out that we are

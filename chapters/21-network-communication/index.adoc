@@ -354,23 +354,11 @@ The first step is the appropriate import statements and the `main()`
 method, which creates a client or a server `Chat` object, depending on
 command line parameters.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.io.*;
-import java.net.*;
-import java.util.*;
-public class Chat {
-	private Socket socket;
-	
-	public static void main(String[] args) {		
-		if( args[0].equals("-s") )
-			new Chat( Integer.parseInt( args[1] ) );
-		else if( args[0].equals("-c") )
-			new Chat( args[1], Integer.parseInt( args[2] )  );
-		else
-			System.out.println("Invalid command line flag.");
-	}
+include::programs/Chat.java[lines=1..14]
 ----
+
 
 The code given here calls the server version of the `Chat` constructor
 if the argument `"-s"` is given and the client version of the `Chat`
@@ -381,34 +369,20 @@ The server `Chat` constructor takes the port and listens for a
 connection on it. After a connection, it calls the `runChat()` method to
 perform the actual business of sending and receiving chats.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	// Server
-	public Chat( int port ) {
-		try {
-			ServerSocket serverSocket = new ServerSocket( port );	
-			socket = serverSocket.accept();
-			runChat();
-		}
-		catch( Exception e ) {}			
-	}
+include::programs/Chat.java[lines=16..24]
 ----
+
 
 The client constructor is similar but connects directly to the specified
 IP address on the specified port.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	// Client
-	public Chat( String address, int port )	{
-		try {				
-			socket = new Socket( address, port );
-			runChat();					
-		}
-		catch( Exception e )
-		{}			
-	}
+include::programs/Chat.java[lines=26..34]
 ----
+
 
 Once the client and server are connected, they both run the `runChat()`
 method, which creates a new `Sender` and a new `Receiver` to do the
@@ -421,17 +395,11 @@ task, but it is concerned with reading input from the network and
 printing it on the screen. Since both tasks are independent, it is
 reasonable to allocate a separate thread to each.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void runChat() throws InterruptedException {
-		Sender sender = new Sender();
-		Receiver receiver = new Receiver();
-		sender.start();
-		receiver.start();			
-		sender.join();
-		receiver.join();
-	}
+include::programs/Chat.java[lines=36..43]
 ----
+
 
 Below is the private inner class `Sender`. In this case it is convenient
 but not necessary to make `Sender` an inner class, especially since it
@@ -443,36 +411,12 @@ is ready, it is printed and flushed, with the user name inserted at the
 beginning, through the `PrintWriter` connected to the `Socket`’s output
 stream. When the user types `quit`, the `Socket` will be closed.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private class Sender extends Thread {
-		public void run() {	
-			try {
-				PrintWriter netOut = new PrintWriter( 
-					socket.getOutputStream() );
-				Scanner in = new Scanner( System.in );		
-				System.out.print("Enter your name: ");
-				String name = in.nextLine();		
-				String buffer = "";
-				while( !socket.isClosed() ) {
-					if( in.hasNextLine() ) {
-						buffer = in.nextLine(); 
-						if( buffer.equals("quit") )
-							socket.close();
-						else {
-							netOut.println( name + ": "
-								+ buffer );
-							netOut.flush();
-						}
-					}			
-				}		
-			}
-			catch( IOException e ) {}			
-		}		
-	}	
+include::programs/Chat.java[lines=45..69 *FIX: Chat program listing, lines]
 ----
 
-*FIX: Chat program listing, lines 45-69, not available.*
+45-69, not available.*
 
 Below is the private inner class `Receiver`, the counterpart of
 `Sender`, as well as the last thing defined in the `Chat` class. The
@@ -486,22 +430,11 @@ the `in.hasNextLine()` method called by `Sender` and the
 functions. Because each might wait for input before continuing, they
 cannot easily be combined in one thread of execution.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private class Receiver extends Thread {
-		public void run() {
-			try{
-				Scanner netIn = new Scanner(
-					socket.getInputStream()) ;
-				while( !socket.isClosed() )					
-					if( netIn.hasNextLine() )
-						System.out.println( netIn.nextLine() );
-			}
-			catch( IOException e ) {}			
-		}
-	}
-}
+include::programs/Chat.java[lines=71..83]
 ----
+
 
 Although the fundamentals are present in this example, a real chat
 client should provide a buddy list, the opportunity to talk to more than
@@ -534,32 +467,11 @@ on, the root directory for the web page, and a `ServerSocket`. The
 `main()` method does nothing but call the constructor using the current
 directory as an argument and then start the server.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.io.*;
-import java.net.*;
-import java.util.*;
-public class WebServer {		
-	private int port;
-	private String webRoot;
-	private ServerSocket serverSocket = null;	
-	
-	public WebServer( int port, String webRoot ) {
-		this.port = port;
-		this.webRoot = webRoot;
-	}
-	
-	public static void main(String[] args) {
-		File currentDirectory = new File(".");
-		try{
-			WebServer server = new WebServer(8080,
-				currentDirectory.getCanonicalPath() );
-			server.start();
-		}
-		catch( IOException e )
-		{}	
-	}
+include::programs/WebServer.java[lines=1..23]
 ----
+
 
 Below is the `start()` method. This method contains the central loop of
 the web server that waits for connections and loops forever. Once a
@@ -576,48 +488,11 @@ Note that the `out` object is of type `ObjectOutputStream`, allowing us
 to send binary data over the socket. However, the `in` variable is of
 type `Scanner`, because HTTP requests are generally only text.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void start() {
-		Socket socket = null;
-		Scanner in = null;
-		ObjectOutputStream out = null;
-		String line;
-		try {
-			serverSocket = new ServerSocket( port );		
-			while( true ) {
-				socket = serverSocket.accept();	
-				try {				
-					in = new Scanner( socket.getInputStream()) ;
-					out = new ObjectOutputStream(
-						socket.getOutputStream() );				
-					while ( in.hasNextLine() ) {
-						line = in.nextLine();
-						if( line.startsWith("GET") ) {
-							String path = line.substring(4,
-								line.lastIndexOf("HTTP")).trim();						
-							System.out.println(
-								"Received request for: " + path);
-							serve( out, getPath( path ) );
-							socket.close();
-							break;
-						}
-					}
-				}
-				catch( IOException e ) {
-					System.out.println("Error: " + e.getMessage());
-				}
-				finally { 
-					if( in != null ) in.close();
-					if( out != null ) out.close();
-				}				
-			}
-		}
-		catch( IOException e ) {
-			System.out.println("Error: " + e.getMessage());
-		}
-	}	
+include::programs/WebServer.java[lines=25..63]
 ----
+
 
 Next is a short utility method which provides some amount of platform
 independence. The `getPath()` method take in a `String` representation
@@ -632,17 +507,11 @@ name. Real web servers try a list of many different files such as
 `index.html`, `index.htm`, `index.php`, and so on, until a file is found
 or the list runs out.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public String getPath(String path) {
-		if ('/' != File.separatorChar)
-			path = path.replace('/', File.separatorChar);		
-		if (path.endsWith("" + File.separatorChar ) )
-			return webRoot + path + "index.html";		
-		else
-			return webRoot + path;		
-	}
+include::programs/WebServer.java[lines=65..72]
 ----
+
 
 The last method in the `WebServer` class takes in a path and sends the
 corresponding file over the nextwork. The `serve()` method first tries
@@ -662,40 +531,11 @@ Once the file is open, the `serve()` method simply reads it in, byte by
 byte, and sends each byte out over the socket. After the file has been
 sent, the method closes it and returns.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public void serve( ObjectOutputStream out, String path )
-		throws IOException {
-		System.out.println("Trying to serve " + path);
-		File file = new File(path);
-		if( !file.exists() ) {
-			out.writeBytes("HTTP/1.1 404 Not Found\n\n");
-			out.writeBytes("<html><head><title>404 Not Found" + 
-				"</title></head><body><h1>Not Found" +
-				"</h1>The requested URL " + path +
-				" was not found on this server.</body></html>");
-			System.out.println("File not found.");
-		}
-		else {
-			out.writeBytes("HTTP/1.1 200 OK\n\n");
-			ObjectInputStream in = null;
-			try {
-				in = new ObjectInputStream(
-					new FileInputStream( file ));
-				int data;
-				while ( (data = in.readByte()) != -1 )
-					out.writeByte( (byte)data );
-				System.out.println("Request succeeded.");
-			}
-			catch (IOException e) {
-				System.out.println("Error sending file: " +
-					e.getMessage());
-			}
-			finally { if( in != null ) in.close(); }
-		}
-	}
-}	
+include::programs/WebServer.java[lines=74..104]
 ----
+
 
 Because a web server is a real world application, we have to give the
 usual caveat that this implementation is quite bare-bones. There are

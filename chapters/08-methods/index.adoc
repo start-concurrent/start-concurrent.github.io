@@ -753,20 +753,11 @@ precision errors.
 Here we present our solution to the three card poker problem. We explain
 each method individually.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-public class ThreeCardPoker {
-	public static final String[] SUITS = {"Spades", "Hearts",
-		"Diamonds", "Clubs"};
-	public static final String[] RANKS = {"2", "3", "4", "5", "6",
-		"7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};	
-	public static final int STRAIGHT_FLUSH = 40;	
-	public static final int THREE_OF_A_KIND = 30;
-	public static final int STRAIGHT = 6;
-	public static final int FLUSH = 2;	
-	public static final int PAIR = 1;
-	public static final int NOTHING = 0;
+include::programs/ThreeCardPoker.java[lines=1..11]
 ----
+
 
 Before our `main()` method even begins, we have declared a number of
 class constants. Two constant arrays of `String` values provide us with
@@ -776,26 +767,11 @@ outcome. Note that these constants can be declared anywhere inside the
 class, provided that they are outside of all methods. However, it is
 typical (and good style) to declare them at the top of the class.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void main(String[] args) {
-		int[] deck = new int[52];
-		int[] hand = new int[3];				
-		for( int i = 0; i < deck.length; i++ )
-			deck[i] = i;
-		shuffle( deck );
-		for( int i = 0; i < hand.length; i++ )
-			hand[i] = deck[i];		
-		int winnings = score(hand);
-		System.out.println("Hand: ");
-		print(hand);
-		if( winnings == 0 )
-			System.out.println("You win nothing.");
-		else
-			System.out.println("You win " + winnings +
-			" times your bet.");
-	}
+include::programs/ThreeCardPoker.java[lines=13..29]
 ----
+
 
 In the `main()` method, an array representing a deck of 52 cards is
 created first, followed by an array representing the 3 cards to be
@@ -807,18 +783,11 @@ score because the hand is sorted in the process of determining the
 score, making the output easier to read. Finally, we print the
 appropriate output, depending on the score.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void shuffle(int[] deck) {
-		int index, temp;
-		for( int i = 0; i < deck.length; i++ ) {
-			index = i + (int)((deck.length - i)*Math.random());
-			temp = deck[index];
-			deck[index] = deck[i];
-			deck[i] = temp;
-		}		
-	}
+include::programs/ThreeCardPoker.java[lines=31..39]
 ----
+
 
 This method shuffles the deck. Its approach is to swap the first element
 in the array of cards with one of the elements that follow, chosen
@@ -828,17 +797,11 @@ uniformly generated random number in the range latexmath:[[0,1)], the
 final shuffled deck should be any one of the latexmath:[52!] possible
 decks with equal probability.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void print(int[] hand) {
-		for( int i = 0; i < hand.length; i++ )
-			System.out.println(RANKS[getRank(hand[i])] + " of "
-			+ SUITS[getSuit(hand[i])]);
-	}
+include::programs/ThreeCardPoker.java[lines=41..48]
+----
 
-	public static int getRank(int value) { return value % 13; }
-	public static int getSuit(int value) { return value / 13; }
-----
 
 The first of these methods prints out a human readable version of each
 card in an array (instead of 0 - 51). It does so using the second and
@@ -853,45 +816,22 @@ methods. Java does not have this complication, and the `getRank()` and
 `getSuit()` methods compile and function perfectly if they are written
 above `print()` or below it inside the class definition.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private static int score(int[] hand) {	
-		sortByRank( hand );	
-		if( hasStraight( hand ) && hasFlush( hand ) )
-			return STRAIGHT_FLUSH;
-		if( hasThree( hand ) )
-			return THREE_OF_A_KIND;
-		if( hasStraight( hand ) )
-			return STRAIGHT;
-		if( hasFlush( hand ) )
-			return FLUSH;
-		if( hasPair( hand ) )
-			return PAIR;		
-		return NOTHING;
-	}	
+include::programs/ThreeCardPoker.java[lines=50..63]
 ----
+
 
 This method computes the score by first sorting the hand and then
 testing progressively worse outcomes, starting with the best, a straight
 flush. As it moves down the list of outcomes, it calls appropriate
 methods to determine if a hand has a certain characteristic.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private static void sortByRank( int[] hand ) {
-		int smallest, temp;
-		for( int i = 0; i < hand.length - 1; i++ ) {
-			smallest = i;
-			for( int j = i + 1; j < hand.length; j++ ) {
-				if( getRank(hand[j]) < getRank(hand[smallest]) )
-					smallest = j;
-			}
-			temp = hand[smallest];
-			hand[smallest] = hand[i];
-			hand[i] = temp;
-		}
-	}
+include::programs/ThreeCardPoker.java[lines=65..77]
 ----
+
 
 This code is an implementation of selection sort packaged into a method.
 Note that this method does actually change the values inside of the
@@ -899,31 +839,11 @@ array `hand` even though it cannot change the array that `hand` points
 to. The array itself is passed by value, but its contents are
 effectively passed by reference.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	private static boolean hasPair( int[] hand ) {
-		return getRank(hand[0]) == getRank(hand[1]) ||
-		       getRank(hand[1]) == getRank(hand[2]);
-	}
-
-	private static boolean hasThree( int[] hand ) {
-		return getRank(hand[0]) == getRank(hand[1]) &&
-		       getRank(hand[1]) == getRank(hand[2]);
-	}
-
-	private static boolean hasFlush( int[] hand ) {
-		return getSuit(hand[0]) == getSuit(hand[1]) &&
-		       getSuit(hand[1]) == getSuit(hand[2]);
-	}
-
-	private static boolean hasStraight( int[] hand ) {		
-		return (getRank(hand[0]) == 0 && getRank(hand[1]) == 1
-				&& getRank(hand[2]) == 12) || //ace low
-		       (getRank(hand[1]) == getRank(hand[0]) + 1 &&
-		        getRank(hand[2]) == getRank(hand[1]) + 1);
-	}	
-}
+include::programs/ThreeCardPoker.java[lines=79..100]
 ----
+
 
 These four methods do the actual work of determining the attributes of a
 hand. They are all similar and would be more complex for five- or

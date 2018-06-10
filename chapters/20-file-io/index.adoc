@@ -591,26 +591,11 @@ Now we will give the solution to the problem posed at the beginning of
 the chapter. First, let’s look at the class definition and `main()`
 method.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.io.*;
+include::programs/BitmapCompression.java[lines=1..17]
+----
 
-public class BitmapCompression {
-	public static void main(String[] args) {
-		ObjectInputStream in = null;
-		try {			
-			in = new ObjectInputStream(new FileInputStream(args[1]));
-			if( args[0].equals("-c"))
-				compress( in, args[1] );
-			else if( args[0].equals("-d"))
-				decompress( in, args[1] );			
-		}
-		catch( Exception e ) { 
-			System.out.println("Bad input: " + e.getMessage() );
-		}
-		finally { try{ in.close(); } catch( Exception e ){} }
-	}
-----
 
 Here we open an `ObjectInputStream` based on the file named passed as
 the second command line parameter. Then, we either compress or
@@ -627,36 +612,11 @@ After the rest of the method, note the usual `finally` block where the
 file is closed, including the inner `try`-`catch` blocks needed to
 safely close binary files.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void compress( ObjectInputStream in,
-		String file ) {
-		int temp, current, count = 1;
-		ObjectOutputStream out = null;
-		try {			
-			out = new ObjectOutputStream( 
-				new FileOutputStream( file + ".compress" ) );		
-			current = in.read();		
-			while( (temp = in.read()) != -1 ) {			
-				if( temp == current && count < 127 )
-					count++;
-				else {
-					out.writeByte( count );
-					out.writeByte( current );				
-					count = 1;
-					current = temp;
-				}
-			out.write( count );
-			out.write( current );
-			}
-		}
-		catch( Exception e ) {
-			System.out.println("Compression failed: "
-				+ e.getMessage() );
-		}
-		finally { try { out.close(); }catch(Exception e){} }
-	}
+include::programs/BitmapCompression.java[lines=19..45]
 ----
+
 
 In the `compress()` method we first open a new `ObjectOutputStream` for
 a file named the same as the input file with `.compress` tacked on the
@@ -669,30 +629,11 @@ file and output the last count and last byte value. The method finishes
 with the usual `catch` and `finally` blocks needed to catch errors and
 safely close the output file.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public static void decompress( ObjectInputStream in,
-		String file ) {
-		int count, temp;		
-		ObjectOutputStream out = null;
-		try {
-			out = new ObjectOutputStream( 
-				new FileOutputStream( file.substring( 0,
-					file.lastIndexOf(".compress")) ));
-			while( (count = in.read()) != -1 ) {			
-				temp = in.readByte();			
-				for( int i = 0; i < count; i++ )
-					out.writeByte( temp );							
-			}
-		}
-		catch( Exception e ) {
-			System.out.println("Decompression failed: "
-				+ e.getMessage() );
-		}				
-		finally { try{ out.close(); } catch(Exception e){} }
-	}
-}
+include::programs/BitmapCompression.java[lines=47..67]
 ----
+
 
 The `decompress()` method is even simpler than `compress()`. It begins
 by opening a new `ObjectOutputStream` for a file named the same as the

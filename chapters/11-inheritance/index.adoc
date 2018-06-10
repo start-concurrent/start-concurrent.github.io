@@ -185,7 +185,11 @@ creates a basic fish that can swim, feed, and die. We can check its
 color, location, and whether or not it is alive. When it runs out of
 energy, it dies.
 
-SPGMFILE: Fish.java
+[source, java, linenums]
+----
+include::programs/Fish.java[]
+----
+
 
 From here we can create a child class called `BoringFish` that does
 exactly what `Fish` does. To do so, we use the `extends` keyword after
@@ -202,7 +206,11 @@ Just as we are allowed to make an empty class, we are allowed to make an
 inherited class and add nothing, but doing so is pointless. Instead, we
 can make a `Flounder` class that can change its color.
 
-SPGMFILE: Flounder.java
+[source, java, linenums]
+----
+include::programs/Flounder.java[]
+----
+
 
 The `Flounder` class can do everything a `Fish` can: It can swim, feed,
 and die. Now, we add the additional ability of changing color, since
@@ -214,7 +222,11 @@ point.
 Here is a `Shark` class that extends `Fish` in another ways, by adding
 the capability of eating other `Fish`.
 
-SPGMFILE: Shark.java
+[source, java, linenums]
+----
+include::programs/Shark.java[]
+----
+
 
 Here we have added an `eat()` method that takes another `Fish` object as
 a parameter. First, the `Fish` parameter is killed; then the `eat()`
@@ -337,9 +349,17 @@ be called. If the parent class does not have a default constructor, then
 leaving off an appropriate call to a parent constructor will result in a
 compiler error. Consider the following two classes.
 
-SPGMFILE: Parent.java
+[source, java, linenums]
+----
+include::programs/Parent.java[]
+----
 
-SPGMFILE: Child.java
+
+[source, java, linenums]
+----
+include::programs/Child.java[]
+----
+
 
 As shown above, the `super` keyword is used to call the constructor of a
 parent class. The `Child` constructor takes a name and prepends the
@@ -374,7 +394,11 @@ original return type.
 We can return to the `Fish` class example and make a new kind of fish
 that never moves.
 
-SPGMFILE: LazyFish.java
+[source, java, linenums]
+----
+include::programs/LazyFish.java[]
+----
+
 
 Whenever someone calls the `swim()` method on a `LazyFish` object, it
 will just announce that it is going to sit where it is. Its location is
@@ -383,7 +407,11 @@ not updated and its energy does not change.
 On the other hand, we could create another child class that swims twice
 as fast as the original `Fish`.
 
-SPGMFILE: FastFish.java
+[source, java, linenums]
+----
+include::programs/FastFish.java[]
+----
+
 
 Every time `swim()` is called on objects of type `FastFish`, those
 objects will call the `swim()` method from `Fish` twice. Thus, this fish
@@ -404,7 +432,17 @@ Just as methods are overridden, fields are _hidden_. It is perfectly
 legal to declare a field with the same name as a field from a parent
 class, but the new field will then be used instead of the old one.
 
-SPGMFILE: A.java SPGMFILE: B.java
+[source, java, linenums]
+----
+include::programs/A.java[]
+----
+
+
+[source, java, linenums]
+----
+include::programs/B.java[]
+----
+
 
 Class `B` is a child of class `A` and declares a field called `a`,
 hiding a field of the same name from `A`. However, which `a` is which
@@ -542,42 +580,22 @@ of closed polygon, using an array of `Point` objects. The `Point` class
 is a way to package up `x` and `y` values of type `int`. Each coordinate
 in the array gives the next vertex of the polygon.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.awt.*;
-
-public class Polygon {
-	protected Point[] points;
-
-	public Polygon( Point[] points ) {
-		this.points = points;
-	}
+include::programs/Polygon.java[lines=1..8]
 ----
+
 
 The `import` statement allows us to use the `Point` class as well as the
 `Graphics` class. Our array of type `Point` is declared `protected` so
 that the child classes we want to create can access it directly. The
 constructor takes an array of type `Point` and stores it.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public double getPerimeter() {
-		double perimeter = 0.0;
-		for( int i = 0; i < points.length - 1; i++ )
-			perimeter += points[i].distance(points[i + 1]);
-		perimeter += points[0].distance(points[points.length - 1]);
-		return perimeter;
-	}
+include::programs/Polygon.java[lines=10..25]
+----
 
-	public void draw( Graphics g ) {
-		for( int i = 0; i < points.length - 1; i++ )
-			g.drawLine(points[i].x, points[i].y,
-				points[i+1].x, points[i+1].y);
-		g.drawLine(points[0].x, points[0].y, points[points.length
-			- 1].x, points[points.length - 1].y);
-	}
-}
-----
 
 The number of things that can be done with this very general `Polygon`
 class are limited. The `getPerimeter()` method can determine the length
@@ -594,23 +612,11 @@ latexmath:[y] values *increase* going downward, not upward.
 With this basic parent class defined, we can design a `Triangle` class
 as a child of it.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.awt.*;
+include::programs/Triangle.java[lines=1..14]
+----
 
-public class Triangle extends Polygon {
-	public Triangle( int x1, int y1, int x2, int y2,
-		int x3, int y3 ) {
-		super( toPointArray( x1, y1, x2, y2, x3, y3 ) );
-	}
-	
-	protected static Point[] toPointArray( int x1, int y1,
-		int x2, int y2, int x3, int y3 ) {
-		Point[] array = {new Point(x1, y1), new Point(x2, y2),
-			new Point(x3, y3)};
-		return array;
-	}
-----
 
 Again, the `import` statement is for the `Point` class. One reasonable
 constructor to make a triangle would take in six values, giving the
@@ -623,20 +629,11 @@ thing in the argument list of the `super` constructor, but it would have
 looked messier. The `toPointArray()` is `protected` because there is no
 reason to let external code have access to it.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-	public String getType() {
-		double a = points[0].distance(points[1]);
-		double b = points[1].distance(points[2]);
-		double c = points[2].distance(points[0]);
-		if( a == b && b == c )
-			return "Equilateral";
-		if( a == b || b == c || a == c )
-			return "Isosceles";
-		return "Scalene";
-	}
-}
+include::programs/Triangle.java[lines=16..26]
 ----
+
 
 Finally, the `getType()` method allows us to do something specific with
 triangles. We can use the `distance()` method from the `Point` class to
@@ -647,7 +644,11 @@ the triangle are already taken care of by the `Polygon` class.
 
 We can easily make a `Rectangle` class along the same lines.
 
-SPGMFILE: Rectangle.java
+[source, java, linenums]
+----
+include::programs/Rectangle.java[]
+----
+
 
 The constructor is similar to the `Triangle` constructor except that the
 upper left corner of the rectangle is specified, along with the length
@@ -659,7 +660,11 @@ rectangle by examining the `points` array and then calculates area.
 Using inheritance as form of specialization, we can go one step further
 and make a `Square` class.
 
-SPGMFILE: Square.java
+[source, java, linenums]
+----
+include::programs/Square.java[]
+----
+
 
 This very short class uses everything available in `Rectangle` but
 simplifies the constructor slightly so that the user does not have to
@@ -672,7 +677,11 @@ enter both length and width.
 Here we present our solution to the Boolean Circuits problem. First, we
 define a parent class for all circuit components, called `Gate`.
 
-SPGMFILE: Gate.java
+[source, java, linenums]
+----
+include::programs/Gate.java[]
+----
+
 
 The `Gate` class doesn’t do anything except set up ways to store a name
 and to get a value. From `Gate`, we can define the most basic circuit
@@ -680,14 +689,28 @@ components: gates whose value is either always true or always false. It
 doesn’t really matter what `getValue()` gives back for `Gate`, but we
 can say that it is `false`.
 
-SPGMFILE: True.java SPGMFILE: False.java
+[source, java, linenums]
+----
+include::programs/True.java[]
+----
+
+
+[source, java, linenums]
+----
+include::programs/False.java[]
+----
+
 
 To conform with the constructor for `Gate`, these new classes must pass
 a `String` giving their name to the `super` constructor. The values
 returned by the `getValue()` method are clear. Next, we want to create a
 class that can be used for general unary operators.
 
-SPGMFILE: UnaryOperator.java
+[source, java, linenums]
+----
+include::programs/UnaryOperator.java[]
+----
+
 
 The important addition in the `UnaryOperator` class is the `input`
 field. Any unary operator must have a single input gate that it operates
@@ -695,7 +718,17 @@ on. This class provides a mutator and accessor for `input`, as well as
 an appropriate constructor. From `UnaryOperator`, we can derive two
 specific operators.
 
-SPGMFILE: Output.java SPGMFILE: Not.java
+[source, java, linenums]
+----
+include::programs/Output.java[]
+----
+
+
+[source, java, linenums]
+----
+include::programs/Not.java[]
+----
+
 
 The `Output` class takes in an `int` value and uses it to make a
 numbered name. Its `getValue()` method simply returns the value of its
@@ -707,7 +740,11 @@ input.
 Just as we did for unary operators, we also need a base class for binary
 operators.
 
-SPGMFILE: BinaryOperator.java
+[source, java, linenums]
+----
+include::programs/BinaryOperator.java[]
+----
+
 
 A `BinaryOperator` has two `Gate` fields, `operand1` and `operand2`,
 representing the inputs to the operator. The `BinaryOperator` class has
@@ -715,11 +752,23 @@ an appropriate constructor and then accessors and mutators for the
 operands. With `BinaryOperator` as a parent, only a few lines of code
 are necessary to define any logical binary operator.
 
-SPGMFILE: And.java
+[source, java, linenums]
+----
+include::programs/And.java[]
+----
 
-SPGMFILE: Or.java
 
-SPGMFILE: Xor.java
+[source, java, linenums]
+----
+include::programs/Or.java[]
+----
+
+
+[source, java, linenums]
+----
+include::programs/Xor.java[]
+----
+
 
 In each case, a constructor passes the name of the gate to the `super`
 constructor. Then, each `getValue()` method gets the values from the two
@@ -730,72 +779,31 @@ logical binary operator would be quick.
 
 The client code that uses these classes to simulate a circuit follows.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-import java.util.*;
+include::programs/BooleanCircuit.java[lines=1..9]
+----
 
-public class BooleanCircuit {
-	public static void main(String[] args) {
-		Scanner in = new Scanner( System.in );
-		int count = in.nextInt();
-		Gate[] gates = new Gate[count];
-		String name;
-		int value;
-----
 
 First we have the `import` needed for `Scanner`. Next, we read in the
 total number of gates and create an array of type `Gate` of that length
 and declare a few useful temporary variables.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		// Create gates
-		for( int i = 0; i < count; i++ ) {
-			name = in.next().toUpperCase();
-			if( name.equals("true") )
-				gates[i] = new True();
-			else if( name.equals("false") )
-				gates[i] = new False();
-			else if( name.equals("AND") )
-				gates[i] = new And();
-			else if( name.equals("OR") )
-				gates[i] = new Or();
-			else if( name.equals("XOR") )
-				gates[i] = new Xor();
-			else if( name.equals("NOT") )
-				gates[i] = new Not();
-			else if( name.equals("OUTPUT") ) {
-				value = in.nextInt();
-				gates[i] = new Output( value );
-			}
-		}		
+include::programs/BooleanCircuit.java[lines=11..30]
 ----
+
 
 Then, we parse the input, creating an appropriate gate based on the name
 read in. In the case of an OUTPUT gate, we must also read in a number so
 that we can identify which OUTPUT gate is which later.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		//connect gates
-		while( in.hasNextInt() ) {
-			value = in.nextInt();
-			name = gates[value].getName();
-			if( name.equals("AND") || name.equals("OR") ||
-				name.equals("XOR") ) {
-				BinaryOperator operator =
-					(BinaryOperator)gates[value];
-				operator.setOperand1( gates[in.nextInt()] );
-				operator.setOperand2( gates[in.nextInt()] );
-			}
-			else if( name.equals("NOT") ||
-				name.startsWith("OUTPUT") ) {
-				UnaryOperator operator =
-					(UnaryOperator)gates[value];
-				operator.setInput( gates[in.nextInt()] );
-			}
-		}
+include::programs/BooleanCircuit.java[lines=32..49]
 ----
+
 
 As long as there is remaining input, we read in an index. Based on the
 name of the gate at that index in the array, we either read in two more
@@ -803,15 +811,11 @@ indexes (for binary operators) or just a single additional index (for
 unary operators). In either case, we set the input or inputs of the
 operator to the gate or gates at those indexes.
 
-[source,numberLines,java]
+[source, java, linenums]
 ----
-		// Compute output
-		for( int i = 0; i < count; i++ )
-		  if( gates[i].getName().startsWith("OUTPUT") )
-			System.out.println( gates[i] );
-	  }
-}
+include::programs/BooleanCircuit.java[lines=51..56]
 ----
+
 
 Finally, the simulation of the circuit is absurdly simple. We look
 through array until we find a gate whose name starts with `"OUTPUT"`.
@@ -947,7 +951,11 @@ extra classes.
 problem from Chapter <<chapter:Interfaces>>. This time, let the `Cat`,
 `Dog`, and `Person` classes extend the `Creature` class defined below.
 +
-SPGMFILE: Creature.java
+[source, java, linenums]
+----
+include::programs/Creature.java[]
+----
+
 +
 Refactor your code so that the `Cat`, `Dog`, and `Person` classes are as
 short as possible. How many lines of code do you save?
