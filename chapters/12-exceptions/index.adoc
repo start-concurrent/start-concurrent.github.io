@@ -4,7 +4,7 @@
 
 === Problem: Bank burglary
 
-Let’s consider a problem in which various aspects of a bank burglary are
+Let's consider a problem in which various aspects of a bank burglary are
 modeled as objects in Java. You want to write some code that will
 accomplish the following steps:
 
@@ -16,7 +16,7 @@ accomplish the following steps:
 
 But any number of things could go wrong! When trying to disable the
 burglar alarm, you might set it off. When you try to break into the
-bank, you might have thought that you’d disabled the burglar alarm but
+bank, you might have thought that you'd disabled the burglar alarm but
 actually failed to do so. The door of the bank might be too difficult to
 open. The vault might be impossible to find, or the vault might be
 impossible to open. It could even be empty. The money might be made of
@@ -42,20 +42,20 @@ The `Bank` class has three methods, `disableAlarm()`, `breakIn()`, and
 The `Loot` class has a `carryAway()` method. Below is a table of the
 exceptions which can be thrown by each of the methods.
 
-[cols="<,<,<",options="header",]
+[.center%autowidth%header,cols="3*<.^l",]
 |=================================================
-|*Class* |*Method* |*Exceptions*
-|`Bank` |`disableAlarm()` |`BurglarAlarmException`
-| | |`WatchmanException`
-| |`breakIn()` |`BurglarAlarmException`
-| | |`LockPickFailException`
-| | |`WatchmanException`
-| |`findVault()` |`WatchmanException`
-|`Vault` |`open()` |`LockPickFailException`
-| | |`WatchmanException`
-| |`getLoot()` |`WatchmanException`
-|`Loot` |`carryAway()` |`LootTooHeavyException`
-| | |`WatchmanException`
+|Class |Method |Exceptions
+.6+|Bank .2+|disableAlarm() |BurglarAlarmException
+							|WatchmanException
+		.3+|breakIn()		|BurglarAlarmException
+							|LockPickFailException
+							|WatchmanException
+			|findVault() 	|WatchmanException
+.3+|Vault .2+|open() 		|LockPickFailException
+							|WatchmanException
+			|getLoot() 		|WatchmanException
+.2+|Loot .2+|carryAway() 	|LootTooHeavyException
+							|WatchmanException
 |=================================================
 
 In order to deal with each of these possible errors, you need some
@@ -281,7 +281,7 @@ thrown. Otherwise your code will not compile.
 
 Checked exceptions are those exceptions that your program should plan
 for. Library and API code often throw checked exceptions. For example,
-when trying to open a file with an API call, it’s possible that no file
+when trying to open a file with an API call, it's possible that no file
 with that name exists or that the user might not have permission to
 access it. A program should catch the corresponding exceptions and
 recover rather than crashing. Perhaps the program should prompt the user
@@ -376,7 +376,7 @@ write a class that extends `Exception`. Theoretically, you could
 alternately extend `RuntimeException` or `Error`, but you typically will
 not. Children of `RuntimeException` are intended to indicate a bug in
 the program and children of `Error` are intended to indicate a system
-error. When creating your new exception, you don’t even have to create
+error. When creating your new exception, you don't even have to create
 any methods, but it is wise to implement a default constructor and one
 that takes a `String` as an additional message.
 
@@ -447,7 +447,7 @@ extensions if there are other possible exceptions we want to catch.
 ====
 
 Exceptions provide a lot of power. If we want, we can use the
-`ArrayOutOfBoundsException` as a crutch when we don’t want to think
+`ArrayOutOfBoundsException` as a crutch when we don't want to think
 about the bounds of our array. Although this makes for an interesting
 example, exceptions should not be used in Java to perform normal tasks.
 This method takes in an array of `int` values and prints them all out.
@@ -499,7 +499,7 @@ latexmath:[256^3 = 16,777,216] colors. If we were programming some
 image manipulation software, we might want to be able to increase the
 red, green, or blue values separately. If changing a value makes it
 larger than 255, we could throw an exception. Likewise, if changing a
-value makes it less than 0, we could throw a different exception. Let’s
+value makes it less than 0, we could throw a different exception. Let's
 give two custom exceptions that could serve in these roles.
 
 [source, java, linenums]
@@ -759,7 +759,7 @@ either a `catch` block or a `throws` declaration.
 This exception is used in cases where the executing thread must wait for
 some event to occur or some time to pass. In extreme circumstances,
 another thread can interrupt the waiting thread, forcing it to continue
-executing before it’s done waiting. If that happens, the code in the
+executing before it's done waiting. If that happens, the code in the
 `catch` block determines how the thread should recover from being woken
 prematurely.
 
@@ -875,12 +875,12 @@ Exercise <<exercise:celestial>> from Chapter <<chapter:Inheritance>>.
 Add to the basic mechanics of the simulation by designing two custom
 exceptions, `CollisionException` and `LightSpeedException`. These
 exceptions should be thrown, respectively, if two bodies collide or if
-the total magnitude of a body’s velocity exceeds the speed of light.
+the total magnitude of a body's velocity exceeds the speed of light.
 14. <<exercise:password_checker>> Users often log onto systems by
 entering their user name and a password. Unfortunately, human beings are
 notoriously bad at picking passwords. In computer security, a tool
 called a _proactive password checker_ allows a user to pick a password
-but rejects the choice if it doesn’t meet certain criteria.
+but rejects the choice if it doesn't meet certain criteria.
 +
 Common criteria for a password are that it must be at least a certain
 length, must contain must contain uppercase and lowercase letters, must
@@ -892,13 +892,13 @@ Write a short program with a `check()` method that takes a single
 an exception if the password does not meet the matching criteria listed
 below.
 +
-[cols="<,<",options="header",]
+[.center%autowidth%header,cols="<.^,<.^l"]
 |==================================================================
-|*Password criteria* |*Exception*
-|At least 8 characters in length |`TooShortException`
-|Contains both upper- and lowercase letters |`NoMixedCaseException`
-|Contains at least one numerical digit |`NoDigitException`
-|Contains at least one symbol |`NoSymbolException`
+|Password criteria|Exception
+|At least 8 characters in length |TooShortException
+|Contains both upper- and lowercase letters |NoMixedCaseException
+|Contains at least one numerical digit |NoDigitException
+|Contains at least one symbol |NoSymbolException
 |==================================================================
 +
 Your `main()` method should prompt the user to select a password and
