@@ -408,7 +408,8 @@ for hours before finally squashing it, but we will give a few examples
 corresponding to the common bugs listed in Section <<section:Fixing
 bugs>>.
 
-==== Begin Example: Precision errors
+.Precision errors
+====
 
 Precision can cause some subtle errors, especially with `float` types.
 Here is an example of a program attributed to Cleve Moler that gives
@@ -438,9 +439,10 @@ values of a floating point number, it is wise to test for a range rather
 than a single value. For example, the condition `(d == 0.0)` could be
 replaced by `(Math.abs(d) < 0.000001)`.
 
-==== End Example
+====
 
-==== Begin Example: Overflow and underflow
+.Overflow and underflow
+====
 
 As you well know, the `int` and `long` types have limited bits for
 storage. If an arithmetic operation pushes the value of an `int`
@@ -513,9 +515,10 @@ to int green = (byte)Math.min( 255, 2*(green & 0xFF));
 blue = (byte)Math.min( 255, 2*(blue & 0xFF));
 ....
 
-==== End Example
+====
 
-==== Begin Example: Casting errors
+.Casting errors
+====
 
 The previous example about scaling color component values is an
 excellent example of the dangers of casting. Someone can easily forget
@@ -576,13 +579,14 @@ list to hold many different types with a common superclass. In those
 cases, some amount of explicit (and therefore dangerous) casting will
 usually be necessary when retrieving the objects from the list.
 
-==== End Example
+====
 
 Loops give Java much of its expressive power and unsurprisingly give it
 much of its power to express incorrect as well as correct code. We are
 just going to mention a few of the most common loop errors.
 
-==== Begin Example: Off-by-one errors
+.Off-by-one errors
+====
 
 Computer scientists often use zero-based counting. This departure from
 "`normal`" practices is just one source of loops that iterate one time
@@ -639,9 +643,10 @@ insidious is that, especially for large sets of input numbers, the error
 is going to be small. Catching this kind of bug will be discussed more
 throughly in the second half of this chapter, dealing with testing.
 
-==== End Example
+====
 
-==== Begin Example: Infinite loops
+.Infinite loops
+====
 
 Infinite loops come in many different flavors, from the `char` overflow
 example earlier to traversing a linked-list which has a cycle in it.
@@ -715,9 +720,10 @@ In this case, the programmer clearly wanted to count *down* from 10 to
 decrement. As a result, the value of `i` increases for a very long (but
 not infinite) time, until it overflows.
 
-==== End Example
+====
 
-==== Begin Example: Zero loops
+.Zero loops
+====
 
 On the other end of the spectrum, a bad condition can make a loop
 execute zero times on `for` and `while` loops. For some input, doing so
@@ -783,9 +789,10 @@ have a fair understanding of the notion of primality. Yet, in the
 process of combining the ideas together, it is easy to get sloppy and
 write code that gives some semblance of being correct without being.
 
-==== End Example
+====
 
-==== Begin Example: Equivalence testing errors
+.Equivalence testing errors
+====
 
 Equivalence is tricky in Java. Very inexperienced programmers confuse
 the `=` operator with the `==` operator, but using the `==` operator to
@@ -847,7 +854,7 @@ value. It seems nit-picky to mention this, but many real-world
 applications depend on the efficient and correct operation of hash
 tables.
 
-==== End Example
+====
 
 ==== Array errors
 
@@ -858,7 +865,8 @@ have gotten to this point, the bug should be obvious. The biggest
 difficulties arise when some unusual course of events is responsible for
 the bug cropping up and you have to reconstruct what it is.
 
-==== Begin Example: Out of bounds
+.Out of bounds
+====
 
 We have all experienced an `ArrayIndexOutOfBoundsException`. Either a
 little carelessness with our indexes or a mistake about the size of the
@@ -897,9 +905,10 @@ like `"\$1"` or `"-isms"`. Incidentally, we are also assuming that
 `word` has at least one character in it. Even if we expect the input to
 the method to be error free, some error checking is always safe.
 
-==== End Example
+====
 
-==== Begin Example: Uninitialized object arrays
+.Uninitialized object arrays
+====
 
 Another simple mistake that can occur with arrays is failing to
 initialize an object array. With a primitive data type like `int`,
@@ -923,7 +932,7 @@ puzzler that will take hours to debug. It is probably just a matter of
 instantiating each element in the array before you try to feed those
 hungry, hungry hippos.
 
-==== End Example
+====
 
 ....
 Hippopotamus[] hippos = new Hippopotamus[15];
@@ -938,7 +947,8 @@ We don’t have variables in real life, and, as a consequence, out
 intuition about them is sometimes wrong. Which variable you are
 accessing at any given time can appear obvious, even if it really isn’t.
 
-==== Begin Example: Shadowing variables
+.Shadowing variables
+====
 
 Java allows variables in different scopes to be declared with the same
 identifier. If the scopes are two separate methods, then they will never
@@ -1020,9 +1030,10 @@ will be set to 20 on line <<line:strength=20>>. Thus, the first call to
 `brag()` will print out `My strength is 10!`, but the second call will
 print out `My strength is 20!`.
 
-==== End Example
+====
 
-==== Begin Example: Reference vs. value
+.Reference vs. value
+====
 
 The final category of scope error we will talk about occurs because of
 confusion between passing by reference and passing by value when using
@@ -1059,7 +1070,7 @@ values in the array are shared by the `increaseMagnitude()` method and
 the calling code. The same phenomenon can be observed with the fields of
 objects whose references are passed into a method.
 
-==== End Example
+====
 
 ==== Null pointer errors
 
@@ -1620,7 +1631,8 @@ of this method for `long` and `Object` types. Note that the preferred
 `assertEquals()` method for the `double` type takes three parameters,
 including an epsilon threshold in case the values don’t match exactly.
 
-==== Begin Example: JUnit math testing
+.JUnit math testing
+====
 
 Using these methods, we can finally write a complete (though very
 simple) implementation of `MathTest.java`.
@@ -1641,7 +1653,7 @@ feature before you have finished implementing it. Or, perhaps a feature
 in your program is broken at the moment, but you want to continue
 running tests on the rest of the features.
 
-==== End Example
+====
 
 In these cases and others, it is useful to turn off a particular test
 temporarily. To do this, you add the annotation `@Ignore` before the
@@ -1770,7 +1782,8 @@ The larger the system, the more critical testing becomes. We do not have
 the space to give or explain a complex testing example, but we can give
 you another example of JUnit testing.
 
-==== Begin Example: A broken class
+.A broken class
+====
 
 We are going to rely on an example from physics and create a
 `PointCharge` class that has a certain charge and a specific location in
@@ -1800,9 +1813,10 @@ and latexmath:[r] is the distance between the charges. Likewise the
 electric field latexmath:[E] at a given location due to a charge
 latexmath:[q] is latexmath:[k_\mathrm{e} \frac{q}{r^2}].
 
-==== End Example
+====
 
-==== Begin Example: Testing the distance methods
+.Testing the distance methods
+====
 
 Let’s come up with a test for the `distance()` methods first. We’re
 going to need some other `PointCharge`s. Let’s make 4 altogether: one at
@@ -1882,9 +1896,10 @@ The most striking thing about this example is that three test cases
 passed! Perhaps that means that we were choosing values that were too
 simple, but it also illustrates the importance of serious testing.
 
-==== End Example
+====
 
-==== Begin Example: Testing the field magnitude method
+.Testing the field magnitude method
+====
 
 Finally, let’s test the value of the `fieldMagnitude()` method. For
 simplicity, we’ll test the field at the locations of `charge1`,
@@ -1904,7 +1919,7 @@ have been waiting to see from JUnit. Why didn’t we fail the assertions
 after the first one? Because of the exception handling mechanism, each
 JUnit test method stops once a failure has happened.
 
-==== End Example
+====
 
 Here is the fully corrected version of `PointCharge` renamed
 `FixedPointCharge`.
