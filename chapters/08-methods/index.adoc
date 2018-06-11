@@ -143,9 +143,10 @@ what latexmath:[f(x)] does in the same way that the code inside of
 specific value, you can set latexmath:[y = f(5)] in the same way that
 you might type the following.
 
-....
+[source,java]
+----
 double y = Math.sqrt(5);
-....
+----
 
 In the statement latexmath:[f(5)], the value of latexmath:[x] is
 replaced by latexmath:[5]. In the same way, some variable inside of
@@ -173,9 +174,10 @@ program jumps into the method, does all the work it needs to there, and
 then returns to the code that called it. Recall the very simple example
 from above.
 
-....
+[source,java]
+----
 double y = Math.sqrt(5);
-....
+----
 
 The JVM has allocated a variable of type `double` and is preparing to
 assign a value to it. Suddenly, the execution of the JVM jumps into the
@@ -202,23 +204,25 @@ A very simple method that the `Math` class provides is the `Math.max()`
 method. This method selects the larger of two values that you give it as
 input.
 
-....
+[source,java]
+----
 int maximum = Math.max(5, 10);
-....
+----
 
 In this case, the value stored into `maximum` is `10`. Despite its
 simplicity, we demonstrated how useful this method could be in our
 solution to Conway’s Game of Life from Chapter <<chapter:Arrays>>. If we
 wanted to write this method ourselves, the code would be as follows.
 
-....
+[source,java]
+----
 public static int max( int a, int b ) {
     if( a >= b )
         return a;
     else
         return b;
 }
-....
+----
 
 Even in such a small method, there are a lot of pieces of syntax to
 worry about. The first line of this method is called the _method
@@ -275,13 +279,14 @@ returned otherwise. Because a `return` statement immediately jumps out
 of a method, we could have written the method with one fewer line of
 code.
 
-....
+[source,java]
+----
 public static int max( int a, int b ) {
     if( a >= b )
         return a;
     return b;
 }
-....
+----
 
 The only way that the line `return b;` can be reached is if `a` had not
 already been returned.
@@ -294,12 +299,13 @@ been coding static methods since your very first Java program. The
 JVM chooses to start execution there. Let’s look at the `main()` method
 from a standard Hello, World! program.
 
-....
+[source,java]
+----
 public static void main( String[] args ) {
     System.out.println("Hello, world!");
     return;
 }
-....
+----
 
 Just like the `max()` method, the header for `main()` starts with
 `public static`. Then, the return type for `main()` is `void` because
@@ -330,11 +336,12 @@ same class, provided that their _signatures_ are not the same. Two
 methods have the same _signature_ if they have the same name and
 parameter types.
 
-....
+[source,java]
+----
 public static int max( int a, int b, int c ) {
     return max(max(a, b), c);
 }
-....
+----
 
 In this example, we have created yet another `max()` method, but this
 one takes three parameters instead of two. This method even calls the
@@ -358,9 +365,10 @@ anything. You have plenty of experience calling static methods like
 `Math.sqrt()` and `Math.max()`. An example of the appropriate syntax was
 given earlier.
 
-....
+[source,java]
+----
 int maximum = Math.max(5, 10);
-....
+----
 
 Formally, the call starts with the name of the class (`Math`), followed
 by a dot, followed by the name of the method (`max`), followed by the
@@ -380,9 +388,10 @@ that return the appropriate type.
 Using the `max()` method defined before, we could rewrite our simple
 example without a class name.
 
-....
+[source,java]
+----
 int maximum = max(5, 10);
-....
+----
 
 Whenever you call a static method from code that is inside the same
 class, you can leave out the class name.
@@ -395,21 +404,23 @@ used as a parameter is called _binding_. Through binding, a value or
 variable from the calling code is given a new name inside of a method.
 Consider the following method.
 
-....
+[source,java]
+----
 public static int add( int a, int b ) {
     return a + b;
 }
-....
+----
 
 This absurdly short method adds two numbers together and returns the
 result, approximating the functionality of the `+` operator. We could
 call the method in the following context.
 
-....
+[source,java]
+----
 int x = 3;
 int y = 5;
 int z = add( x, y );
-....
+----
 
 Inside the method, the value of `x` is bound to the variable `a`, and
 the value of `y` is bound to the variable `b`. The `add()` method has
@@ -420,11 +431,12 @@ scope, variables in one method can have the same names as variables in
 another method without the compiler (or the programmer!) becoming
 confused. Consider the following example:
 
-....
+[source,java]
+----
 int a = 3;
 int b = 5;
 int c = add( b, a );
-....
+----
 
 Here the variables `a` and `b` exist in both the calling code and inside
 the method, but the names are independent. The value of `a` in the
@@ -442,21 +454,23 @@ its argument into it. In practice, this approach means that a method
 cannot directly change the value of an argument. Consider the following
 method:
 
-....
+[source,java]
+----
 public static void increment( int counter ) {
     counter++;
 }
-....
+----
 
 This method takes the value of its argument and copies it into the new
 variable `counter`. Then, it increments `counter`, but the original
 argument is unchanged. Thus, the following fragment is an infinite loop.
 
-....
+[source,java]
+----
 int i = 0;
 while( i < 100 )
     increment( i );
-....
+----
 
 The value of `i` remains fixed at `0` for the entire program. The copy
 of `i` bound to `counter` increases to `1` every time `increment()` is
@@ -466,21 +480,23 @@ This is not to say that a method cannot affect the variables outside of
 itself. The primary way that it can do so is by using `return`
 statements. We can rewrite `increment()` to achieve this effect.
 
-....
+[source,java]
+----
 public static int increment( int counter ) {
     counter++;
     return counter;
 }
-....
+----
 
 Then, we need to adjust the loop so that it stores the returned value
 instead of dropping it on the floor.
 
-....
+[source,java]
+----
 int i = 0;
 while( i < 100 )
     i = increment( i );
-....
+----
 
 A second way that methods can affect the values of outside variables is
 more indirect. In Java, every argument is passed by value, even arrays
@@ -492,14 +508,15 @@ with a method, even if you can’t change which locations are being
 referenced. For example, the following method does *not* reverse the
 order of an array.
 
-....
+[source,java]
+----
 public static void badReverseArray( int[] array ) {
     int[] temp = new int[array.length];
     for( int i = 0; i < array.length; i++ )
         temp[i] = array[array.length - i - 1];
     array = temp;
 }
-....
+----
 
 Although this code does store a reversed version of `array` in `temp`,
 the last line of the method is meaningless: The array passed into the
@@ -508,7 +525,8 @@ the method to do the reversal _in place_, meaning that the values of the
 array are shuffled around, but the array still occupies the same memory
 locations.
 
-....
+[source,java]
+----
 public static void goodReverseArray( int[] array ) {
     int temp;
     for( int i = 0; i < array.length / 2; i++ ) {
@@ -517,7 +535,7 @@ public static void goodReverseArray( int[] array ) {
         array[array.length - i - 1] = temp;
     }
 }
-....
+----
 
 In this version of the method, we swap the first element of the array
 with the last, the second with the second to last, and so on. We only go
@@ -621,7 +639,8 @@ y_2, z_2)], we can compute the Euclidean distance between them with the
 equation: latexmath:[d = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2 + (z_1
 - z_2)^2}] The following method applies this equation directly.
 
-....
+[source,java]
+----
 public static double distance(double x1, double y1, double z1,
                   double x2, double y2, double z2 ) {
     double x = x1 - x2;
@@ -629,7 +648,7 @@ public static double distance(double x1, double y1, double z1,
     double z = z1 - z2;
     return Math.sqrt( x*x + y*y + z*z );
 }
-....
+----
 
 This calculation is a good choice for a static method since it might be
 necessary to do this calculation many times and it does not depend on
@@ -649,7 +668,8 @@ and `false` otherwise. To simplify the problem, we are *not* going to
 ignore spaces and punctuation. Thus, with our method, "`racecar`" counts
 as a palindrome, but neither of the other two examples would.
 
-....
+[source,java]
+----
 public static boolean isPalindrome(String text) {
     text = text.toLowerCase();
     for( int i = 0; i < text.length() / 2; i++ )
@@ -657,7 +677,7 @@ public static boolean isPalindrome(String text) {
             return false;
     return true;
 }
-....
+----
 
 Because our method returns `true` or `false`, its return type must be
 `boolean`. Many methods that return a `boolean` value have a name
@@ -692,7 +712,8 @@ recreate a similar method to convert the `String` representation of a
 floating point number into a `double`. Our simple method ignores
 scientific notation.
 
-....
+[source,java]
+----
 public static double parseDouble(String value) {
     int i = 0;
     boolean negative = false;
@@ -719,7 +740,7 @@ public static double parseDouble(String value) {
         temp = -temp;
     return temp;
 }
-....
+----
 
 After declaring a few variables, this method first checks index `0` in
 the input `String` `value` to see if it is a `'-'` or a `'+'`. If it is
@@ -962,37 +983,42 @@ mean, median, and standard deviation of an input array of `double`
 values, how would you return those three answers?
 4.  Consider the following method definition.
 +
-....
+[source,java]
+----
 public static void twice( int i ) {
     i = 2 * i;
 }
-....
+----
 +
 How many times does the following loop run, and why?
 +
-....
+[source,java]
+----
 int x = 2;
 while( x < 128 )
     twice(x);
-....
+----
 5.  Consider the following signatures of two overloaded methods.
 +
-....
+[source,java]
+----
 public static int magic( int rabbit, double hat )
 public static int magic( double wand, int spell )
-....
+----
 +
 Which method would be invoked by the following call?
 +
-....
+[source,java]
+----
 int x = magic( 3, 16 );
-....
+----
 +
 What about the following?
 +
-....
+[source,java]
+----
 int y = magic( 3.2, 16.4 );
-....
+----
 +
 Use a compiler to check your answers.
 6.  The following class generates a sequence of even numbers. Each time
@@ -1000,7 +1026,8 @@ the `next()` method is called, the next even number in the sequence is
 returned. What is the design problem with using a static field to keep
 track of the next value in the sequence?
 +
-....
+[source,java]
+----
 public class EvenNumbers {
     private static int counter = 0;
 
@@ -1009,7 +1036,7 @@ public class EvenNumbers {
         return counter;
     }
 }
-....
+----
 +
 *Programming Practice*
 7.  Write a static method called `cube()` that takes a single `double`
@@ -1042,19 +1069,14 @@ to the `Math` library.
 Here are some examples of the return values your method should give for
 various input values of latexmath:[n].
 +
-[.center%autowidth%header,cols="^,^"]
+[.center%autowidth%header,cols="4*^"]
 |=============================
-|latexmath:[n] |Return Value
-|1 |0
-|2 |1
-|4 |2
-|8 |3
-|10 |3
-|16 |4
-|100 |6
-|512 |9
-|1000 |9
-|1024 |10
+|latexmath:[n] |Return Value |latexmath:[n] |Return Value
+|1 |0 |16 |4
+|2 |1 |100 |6
+|4 |2 |512 |9
+|8 |3 |1000 |9
+|10 |3 |1024 |10
 |=============================
 11. <<exercise:palindromes>> Write a method that tests palindromes like
 the method from Example <<example:Palindrome_testing>> but also ignores
@@ -1117,11 +1139,12 @@ average running time.
 Now, instead of using the `+` operator to add `a` and `b`, use the
 following method.
 +
-....
+[source,java]
+----
 public static int add( int a, int b ) {
     return a + b;
 }
-....
+----
 +
 Again, run your program repeatedly with this modification. What is the
 difference in running time between the version that uses a method and
