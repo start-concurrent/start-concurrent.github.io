@@ -70,31 +70,28 @@ the loop and can move on to the code that comes afterward.
 
 One of the difficulties of programming a computer is that we must be
 very explicit. Even the most obvious tasks must be spelled out
-meticulously. Let’s consider a simple task, one that we perform every
+meticulously. Let's consider a simple task, one that we perform every
 day. If we are in a room and we want to leave, we simply walk out of the
 nearest door. Assuming there is only one door in the room, how can we
 describe this process by breaking it down into the steps we (literally)
-take? Perhaps we could say the following. +
+take? Perhaps we could say the following.
 
-[cols="<",]
-|==========================================
-|_Walk toward the door until you reach it._
-|==========================================
+====
+_Walk toward the door until you reach it._
+====
 
- +
 This statement is a little more specific than _Leave the room_, but it
 does not conform nicely to the paradigm of a loop, that is, a clearly
-separated task and a condition. The following is better. +
+separated task and a condition. The following is better.
 
-[cols="<",]
-|================================
-|_While you are not at the door,_
-a|
+
+====
+_While you are not at the door,_
+=====
 _Take a step toward the door._
+=====
+====
 
-|================================
-
- +
 Now we have good separation between the work done and the condition for
 repeating. What is the task performed in the body of this loop and what
 is the condition? The task is taking a step towards the door. The
@@ -110,26 +107,21 @@ to the door from the starting position. It is even possible that the
 loop will iterate zero times: The person following this set of
 instructions might already be at the door.
 
-It’s hard to get away from numbers in a computer program, especially
+It's hard to get away from numbers in a computer program, especially
 since everything is fundamentally stored as numbers inside of a
 computer. So, the most common kind of loop is one that iterates a fixed
 number of times. For example, your morning exercise routine might
 include jumping rope 100 times. We could formulate a loop to do that
-like so. +
+like so.
 
-[cols="<",]
-|======================================
-|_Set your counter to 0._
-|_While your counter is less than 100,_
-a|
-_Jump rope._
-
-a|
+====
+_Set your counter to 0._ +
+_While your counter is less than 100,_
+=====
+_Jump rope._ +
 _Increase your counter by 1._
-
-|======================================
-
- +
+=====
+====
 This loop required some set up to make sure that the counter value
 started at the right place. Then, the work done by the loop is the
 actual rope jumping and the counter increment. The condition is the
@@ -145,38 +137,30 @@ be a soldier training in the U.S. Marine Corps. Perhaps your drill
 sergeant has commanded you to do push-ups until he says you can stop. We
 might formulate a loop to do this as follows. +
 
-[cols="<",]
-|========================================
-|_Do:_
-a|
-_Push-up._
-
-a|
+====
+_Do:_
+=====
+_Push-up._ +
 _Ask the drill sergeant if you can stop._
+=====
+_While the answer is pass:q["`no.`"]_
+====
 
-|_While the answer is "`no.`"_
-|========================================
-
- +
 As is the case with user input, you must often go into the loop at least
 once to get the input. This loop requires the soldier to do at least one
 push-up before asking to stop. Some systems might use input but have
 other constraints. A more realistic version of this loop might be the
-following. +
+following.
 
-[cols="<",]
-|=======================================================
-|_Do:_
-a|
-_Push-up._
-
-a|
+====
+_Do:_
+=====
+_Push-up._ +
 _Ask the drill sergeant if you can stop._
+=====
+_While the answer is "`no`" and you haven't collapsed._
+====
 
-|_While the answer is "`no`" and you haven’t collapsed._
-|=======================================================
-
- +
 Remember, the condition for a loop should be a Boolean, and the loop
 runs as long as the condition is true. However, there is no reason why
 the Boolean cannot be a complicated expression using all the Boolean
@@ -195,31 +179,21 @@ As an example, if you are working out, you might do several sets of
 bench presses with a fixed number of reps in each set. If you did 3 sets
 of 15 bench presses each, your workout program might look like this: +
 
-[cols="<",]
-|========================================
-|_Set your set counter to 0._
-|_While your set counter is less than 3,_
-a|
-_Set your rep counter to 0._
-
-a|
+====
+_Set your set counter to 0._ +
+_While your set counter is less than 3,_ +
+=====
+_Set your rep counter to 0._ +
 _While your rep counter is less than 15,_
-
-a|
-_Do a bench press._
-
-a|
+======
+_Do a bench press._ +
 _Increase your rep counter by 1._
-
-a|
-_Rest for 2 minutes._
-
-a|
+======
+_Rest for 2 minutes._ +
 _Increase your set counter._
+=====
+====
 
-|========================================
-
- +
 This way of describing the work out program seems tedious. Most of the
 description is structural: conditions for the loops and increments for
 the counters. The only "`real`" activities are the bench press and the
@@ -276,11 +250,12 @@ have reached the door and the method `walkTowardsDoor()` allows us to
 take one step closer to the door, we could formulate our example from
 the beginning of the previous section as follows.
 
-....
+[source,java]
+----
 while( !atDoor ) {
     atDoor = walkTowardsDoor();
 }
-....
+----
 
 Here we assume that the `walkTowardsDoor()` method gives back a
 `boolean` value that is `true` if we have reached the door and `false`
@@ -288,11 +263,12 @@ otherwise. Unless the `walkTowardsDoor()` method is able to change the
 value of `atDoor`, the loop will repeat forever, a phenomenon known as
 an _infinite loop_.
 
-....
+[source,java]
+----
 while( true ) {
     System.out.println("Help me!");
 }
-....
+----
 
 This loop is an example of an infinite loop. If you run this code inside
 of a program, it will print out an endless succession of `Help me!`
@@ -303,18 +279,20 @@ all infinite loops are this obvious. A programmer will not usually use
 Some loops are expected to continue for quite some time with no definite
 end. To leave a loop abruptly, you can use the `break` command.
 
-....
+[source,java]
+----
 while( true ) {
     System.out.println("Help me!");
     break;
 }
-....
+----
 
 This loop will only print out a single `Help me!` before exiting. A
 `break` command can be used with an `if` statement to make a loop that
 repeats more than once.
 
-....
+[source,java]
+----
 int counter = 0;
 while( true ) {
     System.out.print("the loop ");
@@ -323,29 +301,30 @@ while( true ) {
         break;
 }
 System.out.println("is on fire!");
-....
+----
 
 This loop will print out `the loop the loop the loop is on fire!` Of
 course, the `break` statement unnecessarily complicates the code. We
 could have written equivalent code as follows.
 
-....
+[source,java]
+----
 int counter = 0;
 while( counter < 3 ) {
     System.out.print("the loop ");
     counter++;
 }
 System.out.println("is on fire!");
-....
+----
 
 Now we move on to a more complicated example that can print out the
 binary equivalent of a number.
 
-==== Begin Example: Binary Conversion
-
+.Binary Conversion
+==== 
 As we discussed in Chapter <<chapter:Computer_Basics>>, binary numbers
 are the building blocks of every piece of data inside of a modern
-computer’s memory. Integers are stored in binary. The representation of
+computer's memory. Integers are stored in binary. The representation of
 floating point numbers is more complicated, but it also uses 1s and 0s.
 Even the `char` data type and the `String` values built from them are
 fundamentally stored as binary numbers. For this reason, computer
@@ -396,22 +375,22 @@ order. Because we write our numbers with the most significant digit on
 the left, we had to use the code given above to first find the largest
 value and work backwards, in order to determine the binary digits in the
 correct sequence.
-
-==== End Example
+====
 
 ==== `for` loops
 
-Let’s return to our code that prints out
+Let's return to our code that prints out
 `the loop the loop the loop is on fire!`
 
-....
+[source,java]
+----
 int counter = 0;
 while( counter < 3 ) {
     System.out.print("the loop ");
     counter++;
 }
 System.out.println("is on fire!");
-....
+----
 
 This code involves some initialization, a condition, and an update, as
 many loops do. The initialization sets `counter` to `0`. The condition
@@ -425,12 +404,13 @@ variable, are pulled into the header of the loop. We could code the
 previous `while` loop example more cleanly, using a `for` loop, as
 follows.
 
-....
+[source,java]
+----
 for( int i = 0; i < 3; i++ ) {
     System.out.print("the loop ");
 }
 System.out.println("is on fire!");
-....
+----
 
 The header of a `for` loop consists of those three parts: the
 initialization, the condition, and the update, all separated by
@@ -461,11 +441,12 @@ with `int i = 0` and ends with `i++`. While this pattern is often true,
 there are many other ways to use a for loop. For example, we could print
 the powers of 2 that are less than 1000.
 
-....
+[source,java]
+----
 for( int i = 1; i < 1000; i *= 2 ) {
     System.out.println(i);
 }
-....
+----
 
 This segment of code prints out `1`, `2`, `4`, `8`, `16`, `32`, `64`,
 `128`, `256`, and `512` on separate lines, which are the powers of
@@ -477,7 +458,7 @@ loop. Like `if` statements, loops only require braces if their bodies
 have more than one executable line. Many of the `while` loops from the
 previous subsection could have been written without braces.
 
-Just because a `for` loop already has a counting mechanism doesn’t mean
+Just because a `for` loop already has a counting mechanism doesn't mean
 that we will not need other variables to perform useful tasks. For
 example, given a `String`, we could try to find the letter of the
 alphabet in the `String` which is closest to the end of the alphabet.
@@ -490,7 +471,8 @@ latest letter found so far. To get the latexmath:[i]^th^ `char` from a
 `char` in a `String` is 0, and the index of the last `char` is one less
 than the length of the `String`.
 
-....
+[source,java]
+----
 String s = "The quick brown fox jumps over the lazy dog.";
 String lower = s.toLowerCase();
 char latest = ' ';
@@ -502,7 +484,7 @@ for( int i = 0; i < lower.length(); i++ ) {
 }
 System.out.println("The latest character in the alphabet " +
     "from your message is: '" + latest + "'.");
-....
+----
 
 The first thing we do in this example is convert `s` to lower case, so
 that we are comparing all `char` values in the same case. Next, we run
@@ -526,7 +508,8 @@ thousands of operations reading characters when we knew that `'z'` was
 going to be the latest letter, no matter what. So, we can rewrite our
 `for` loop so that it quits early if it reaches a `'z'`.
 
-....
+[source,java]
+----
 for( int i = 0; i < lower.length(); i++ ) {
     c = lower.charAt(i);
     if( c >= 'a' && c <= 'z' && c > latest )
@@ -534,7 +517,7 @@ for( int i = 0; i < lower.length(); i++ ) {
     if( latest == 'z' )
         break;
 }
-....
+----
 
 This version of the `for` loop will break out immediately if the latest
 is already a `'z'`. This code will work efficiently, but many
@@ -544,13 +527,14 @@ used to exit the loop, this logic can be encoded into the condition of
 the loop. Thus, the same loop written with better style would be the
 following.
 
-....
+[source,java]
+----
 for( int i = 0; i < lower.length() && latest != 'z'; i++ ) {
     c = lower.charAt(i);
     if( c >= 'a' && c <= 'z' && c > latest )
         latest = c;
 }
-....
+----
 
 For this final version of the loop, we have made the conditional portion
 of the header more complex. The comparison using `<` gives a `boolean`
@@ -570,8 +554,8 @@ the hanzi and kanji of Chinese and Japanese. Regardless, using the
 `Character.isLetter()` method is recommended for almost all
 applications, since it is more general and more readable.
 
-==== Begin Example: Primality testing
-
+.Primality testing
+====
 Prime numbers are numbers whose only factors are 1 and themselves. If
 you have encountered prime numbers before, they probably seemed like a
 mathematical curiosity and nothing more. In fact, prime numbers are the
@@ -592,14 +576,14 @@ include::programs/PrimalityTester0.java[]
 ----
 
 This program has a `for` loop that runs from `2` up to `number - 1`,
-provided that we don’t find a number that evenly divides `number`. This
+provided that we don't find a number that evenly divides `number`. This
 optimization means that the program will output the moment that it knows
 that the number is not prime, but we will still have to wait for it to
 check all the other possibilities before it is sure that the number is
 prime.
 
 One insight that we can use to make the program more efficient is that,
-after checking 2, we don’t have to divide it by any even numbers. So, we
+after checking 2, we don't have to divide it by any even numbers. So, we
 can do half the checking with a few simple modifications.
 
 .This program gives a slightly cleverer approach for testing if a number is prime.
@@ -634,18 +618,17 @@ include::programs/PrimalityTester2.java[]
 
 Note in this version of the program we do go up to and including `root`,
 because there is the possibility that `number` is a perfect square.
+====
 
-==== End Example
-
-==== Begin Example: DNA reverse complement
-
+.DNA reverse complement
+====
 DNA is usually double stranded, with each base paired to another
 specific base, called its complementary base. The following table shows
 the association between each base and its complementary base.
 
-[cols="^,^,^",options="header",]
+[.center%autowidth%header,cols="^,^,^",]
 |============================================
-|*Base* |*Abbreviation* |*Complementary Base*
+|Base|Abbreviation|Complementary Base
 |Adenine |A |T
 |Cytosine |C |G
 |Guanine |G |C
@@ -684,14 +667,13 @@ a separate step.
 ----
 include::programs/CleverReverseComplement.java[]
 ----
-
-==== End Example
+====
 
 ==== `do-while` loops
 
 Use this rule of thumb for deciding which kind of loop to use: If you
 know how many times you want the loop to execute, use a `for` loop. If
-you don’t know how many times you want it to execute, use a `while`
+you don't know how many times you want it to execute, use a `while`
 loop. Clearly, this rule is not iron-clad. In the previous example, we
 used a `for` loop even though it would stop executing as soon as a `'z'`
 was encountered. Nevertheless, it seems like we have covered all of the
@@ -716,26 +698,28 @@ image::dowhile.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
 We can use a `do-while` loop to print out the first 10 perfect squares
 as follows.
 
-....
+[source,java]
+----
 int x = 1;
 do {
     System.out.println(x*x);
     x++;
 } while( x <= 10 );
-....
+----
 
 This loop behaves exactly the same as the following loop.
 
-....
+[source,java]
+----
 int x = 1;
 while( x <= 10 ) {
     System.out.println(x*x);
     x++;
 }
-....
+----
 
 The time when a `do-while` loop is really going to shine is when your
-program will work incorrectly if the loop doesn’t run at least once.
+program will work incorrectly if the loop doesn't run at least once.
 This situation often occurs with input, when the loop must run at least
 once before checking the condition. For example, imagine that you want
 to write a program that picks a random number between 1 and 100 and lets
@@ -744,7 +728,8 @@ because it is a repetitive activity, but you need to let the user guess
 at least once so that you can check to see if he or she was right. The
 following program fragment does exactly that.
 
-....
+[source,java]
+----
 Scanner in = new Scanner( System.in );
 Random random = new Random();
 int guess = 0;
@@ -754,7 +739,7 @@ do {
     guess = in.nextInt();
 } while( guess != number );
 System.out.println("You got it! The number was " + number + ".");
-....
+----
 
 You could perform the same function with a `while` loop, but you will
 need to get some input from the user before the loop starts. Using the
@@ -771,7 +756,8 @@ number by every integer between 1 and 12. We can write code to print out
 out the multiplication table for every number from 1 to 10 by simply
 repeating the process.
 
-....
+[source,java]
+----
 for( int number = 1; number <= 10; number++ ) {
     for( int factor = 1; factor <= 12; factor++ ) {
         System.out.println( number + " x " + factor +
@@ -779,7 +765,7 @@ for( int number = 1; number <= 10; number++ ) {
     }
     System.out.println();
 }
-....
+----
 
 The outer loop incrementing `number` will run 10 times. The inner loop
 incrementing `factor` runs 12 times for each iteration of the outer
@@ -787,8 +773,8 @@ loop. So, the code in the inner loop will run a total of 120 times.
 Every 12 iterations, the inner loop will stop, and an extra blank line
 will be added by the `System.out.println()` method in the outer loop.
 
-==== Begin Example: Triangular numbers
-
+.Triangular numbers
+====
 The sequence consisting of 1, 3, 6, 10, 15, and so on is known as the
 triangular numbers. The latexmath:[i]^th^ triangular number is the sum
 of the first latexmath:[i] integers. They are called triangular
@@ -822,8 +808,7 @@ include::programs/CleverTriangularNumbers.java[]
 
 By removing the inner `for` loop, the total amount of work needed is
 greatly reduced.
-
-==== End Example
+====
 
 [[subsection:common_pitfalls]]
 ==== Common pitfalls
@@ -834,20 +819,22 @@ large number of times. Many classic bugs occur as a result of logical or
 typographical errors in loops. Below we will list a few of the most
 common.
 
-==== Begin Pitfall: Infinite loops
-
+.Pitfall: Infinite loops
+[WARNING]
+====
 It is possible to create a loop that never terminates. Your program may
 be taking a long time to finish, but if it takes much longer than you
 expect, an infinite loop might be the culprit. Infinite loops might
 occur because you forgot to include an appropriate statement to advance
 a counter.
 
-....
+[source,java]
+----
 int number = 1;
 while( number <= 100 )
     System.out.println(number);
 }
-....
+----
 
 This code is presumably intended to print out the first 100 integers,
 but there is no code that increases the value of `number`. As a
@@ -855,10 +842,11 @@ consequence, the number `1` will be printed out over and over until the
 user stops the program from executing. Usually, the cause is more
 subtle, as in the following code.
 
-....
+[source,java]
+----
 for( int i = 0; i < 10; i += 0.5 )
     System.out.println("Half a step forward, half a step back...");
-....
+----
 
 One might expect this code to print out 20 lines of output. However,
 remember that `i` is an `int`. Adding `0.5` to `0` and then casting it
@@ -867,33 +855,34 @@ loop is that it compiles without even a warning in Java. Usually
 conversion from a `double` to an `int` requires an explicit cast, but
 the `+=` operator (and other similar operators) behave a little
 differently for technical reasons.
+====
 
-==== End Pitfall
-
-==== Begin Pitfall: Almost infinite loops
-
+.Pitfall: Almost infinite loops
+[WARNING]
+====
 Many loops are truly infinite; others take a really long time. For
 example, if you intended to run a loop down from 10 to 0, but increment
 your counter instead of decrementing it, overflow means that you will
 eventually get to a number less than 0, but it will take more than 2
 billion increments instead of the expected 10 decrements.
 
-....
+[source,java]
+----
 for( int i = 10; i > 0; i++ )
     System.out.println(i);
 System.out.println("Blast off!");
-....
+----
 
 This loop will significantly slow your code. Everyone will be so tired
 of waiting that they might leave the space shuttle launch. Of course,
 another problem with almost infinite loops is that you are dealing with
 the wrong values. No one expects to hear the number `2147483647` in a
 countdown.
+====
 
-==== End Pitfall
-
-==== Begin Pitfall: Fencepost errors
-
+.Pitfall: Fencepost errors
+[WARNING]
+====
 Perhaps the most common loop errors are fencepost errors, often known as
 off-by-one errors. The name "`fencepost`" comes from a related mistake
 that someone might make when putting up a fence. Imagine that you want
@@ -907,37 +896,41 @@ enclosure, say 3 meters by 2 meters, you will only need 10 posts.
 In loops, fencepost errors are often due to zero-based counting. A `for`
 loop that iterates 10 times is below.
 
-....
+[source,java]
+----
 for( int i = 0; i < 10; i++ )
     System.out.println(i);
-....
+----
 
 Of course, sometimes we need one-based counting instead. After being
 used to zero-based counting, a programmer might make the following loop
 that incorrectly iterates 9 times.
 
-....
+[source,java]
+----
 for( int i = 1; i < 10; i++ )
     System.out.println(i);
-....
+----
 
 The correct version that iterates 10 times is below.
 
-....
+[source,java]
+----
 for( int i = 1; i <= 10; i++ )
     System.out.println(i);
-....
+----
 
 If you want to iterate latexmath:[n] times, start at 0 and go up to
 but not including latexmath:[n] or start at 1 and go up to and
 including latexmath:[n]. To keep loop headers consistent, some
 programmers always start at 0 and then adjust the values inside the
 loop, printing out `i + 1` in this case.
+====
 
-==== End Pitfall
 
-==== Begin Pitfall: Skipped loops
-
+.Pitfall: Skipped loops
+[WARNING]
+====
 A loop runs as long as its condition is `true`. For `for` loops and
 `while` loops, this could mean that the loop is never even entered.
 Sometimes, that behavior is intended by the programmer. Sometimes, the
@@ -949,7 +942,8 @@ negative number. This negative number, called a _sentinel value_, tells
 the program to stop executing the loop. Below is an incorrect
 implementation of such a program.
 
-....
+[source,java]
+----
 Scanner in = new Scanner( System.in );
 int number = 0;
 int sum = 0;
@@ -959,7 +953,7 @@ while( number > 0 ) {
     number = in.nextInt();
 }
 System.out.println("The total sum is " + sum);
-....
+----
 
 This loop will never be executed because `0` is not greater than `0`.
 The program could be changed by making the condition of the `while` loop
@@ -967,25 +961,26 @@ The program could be changed by making the condition of the `while` loop
 is fine since it does not change the value of the `sum`. If you want to
 force the user to enter only numbers greater than zero, you could change
 the loop into a `do-while` loop.
+====
 
-==== End Pitfall
-
-==== Begin Pitfall: Misplaced semicolons
-
+.Pitfall: Misplaced semicolons
+[WARNING]
+==== 
 The idea of a statement in Java is often amorphous in the minds of
 beginning programmers. An entire loop (with any number of loops nested
 inside of it) is just one statement. An executable statement ending with
 a semicolon is one statement as well, even when that executable
 statement is empty. Thus, the following is a legal (but infinite) loop.
 
-....
+[source,java]
+----
 int i = 100;
 while( i > 0 ); {
     System.out.println(i);
     i--;
 }
 System.out.println("Ready or not, here I come!");
-....
+----
 
 This code was supposed to count down from 100, just like in the game of
 Hide and Seek; however, there is a semicolon after the condition of the
@@ -1002,12 +997,13 @@ A misplaced semicolon does not always result in an infinite loop. Here
 is the `for` loop version of the same code, also with a semicolon
 inserted after the loop header.
 
-....
+[source,java]
+----
 for( int i = 100; i > 0; i-- ); {
     System.out.println(i);
 }
 System.out.println("Ready or not, here I come!");
-....
+----
 
 This version of the code will execute similarly, except the decrement is
 built into the header of the loop. So, the loop will execute the empty
@@ -1019,8 +1015,7 @@ There are some cases when an empty statement for a loop body is actually
 useful, although it is never necessary. In future chapters, we will
 point out situations in which you may wish to use an empty statement
 this way.
-
-==== End Pitfall
+====
 
 === Solution: DNA searching
 
@@ -1040,7 +1035,7 @@ include::programs/DNASearch.java[lines=1..8]
 
 
 The `main()` method instantiates a `Scanner` object and declares both of
-the `String` variables we’ll need to store the DNA sequences. The method
+the `String` variables we'll need to store the DNA sequences. The method
 also declares a `boolean` and a `char` we will use for input checking.
 
 [source, java, linenums]
@@ -1117,7 +1112,8 @@ takes care. There is also more than one way to code this solution. For
 example, we could have written the nested loops that do the searching as
 follows.
 
-....
+[source,java]
+----
 int found = 0;
 for( int i = 0; i < sequence.length() -
     subsequence.length() + 1; i++ ) {
@@ -1129,13 +1125,14 @@ for( int i = 0; i < sequence.length() -
         }
     }
 }
-....
+----
 
 This design is preferred by many since it removes the `break`. By using
 an empty statement, it is possible to move the check to see if the
 matching process is done outside of the inner `for` loop.
 
-....
+[source,java]
+----
 int found = 0;
 int j;
 for( int i = 0; i < sequence.length() -
@@ -1147,7 +1144,7 @@ for( int i = 0; i < sequence.length() -
         found++;
     }
 }
-....
+----
 
 In this case, note that we must declare `j` outside of the inner `for`
 loop, since it will be used outside. This approach is more efficient
@@ -1185,15 +1182,16 @@ for writing a concurrent program with different threads of execution
 running at the exactly the same time and potentially interacting. Using
 only the power of loops, you can see parallelism in action now.
 
-==== Begin Example: Parallelism without threads
-
+.Parallelism without threads
+====
 Consider the problem of computing the sum of the sines of a range of
 integers. At its heart is a loop from the start of the range to the end.
 
-....
+[source,java]
+----
 for( int i = start; i <= end; i++ )
     sum += Math.sin(start);
-....
+----
 
 If we want to allow the user to specify the start and the end and print
 out the sum, we need to make a program with a little bit of input and
@@ -1235,7 +1233,7 @@ Most operating systems provide a graphical way of viewing the load on
 each processor. If you examine your CPU usage while running those
 programs, you should see it spike up when the programs start and then
 come down when they finish. For multiple cores, how did we say which
-core we wanted each program to run on? We didn’t. In general, it is
+core we wanted each program to run on? We didn't. In general, it is
 difficult to specify which core we want to run a program, process, or
 thread on. The OS does the job of scheduling and picks a free processor
 when it needs to run a program. It is even possible for programs and
@@ -1250,8 +1248,7 @@ very carefully, and you have to combine the answers at the end since
 your programs cannot interact directly with each other. Features of Java
 will make this job easier, allowing us to run more than one thread of
 execution at a time without the need to run multiple programs by hand.
-
-==== End Example
+====
 
 === Exercises
 
@@ -1264,30 +1261,33 @@ square root of the number being tested. Instead of computing this value
 before the loop, how would performance be affected by changing the head
 of the `for` loop to the following?
 +
-....
+[source,java]
+----
 for(long i = 3; i <= Math.sqrt(number) && prime; i += 2)
-....
+----
 3.  How many different DNA sequences of length latexmath:[n] are
 there?
 4.  There are three different errors in the following loop intended to
 print out the numbers 1 through 10. What are they?
 +
-....
+[source,java]
+----
 for( int i = 1; i < 10; i-- );
 {
     System.out.println(i);
 }
-....
+----
 5.  Consider the following code containing nested `for` loops.
 +
-....
+[source,java]
+----
 Scanner in = new Scanner(System.in);
 int n = in.nextInt();
 int count = 0;
 for( int i = 1; i <= n; i++ )
     for( int j = 1; j <= i; j++ )
         count++;
-....
+----
 +
 In terms of the value of `n`, how many times is `count` incremented? If
 it is not immediately obvious, trace through the execution of the
@@ -1314,11 +1314,12 @@ loop and the `indexOf()` method in the `String` class. One version of
 this method returns the index of a substring within a `String` object,
 starting from a particular offset, as shown below.
 +
-....
+[source,java]
+----
 String text = "fun dysfunction";
 String search = "fun";
 System.out.println("Location: " + text.indexOf(search, 4));
-....
+----
 +
 This code will output `Location: 7` since the first occurrence of
 `"fun"` from index `4` or later starts at index `7`. If there are no
