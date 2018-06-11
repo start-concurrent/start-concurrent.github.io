@@ -107,10 +107,11 @@ program go to sleep for a short period of time, a tenth of a second as
 we suggested before. The code to make your program sleep for that amount
 of time is:
 
-....
+[source,java]
+----
 try { Thread.sleep(100); }
 catch( InterruptedException e ) {}
-....
+----
 
 We will explain this code in much greater detail in
 Chapter <<chapter:Concurrent_Programming>>. The key item of importance
@@ -231,16 +232,18 @@ brackets (`[]`), followed by the name of the variable. For example, if
 you want to create an array called `numbers` that can hold integers, you
 would type the following.
 
-....
+[source,java]
+----
 int[] numbers;
-....
+----
 
 If you have some C or C++ programming experience, you might be used to
 the brackets being on the other side of the variable, like so.
 
-....
+[source,java]
+----
 int numbers[];
-....
+----
 
 In Java, both declarations are perfectly legal and equivalent. However,
 the first declaration is preferred from a stylistic perspective. It
@@ -257,9 +260,10 @@ created. To actually create the array, we need to use another step,
 involving the keyword `new`. Here is how we instantiate an array of
 `int` type with 10 elements.
 
-....
+[source,java]
+----
 numbers = new int[10];
-....
+----
 
 We use the keyword `new`, followed by the type of element, followed by
 the number of elements the array can hold in square brackets. This new
@@ -267,21 +271,23 @@ array is stored into `numbers`. In other words, the variable `numbers`
 is now a name for the array. Commonly, the two steps of declaring and
 instantiating an array will be combined into one line of code.
 
-....
+[source,java]
+----
 int[] numbers = new int[10];
-....
+----
 
 It is always possible to separate the two steps. In some cases, a single
 variable might be used to point at an array of one particular length,
 then changed to point at an array of another length, and so on, as
 below.
 
-....
+[source,java]
+----
 int[] numbers;
 numbers = new int[10];
 numbers = new int[100];
 numbers = new int[1000];
-....
+----
 
 Here, the variable `numbers` starts off pointing at no array. Next, it
 is made to point at a new array with 10 elements. Then, it is made to
@@ -312,9 +318,10 @@ It is also possible to use a list to initialize an array. For example,
 we can create an array of type `double` that contains the values `0.5`,
 `1.0`, `1.5`, `2.0`, and `2.5` using the following code.
 
-....
+[source,java]
+----
 double[] increments = {0.5, 1.0, 1.5, 2.0, 2.5};
-....
+----
 
 This line of code is equivalent to using the `new` keyword to create a
 `double` array with 5 elements and then setting each to the values
@@ -327,16 +334,18 @@ square brackets once again. Returning to the example of the `int` array
 `numbers` with length 10, we can read the value at index 4 from the
 array and print it out.
 
-....
+[source,java]
+----
 System.out.println( numbers[4] );
-....
+----
 
 Of course, the value of `numbers[4]` is `0` and so `0` is all that will
 be printed out. We can set the value at `numbers[4]` to `17` as follows.
 
-....
+[source,java]
+----
 numbers[4] = 17;
-....
+----
 
 Then, if we try to print out `numbers[4]`, `17` will be printed. The
 contents of the `numbers` array will look like this.
@@ -351,11 +360,12 @@ gives you an element of the specified type. In other words, `numbers[4]`
 You can change its value. You can pass it into a method. It can be used
 anywhere a normal `int` can be used, as in the following example.
 
-....
+[source,java]
+----
 int x = numbers[4];
 double y = Math.sqrt(numbers[2]) + numbers[4];
 numbers[9] = (int)(y*x);
-....
+----
 
 Executing this code will store `17` into `x` and `17.0` into `y`. Then,
 the product of those two, `289`, will be stored into `numbers[9]`.
@@ -366,17 +376,19 @@ they have the same type, it makes sense to store an element of an `int`
 array like `numbers[4]` into an `int` variable like `x`. However, an
 array of `int` values cannot be stored into an `int` type.
 
-....
+[source,java]
+----
 int z = numbers;
-....
+----
 
 This code will cause a compiler error. What would it mean? You can't put
 a list of variables into a single variable. And the converse is true as
 well.
 
-....
+[source,java]
+----
 numbers = 31;
-....
+----
 
 This code will also cause a compiler error. A single value cannot be
 stored into a whole list. You have to specify an index where it can be
@@ -384,9 +396,10 @@ stored. Furthermore, you must be careful to specify a legal index. No
 negative index will ever be legal, and neither will an index greater
 than or equal to the number of elements in the array.
 
-....
+[source,java]
+----
 numbers[10] = 99;
-....
+----
 
 This code will compile correctly. If you remember, we instantiated the
 array that `numbers` points at to have 10 elements, numbered 0 through
@@ -405,11 +418,12 @@ array, but the `for` loop is an especially good match. Here is an
 example of a `for` loop that sets the values in an array to their
 indexes.
 
-....
+[source,java]
+----
 int[] values = new int[100];
 for( int i = 0; i < 100; i++ )
     values[i] = i;
-....
+----
 
 This sample of code shows how easy it is to iterate over every element
 in an array with a `for` loop, but it has a flaw in its style. Note that
@@ -423,11 +437,12 @@ by user input.
 To make the code both more robust and readable, we can use the `length`
 field of the `values` array for the bound of the `for` loop.
 
-....
+[source,java]
+----
 int[] values = new int[100];
 for( int i = 0; i < values.length; i++ )
     values[i] = i;
-....
+----
 
 The `length` field gives the length of the array that `values` points
 to. If the programmer wants to instantiate the array with a different
@@ -443,12 +458,13 @@ sum all its elements using the following code. A more elegant way to do
 the same summation is discussed in Section <<subsection:The for-each
 loop>>.
 
-....
+[source,java]
+----
 double sum = 0.0;
 for( int i = 0; i < data.length; i++ )
     sum += data[i];
 System.out.println("The sum of your data is: " + sum);
-....
+----
 
 So far, we have only discussed operations on the values in an array. It
 is important to realize that the *order* of those values can be equally
@@ -456,7 +472,8 @@ important. We are going to create an array of `char` type named
 `letters`, initialized with some values, and then reverse the order of
 the array.
 
-....
+[source,java]
+----
 char[] letters = {'b', 'y', 'z', 'a', 'n', 't', 'i', 'n', 'e'};
 int start = 0;
 int end = letters.length - 1;
@@ -470,7 +487,7 @@ while( start < end ) {
 }
 for( int i = 0; i < letters.length; i++ )
     System.out.print( letters[i] );
-....
+----
 
 This code will print out `enitnazyb`. After initializing the `letters`
 array, we declare `start` and `end`, giving them the values `0`, the
@@ -558,8 +575,10 @@ screen, you can send the output to a file of your choosing. The syntax
 for this operation is just like the syntax for input redirection except
 that you use the `>` sign instead of `<`. To run `QuietSummer` with
 input from `numbers.txt` and output to `sum.txt`, we could do the
-following. +
-`java QuietSummer < numbers.txt > sum.txt` +
+following.
+
+`java QuietSummer < numbers.txt > sum.txt`
+
 You would be free to examine `sum.txt` at any time with your text editor
 of choice. When using output redirection, it makes more sense run to
 `QuietSummer` than `Summer`. If we had run `Summer`, all of that
@@ -604,13 +623,14 @@ the list is by setting your temporary variable to the first element
 (index `0`) in the array. Below is a short snippet of code that finds
 the largest value in an `int` array named `values` in exactly this way.
 
-....
+[source,java]
+----
 int largest = values[0];
 for( int i = 1; i < values.length; i++ )
     if( values[i] > largest )
         largest = values[i];
 System.out.println("The largest value is " + largest);
-....
+----
 
 Note that the `for` loop starts at `1` not `0`. Because `largest` is
 initialized to be `values[0]`, there is no reason to repeat that value.
@@ -621,13 +641,14 @@ What is the feature of this code that makes it find the largest value?
 The key is the `>` operator. With the change of a single character, we
 could find the smallest value instead.
 
-....
+[source,java]
+----
 int smallest = values[0];
 for( int i = 1; i < values.length; i++ )
     if( values[i] < smallest )
         smallest = values[i];
 System.out.println("The smallest value is " + smallest);
-....
+----
 
 In addition to the necessary change from `>` to `<`, we also changed the
 output and the name of the variable to avoid confusion. Now we will show
@@ -1080,9 +1101,10 @@ one-dimensional array is an extra pair of brackets. If we wish to
 declare a two-dimensional array of type `int` in which we could store
 values like the table of distances above, we would do so as follows.
 
-....
+[source,java]
+----
 int[][] distances;
-....
+----
 
 As with one-dimensional arrays, it is legal to put the brackets on the
 other side of the variable identifier or, even more bizarrely, have a
@@ -1093,9 +1115,10 @@ Once the array is declared, it must still be instantiated using the
 brackets, with the number in the first pair specifying the number of
 rows and the number in the second pair specifying the number of columns.
 
-....
+[source,java]
+----
 distances = new int[5][5];
-....
+----
 
 After the instantiation, we will have 5 rows and 5 columns, giving a
 total of 25 locations where `int` values can be stored. Indexing these
@@ -1103,7 +1126,8 @@ locations is done by specifying row and column values in the brackets.
 So, to fill up the table with the distances between cities given above
 we can use the following tedious code.
 
-....
+[source,java]
+----
 //New York
 distances[0][1] = 2791;
 distances[0][2] = 791;
@@ -1129,7 +1153,7 @@ distances[4][0] = 2457;
 distances[4][1] = 373;
 distances[4][2] = 1181;
 distances[4][3] = 1176;
-....
+----
 
 You will notice that we did not specify values for `distances[0][0]`,
 `distances[1][1]`, `distances[2][2]`, `distances[3][3]`, or
@@ -1141,7 +1165,8 @@ Much more often, multidimensional array manipulation will use nested
 columns, and then assign values to those locations such that they were
 numbered increasing across each row.
 
-....
+[source,java]
+----
 int[][] values = new int[3][4];
 int number = 1;
 for( int i = 0; i < values.length; i++ )
@@ -1149,7 +1174,7 @@ for( int i = 0; i < values.length; i++ )
         values[i][j] = number;
         number++;
     }
-....
+----
 
 This code would result in an array filled up like the following table.
 
@@ -1183,14 +1208,15 @@ its contents. Arrays, however, are mutable, which means that aliasing
 can cause unexpected results. Here is a simple example with
 one-dimensional array aliasing.
 
-....
+[source,java]
+----
 int[] array1 = new int[10];
 for( int i = 0; i < array1.length; i++ )
     array1[i] = i;
 int[] array2 = array1;
 array2[3] = 17;
 System.out.println(array1[3]);
-....
+----
 
 Surprisingly, the value printed out will be `17`. The variables `array1`
 and `array2` are references to the same fundamental array. Unlike
@@ -1216,10 +1242,11 @@ is only one actual object for every call to `new`. The primary exception
 to this rule is that uses of `new` can be hidden from the user when they
 are in method calls.
 
-....
+[source,java]
+----
 String greeting = new String("Hello");
 String pronoun = greeting.substring(0,2);
-....
+----
 
 At the end of this code, the reference `pronoun` will point to an object
 containing the `String "He"`. The `substring()` method invokes `new`
@@ -1245,7 +1272,8 @@ If we return to the definition of the two-dimensional array with 3 rows
 and 4 columns, we can instantiate each row separately instead of as a
 block.
 
-....
+[source,java]
+----
 int[][] values = new int[3][];
 int number = 1;
 for( int i = 0; i < values.length; i++ ) {
@@ -1255,7 +1283,7 @@ for( int i = 0; i < values.length; i++ ) {
             number++;
     }
 }
-....
+----
 
 This code is functionally equivalent to the earlier code that
 instantiated all 12 locations at once. The same could be done with a
@@ -1290,7 +1318,8 @@ distance information.
 
 We could create this table in code by doing the following.
 
-....
+[source,java]
+----
 distances = new int[5][];
 //New York
 distances[0] = new int[1];
@@ -1312,7 +1341,7 @@ distances[4][0] = 2457;
 distances[4][1] = 373;
 distances[4][2] = 1181;
 distances[4][3] = 1176;
-....
+----
 
 With this table a user cannot simply type in `distances[0][4]` and hope
 to get the distance from New York to Phoenix. Instead, we have to be
@@ -1322,7 +1351,8 @@ the cities from a user, we can write some code to do this check. Let
 `city1` and `city2`, respectively, contain the indexes of the cities the
 user wants to use to find the distances between.
 
-....
+[source,java]
+----
 if( city1 > city2 ) {
     int temp = city1;
     city1 = city2;
@@ -1330,7 +1360,7 @@ if( city1 > city2 ) {
 }
 System.out.println("The distance is: " + distances[city1][city2] +
     " miles");
-....
+----
 
 If we wanted to be even cleverer, we could eliminate the zero entries
 from the table, but then the ragged array would have one fewer row than
@@ -1353,11 +1383,12 @@ checking to see if you are in the right range. If your program tries to
 access an illegal element, it will crash with an
 `ArrayIndexOutOfBoundsException`.
 
-....
+[source,java]
+----
 int[] array = new int[100];
 for( int i = 0; i <= array.length; i++ )
     array[i] = i;
-....
+----
 
 Here is a classic example. By iterating through the loop one too many
 times, the program will try to store `100` into `array[100]`, when the
@@ -1371,7 +1402,8 @@ Imagine that you are scanning through a file that has been redirected to
 input, keeping a count of the occurrences of each letter of the alphabet
 in the file.
 
-....
+[source,java]
+----
 Scanner in = new Scanner(System.in);
 int[] counts = new int[26];
 String word;
@@ -1380,7 +1412,7 @@ while( in.hasNext() ) {
     for( int i = 0; i < word.length(); i++ )
         counts[word.charAt(i) - 'a']++;
 }
-....
+----
 
 This segment of code does a decent job of counting the occurrences of
 each letter. The `while` loop continues to execute as long as there is
@@ -1407,28 +1439,31 @@ is allocated. Whenever the elements of the array are reference types,
 only references to objects, initialized to `null` are allocated. Because
 it's an array of primitive values, the following code works fine.
 
-....
+[source,java]
+----
 int[] primitives = new int[100];
 primitives[67]++;
-....
+----
 
 The following code, however, will cause a `NullPointerException`.
 
-....
+[source,java]
+----
 String[] references = new String[100];
 int x = references[67].length();
-....
+----
 
 Arrays of reference types must initialize each element before using it.
 The +
 `NullPointerException` could be avoided as follows.
 
-....
+[source,java]
+----
 String[] references = new String[100];
 for( int i = 0; i < references.length; i++ )
     references[i] = new String();
 int x = references[67].length();
-....
+----
 
 In this case, there would be no error, although
 `references[67].length()` would still be `0`, and that is probably not
@@ -1436,11 +1471,12 @@ what the programmer intended.
 
 A similar error can happen with multidimensional arrays.
 
-....
+[source,java]
+----
 int[][] table = new int[10][];
 for( int i = 0; i < table.length; i++ )
     table[i][i] = i;
-....
+----
 
 Because an array is itself a reference type, the `table` array contains
 `10` references to `null` for each of its `10` rows. Unless those rows
@@ -1585,12 +1621,13 @@ becomes `true`. The first line of the body of this loop is an obscure
 Java shortcut often referred to as the _ternary operator_. This line is
 really shorthand for the following.
 
-....
+[source,java]
+----
 if( turn )
     shape = 'X';
 else
     shape = '0';
-....
+----
 
 The ternary operator works with a condition followed by a question mark
 and then two values separated by a colon. If the condition is `true`,
@@ -1655,20 +1692,22 @@ values of an array of `int` values called `array`. As with all loops in
 Java, braces are optional if there is only one executable statement in
 the loop.
 
-....
+[source,java]
+----
 int sum = 0;
 for( int value : array )
     sum += value;
-....
+----
 
 This code functions in exactly the same way as the traditional `for`
 loop we would use to solve the same problem.
 
-....
+[source,java]
+----
 int sum = 0;
 for( int i = 0; i < array.length; i++ )
     sum += array[i];
-....
+----
 
 The advantage of the for-each loop is that it is shorter and clearer.
 There is also no worry about being off by one with your indexes. The
@@ -1679,14 +1718,15 @@ For-each loops can be nested or used inside of other loops. Consider the
 following nested for-each loops that print out all of the kinds of chess
 pieces, in both black and white colors.
 
-....
+[source,java]
+----
 String[] colors = {"Black", "White"};
 String[] pieces =
     {"King", "Queen", "Rook", "Bishop", "Knight", "Pawn"};
 for( String color : colors )
     for( String piece : pieces )
         System.out.println(color + " " + piece);
-....
+----
 
 For-each loops do have a few drawbacks. They are designed for iterating
 through an entire array. It is ugly to try to make them stop early, and
@@ -1697,19 +1737,21 @@ but assigning values to that variable have no effect on the underlying
 array. Consider the following `for` loop that assigns `5` to every value
 in `array`.
 
-....
+[source,java]
+----
 for( int i = 0; i < array.length; i++ )
     array[i] = 5;
-....
+----
 
 This kind of assignment is impossible in a for-each loop. The
 "`equivalent`" for-each loop does nothing. It assigns `5` to the local
 variable `value` but never changes `array`.
 
-....
+[source,java]
+----
 for( int value : array )
     value = 5;
-....
+----
 
 Although for-each loops are great for arrays, they can also be used for
 any other data structures that implements the `Iterable` interface. We
@@ -1935,7 +1977,8 @@ copied over. List some tasks for which an array would be better than a
 linked list and vice versa.
 3.  Given the following code:
 +
-....
+[source,java]
+----
 double[] array1 = new double[50];
 double[] array2 = new double[50];
 for( int i = 0; i < array1.length; i++ ) {
@@ -1945,26 +1988,28 @@ for( int i = 0; i < array1.length; i++ ) {
 array2 = array1;
 for( int i = 1; i < array1.length; i++ )
     array1[i] = array1[i - 1] + array1[i];
-....
+----
 +
 What is the value in `array2[array2.length - 1]` after this code is
 executed?
 4.  What error will be caused by the following code, and why?
 +
-....
+[source,java]
+----
 String[] array = new String[100];
 System.out.println(array[99].charAt(0) +
            " is the first letter of the last String.");
-....
+----
 5.  An array of length latexmath:[n] in Java typically takes
 latexmath:[n] times the number of bytes for each element plus an
 additional 16 bytes of overhead. Since an `int` uses 4 bytes of storage,
 an array of 100 `int` elements would take 416 bytes. Consider the
 following three-dimensional array declaration and allocation.
 +
-....
+[source,java]
+----
 int[][][] data = new int[10][5][20];
-....
+----
 +
 How many bytes are allocated for this array? Remember that the 16 byte
 overhead will occur repeatedly, since Java creates a three-dimensional
