@@ -27,15 +27,14 @@ they do at the end of the previous paragraph. Table <<table:nested
 expressions>> shows more examples of correctly and incorrectly nested
 expressions.
 
-.Correctly and incorrectly nested expressions.
-[cols="<,^,<",options="header",]
+[.center%autowidth%header,cols="<l,<l",]
 |===========================================
-|Correctly Nested | |Incorrectly Nested
-|`""` | |`"("`
-|`"(){}" ` | |`"}{"`
-|`"((abc)){x}"` | |`"( a { b ) c }"`
-|`"({[z]})"` | |`"{abc("`
-|`"({xyz})({ijk}[123])"` | |`"{(333)888(})"`
+|Correctly Nested |Incorrectly Nested
+|""|"("
+|"(){}"|"}{"
+|"((abc)){x}"|"( a { b ) c }"
+|"({[z]})"|"{abc("
+|"({xyz})({ijk}[123])"|"{(333)888(})"
 |===========================================
 
 But how can we examine an expression to see if it is correctly nested?
@@ -482,9 +481,7 @@ different levels of access that can be applied to fields and methods,
 whether static or not. They are `public`, `private`, `protected`, and
 package-private.
 
-===== `public` modifier
-
-___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+`public` modifier::
 The `public` access modifier states that a variable or method can be
 accessed by any code, no matter what class contains it. Most methods
 should be `public` so that they can be used freely to interact with
@@ -495,11 +492,7 @@ by outside code anyway. In the `Rectangle` class, variables `length` and
 `width` are so simple that making them `public` is not unreasonable. If
 you have a field that can be changed at any time by any code to any
 value, you can leave that field `public`.
-___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
-===== `private` modifier
-
-_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+`private` modifier::
 This modifier states that a variable or method cannot be accessed by any
 code unless the code is contained in the same class. It is important to
 realize that the restriction is based on the *class*, not on the
@@ -508,22 +501,14 @@ inside of any other `Rectangle` object or class. Most fields should be
 `private` so that outside code cannot modify them. Methods can be
 `private`, but these methods should be helper or utility methods used
 inside the class or object to divide up work.
-_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
-===== `protected` modifier
-
-_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+`protected` modifier::
 This modifier states that a variable or method cannot be accessed by any
 code unless the code is contained in the same class, a subclass, or is
 in the same package. This level of access is more restrictive than
 `public` but less restrictive than `private` or default access. We
 discuss it further in the context of subclasses and inheritance in
 Chapter <<chapter:Inheritance>>.
-_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
-===== Package-private (no explicit modifier)
-
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Package-private (no explicit modifier)::
 If you do not type an access modifier when you declare a field or
 method, that field or method is not `public`. Instead, it has the
 default or package-private access modifier applied to it. Fields or
@@ -535,8 +520,7 @@ There is no keyword for this access modifier. It is useful if you are
 designing a package containing classes that must be able to access each
 other’s fields or methods. For now, you should always give your fields
 and methods an explicit `public` or `private` (or sometimes `protected`)
-modifier. +
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+modifier.
 
 From least restrictive to most restrictive, the modifiers are `public`,
 `protected`, package-private, and `private`. Each additional level of
@@ -545,9 +529,10 @@ can be accessed by code from the same class. The following table gives
 the contexts outside the class that can access a field or method marked
 with each modifier.
 
-[cols=">,^,^,^",options="header",]
+[.center%autowidth%header,cols=">.>,3*^.>",]
 |======================================================
-|*Modifier* |*Package* |*Subclass* |*Unrelated Classes*
+|Modifier |Package |Subclass |Unrelated +
+Classes
 |`public` |Yes |Yes |Yes
 |`protected` |Yes |Yes |No
 |Package-private |Yes |No |No
