@@ -22,7 +22,7 @@ planet is in grave danger!
 
 === Problem: Deadly virus
 
-A deadly virus capable of wiping out the world’s population is about to
+A deadly virus capable of wiping out the world's population is about to
 be released by an evil mastermind. Only he knows the security code that
 can stop the countdown. The world is doomed. The single hope for
 salvation lies with you and your Java programming skills. Through the
@@ -86,7 +86,7 @@ the dinner, clean your house, and set the table. If four of you were
 planning the party, each could perform a separate activity. The
 preparations could go much faster than if a single person was doing the
 work, but coordination is still important. Perhaps the person cooking
-the dinner couldn’t finish until certain supplies had been bought.
+the dinner couldn't finish until certain supplies had been bought.
 
 Task decomposition is often easier than domain decomposition because
 many tasks have natural divisions. Unfortunately, it is not always an
@@ -206,7 +206,7 @@ latexmath:[S=\sum_{i=1}^N f\left(a(i)\right)]
 In this formula, latexmath:[a(i)] is the latexmath:[i]^th^ element
 of array latexmath:[A]. We want to perform the task of applying
 function latexmath:[f()] to each element in the array and summing the
-result. Let’s assume that we have a dual-core processor available to
+result. Let's assume that we have a dual-core processor available to
 compute the sum. We split up the array so that each core performs the
 task on half of the array. Let latexmath:[S_1] and latexmath:[S_2]
 denote the sums computed by core 1 and core 2, respectively.
@@ -218,17 +218,16 @@ Assuming that latexmath:[N] is even, both cores process exactly the
 same amount of data. For odd latexmath:[N], one of the cores processes
 one more data item than the other.
 
+[.text-center]
+.Computing the sum of a function of each element of an array.
+image::arrayDecomposition.svg[scaledwidth=60%,pdfwidth=60%,width=60%]
+
 After latexmath:[S_1] and latexmath:[S_2] have been computed, one of
 the cores can add these two numbers together to get latexmath:[S].
 This strategy is illustrated in Figure <<figure:array_decomposition>>.
 After the two cores have completed their work on each half of the array,
 the individual sums are added together to produce the final sum.
-
 ====
-
-[.text-center]
-.Computing the sum of a function of each element of an array.
-image::arrayDecomposition.svg[scaledwidth=60%,pdfwidth=60%,width=60%]
 
 
 .Matrix multiplication preview
@@ -263,7 +262,7 @@ matrices latexmath:[A] and latexmath:[B].
 
 ==== Tasks and threads
 
-It is the programmer’s responsibility to divide his or her solution into
+It is the programmer's responsibility to divide his or her solution into
 a number of tasks and subtasks which will run on one or more cores on a
 processor. In previous sections, we described concurrent programs as if
 specific tasks could be assigned specific cores, but Java does not
@@ -383,11 +382,12 @@ example, the following class definition allows objects of type
 `ThreadedTask` to be created. Such an object can be executed as a
 separate thread.
 
-....
+[source,java]
+----
 public class ThreadedTask extends Thread {
     // Add constructor and body of class
 }
-....
+----
 
 The constructor is written just like any other constructor, but there is
 a special `run()` method in `Thread` that can be overridden by any of
@@ -432,9 +432,10 @@ Creating an object from a subclass of `Thread` is the same as creating
 any other object in Java. For example, we can instantiate the `Thread1`
 class above to create an object called `thread1`.
 
-....
+[source,java]
+----
 Thread1 thread1 = new Thread1( 15.1, 2.8, 7.53 );
-....
+----
 
 Using the `new` keyword to invoke the constructor creates a `Thread1`
 object, but it does not start executing it as a new thread. As with all
@@ -448,9 +449,10 @@ To start the thread object executing, its `start()` method must be
 called. For example, the `thread1` object created above can be started
 as follows.
 
-....
+[source,java]
+----
     thread1.start();
-....
+----
 
 Once started, a thread executes independently. When a thread needs to
 share data with another thread, it might have to wait.
@@ -462,9 +464,10 @@ before proceeding further with its execution. The `join()` method is
 used to wait for a thread to finish executing. For example, whichever
 thread executes the following code will wait for `thread1` to complete.
 
-....
+[source,java]
+----
     thread1.join();
-....
+----
 
 Calling `join()` is a _blocking_ call, meaning that the code calling
 this method will wait until it returns. Since it can throw a a checked
@@ -473,7 +476,8 @@ is generally used within a `try`-`catch` block. We can add a
 `try`-`catch` block to the `thread1` example so that we can recover from
 being interrupted while waiting for `thread1` to finish.
 
-....
+[source,java]
+----
     try {
         System.out.println("Waiting for thread 1...");
         thread1.join();
@@ -482,7 +486,7 @@ being interrupted while waiting for `thread1` to finish.
     catch (InterruptedException e) {
         System.out.println("Thread 1 didn't finish!");
     }
-....
+----
 
 Note that the `InterruptedException` is thrown because the main thread
 was interrupted while waiting for `thread1` to finish. If the `join()`
@@ -576,21 +580,23 @@ When creating a new thread, there are some differences in syntax between
 the two styles. The familiar way of creating and running a thread from a
 `Thread` subclass is as follows.
 
-....
+[source,java]
+----
 Summer summer = new Summer( array, lower, upper );
 summer.start();
-....
+----
 
 Since `Summer` does not inherit from `Thread`, it does not have a
 `start()` method, and this code will not compile. When a class only
 implements `Runnable`, it is still necessary to create a `Thread` object
 and call its `start()` method. Thus, an extra step is needed.
 
-....
+[source,java]
+----
 Summer summer = new Summer( array, lower, upper );
 Thread thread = new Thread( summer );
 thread.start();
-....
+----
 
 This alternate way of implementing the `Runnable` interface seems more
 cumbersome than inheriting directly from `Thread`, since you have to
@@ -616,7 +622,8 @@ include::programs/NumberedThread.java[]
 Now suppose that we want to create 10 thread objects of type
 `NumberedThread`, start them, and then wait for them to complete.
 
-....
+[source,java]
+----
 NumberedThread[] threads = new NumberedThread[10];
 for( int i = 0; i < threads.length; i++ ) {
     threads[i] = new NumberedThread(i);
@@ -629,7 +636,7 @@ try {
 catch( InterruptedException e ) {
     System.out.println("A thread didn't finish!");
 }
-....
+----
 
 First, we declare an array to hold references to `NumberedThread`
 objects. Like any other type, we can make an array to hold objects that
@@ -646,9 +653,9 @@ method forces the main thread to wait for each thread to finish.
 The entire second `for` loop is nested inside of a `try` block. If the
 main thread is interrupted while waiting for any of the threads to
 finish, an `InterruptedException` will be caught. As before, we warn the
-user that a thread didn’t finish. For production-quality code, the
+user that a thread didn't finish. For production-quality code, the
 `catch` block should handle the exception in such a way that the thread
-can recover and do useful work even though it didn’t get what it was
+can recover and do useful work even though it didn't get what it was
 waiting for.
 
 ====
@@ -656,7 +663,7 @@ waiting for.
 === Examples: Concurrency and speedup
 
 Speedup is one of the classic motivations for writing concurrent
-programs. To understand speedup, let’s assume we have a problem to
+programs. To understand speedup, let's assume we have a problem to
 solve. We write two programs to solve this problem, one that is
 sequential and another that is concurrent and, hence, able to exploit
 the multiple cores. Let latexmath:[t_s] be the average time to execute
@@ -678,14 +685,15 @@ To determine speedup, we need to measure latexmath:[t_s] and
 latexmath:[t_c]. Time in a Java program can easily be measured with
 the following two static methods in the `System` class.
 
-....
+[source,java]
+----
 public static long currentTimeMillis()
 public static long nanoTime()
-....
+----
 
 The first of these methods returns the current time in milliseconds
 (ms). A _millisecond_ is 0.001 seconds. This method gives the difference
-between the current time on your computer’s clock and midnight of
+between the current time on your computer's clock and midnight of
 January 1, 1970 coordinated universal time (UTC). This point in time is
 used for many timing features on many computer platforms and is called
 the _Unix epoch_. The second method returns the current time in
@@ -705,12 +713,13 @@ For convenience, we can assume this code is contained in the `work()`
 method. The following code snippet measures the time to execute
 `work()`.
 
-....
+[source,java]
+----
 long start = System.currentTimeMillis();
 work();
 long end = System.currentTimeMillis();
 System.out.println("Elapsed time: " + (end - start) + " ms");
-....
+----
 
 The output will give the execution time for `work()` measured in
 milliseconds. To get the execution time in nanoseconds, use the
@@ -718,7 +727,6 @@ milliseconds. To get the execution time in nanoseconds, use the
 
 ====
 
- +
 Now that we have the tools to measure execution time, we can measure
 speedup. The next few examples show the speedup (or lack of it) that we
 can achieve using a concurrent solution to a few simple problems.
@@ -750,7 +758,7 @@ cores.
 
 In Example <<example:Array_summation_preview>>, we introduced the
 problem of applying a function to every value in an array and then
-summing the results. Let’s say that we want to apply the sine function
+summing the results. Let's say that we want to apply the sine function
 to each value. To solve this problem concurrently, we partition the
 array evenly among a number of threads, using the domain decomposition
 strategy. Each thread finds the sum of the sines of the values in its
@@ -798,10 +806,10 @@ with random values. Note that the array is a static field so that it can
 be shared by all instances of `SumThread`. Then each thread is created
 with lower and upper bounds that mark its array partition. If the
 process using the array length and the number of threads to determine
-upper and lower bounds doesn’t make sense, refer to
+upper and lower bounds doesn't make sense, refer to
 Section <<concurrency:Arrays>> which describes the fair division of work
 to threads. If the length of the array is not divisible by the number of
-threads, simple division isn’t enough. After creating each thread, its
+threads, simple division isn't enough. After creating each thread, its
 `start()` method is called.
 
 [source, java, linenums]
@@ -841,12 +849,13 @@ Note that mathematical notation often uses uppercase letters to
 represent matrices though the Java convention is to start all variable
 names with lowercase letters.
 
-....
+[source,java]
+----
 for( int i = 0; i < c.length; i++ )
     for( int j = 0; j < c[i].length; j++ )
         for( int k = 0; k < b.length; k++ )
             c[i][j] += a[i][k] * b[k][j];
-....
+----
 
 The first step in making a concurrent solution to this problem is to
 create a `Thread` subclass which will do some part of the matrix
@@ -876,7 +885,8 @@ perform a matrix multiplication. We assume that an `int` constant named
 `THREADS` has been defined which gives the number of threads we want to
 create.
 
-....
+[source,java]
+----
 MatrixThread[] threads = new MatrixThread[THREADS];
 int quotient = c.length / THREADS;
 int remainder = c.length % THREADS;
@@ -896,7 +906,7 @@ try {
 catch( InterruptedException e ) {
     e.printStackTrace();
 }
-....
+----
 
 We loop through the array, creating a `MatrixThread` object for each
 location. As in the previous example, we use the approach described in
@@ -909,7 +919,7 @@ the next line of code.
 Next, there is a familiar `for` loop with the `join()` calls that force
 the main thread to wait for the other threads to finish. Presumably,
 code following this snippet will print the values of the result matrix
-or use it for some other calculations. If we don’t use the `join()`
+or use it for some other calculations. If we don't use the `join()`
 calls to be sure the threads have finished, we might print out a result
 matrix that has only been partially filled in.
 
@@ -1005,7 +1015,7 @@ impossible to reproduce. In this chapter, we introduce how to create and
 run threads, but making these threads interact properly is a major
 problem we tackle in subsequent chapters.
 
-After those dire words of warning, we’d like to remind you that
+After those dire words of warning, we'd like to remind you that
 nondeterminism is not in itself a bad thing. Many threaded applications
 with a lot of input and output, such as server applications, necessarily
 exist in a nondeterministic world. For these programs, many different
@@ -1028,7 +1038,7 @@ There are a number of problems with this approach. The first is that it
 wastes CPU cycles. Those cycles spent by the waiting thread continually
 checking could have been used productively by some other thread in the
 system. The second problem is that we have to be certain that the state
-of the thread we are waiting for won’t change back to the original state
+of the thread we are waiting for won't change back to the original state
 or to some other state. Because of the unpredictability of scheduling,
 there is no guarantee that the waiting thread will read the state of the
 other thread when it has the correct value.
@@ -1066,7 +1076,7 @@ image::thread-states.svg[scaledwidth=80%,pdfwidth=80%,width=80%]
 Figure <<figure:thread_states>> shows the lifecycle of a thread. A
 thread begins its life in the New Thread state, after the constructor is
 called. When the `start()` method is called, the thread begins to run
-and transitions to the Runnable state. Being Runnable doesn’t
+and transitions to the Runnable state. Being Runnable doesn't
 necessarily mean that the thread is executing at any given moment but
 that it is ready to run at any time. When in the Runnable state, a
 thread may call `Thread.yield()`, relinquishing use of the processor,
@@ -1099,18 +1109,18 @@ the thread that creates it. Usually, this priority is
 good idea to raise or lower this priority. Avoid changing thread
 priorities because it increases platform dependence and because the
 effects are not always predictable. Be aware that priorities exist, but
-don’t use them unless and until you have a good reason.
+don't use them unless and until you have a good reason.
 
 .Military marching
 ====
 
-Let’s apply the ideas discussed above to a lighthearted example. You
+Let's apply the ideas discussed above to a lighthearted example. You
 might be familiar with sound of soldiers marching: "`Left, Left, Left,
 Right, Left!`" We can design a thread that prints `Left` and another
 thread that prints `Right`. We can combine the two to print the correct
 sequence for marching and loop the whole thing 10 times so that we can
 see how accurately place the words. We want to use the scheduling tools
-discussed above to get the timing right. Let’s try `Thread.sleep()`
+discussed above to get the timing right. Let's try `Thread.sleep()`
 first.
 
 [source, java, linenums]
@@ -1208,7 +1218,7 @@ a concurrent solution, but applying this solution to problems which can
 benefit from concurrency might cause performance problems. Each thread
 wastes time busy waiting in a `while` loop for the other to be done,
 consuming CPU cycles while it does so. You will notice that the code
-must still be carefully written. Each thread must set the other thread’s
+must still be carefully written. Each thread must set the other thread's
 `done` value to `false`. If threads were responsible for setting their
 own `done` values to `false`, one thread might print its information and
 go back to the top of the `for` loop before the other thread had reset
@@ -1257,7 +1267,7 @@ threads. In the `main()` method, we create an array of threads for
 storage. Then, we create each `FactorThread` object, assigning upper and
 lower bounds at the same time, using the standard technique from
 Section <<concurrency:Arrays>> to divide the work fairly. Because we
-know the number we’re dividing isn’t even, we start with 3. By only
+know the number we're dividing isn't even, we start with 3. By only
 going up to the square root of the number, we know that we will only
 find the smaller of the two factors. In that way we can avoid having one
 thread find the smaller while another is finds the larger.
@@ -1266,7 +1276,7 @@ Afterwards, we have the usual `join()` calls to make sure that all the
 threads are done. In this problem, these calls are unnecessary. One
 thread will print out the correct security code, and the others will
 search fruitlessly. If the program went on to do other work, we might
-need to let the other threads finish or even interrupt them. Don’t
+need to let the other threads finish or even interrupt them. Don't
 forget `join()` calls since they are usually very important.
 
 === Summary
@@ -1312,7 +1322,7 @@ quadcore processor. Can the tasks in Examples <<example:Video game
 tasks>> and <<example:Math_expression_tasks>> be further subdivided to
 improve performance on four cores? Why or why not?
 6.  <<exercise:speedup>> Consider the definition of speedup from
-Section <<examples:Concurrency_and_speedup>>. Let’s assume you have a
+Section <<examples:Concurrency_and_speedup>>. Let's assume you have a
 job 1,000,000 units in size. A thread can process 10,000 units of work
 every second. It takes an additional 100 units of work to create a new
 thread. What is the speedup if you have a dual-core processor and create
@@ -1322,14 +1332,14 @@ thread does not need to communicate after it has been created.
 7.  <<exercise:speedup_bounds>> In which situations can speedup be
 smaller than the number of processors? Is it ever possible for speedup
 to be greater than the number of processors?
-8.  <<exercise:Amdahl>> Amdahl’s Law is a mathematical description of
+8.  <<exercise:Amdahl>> Amdahl's Law is a mathematical description of
 the maximum amount you can improve a system by only improving a part of
 it. One form of it states that the maximum speedup attainable in a
 parallel program is latexmath:[\frac{1}{1 - P}] where latexmath:[P]
 is the fraction of the program which can be parallelized to an arbitrary
 degree. If 30% of the work in a program can be fully parallelized but
 the rest is completely serial, what is the speedup with 2 processors? 4?
-8? What implications does Amdahl’s Law have?
+8? What implications does Amdahl's Law have?
 9.  <<exercise:task_parallelization>> Consider the following table of
 tasks:
 +
@@ -1356,17 +1366,19 @@ with an unlimited number of people? What is the smallest number of
 people needed to achieve this minimum time?
 10. <<exercise:interleavings>> Consider the following code snippet.
 +
-....
+[source,java]
+----
 x = 13;
 x = x * 10;
-....
+----
 +
 Consider this snippet as well.
 +
-....
+[source,java]
+----
 x = 7;
 x = x + x;
-....
+----
 +
 If we assume that these two snippets of code are running on separate
 threads but that `x` is a shared variable, what are the possible values
@@ -1396,7 +1408,8 @@ If the samples are stored in array `in` and the delay parameter is
 stored in variable `delay`, the following code snippet can be used to
 create array `out` which contains the sound with an echo.
 +
-....
+[source,java]
+----
 double[] out = new double[in.length + delay];
 //sound before echo starts
 for( int i = 0; i < delay; i++ )
@@ -1407,7 +1420,7 @@ for( int i = delay; i < in.length; i++ )
 //echo after sound is over
 for( int i = in.length; i < out.length; i++ )
     out[i] = b*in[i - delay];
-....
+----
 +
 Parameters `a` and `b` are used to control the nature of the echo. When
 `a` is `1` and `b` is `0`, there is no echo. When `a` is `0` and `b` is
