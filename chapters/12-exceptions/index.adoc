@@ -127,10 +127,11 @@ By now you have probably experienced a `NullPointerException` in the
 process of coding. This exception happens when an object reference is
 `null` but we try to access one of its methods or fields.
 
-....
+[source,java]
+----
 String text = null;
 int x = text.length(); // NullPointerException
-....
+----
 
 In this case, the exception is thrown by the JVM itself. It is possible
 to catch this exception and deal with it, but a `NullPointerException`
@@ -140,10 +141,11 @@ recovered from. Although many useful exceptions such as +
 `ArrayIndexOutOfBoundsException` are implicitly thrown by the JVM, we
 are permitted to throw them explicitly.
 
-....
+[source,java]
+----
 if( y < 14 )
     throw new NullPointerException();
-....
+----
 
 Like any other object, we use the `new` keyword to instantiate a
 `NullPointerException` using its default constructor. Once created, we
@@ -163,7 +165,8 @@ to throw an exception in a `try` block. Immediately after the `try`
 block, you can list one or more `catch` blocks. The code inside the
 first `catch` block that matches your exception will be executed.
 
-....
+[source,java]
+----
 try {
     String text = null;
     int x = text.length(); //NullPointerException
@@ -172,7 +175,7 @@ try {
 catch( NullPointerException e ) {
     System.out.println("Surprise! A NullPointerException!");
 }
-....
+----
 
 In this case, trying to access the `length()` method of a `null`
 reference will still throw a `NullPointerException`, but now it will be
@@ -190,7 +193,8 @@ any superclass. Since `Exception` is the parent of `RuntimeException`
 which is the parent of `NullPointerException`, we could write our
 example with `Exception` instead.
 
-....
+[source,java]
+----
 try {
     String text = null;
     int x = text.length(); //NullPointerException
@@ -199,7 +203,7 @@ try {
 catch( Exception e ) {
     System.out.println("Well, of course you got a NullPointerException!");
 }
-....
+----
 
 In general, you should write the most specific exception class possible
 for your `catch` blocks. Otherwise, you might be catching a different
@@ -208,7 +212,8 @@ up to an appropriate handler. For example, the following code has the
 potential to throw either a `NullPointerException` or an
 `ArithmeticException`, because of a division by 0.
 
-....
+[source,java]
+----
 try {
     String text = null;
     int x;
@@ -220,13 +225,14 @@ try {
 catch( Exception e ) {
     System.out.println("You got some kind of exception!");
 }
-....
+----
 
 This code will catch either kind of exception, but it will not tell you
 which you got. Instead, the correct approach is to have one `catch`
 block for each possible kind of exception.
 
-....
+[source,java]
+----
 try {
     String text = null;
     int x;
@@ -241,7 +247,7 @@ catch( NullPointerException e ) {
 catch( ArithmeticException e ) {
     System.out.println("You divided by zero!");
 }
-....
+----
 
 The list of `catch` blocks can be arbitrarily long. You must always go
 from the most specific exceptions to the most general, like `Exception`,
@@ -264,14 +270,15 @@ the execution of our program to sleep for a short period of time. We
 were forced to enclose this method call in a `try` block with a `catch`
 block for `InterruptedException`.
 
-....
+[source,java]
+----
 try{
     Thread.sleep(100);
 }
 catch( InterruptedException  e ) {
     System.out.println("Wake up!");
 }
-....
+----
 
 An `InterruptedException` is thrown when another thread tells your
 thread of execution to wake up before it finishes sleeping or waiting.
@@ -300,11 +307,12 @@ causing that exception. To specify that a method can throw certain
 exceptions, we use the `throws` keyword. Note that this is *not* the
 same as the `throw` keyword.
 
-....
+[source,java]
+----
 public static void sleepWithoutTry( int milliseconds ) throws InterruptedException {
     Thread.sleep( milliseconds );
 }
-....
+----
 
 In this case, there is no need for a `try`-`catch` block because the
 method announces that it has a risk of throwing an
@@ -341,7 +349,8 @@ executed before propagating the exception. Even a `return` statement
 will wait for a `finally` block to be executed before returning, leading
 to the following bizarre possibility.
 
-....
+[source,java]
+----
 public static boolean neverTrue() {
     try {
         return true;
@@ -350,7 +359,7 @@ public static boolean neverTrue() {
         return false;
     }
 }
-....
+----
 
 This method attempts to return `true`, but before it can finish, the
 `finally` block returns `false`. Only one value can be returned, and the
@@ -380,7 +389,8 @@ error. When creating your new exception, you don't even have to create
 any methods, but it is wise to implement a default constructor and one
 that takes a `String` as an additional message.
 
-....
+[source,java]
+----
 public class EndOfWorldException extends Exception {
     public EndOfWorldException() {}
 
@@ -388,7 +398,7 @@ public class EndOfWorldException extends Exception {
         super( message );
     }
 }
-....
+----
 
 As with all other classes, your exceptions should be named in a readable
 way. This exception is apparently thrown when the world ends. It is
@@ -452,7 +462,8 @@ about the bounds of our array. Although this makes for an interesting
 example, exceptions should not be used in Java to perform normal tasks.
 This method takes in an array of `int` values and prints them all out.
 
-....
+[source,java]
+----
 public static void exceptionalArrayPrint( int[] array ) {
     try {
         int i = 0;
@@ -461,7 +472,7 @@ public static void exceptionalArrayPrint( int[] array ) {
     }
     catch(  ArrayIndexOutOfBoundsException e ) {}
 }
-....
+----
 
 Although the `while` loop will run without stopping, the moment that `i`
 reaches +
@@ -518,7 +529,8 @@ Now we can write six methods, each of which increases or decreases the
 red, green, or blue component of a `Color` object by 5. If the value of
 the component is out of range, an appropriate exception will be thrown.
 
-....
+[source,java]
+----
 public static Color increaseRed( Color color )
     throws ColorOverflowException {
     if( color.getRed() + 5 > 255 )
@@ -577,12 +589,13 @@ public static Color decreaseBlue( Color color )
         return new Color( color.getRed(), color.getGreen(),
             color.getBlue() - 5 );
 }
-....
+----
 
 Finally, we can write a short method that changes a given color based on
 user input and deals with exceptions appropriately.
 
-....
+[source,java]
+----
 public static Color changeColor( Color color ) {
     System.out.println("Enter 'R', 'G', or 'B' to increase " +
         "the amount of red, green, or blue in your color. " +
@@ -607,7 +620,7 @@ public static Color changeColor( Color color ) {
     }
     return color;
 }
-....
+----
 
 The code that uses these methods and exceptions is compact. One `try`
 block enclosing the method calls is needed so that the exceptions can be
@@ -799,7 +812,8 @@ that a program that unintentionally dereferences a `null` pointer or
 divides by zero will often crash.
 8.  <<exercise:checked_example>> Consider the following two classes.
 +
-....
+[source,java]
+----
 public class Trouble {
     public makeTrouble() {
         throw new ArithmeticException();
@@ -811,14 +825,15 @@ public class Hazard {
         throw new InterruptedException();
     }
 }
-....
+----
 +
 Class `Trouble` will compile, but class `Hazard` will not. Explain why
 and what could be done to make `Hazard` compile.
 9.  <<exercise:finally_returns>> What value will the following method
 always return and why?
 +
-....
+[source,java]
+----
 public static int magic( String value ) {
     try {
         int x = Integer.parseInt( value );
@@ -832,11 +847,12 @@ public static int magic( String value ) {
         return -1;
     }
 }
-....
+----
 10. <<exercise:specific_exceptions_first>> Why will the following
 segment of code fail to compile?
 +
-....
+[source,java]
+----
 try{
     Thread.sleep(1000);
 }
@@ -846,18 +862,19 @@ catch( Exception e ) {
 catch( InterruptedException e ) {
     System.out.println("Woke up early!");
 }
-....
+----
 11. <<exercise:multiple_exceptions>> Consider the following fragment of
 Java.
 +
-....
+[source,java]
+----
 try {
     throw new NullPointerException();
 }
 finally {
     throw new ArrayIndexOutOfBoundsException();
 }
-....
+----
 +
 This code is legal Java. It is possible to have a `finally` block after
 a `try` block without any `catch` blocks between them. However, only a
