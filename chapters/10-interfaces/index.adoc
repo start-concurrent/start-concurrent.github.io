@@ -41,7 +41,8 @@ until no consecutive pair of elements is out of order. Here is an
 implementation of bubble sort that sorts an array of `int` values in
 ascending order.
 
-....
+[source,java]
+----
 boolean swapped = true;
 int temp;
 while( swapped ) {
@@ -54,7 +55,7 @@ while( swapped ) {
             swapped = true;
         }
 }
-....
+----
 
 .Pitfall: Array out of bounds
 [WARNING]
@@ -145,7 +146,8 @@ interface. In the following snippet of code we do this by creating 100
 `Guitarist` references, each of which randomly points to either a
 `RockGuitarist` or a `ClassicalGuitarist`.
 
-....
+[source,java]
+----
 Guitarist[] guitarists = new Guitarist[100];
 Random random = new Random();
 for( int i = 0; i < guitarists.length; i++ )
@@ -153,7 +155,7 @@ for( int i = 0; i < guitarists.length; i++ )
         guitarists[i] = new RockGuitarist();
     else
         guitarists[i] = new ClassicalGuitarist();
-....
+----
 
 Mistakes in the use of interfaces should generally be caught at compile
 time. If you implement an interface with a class you are writing but
@@ -173,7 +175,8 @@ point at any object of any type. In this case, if the `Object` turns out
 to implement the `Guitarist` interface, we can cast it to a `Guitarist`
 and use it to strum a chord.
 
-....
+[source,java]
+----
 void checkBeforeStrum( Object unknown, Chord chord ) {
     if( unknown instanceof Guitarist ) {
         Guitarist player = (Guitarist)unknown;
@@ -182,7 +185,7 @@ void checkBeforeStrum( Object unknown, Chord chord ) {
     else
         System.out.println("That's not a guitarist!");
 }
-....
+----
 
 .Pitfall: Interfaces cannot be instantiated
 [WARNING]
@@ -194,9 +197,10 @@ An interface is a promise to do things, but it is not a class. It has no
 data nor methods to manipulate data. Thus, the following code will fail
 to compile.
 
-....
+[source,java]
+----
 Guitarist guitarist = new Guitarist();
-....
+----
 
 We are permitted to make a reference to objects that implement
 `Guitarist`. We can make an array that holds such references. The
@@ -290,7 +294,8 @@ cart filled with these items (and any others implementing the
 represent the shopping cart as an array of `Priceable` items, we could
 write a simple method to total the values like so.
 
-....
+[source,java]
+----
 public static double getTotal( Priceable[] cart ) {
     double total = 0.0;
     for( int i = 0; i < cart.length; i++ )
@@ -298,7 +303,7 @@ public static double getTotal( Priceable[] cart ) {
 
     return total;
 }
-....
+----
 
 Note that we can pass in `Bananas`, `Eggs`, `Water`, and many other
 kinds of objects in a `Priceable` array as long as they all implement
@@ -344,7 +349,8 @@ r^2] in that case.)
 .Area of an ellipse.
 image::ellipse.svg[scaledwidth=50%,pdfwidth=50%,width=50%]
 
-....
+[source,java]
+----
 public static void createEllipse(double a1, double a2) {
     class Ellipse {
         private double axis1;
@@ -363,16 +369,16 @@ public static void createEllipse(double a1, double a2) {
     System.out.println("The ellipse has area " + e.getArea());
     Ellipse e = new Ellipse(a1, a2);
 }
+----
 
-....
 This `Ellipse` class cannot be referred to by any other methods. Since
 an `Ellipse` class might be useful in other code, a top-level class
 would make more sense than this local class. For this reason, local
 classes are not commonly used.
 
 However, we can make local classes more useful if they implement
-any shape that returns its area.
 interfaces. Consider the following interface which can be implemented by
+any shape that returns its area.
 
 [source, java, linenums]
 ----
@@ -383,7 +389,8 @@ include::programs/AreaGettable.java[]
 The method below takes an array of `AreaGettable` objects and sums their
 areas.
 
-....
+[source,java]
+----
 public static double sumAreas( AreaGettable[] shapes ) {
     double sum  = 0;
     for( int i = 0; i < shapes.length; i++ )
@@ -391,7 +398,7 @@ public static double sumAreas( AreaGettable[] shapes ) {
 
     return sum;
 }
-....
+----
 If we create a local class that implements `AreaGettable`, we can use it
 
 in conjunction with the `sumAreas()` method. In the following method, we
@@ -399,7 +406,8 @@ in conjunction with the `sumAreas()` method. In the following method, we
 will expand the local `Ellipse` class in this way and fill an array with
 
 public static void createEllipses() {
-....
+[source,java]
+----
     class Ellipse implements AreaGettable {
         private double axis1;
 
@@ -423,7 +431,7 @@ public static void createEllipses() {
 
     System.out.println("The total area is " + sum);
 }
-....
+----
 
 Even though the `Ellipse` class had the `getArea()` method before, the
 compiler would not have allowed us to store `Ellipse` references in an
@@ -447,7 +455,8 @@ type. In the following example, we modify the `createEllipses()` method
 so that it creates an anonymous class which behaves exactly like the
 `Ellipse` class and implements the `AreaGettable` interface.
 
-....
+[source,java]
+----
 public static void createEllipses() {
     AreaGettable[] ellipses = new AreaGettable[100];
 
@@ -468,7 +477,7 @@ public static void createEllipses() {
     double sum = sumAreas( ellipses );
     System.out.println("The total area is " + sum);
 }
-....
+----
 
 The syntax for creating an anonymous class is ugly. First, you use the
 `new` keyword followed by the name of the interface or parent class you
@@ -570,7 +579,8 @@ necessary is to write the method that will do the sorting. We can wrap
 the bubble code given earlier in a method body with only a few changes
 to generalize the sort beyond `int` values.
 
-....
+[source,java]
+----
 public void sort( Object[] array, boolean age ) {
     boolean swapped = true;
     Object temp;
@@ -585,7 +595,7 @@ public void sort( Object[] array, boolean age ) {
             }
     }
 }
-....
+----
 
 In this method, the `boolean` `age` is `true` if we are sorting by age
 and `false` if we are sorting by weight. Note that the array and `temp`
@@ -595,7 +605,8 @@ reference of type `Object`.
 The only other change we needed was to replace the greater-than
 comparison (`>`) with the `outOfOrder()` method, which we define below.
 
-....
+[source,java]
+----
 public boolean outOfOrder( Object o1, Object o2, boolean age ) {
     if( age ) {
         Ageable age1 = (Ageable)o1;
@@ -608,7 +619,7 @@ public boolean outOfOrder( Object o1, Object o2, boolean age ) {
         return weight1.getWeight() > weight2.getWeight();
     }
 }
-....
+----
 
 Even though we have designed our program for objects that implement both
 the `Ageable` and `Weighable` interfaces, the compiler only sees
@@ -679,7 +690,7 @@ context of interfaces?
 constants storing the wavelengths in nanometers for each of the seven
 colors of light, as given below.
 +
-[cols="^,^",options="header",]
+[.center%autowidth%header,cols="^,^",]
 |======================
 |Color |Wavelength (nm)
 |Red |680
@@ -698,7 +709,8 @@ that you specify.
 8.  There are four compiler errors in the following interface. Name each
 one and explain why it is an error.
 +
-....
+[source,java]
+----
 public interface Singable {
     public int SOPRANO = 1;
     public static int ALTO = 2;
@@ -711,18 +723,20 @@ public interface Singable {
     public static boolean hasPerfectPitch();
     public synchronized void tune( int frequency );
 }
-....
+----
 9.  Consider the interface defined below.
 +
-....
+[source,java]
+----
 public interface Explodable {
     boolean explode( double megatons );
 }
-....
+----
 +
 Which of the following classes properly implement `Explodable`?
 +
-....
+[source,java]
+----
 public class Dynamite implements Explodable {
     public boolean explode() {
         System.out.println("BOOM!");
@@ -749,27 +763,30 @@ public class Firecracker implements Explodable {
         return (megatons < 0.0000001);
     }
 }
-....
+----
 10. Write a single class that correctly implements the following three
 interfaces.
 +
-....
+[source,java]
+----
 public interface Laughable {
     boolean laugh( int times );
 }
-....
+----
 +
-....
+[source,java]
+----
 public interface Cryable {
     void cry( int tears, boolean moaning );
 }
-....
+----
 +
-....
+[source,java]
+----
 public interface Shoutable {
     void laugh( double volume, String words );
 }
-....
+----
 11. If you are sorting a list of items latexmath:[n] elements long
 using bubble sort, what is the minimum number of passes you would need
 to be sure the list is sorted, assuming the worst possible ordering of

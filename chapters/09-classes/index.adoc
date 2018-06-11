@@ -27,15 +27,14 @@ they do at the end of the previous paragraph. Table <<table:nested
 expressions>> shows more examples of correctly and incorrectly nested
 expressions.
 
-.Correctly and incorrectly nested expressions.
-[cols="<,^,<",options="header",]
+[.center%autowidth%header,cols="<l,<l",]
 |===========================================
-|Correctly Nested | |Incorrectly Nested
-|`""` | |`"("`
-|`"(){}" ` | |`"}{"`
-|`"((abc)){x}"` | |`"( a { b ) c }"`
-|`"({[z]})"` | |`"{abc("`
-|`"({xyz})({ijk}[123])"` | |`"{(333)888(})"`
+|Correctly Nested |Incorrectly Nested
+|""|"("
+|"(){}"|"}{"
+|"((abc)){x}"|"( a { b ) c }"
+|"({[z]})"|"{abc("
+|"({xyz})({ijk}[123])"|"{(333)888(})"
 |===========================================
 
 But how can we examine an expression to see if it is correctly nested?
@@ -177,13 +176,14 @@ also sometimes called member variables. You declare fields just like you
 would class variables, except without the `static` keyword. Here’s an
 example with the `Human` class.
 
-....
+[source,java]
+----
 public class Human {
     private String name;
     private String DOB;
     private int height; //in cm
 }
-....
+----
 
 With this definition, a `Human` object has three attributes: `name`,
 `DOB`, and `height`. Because the access modifier for each field is
@@ -192,7 +192,8 @@ values. Note that this class cannot do anything yet. Also, note that
 this class does not contain a `main()` method. There is no way to run
 this class, but that’s fine. We can add a `main()` method, of course.
 
-....
+[source,java]
+----
 public class Human {
     private String name;
     private String DOB;
@@ -204,7 +205,7 @@ public class Human {
         height = 175;
     }
 }
-....
+----
 
 Now we have added a `main()` method, but our code does not compile.
 Since the `main()` method is a static method, it is not associated with
@@ -243,14 +244,15 @@ all share. By using the keyword `static`, we could add a class variable
 called `population` to our `Human` class, since that is information
 connected to humans as a whole, not to any individual human being.
 
-....
+[source,java]
+----
 public class Human {
     private String name;
     private String DOB;
     private int height; //in cm
     private static double population = 7.023E9;
 }
-....
+----
 
 We are using a `double` to represent the world’s population since the
 value is too big to fit in an `int` and is easily expressed in
@@ -270,28 +272,31 @@ up the values inside an object when it is first created. Let’s consider
 a simple `Rectangle` class with only two fields: `length` and `width`,
 both of type `int`.
 
-....
+[source,java]
+----
 public class Rectangle {
     private int length;
     private int width;
-....
+----
 
 One possible constructor for the class is given below.
 
-....
+[source,java]
+----
     public Rectangle( int l, int w ) {
         length = l;
         width = w;
     }
-....
+----
 
 This constructor lets us set the width and length when the object is
 created. To do so, code could invoke the constructor using the `new`
 keyword.
 
-....
+[source,java]
+----
 Rectangle rectangle = new Rectangle(50, 20);
-....
+----
 
 This code creates a new `Rectangle` object, with length 50 and width 20.
 Constructors are almost always `public`, otherwise it would be
@@ -303,12 +308,13 @@ than one constructor as well, just as other methods can be overloaded.
 For more information about overloaded methods, refer back to
 Section <<subsubsection:Overloaded_methods>>.
 
-....
+[source,java]
+----
     public Rectangle( int value ) {
         length = value;
         width = value;
     }
-....
+----
 
 In the very same class, we could have this second constructor, allowing
 us to quickly and easily create a square. All classes have constructors,
@@ -321,20 +327,22 @@ definition of the `Rectangle` class already contains two constructors,
 the following line would cause a compiler error if someone tries to use
 it in their code.
 
-....
+[source,java]
+----
 Rectangle defaultRectangle = new Rectangle();
-....
+----
 
 Another important thing to consider with all instance methods is scope.
 Fields are visible inside of instance methods, but they can be hidden by
 parameters.
 
-....
+[source,java]
+----
     public Rectangle( int length, int width ) {
         length = length;
         width = width;
     }
-....
+----
 
 This version of the two parameter `Rectangle` constructor compiles, but
 it does not properly initialize the values of the fields `length` and
@@ -347,12 +355,13 @@ a dot, followed by the name of that field or method. Since you don’t
 have a variable name to reference the object when you’re inside of it,
 the `this` keyword acts as a reference to the object.
 
-....
+[source,java]
+----
     public Rectangle( int length, int width ) {
         this.length = length;
         this.width = width;
     }
-....
+----
 
 This version of the code functions correctly, since we have explicitly
 told Java to store the argument `length` into the field `length` inside
@@ -381,7 +390,8 @@ information out of an object without making any changes to its fields.
 Accessors can be thought of as asking the object a question. The names
 of accessors often start with the word `get`.
 
-....
+[source,java]
+----
     public int getLength() {
         return length;
     }
@@ -389,7 +399,7 @@ of accessors often start with the word `get`.
     public int getWidth() {
         return width;
     }
-....
+----
 
 Here are two accessors methods that we would expect in the `Rectangle`
 class. The first returns the value of `length`, and the second returns
@@ -402,7 +412,8 @@ type of `int` because that is the type used to store `length` and
 An accessor does not have to be so simple. An accessor could return a
 value that needs to be computed from the underlying field data.
 
-....
+[source,java]
+----
     public int getArea() {
         return length*width;
     }
@@ -410,7 +421,7 @@ value that needs to be computed from the underlying field data.
     public int getPerimeter() {
         return 2*length + 2*width;
     }
-....
+----
 
 These accessors compute the area and perimeter, respectively, of the
 rectangle in question, even though that data is not stored directly in
@@ -431,7 +442,8 @@ describe any methods that change the data inside of an object. For the
 `Rectangle` class, the only internal data we have is the `length` and
 `width` variables. Mutators for these might look as follows.
 
-....
+[source,java]
+----
     public void setLength( int length ) {
         this.length = length;
     }
@@ -439,7 +451,7 @@ describe any methods that change the data inside of an object. For the
     public void setWidth( int width ) {
         this.width = width;
     }
-....
+----
 
 Just as the names for many accessors begin with `get`, the names for
 many mutators begin with `set`. Mutators often have a `void` return type
@@ -456,7 +468,8 @@ declared with the `public` modifier instead of the `private` modifier,
 we could get and set its value directly, without using methods. In
 response, let’s improve the mutators that set `length` and `width`.
 
-....
+[source,java]
+----
     public void setLength( int length ) {
         if( length > 0 )
             this.length = length;
@@ -466,7 +479,7 @@ response, let’s improve the mutators that set `length` and `width`.
         if( width > 0 )
             this.width = width;
     }
-....
+----
 
 With these better mutators, we can prevent a user from setting the
 values of `length` and `width` to negative numbers or zero, values that
@@ -482,9 +495,7 @@ different levels of access that can be applied to fields and methods,
 whether static or not. They are `public`, `private`, `protected`, and
 package-private.
 
-===== `public` modifier
-
-___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+`public` modifier::
 The `public` access modifier states that a variable or method can be
 accessed by any code, no matter what class contains it. Most methods
 should be `public` so that they can be used freely to interact with
@@ -495,11 +506,7 @@ by outside code anyway. In the `Rectangle` class, variables `length` and
 `width` are so simple that making them `public` is not unreasonable. If
 you have a field that can be changed at any time by any code to any
 value, you can leave that field `public`.
-___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
-===== `private` modifier
-
-_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+`private` modifier::
 This modifier states that a variable or method cannot be accessed by any
 code unless the code is contained in the same class. It is important to
 realize that the restriction is based on the *class*, not on the
@@ -508,22 +515,14 @@ inside of any other `Rectangle` object or class. Most fields should be
 `private` so that outside code cannot modify them. Methods can be
 `private`, but these methods should be helper or utility methods used
 inside the class or object to divide up work.
-_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
-===== `protected` modifier
-
-_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+`protected` modifier::
 This modifier states that a variable or method cannot be accessed by any
 code unless the code is contained in the same class, a subclass, or is
 in the same package. This level of access is more restrictive than
 `public` but less restrictive than `private` or default access. We
 discuss it further in the context of subclasses and inheritance in
 Chapter <<chapter:Inheritance>>.
-_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
-===== Package-private (no explicit modifier)
-
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Package-private (no explicit modifier)::
 If you do not type an access modifier when you declare a field or
 method, that field or method is not `public`. Instead, it has the
 default or package-private access modifier applied to it. Fields or
@@ -535,8 +534,7 @@ There is no keyword for this access modifier. It is useful if you are
 designing a package containing classes that must be able to access each
 other’s fields or methods. For now, you should always give your fields
 and methods an explicit `public` or `private` (or sometimes `protected`)
-modifier. +
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+modifier.
 
 From least restrictive to most restrictive, the modifiers are `public`,
 `protected`, package-private, and `private`. Each additional level of
@@ -545,9 +543,10 @@ can be accessed by code from the same class. The following table gives
 the contexts outside the class that can access a field or method marked
 with each modifier.
 
-[cols=">,^,^,^",options="header",]
+[.center%autowidth%header,cols=">.>,3*^.>",]
 |======================================================
-|*Modifier* |*Package* |*Subclass* |*Unrelated Classes*
+|Modifier |Package |Subclass |Unrelated +
+Classes
 |`public` |Yes |Yes |Yes
 |`protected` |Yes |Yes |No
 |Package-private |Yes |No |No
@@ -673,7 +672,8 @@ class whose objects are independent of any particular outer class
 object. Such a class is called a _static nested class_. Consider the
 following class definition.
 
-....
+[source,java]
+----
 public class Outer {
     private int x;
     private int y;
@@ -682,7 +682,7 @@ public class Outer {
         private int z;
     }
 }
-....
+----
 
 A static nested class is similar to a normal, top-level class with two
 differences. First, the full name of a nested class is the name of the
@@ -701,9 +701,10 @@ in connection with the outer class. Thus, nesting the class groups it
 with its outer class. We can create an instance of the nested class
 above as follows.
 
-....
+[source,java]
+----
 Outer.Nested nested = new Outer.Nested();
-....
+----
 
 Because it is a static nested class, we do not need an instance of type
 `Outer` to create an instance of type `Outer.Nested`. If you compile
@@ -729,7 +730,8 @@ can deliver only the `.class` file for the outer class to your customer.
 Consider the `Square` class, similar to the `Rectangle` class given
 earlier.
 
-....
+[source,java]
+----
 public class Square {
     private int side;
 
@@ -741,13 +743,14 @@ public class Square {
         return side*side;
     }
 }
-....
+----
 
 We could add a static nested class called `Test` to `Square` to test
 that its `getArea()` and `getPerimeter()` methods are working properly.
 The final code might be as follows.
 
-....
+[source,java]
+----
 public class Square {
     private int side;
 
@@ -777,7 +780,7 @@ public class Square {
         }
     }
 }
-....
+----
 
 To run the tests, you would compile `Square.java` and then run the
 nested class by invoking `java Square$Test`. It is unwise to use the
@@ -796,7 +799,8 @@ object of the outer class. You can think of an inner class object living
 class object without having an outer class object first. Consider the
 following class definition.
 
-....
+[source,java]
+----
 public class Outer {
     private int a;
 
@@ -805,7 +809,7 @@ public class Outer {
         private int c;
     }
 }
-....
+----
 
 Every instance of `Inner` must be associated with an instance of
 `Outer`. To instantiate an inner class, you use the name of an outer
@@ -813,10 +817,11 @@ class object, followed by a dot, followed by the `new` keyword, and then
 the name of the inner class. We can create an instance of the inner
 class above as follows.
 
-....
+[source,java]
+----
 Outer outer = new Outer();
 Outer.Inner inner = outer.new Inner();
-....
+----
 
 This syntax looks confusing, but it makes `inner` an object that exists
 inside of `outer`. Thus, if there were methods defined in `Inner`, they
@@ -863,7 +868,8 @@ Iterators are a very common application of inner classes.
 We can create a `SafeArray` class that only allows data to be written to
 its internal array if it falls in the legal range of indexes.
 
-....
+[source,java]
+----
 public class SafeArray {
     private double[] data;
 
@@ -876,14 +882,15 @@ public class SafeArray {
             data[index] = value;
     }
 }
-....
+----
 
 We could add an inner class called `Iterator` to `SafeArray` that allows
 us to process all the array values without knowing how many there are.
 This kind of behavior is useful for many dynamic data structures, as
 discussed in Chapter <<chapter:Dynamic_Data_Structures>>.
 
-....
+[source,java]
+----
 public class SafeArray {
     private double[] data;
 
@@ -911,12 +918,13 @@ public class SafeArray {
         }
     }
 }
-....
+----
 
 The following method uses the iterator we have defined to find the sum
 of the values in a `SafeArray` object.
 
-....
+[source,java]
+----
 public static findSum( SafeArray array ) {
     double sum = 0;
     SafeArray.Iterator iterator = array.new Iterator();
@@ -926,7 +934,7 @@ public static findSum( SafeArray array ) {
 
     return sum;
 }
-....
+----
 
 ====
 
@@ -1100,7 +1108,8 @@ would be easier to make all fields `public`?
 use it? When can it be ignored?
 8.  Consider the following class definitions.
 +
-....
+[source,java]
+----
 public class A {
     private int a;
 
@@ -1125,7 +1134,7 @@ public class B {
         object.a = b;
     }
 }
-....
+----
 +
 The field `a` is used three times in the previous code. Which of these
 uses cause a compiler error and why?
@@ -1133,10 +1142,11 @@ uses cause a compiler error and why?
 `SymbolStack` that implements a simple stack using two fields, defined
 as followed:
 +
-....
+[source,java]
+----
 private char[] symbols;
 private int size;
-....
+----
 +
 By calling the `top()` or `pop()` methods on an empty stack, it is
 possible to cause a program to crash. What additional problems could
@@ -1144,7 +1154,8 @@ happen if `symbols` and `size` were declared `public` and malicious or
 poorly written code had access to the object?
 10. Consider the following class definition.
 +
-....
+[source,java]
+----
 public class GroceryItem {
     private String name;
     private double price;
@@ -1157,7 +1168,7 @@ public class GroceryItem {
     public String getName() { return name; }
     public String getPrice() { return price; }
 }
-....
+----
 +
 This class compiles, but its constructor does not function properly. Why
 not?
