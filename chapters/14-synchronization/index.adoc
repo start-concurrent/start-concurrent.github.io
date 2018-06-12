@@ -90,10 +90,11 @@ Each thread should increase the value of `counter` a total of
 for `counter = counter + 1`. To be even more explicit we could write it
 as follows.
 
-....
+[source, java]
+-----
 temp = counter;
 counter = temp + 1;
-....
+-----
 
 One thread may get as far as storing `counter` into a temporary
 location, but then it runs out of time and the next thread in the
@@ -144,11 +145,12 @@ Let’s imagine a class with a private `String` field called `message`
 which is set to be `"Will Robinson!"` by the constructor. Now, we define
 the following method.
 
-....
+[source, java]
+-----
 public synchronized void danger() {
     message = "Danger, " + message;
 }
-....
+-----
 
 If `danger()` is called five times from different threads, `message`
 will contain +
@@ -170,12 +172,13 @@ which call other synchronized methods.
 Consider method `safety()` which does the "`opposite`" of `danger()`, by
 removing occurrences of `"Danger, "` from the beginning of `message`.
 
-....
+[source, java]
+-----
 public synchronized void safety() {
     if( message.startsWith("Danger, ") )
         message = message.substring( 8 );
 }
-....
+-----
 
 Will the `danger()` and `safety()` methods play nicely together? In
 other words, will a thread be blocked from entering `safety()` if
@@ -197,13 +200,14 @@ Although it takes a little more work, using `synchronized` with a block
 of code allows more fine-grained control. The following version of
 `danger()` is equivalent to the earlier one.
 
-....
+[source, java]
+-----
 public void danger() {
     synchronized( this ) {
         message = "Danger, " + message;
     }
 }
-....
+-----
 
 Using `synchronized` on a block of code gives us more flexibility in two
 ways. First, we can choose exactly how much code we want to control,
@@ -218,14 +222,16 @@ can use the fine-grained control the block style provides. First, you’ll
 need some objects to use as locks, probably declared so that they can
 easily be shared, perhaps as static fields of a class.
 
-....
+[source, java]
+-----
 private static Object lock1 = new Object();
 private static Object lock2 = new Object();
-....
+-----
 
 Then, wherever you need control over concurrency, you use them as locks.
 
-....
+[source, java]
+-----
 synchronized( lock1 ){
     //do dangerous thing 1
 }
@@ -235,7 +241,7 @@ synchronized( lock1 ){
 synchronized( lock2 ){
     //do dangerous thing 2, unrelated to dangerous thing 1
 }
-....
+-----
 
 Since declaring a method with `synchronized` is equivalent to having its
 body enclosed in a block beginning with `synchronized(this)`, what about
@@ -260,7 +266,8 @@ counting. We could use a synchronized block and an indicator `boolean`
 called `votingComplete` to allow the collector thread to signal to the
 counting thread.
 
-....
+[source, java]
+-----
 while( true ) {
     synchronized( this ) {
         if( votingComplete )
@@ -268,7 +275,7 @@ while( true ) {
     }
 }
 countVotes();
-....
+-----
 
 What’s the problem with this design? Notice that the counting thread is
 running through the `while` loop over and over waiting for
@@ -288,14 +295,15 @@ Programming>>, there is a Not Runnable state which threads enter by
 calling `sleep()`, calling `wait()`, or performing blocking I/O. Using
 `wait()`, we can rewrite the vote counting thread.
 
-....
+[source, java]
+-----
 synchronized( this ) {
     while( !votingComplete ) {
         wait();
     }
 }
 countVotes();
-....
+-----
 
 Notice that the `while` loop has moved inside the synchronized block.
 Doing so before might have kept our program from terminating: As long as
@@ -313,13 +321,14 @@ synchronized block or method. Here is corresponding code the vote
 collecting thread would use to notify the counting thread that voting is
 complete.
 
-....
+[source, java]
+-----
 // finish collecting votes
 synchronized( this ) {
     votingComplete = true;
     notifyAll();
 }
-....
+-----
 
 A call to `notify()` will wake up one thread waiting on the lock object.
 If there are many threads waiting, the method `notifyAll()` used above
@@ -720,7 +729,8 @@ implementation of matrix multiply given in Example <<example:Matrix
 multiplication>> and use the `synchronized` keyword to lock on the
 matrix itself.
 
-....
+[source, java]
+-----
 public void run() {
     synchronized( c ) {
         for( int i = lower; i < upper; i++ )
@@ -729,7 +739,7 @@ public void run() {
                     c[i][j] += a[i][k] * b[k][j];
     }
 }
-....
+-----
 
 In this case, only a single thread would have access to the matrix at
 any given time, and all speedup would be lost.
@@ -890,12 +900,13 @@ increments a variable with several threads from
 Section <<concepts:Thread_interaction>>. We can rewrite the `run()`
 method as follows.
 +
-....
+[source, java]
+-----
 public synchronized void run() {
     for( int i = 0; i < COUNT / THREADS; i++ )
         counter++;
 }
-....
+-----
 +
 Will this change fix the race condition? Why or why not?
 8.  <<exercise:deadlock_conditions>> Examine our deadlock example from
