@@ -22,7 +22,7 @@ behavior (and even people starving!)
 Concurrency gives us the potential to make our programs faster but
 introduces a number of other problems. The way that threads interact can
 be unpredictable. Because they share memory, one thread can corrupt the
-value in another thread’s variables. We introduce synchronization tools
+value in another thread's variables. We introduce synchronization tools
 in this chapter that can prevent threads from corrupting data, but these
 tools create new pitfalls. To explore these pitfalls, we give you
 another problem to solve.
@@ -82,19 +82,19 @@ vary a lot. On all systems, if you change the value of `THREADS` to `1`,
 the answer should always be correct.
 
 Looking at the code, the problem might not be obvious. Everything
-centers on the statement `counter++` in the `for` loop inside the
+centers on the statement `+counter+\++` in the `for` loop inside the
 `run()` method. But, this statement appears to execute in a single step!
 Each thread should increase the value of `counter` a total of
 `COUNT/THREADS` times, adding up to `1000000`. The trouble is that
-`counter++` is not a single step. Recall that `counter++` is shorthand
+`+counter+++` is not a single step. Recall that `+counter+++` is shorthand
 for `counter = counter + 1`. To be even more explicit we could write it
 as follows.
 
-[source, java]
------
+[source,java]
+----
 temp = counter;
 counter = temp + 1;
------
+----
 
 One thread may get as far as storing `counter` into a temporary
 location, but then it runs out of time and the next thread in the
@@ -113,7 +113,7 @@ operation is one which cannot be interrupted by a context switch to
 another thread. The actual code that the JVM runs is much lower level
 than source code.
 
-We can’t easily force a non-atomic operation to be atomic, but there are
+We can't easily force a non-atomic operation to be atomic, but there are
 ways to restrict access to certain pieces of code under certain
 conditions. The name we give to a piece of code which should not be
 accessed by more than one thread at a time is a _critical section_. In
@@ -141,16 +141,16 @@ In Java, the language feature which allows you to enforce mutual
 exclusion is the `synchronized` keyword. There are two ways to use this
 keyword: with a method or with an arbitrary block of code. In the method
 version, you add the `synchronized` modifier before the return type.
-Let’s imagine a class with a private `String` field called `message`
+Let's imagine a class with a private `String` field called `message`
 which is set to be `"Will Robinson!"` by the constructor. Now, we define
 the following method.
 
-[source, java]
------
+[source,java]
+----
 public synchronized void danger() {
     message = "Danger, " + message;
 }
------
+----
 
 If `danger()` is called five times from different threads, `message`
 will contain +
@@ -172,13 +172,13 @@ which call other synchronized methods.
 Consider method `safety()` which does the "`opposite`" of `danger()`, by
 removing occurrences of `"Danger, "` from the beginning of `message`.
 
-[source, java]
------
+[source,java]
+----
 public synchronized void safety() {
     if( message.startsWith("Danger, ") )
         message = message.substring( 8 );
 }
------
+----
 
 Will the `danger()` and `safety()` methods play nicely together? In
 other words, will a thread be blocked from entering `safety()` if
@@ -200,14 +200,14 @@ Although it takes a little more work, using `synchronized` with a block
 of code allows more fine-grained control. The following version of
 `danger()` is equivalent to the earlier one.
 
-[source, java]
------
+[source,java]
+----
 public void danger() {
     synchronized( this ) {
         message = "Danger, " + message;
     }
 }
------
+----
 
 Using `synchronized` on a block of code gives us more flexibility in two
 ways. First, we can choose exactly how much code we want to control,
@@ -218,30 +218,30 @@ to get the lock and do all the other management needed to make the
 `synchronized` keyword work.
 
 If you have two critical sections which are unrelated to each other, you
-can use the fine-grained control the block style provides. First, you’ll
+can use the fine-grained control the block style provides. First, you'll
 need some objects to use as locks, probably declared so that they can
 easily be shared, perhaps as static fields of a class.
 
-[source, java]
------
+[source,java]
+----
 private static Object lock1 = new Object();
 private static Object lock2 = new Object();
------
+----
 
 Then, wherever you need control over concurrency, you use them as locks.
 
-[source, java]
------
-synchronized( lock1 ){
+[source,java]
+----
+synchronized( lock1 ) {
     //do dangerous thing 1
 }
 
 //do safe things
 
-synchronized( lock2 ){
+synchronized( lock2 ) {
     //do dangerous thing 2, unrelated to dangerous thing 1
 }
------
+----
 
 Since declaring a method with `synchronized` is equivalent to having its
 body enclosed in a block beginning with `synchronized(this)`, what about
@@ -266,8 +266,8 @@ counting. We could use a synchronized block and an indicator `boolean`
 called `votingComplete` to allow the collector thread to signal to the
 counting thread.
 
-[source, java]
------
+[source,java]
+----
 while( true ) {
     synchronized( this ) {
         if( votingComplete )
@@ -275,9 +275,9 @@ while( true ) {
     }
 }
 countVotes();
------
+----
 
-What’s the problem with this design? Notice that the counting thread is
+What's the problem with this design? Notice that the counting thread is
 running through the `while` loop over and over waiting for
 `votingComplete` to become `true`. On a single processor, the counting
 thread would slow down the job of the collecting thread which is trying
@@ -295,15 +295,15 @@ Programming>>, there is a Not Runnable state which threads enter by
 calling `sleep()`, calling `wait()`, or performing blocking I/O. Using
 `wait()`, we can rewrite the vote counting thread.
 
-[source, java]
------
+[source,java]
+----
 synchronized( this ) {
     while( !votingComplete ) {
         wait();
     }
 }
 countVotes();
------
+----
 
 Notice that the `while` loop has moved inside the synchronized block.
 Doing so before might have kept our program from terminating: As long as
@@ -313,7 +313,7 @@ however, it gives up the corresponding lock it is holding until it wakes
 up and runs again. Why use the `while` loop at all, now? There is no
 guarantee that the condition you are waiting for is `true`. Many threads
 may be waiting on this particular lock. We use the `while` loop to check
-that `votingComplete` is `true` and wait again if it isn’t.
+that `votingComplete` is `true` and wait again if it isn't.
 
 In order to notify a waiting thread, the other thread calls the
 `notify()` method. Like `wait()`, `notify()` must be called within a
@@ -321,14 +321,14 @@ synchronized block or method. Here is corresponding code the vote
 collecting thread would use to notify the counting thread that voting is
 complete.
 
-[source, java]
------
+[source,java]
+----
 // finish collecting votes
 synchronized( this ) {
     votingComplete = true;
     notifyAll();
 }
------
+----
 
 A call to `notify()` will wake up one thread waiting on the lock object.
 If there are many threads waiting, the method `notifyAll()` used above
@@ -388,7 +388,7 @@ other ways that reading and writing threads might interact. Consider the
 following programming problem, similar to one you might find in real
 life.
 
-As a rising star in a bank’s IT department, you have been given the job
+As a rising star in a bank's IT department, you have been given the job
 of creating a new bank account class called `SynchronizedAccount`. This
 class must have methods to support the following operations: deposit,
 withdraw, and check balance. Each method should print a status message
@@ -646,15 +646,15 @@ getting ready at different times. They follow the pattern of getting
 ready for a while, waiting for their friends to get ready, and then
 calling their friends to see if the other two are ready. If all three
 are ready, then the friends will leave. Unfortunately, if a friend calls
-and either of the other two aren’t ready, he’ll become frustrated and
-stop being ready. Perhaps he’ll realize that he’s got time to take a
+and either of the other two aren't ready, he'll become frustrated and
+stop being ready. Perhaps he'll realize that he's got time to take a
 shower or get involved in some other activity for a while. After
-finishing that activity, he’ll become ready again and wait for his
+finishing that activity, he'll become ready again and wait for his
 friends to become ready.
 
 If the timing is just right, the three friends will keep becoming ready,
 waiting for a while, and then becoming frustrated when they realize that
-their friends aren’t ready. Here is a rough simulation of this process
+their friends aren't ready. Here is a rough simulation of this process
 in code.
 
 [source, java, linenums]
@@ -695,18 +695,18 @@ testing whether `totalReady` is `3`. If not, he decrements `totalReady`
 and repeats the process.
 
 At roughly 75 milliseconds into the simulation, the first friend becomes
-ready, but he doesn’t check with his friends until 150 milliseconds.
-Unfortunately, the second friend doesn’t become ready until 175
+ready, but he doesn't check with his friends until 150 milliseconds.
+Unfortunately, the second friend doesn't become ready until 175
 milliseconds. He then checks with his friends at 225 milliseconds,
 around which time the first friend is becoming ready a second time.
-However, the third friend isn’t ready until 275 milliseconds. When he
-then checks at 350 milliseconds, the first friend isn’t ready anymore.
+However, the third friend isn't ready until 275 milliseconds. When he
+then checks at 350 milliseconds, the first friend isn't ready anymore.
 On some systems the timing might drift such that the friends all become
 ready at the same time, but it could take a long, long while.
 
 In reality, human beings would not put off going to a party
 indefinitely. Some people would decide that it was too late to go.
-Others would go alone. Others would go over to their friends’ houses and
+Others would go alone. Others would go over to their friends' houses and
 demand to know what was taking so long. Computers are not nearly as
 sensible and must obey instructions, even if they cause useless
 repetitive patterns. Realistic examples of livelock are hard to show in
@@ -729,8 +729,8 @@ implementation of matrix multiply given in Example <<example:Matrix
 multiplication>> and use the `synchronized` keyword to lock on the
 matrix itself.
 
-[source, java]
------
+[source,java]
+----
 public void run() {
     synchronized( c ) {
         for( int i = lower; i < upper; i++ )
@@ -739,7 +739,7 @@ public void run() {
                     c[i][j] += a[i][k] * b[k][j];
     }
 }
------
+----
 
 In this case, only a single thread would have access to the matrix at
 any given time, and all speedup would be lost.
@@ -875,7 +875,7 @@ years, and research continues to find better solutions.
 makes it illegal to use the `synchronized` keyword on constructors.
 During the creation of an object, it is possible to _leak_ data to the
 outside world by adding a reference to the object under construction to
-some shared data structure. What’s the danger of leaking data in this
+some shared data structure. What's the danger of leaking data in this
 way?
 3.  <<exercise:wait_or_notify_without_synchronized>> If you call
 `wait()` or `notify()` on an object, it must be inside of a block
@@ -895,18 +895,18 @@ food be passed from waiter to chef and chef to waiter? How would you
 synchronize the process?
 6.  <<exercise:race_condition>> What is a race condition? Give a real
 life example of one.
-7.  <<exercise:per_object_lock>> Let’s reexamine the code that
+7.  <<exercise:per_object_lock>> Let's reexamine the code that
 increments a variable with several threads from
 Section <<concepts:Thread_interaction>>. We can rewrite the `run()`
 method as follows.
 +
-[source, java]
------
+[source,java]
+----
 public synchronized void run() {
     for( int i = 0; i < COUNT / THREADS; i++ )
         counter++;
 }
------
+----
 +
 Will this change fix the race condition? Why or why not?
 8.  <<exercise:deadlock_conditions>> Examine our deadlock example from

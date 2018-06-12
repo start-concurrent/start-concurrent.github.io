@@ -8,7 +8,7 @@ The evil mastermind from Chapter <<chapter:Concurrent_Programming>> has
 returned with a new attempt at world domination. Since he now knows that
 you can use concurrency to crack his security code, this time he has
 hidden his deadly virus in a secret location protected by a complex maze
-of walls and passageways. Fortunately, you’ve been able to get a copy of
+of walls and passageways. Fortunately, you've been able to get a copy of
 the maze floor plan, but now you must write a program to find a path
 through the maze so you can steal the deadly virus before the evil
 mastermind releases it on the world.
@@ -19,18 +19,18 @@ image::maze.svg[scaledwidth=50%,pdfwidth=50%,width=50%]
 
 
 Finding a path through a maze involves systematically exploring twists
-and turns, keeping track of where you’ve been, backtracking out of dead
+and turns, keeping track of where you've been, backtracking out of dead
 ends, and producing a resulting path once you make it through. You
 already have the basic tools necessary to solve this problem. You can,
 for example, represent the maze with a two-dimensional array of
-characters, where a plus (`'+'`) represents a wall and a space (`' '`)
+characters, where a plus ( `'+'` ) represents a wall and a space ( `' '` )
 represents a passageway. You could create a path through the maze by
 replacing a contiguous (vertical and horizontal but not diagonal)
 sequence of `' '` characters by `'*'` characters, that lead from the
 starting square to the final square where the deadly virus is located.
 
 The difficulty is dead ends or, worse, loops. How do you keep track of
-which paths you’ve tried that didn’t work? While you could use
+which paths you've tried that didn't work? While you could use
 additional data structures to store this additional information,
 _recursion_ is a solution technique that makes solving problems like
 this one surprisingly straightforward.
@@ -55,7 +55,7 @@ problem solving in Java? How does the computer keep track of these
 self-references? The following subsections address precisely these
 questions.
 
-[[subsection:What_is_recursion?]]
+[[subsection:What_is_recursion]]
 ==== What is recursion?
 
 In the context of computer science and mathematics, recursion means
@@ -88,16 +88,15 @@ given year. Here latexmath:[age(year)] is a function that gives the
 age you were during year latexmath:[year].
 
 latexmath:[age(year) =
-\begin{cases} 0 & \text{\textbf{(Base Case)} if you were born in  $year$}
+\begin{cases} 0 & \text{if you were born in $year$} & \text{(Base Case)}
 \\
-  1 + age(year-1) & \text{\textbf{(Recursive Case)} if you were born before
-  $year$}
+  1 + age(year-1) & \text{if you were born before $year$} & \text{(Recursive Case)}  
 \end{cases}]
 
 To be meaningful, recursive cases should be defined in terms of simpler
 or smaller values. In English, it is equally correct to say that you are
-now a year younger than you’ll be next year. Unfortunately, the age that
-you’ll be next year is not any closer to a base case, making that
+now a year younger than you'll be next year. Unfortunately, the age that
+you'll be next year is not any closer to a base case, making that
 recursion useless.
 
 .Recursive refinement generating a tree-like image.
@@ -143,9 +142,9 @@ multiplication with the following recursive definition. Note the base
 case and recursive case.
 
 latexmath:[x \times y =
-\begin{cases} x & \text{\textbf{(Base Case)} if  $y = 1$}
+\begin{cases} x & \text{if  $y = 1$} & \text{(Base Case)}
 \\
-x + \left(x \times (y - 1)\right) & \text{\textbf{(Recursive Case)} if $y > 1$}
+x + \left(x \times (y - 1)\right) & \text{if $y > 1$} & \text{(Recursive Case)}
 \end{cases}]
 
 Multiplication seems like such a basic operation that there would be no
@@ -167,9 +166,9 @@ like recursive definitions because they are able to describe functions
 and sequences precisely without using ellipses (latexmath:[\ldots]).
 
 latexmath:[n! =
-\begin{cases} 1 & \text{\textbf{(Base Case)} if  $n = 0$}
+\begin{cases} 1 & \text{if  $n = 0$} & \text{(Base Case)}
 \\
-n \cdot (n-1)! & \text{\textbf{(Recursive Case)} if $n>0$}
+n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
 \end{cases}]
 
 Note that the base case gives latexmath:[1] as the answer when
@@ -196,10 +195,10 @@ definition. Indeed, you may have noticed that we described each term as
 the sum of the two previous terms. We can formally define the
 latexmath:[n]^th^ Fibonacci number latexmath:[F_n] as follows,
 starting with latexmath:[n=0]. latexmath:[F_n=
-\begin{cases} 1 & \text{\textbf{(Base
-Cases)} if  $n=0$ or  $n = 1$}
+\begin{cases} 1 & \text{if  $n=0$ or  $n = 1$} & \text{(Base
+Cases)}
 \\
-F_{n-1}+F_{n-2} & \text{\textbf{(Recursive Case)} if $n>1$}
+F_{n-1}+F_{n-2} & \text{if $n>1$} & \text{(Recursive Case)}
 \end{cases}]
 
 Since the latexmath:[F_n] depends on the two previous terms, it is
@@ -219,10 +218,10 @@ operations on elements of a sequential data structure. We sum the
 elements of an array by iterating through them from first to last. We
 multiply two matrices by using nested `for` loops to sequence through
 the matrix contents in the proper order. Similarly, one method may make
-a sequence of one or more calls to other methods. We’re confident that
+a sequence of one or more calls to other methods. We're confident that
 such computations terminate because we start at the beginning and work
 to the end of a finite structure. But what if the structure is not a
-simple linear or multidimensional array? The path we’re trying to find
+simple linear or multidimensional array? The path we're trying to find
 through the maze is of unknown length and may not take a "`straight
 line`" through the array.
 
@@ -328,11 +327,11 @@ chapters may make it harder for you to embrace recursion.
 Iteration views the whole problem at once and tries to sequence all the
 pieces of the solution in some organized way. Recursion is only
 concerned with the current step in the solution. If the current step is
-one in which the answer is clear, you’re in a base case. Otherwise, the
+one in which the answer is clear, you're in a base case. Otherwise, the
 solution takes one step toward the answer and then makes the leap of
 faith, allowing the recursion to take care of the rest. Programmers who
 are new to recursion are often tempted to do too much in each recursive
-call. Don’t rush it!
+call. Don't rush it!
 
 The use of recursion in languages like Java owes much to the development
 of _functional programming_. In many functional languages (such as
@@ -380,9 +379,9 @@ factorial function. Recall the recursive definition that describes the
 function.
 
 latexmath:[n! =
-\begin{cases} 1 & \text{\textbf{(Base Case)} if $n = 0$}
+\begin{cases} 1 & \text{if $n = 0$} & \text{(Base Case)}
 \\
-n \cdot (n-1)! & \text{\textbf{(Recursive Case)} if $n>0$}
+n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
 \end{cases}]
 
 By translating this mathematical definition almost directly into Java,
@@ -411,10 +410,10 @@ enough to fit inside of an `int`.
 Let us return to the recursive definition of Fibonacci.
 
 latexmath:[F_n=
-\begin{cases} 1 & \text{\textbf{(Base
-Cases)} if  $n=0$ or $n = 1$}
+\begin{cases} 1 & \text{if  $n=0$ or $n = 1$} & \text{(Base
+Cases)}
 \\
-F_{n-1}+F_{n-2} & \text{\textbf{(Recursive Case)} if  $n>1$}
+F_{n-1}+F_{n-2} & \text{if  $n>1$} & \text{(Recursive Case)}
 \end{cases}]
 
 Like factorial, this definition translates naturally into a recursive
@@ -486,7 +485,7 @@ The extra pole is used as a holder for intermediate moves. The idea
 behind the recursive solution follows.
 
 Base Case:::
-  Moving one disk is easy. Just move it from the pole it’s on to the
+  Moving one disk is easy. Just move it from the pole it's on to the
   destination pole.
 Recursive Case:::
   In order to move latexmath:[n > 1] disks from one pole to another,
@@ -525,14 +524,14 @@ efficient solutions. Consider the problem of exponentiation, which looks
 trivial: Given a rational number latexmath:[a] and a positive integer
 latexmath:[n], find the value of latexmath:[a^n].
 
-It’s tempting to call `Math.pow(a, n)` or to use a short `for` loop to
+It's tempting to call `Math.pow(a, n)` or to use a short `for` loop to
 compute this value, but what if neither tool existed in Java? A simple
 recursive formulation can describe exponentiation.
 
 latexmath:[a^n =
-\begin{cases} a & \text{\textbf{(Base case)} if $n=1$}
+\begin{cases} a & \text{if $n=1$} & \text{(Base case)}
 \\
-a \cdot a^{n - 1} & \text{\textbf{(Recursive case)} if $n>1$}
+a \cdot a^{n - 1} & \text{if $n>1$} & \text{(Recursive case)}
 \end{cases}]
 
 As with factorial and Fibonacci, directly converting the recursive
@@ -563,9 +562,9 @@ that makes the method much more efficient with many fewer recursive
 calls. Consider this alternative recursion definition of exponentiation.
 
 latexmath:[a^n =
-\begin{cases} a & \text{\textbf{(Base Case)} if  $n=1$}
+\begin{cases} a & \text{if  $n=1$} & \text{(Base Case)}
 \\
-\left(a^{\frac{n}{2}}\right)^2 & \text{\textbf{(Base Case)} if  $n>1$}
+\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$} & \text{(Base Case)}
 \end{cases}]
 
 Recalling basic rules of exponents,
@@ -590,7 +589,7 @@ Note that we only make the recursive call once and save it in `temp`. If
 we made two recursive calls, we would no longer be more efficient than
 the previous method. That version took latexmath:[n] recursive calls.
 How efficient is this version? The answer is the number of times you
-have to cut latexmath:[n] in half before you get 1. Let’s call that
+have to cut latexmath:[n] in half before you get 1. Let's call that
 value latexmath:[x]. Recall that latexmath:[n] is a power of 2,
 meaning that latexmath:[n = 2^k] for some integer
 latexmath:[k \geq 0].
@@ -670,7 +669,7 @@ Merge sort is an efficient sorting algorithm that is usually implemented
 recursively. The idea of the sort is to break a list of items in half
 and recursively merge sort each half. Then, these two sorted halves are
 merged back together into the final sorted list. The base case of the
-recursion is when there’s only a single item in the list, since a list
+recursion is when there's only a single item in the list, since a list
 with only one thing in it is, by definition, sorted.
 
 Here is a method that recursively sorts an `int` array using the merge
@@ -696,7 +695,7 @@ public static void mergeSort( int[] array ) {
 The `mergeSort()` method is quite short and appears to do very little.
 It starts by creating arrays `a` and `b` and copying roughly half of the
 elements in `array` into each. We make `a` half the size of `array`, but
-we can’t do the same thing for `b` because an odd length for `array`
+we can't do the same thing for `b` because an odd length for `array`
 would leave us without enough space in `a` and `b` to hold everything
 from `array`. Instead, we let `b` hold however much is leftover after
 the elements for `a` have been accounted for.
@@ -731,8 +730,8 @@ method assumes that `a` and `b` are sorted and that the sum of their
 lengths is the length of `array`. We want to compare each element in `a`
 and `b`, always taking the smaller and putting it into the next
 available location in `array`. Since the next smallest item could be in
-either `a` or `b`, we never know when we’ll run out of elements in
-either array. That’s why the first two `if` statements in the `merge()`
+either `a` or `b`, we never know when we'll run out of elements in
+either array. That's why the first two `if` statements in the `merge()`
 method check to see if the `bIndex` or the `aIndex` is already past the
 last element in its respective array. If so, the next element from the
 other array is automatically used. By the time the third `if` statement
@@ -784,7 +783,7 @@ manipulate recursive data structures.
 
 How would you get the size of a linked list? The implementation in
 Program <<program:LinkedList>> keeps track of its size as it grows, but
-what if it didn’t? A standard way to count the elements in the list
+what if it didn't? A standard way to count the elements in the list
 would be to start with a reference to the head of the list and a counter
 with value zero. As long as the reference is not `null`, add one to the
 counter and set the reference to the next element on the list.
@@ -808,7 +807,7 @@ list using this recursive procedure. Note that there is a non-recursive
 non-recursive method is called a _proxy method_. The recursive method
 requires access to the internals of the data structure. The proxy method
 calls the recursive method with the appropriate starting point (`head`),
-while providing a public way to get the list’s size without exposing its
+while providing a public way to get the list's size without exposing its
 internals.
 
 .Linked list implementation with a recursive `size()` method for counting its elements.
@@ -873,7 +872,7 @@ the root.
 This recursive definition describes a tree that makes items with a
 natural ordering easy to find. If you are looking for an item, you first
 look at the root of the tree. If the item you want is in the root,
-you’ve found it! If the item you want is smaller than the root, go left.
+you've found it! If the item you want is smaller than the root, go left.
 If the item you want is larger than the root, go right. If you ever run
 out of tree (hit a `null`), the item is not in the tree.
 
@@ -981,7 +980,7 @@ can reuse code.
 Program <<program:GenericTree>> defines a generic version of the `Tree`
 class. This example is complicated by the fact that we need to be able
 to compare the value we want to store with the value in each `Node`
-object. We can’t make a tree with any arbitrary type. Objects of the
+object. We can't make a tree with any arbitrary type. Objects of the
 type *must* have the ability to be compared to each other and ordered.
 Thus, we use a _bounded type parameter_ specifying that the type `T`
 stored in each `Tree` must implement the `Comparable` interface. This
@@ -1035,14 +1034,14 @@ include::programs/ReadAndSortGenerics.java[]
 
 Our algorithm for solving the maze follows the conventional
 pencil-and-paper method: trial and error! We mark locations in the maze
-with `'*'` as we explore them. If we come to a dead end, we unmark the
-location (by replacing `'*'` with `' '`) and return to our previous
+with `+'*'+` as we explore them. If we come to a dead end, we unmark the
+location (by replacing `+'*'+` with `' '`) and return to our previous
 location to try a different direction.
 
 Start at the beginning square of the maze, which must be a passageway.
-Mark that location as part of the path by putting `'*'` in the cell.
+Mark that location as part of the path by putting `+'*'+` in the cell.
 Now, what can we do? There are, in general, four possible directions to
-head: up, down, left, or right. If that direction doesn’t take you
+head: up, down, left, or right. If that direction doesn't take you
 outside the bounds of the array, then you find either a wall or a
 passageway. If you have been walking through the maze, you may also find
 a part of the current path (often the square you were on before the
@@ -1052,15 +1051,15 @@ Suppose from your current point in the maze you could send a scout ahead
 in each of the four directions. If the direction did not take the scout
 out of bounds, he would find either a wall, a part of the current path
 (the path that led into that space), or an open passageway. If the scout
-doesn’t find an open passageway, he reports back that that direction
-doesn’t work.
+doesn't find an open passageway, he reports back that that direction
+doesn't work.
 
 On the other hand, if the scout finds an open passageway, what does he
 do? Brace yourself! He does the exact same thing you just did: Sends out
 scouts of his own in each of the four possible directions.
 
 With careful, consistent coding, you and the scout follow the exact same
-process. And the scout’s scouts. And so on. There is, in fact, only one
+process. And the scout's scouts. And so on. There is, in fact, only one
 method and instead of calling a scout method to investigate each of the
 squares in the four directions, you call yourself recursively.
 
@@ -1189,7 +1188,7 @@ interface, which is similar to the `Runnable` interface in that it
 allows you to specify a class whose objects can be started as
 independent threads. Both the `Future` interface and the `Callable` are
 generic interfaces that require to specify a type. Remember that futures
-are supposed to give back an answer, and that’s the type that you supply
+are supposed to give back an answer, and that's the type that you supply
 as a parameter. For example, when creating a future that returns an
 `int` value, you would create a class that implemented the
 `Callable<Integer>` interface, requiring it to contain a method with the
@@ -1269,7 +1268,7 @@ Inside the `main()` method, we create an `ArrayList` to hold the
 futures. Since we know the number of futures ahead of time, an array
 would be ideal. Unfortunately, quirks in the way Java handles generics
 makes it illegal to create an array with a generic type. Instead, we
-create an `ArrayList` with the size we’ll need pre-allocated. Next, we
+create an `ArrayList` with the size we'll need pre-allocated. Next, we
 create an `ExecutorService` with a thread pool of size `THREADS`.
 Finally, we find the amount of work done by each future by dividing `N`
 by `FUTURES`.
@@ -1282,7 +1281,7 @@ include::programs/RootFutures.java[lines=16..22]
 
 In this section of code, we create each future and start it running.
 First, we instantiate a `RootSummer` object with the appropriate bounds
-for the work it’s going to compute. Then, we supply that object to the
+for the work it's going to compute. Then, we supply that object to the
 `submit()` method on the `ExecutorService`, which returns a `Future`
 object. We could have saved a line of code by storing this return value
 directly into the list `futures`.
@@ -1295,7 +1294,7 @@ include::programs/RootFutures.java[lines=24..40]
 
 All that remains is to collect the values from each future. We iterate
 through the list of futures with a for-each loop and add the return
-value each future’s `get()` method to our running total `sum`. Because
+value each future's `get()` method to our running total `sum`. Because
 `get()` is a blocking call, we have to catch an `InterruptedException`
 in case we are interrupted while waiting for the future to respond.
 However, we also have to catch an `ExecutionException` in case an
@@ -1396,12 +1395,11 @@ Use the following recursive definition of exponentiation to guide your
 implementation.
 +
 latexmath:[a^n =
-\begin{cases} a & \text{\textbf{(Base Case)} if  $n=1$}
+\begin{cases} a & \text{if  $n=1$} & \text{(Base Case)}
 \\
-\left(a^{\frac{n}{2}}\right)^2 & \text{\textbf{(Base Case)} if  $n>1$ and even}
+\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$ and even} & \text{(Base Case)}
 \\
-a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 & \text{\textbf{(Base Case)} if  $n>1$
-and odd}
+a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 & \text{if  $n>1$ and odd} & \text{(Base Case)}
 \end{cases}]
 8.  <<exercise:efficient_Fibonacci>> Example <<example:Fibonacci
 implemented recursively>> shows two implementations that can be used to
@@ -1498,7 +1496,7 @@ recursive solution.)
 17. Exercise <<exercise:binary_search>> from Chapter <<chapter:Arrays>>
 explains how binary search can be used to search for a value in a sorted
 array of values. The idea is to play a "`high-low`" game, first looking
-at the middle value. If the value is the one you’re looking for, you’re
+at the middle value. If the value is the one you're looking for, you're
 done. If it is too high, look in the lower half of the array. If it is
 too low, look in the upper half of the array. Implement binary search
 both iteratively and recursively. Populate an array with 100,000 `int`

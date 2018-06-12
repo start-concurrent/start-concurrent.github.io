@@ -95,7 +95,7 @@ use a `TurboRacecar` whenever a `Racecar` is required.
 ==== Dynamic binding
 
 There is a little bit of magic that makes polymorphism work. When you
-compile your code, the `RaceTrack` doesn’t know which `getHorsePower()`
+compile your code, the `RaceTrack` doesn't know which `getHorsePower()`
 method will eventually get called. Only at run time does it query the
 object in question and, if it is a `TurboRacecar`, use the overridden
 method that returns 1100. This feature of Java is called _dynamic
@@ -122,12 +122,12 @@ include::programs/StaticTurboRacecar.java[]
 Assume that `RaceTrack` contains a method which prints out the
 horsepower of a `StaticRacecar` like so:
 
-[source, java]
------
+[source,java]
+----
 public void printHorsepower( StaticRacecar car ) {
     System.out.print( car.HORSEPOWER );
 }
------
+----
 
 Even if you pass an object of type `StaticTurboRacecar`, the value 700
 will be printed out every time. In Java, all fields, whether normal,
@@ -162,18 +162,18 @@ include::programs/RocketShip.java[]
 Here is a method that requires a `RocketShip` but only uses its
 `travel()` method.
 
-[source, java]
------
+[source,java]
+----
 public void takeVacation( RocketShip ship, String destination ) {
     ship.travel( destination );
 }
------
+----
 
 It seems as though we should be able to pass any `Vehicle` to the
 `takeVacation()` method because the only method in `ship` used by
 `takeVacation()` is the `travel()` method. However, the programmer
 specified that the parameter should be a `RocketShip`, and Java plays it
-safe. Just because it looks like there won’t be a problem, Java isn’t
+safe. Just because it looks like there won't be a problem, Java isn't
 going to take any chances on passing an overly general `Vehicle` when a
 `RocketShip` is required. If Java took chances, a problem could arise if
 the `takeVacation()` method was overridden by a method that did call
@@ -183,15 +183,15 @@ In summary, you can pass a `RocketShip` to a method which takes a
 `Vehicle` or store a `RocketShip` in an array of `Vehicles`, but not the
 reverse. Java usually gives a compile time error if you try to put
 something too general into a location that is too specific. There are,
-however, some situations which are so tricky that Java doesn’t catch the
+however, some situations which are so tricky that Java doesn't catch the
 error until runtime. Arrays, specifically, can cause problems. Examine
 the following code snippet:
 
-[source, java]
------
+[source,java]
+----
 Vehicle[] transportation = new RocketShip[100];
 transportation[0] = new Vehicle();
------
+----
 
 On the first line, we are using a `Vehicle` array reference to store an
 array of 100 `RocketShip`s. But, in the second line, we try to store a
@@ -221,16 +221,16 @@ include::programs/Useless.java[]
 ----
 
 
-This class is useless for a number of reasons. For one thing, there’s no
+This class is useless for a number of reasons. For one thing, there's no
 way to find out the value of `variable` except by printing it out.
-Furthermore, there’s no way to change the value of `variable` after the
+Furthermore, there's no way to change the value of `variable` after the
 object has been created. Finally, since an abstract class cannot be
 instantiated, the following code snippet will not compile.
 
-[source, java]
------
+[source,java]
+----
 Useless thing = new Useless( 14 );
------
+----
 
 Instead, we must create a new class that extends `Useless`.
 
@@ -243,11 +243,11 @@ include::programs/Useful.java[]
 Then, we can instantiate an object of type `Useful` and use it for
 something.
 
-[source, java]
------
+[source,java]
+----
 Useless item = new Useful( 14 );
 item.print();
------
+----
 
 Note that, in accordance with the rules of Java, we can store a more
 specific object of type `Useful` into more general reference of type
@@ -291,11 +291,11 @@ include::programs/GeometricSequence.java[]
 The `Sequence` class does not specify *how* the sequence of numbers
 should be generated, but any derived class must implement the
 `getNextValue()` method in order to compile. By using an abstract class,
-we don’t have to create a base class which generates a meaningless
+we don't have to create a base class which generates a meaningless
 sequence of numbers just for the sake of establishing the
 `getNextValue()` method.
 
-Here’s a more involved example of an abstract class that gives a first
+Here's a more involved example of an abstract class that gives a first
 step toward solving the bank account with a vengeance problem posed at
 the beginning of the chapter.
 
@@ -316,7 +316,7 @@ include::programs/BankAccount.java[lines=3..6]
 
 We extend `SynchronizedAccount` and declare the new class to be
 abstract. In this example, we do not use any abstract methods, but,
-since each bank account has unique characteristics, we don’t want people
+since each bank account has unique characteristics, we don't want people
 to be able to create a generic `BankAccount`.
 
 [source, java, linenums]
@@ -348,7 +348,7 @@ Other than adding `String` for a name associated with the account, the
 `update()` method is the other major addition made in `BankAccount`.
 Each time `update()` is called, the number of months since the last
 access is stored in the field `monthsPast` and the timestamp of the last
-access is stored in `lastAccess`. We didn’t need these time features
+access is stored in `lastAccess`. We didn't need these time features
 before, but issues like earning interest or paying monthly service
 charges will make them necessary. This method is synchronized so that
 the two fields associated with the last access are updated atomically.
@@ -375,10 +375,10 @@ is and prevent anything unexpected from happening.
 The most common example of a `final` class is the `String` class.
 Consider the following.
 
-[source, java]
------
+[source,java]
+----
 public class SuperString extends String {}
------
+----
 
 This code will give a compiler error. `String` is perfect the way it is
 (or so the Java designers have decided). There is no reason to restrict
@@ -389,19 +389,19 @@ some performance optimizations that would otherwise be impossible.
 ==== Casting
 
 If we shift the focus back to polymorphism, we have to admit that we
-have avoided one of the messier issues. It’s true that polymorphism
+have avoided one of the messier issues. It's true that polymorphism
 gives us lots of power. For example, we can make a `Vehicle` array and
 store subclasses of `Vehicle` inside, like so:
 
-[source, java]
------
+[source,java]
+----
 Vehicle[] vehicles = new Vehicle[5];
 vehicles[0] = new Skateboard();
 vehicles[1] = new RocketShip();
 vehicles[2] = new SteamBoat();
 vehicles[3] = new Car();
 vehicles[4] = new Skateboard;
------
+----
 
 This process could be infinitely more complex. We could be reading data
 out of a file and dynamically creating different kinds of `Vehicle`
@@ -409,46 +409,46 @@ objects. But, the final product of an array of `Vehicle` objects is the
 important thing. Now, we can run through the array with a loop and have
 the code magically work for each kind of `Vehicle`.
 
-[source, java]
------
+[source,java]
+----
 for( int i = 0; i < vehicles.length; i++ )
     vehicles[i].travel( "Prague" );
------
+----
 
 Each `Vehicle` will travel to Prague as it should. The only trouble is
 that we have hidden some information. We know that `vehicles[1]` is a
-`RocketShip`, but we can’t treat it like one.
+`RocketShip`, but we can't treat it like one.
 
-[source, java]
------
+[source,java]
+----
 vehicles[1].blastOff();
------
+----
 
 This code will not compile.
 
-[source, java]
------
+[source,java]
+----
 RocketShip ship = vehicles[1];
------
+----
 
 This code will not compile either. In both cases, we must use an
 explicit cast to tell the compiler that the object really *is* a
 `RocketShip`.
 
-[source, java]
------
+[source,java]
+----
 RocketShip ship = (RocketShip)vehicles[1];
 ((RocketShip)vehicles[1]).blastOff();
------
+----
 
 Both lines of code will work. The compiler is always conservative. It
 never makes guesses about the type of something. For example:
 
-[source, java]
------
+[source,java]
+----
 Vehicle ship = new RocketShip();
 ship.blastOff();
------
+----
 
 Even though `ship` *must* be a `RocketShip`, Java does not assume that.
 The compiler uses the reference type `Vehicle` to do the check and will
@@ -456,12 +456,12 @@ refuse to compile. Casting allows us to use our human intellect to
 overcome the shortsightedness of the compiler. Human intellect is
 unfortunately flawed. What happens if you cast improperly?
 
-[source, java]
------
+[source,java]
+----
 Vehicle vehicle = new Skateboard();
 RocketShip ship = (RocketShip)vehicle;
 ship.blastOff();
------
+----
 
 In this example, we are trying to cast a `Skateboard` into a
 `RocketShip`. At compile time, no errors will be found. Because we use
@@ -476,14 +476,14 @@ instance of a particular class (or one of its derived classes). For
 example, we can make an object execute a special command if we know that
 the object is capable of it.
 
-[source, java]
------
+[source,java]
+----
 public void visitDenver( Vehicle vehicle ) {
     if( vehicle instanceof RocketShip )
         ((RocketShip)vehicle).blastOff();
     vehicle.travel( "Denver" ); 
 }
------
+----
 
 Even inside the `if` statement where it must be the case that `vehicle`
 is a `RocketShip`, we still must perform an explicit cast. Sometimes
@@ -493,14 +493,14 @@ can use the `getClass()` method on any object and compare it to the
 static class object. Using this tool, we can rewrite the former example
 to be more specific.
 
-[source, java]
------
+[source,java]
+----
 public void visitDenver( Vehicle vehicle ) {
     if( vehicle.getClass() ==  RocketShip.class )
         ((RocketShip)vehicle).blastOff();
     vehicle.travel( "Denver" ); 
 }
------
+----
 
 This version of the code will only call `blastOff()` for objects of
 class `RocketShip` and not for objects of a subclass like
@@ -516,31 +516,31 @@ such, when using multiple exception handlers, it is necessary to order
 them from most specific to most general in terms of class hierarchy.
 
 However, there is another subtle rule that is necessary to keep
-polymorphism functioning smoothly. Let’s consider a `Fruit` class with
+polymorphism functioning smoothly. Let's consider a `Fruit` class with
 an `eat()` method that throws an `UnripeFruitException`.
 
-[source, java]
------
+[source,java]
+----
 public class Fruit {
     public void eat() throws UnripeFruitException {
         ...
     }
 }
------
+----
 
 Almost any fruit can be unripe, and it is unpleasant to try to eat an
 unripe fruit. But, there are other things that can go wrong when eating
 fruit. Consider the `Plum` class derived from `Fruit`.
 
-[source, java]
------
+[source,java]
+----
 public class Plum extends Fruit {
     public void eat() throws
         UnripeFruitException, ChokingOnPitException {
         ...
     }
 }
------
+----
 
 In the `Plum` class, the `eat()` method has been overridden to tackle
 the special ways that eating a plum is different from eating fruit in
@@ -560,7 +560,7 @@ There is nothing wrong with throwing exceptions on overridden methods.
 The rule is that the overriding method must throw a subset (not a proper
 subset, so it could be all of the original exceptions) of the exceptions
 that the overridden method throws. This rule is actually a concept
-called Hoare’s rule of consequence that pops up several places in
+called Hoare's rule of consequence that pops up several places in
 programming languages. Essentially, if you start with something that
 works, tighten the requirements on the input (use a `Plum` instead of
 any `Fruit`), loosen the requirements on the output (throw fewer
@@ -586,7 +586,7 @@ include::programs/Animal.java[]
 We begin with the abstract `Animal` class. This class gives a base
 definition for animals which includes whether the animal is alive,
 whether the animal is happy, and whether it is warmblooded (declared
-`final` because an animal can’t switch between warmblooded and
+`final` because an animal can't switch between warmblooded and
 coldblooded).
 
 [source, java, linenums]
@@ -693,7 +693,7 @@ include::programs/DirectDepositAccount.java[]
 ----
 
 The `DirectDepositAccount` class extends the `CheckingAccount` class.
-Note that the `update()` method hasn’t been overridden. We have added
+Note that the `update()` method hasn't been overridden. We have added
 another `Calendar` object to keep track of the last time a direct
 deposit was made. Then, we do override the `getFee()` method. If there
 has been a recent direct deposit, the fee is nothing, otherwise, it
@@ -807,8 +807,8 @@ include::programs/Blowout.java[]
 +
 Given the following snippet of code, what is the output?
 +
-[source, java]
------
+[source,java]
+----
 Sale sale = new Blowout();
 System.out.println( sale.discount );
 System.out.println( sale.getDiscount );
@@ -816,7 +816,7 @@ Blowout blowout = (Blowout)sale;
 System.out.println( blowout.discount );
 sale.setDiscount( 0.75 );
 System.out.println( sale.discount );
------
+----
 2.  What are the differences and similarities between abstract classes
 and interfaces?
 3.  Assume that the `Corn`, `Carrot`, and `Potato` classes are all
@@ -824,8 +824,8 @@ derived from `Vegetable`. Both `Carrot` and `Potato` classes have a
 `peel()` method, but `Corn` does not. Examine the following code and
 identify which line will cause an error and why.
 +
-[source, java]
------
+[source,java]
+----
 Vegetable[] vegetables = new Vegetable[30];
 for( int i = 0; i < vegetables.length; i += 3 ) {
     vegetables[i] = new Corn();
@@ -838,15 +838,15 @@ while( index >= 0 ) {
     potato = (Potato)vegetable[index];
     potato.peel();
 }
------
+----
 4.  How many different meanings of the keyword `final` are there in
 Java, and what does each mean?
 5.  Assume that `Quicksand` is a subclass of `Danger`.
 +
 What is the output of the following code?
 +
-[source, java]
------
+[source,java]
+----
 Quicksand quicksand = new Quicksand();
 if( quicksand instanceof Danger ) {
     System.out.printf( "Run for your lives!" );
@@ -857,7 +857,7 @@ if( quicksand instanceof Quicksand ) {
     " the faster you'll sink!" );
 if( quicksand.getClass() == Quicksand.class )
     System.out.printf( "You'll need to find a vine to escape!" );
------
+----
 +
 *Programming Practice*
 6.  Implement a program to assess income tax on normal employees,
@@ -866,9 +866,9 @@ employees pay a 6.2% social security tax and a 1.45% Medicare tax every
 year, but neither kind of student pays these taxes. All three groups pay
 normal income tax according to the following table.
 +
-[cols="^,^",options="header",]
+[.center%autowidth%header,cols="^,^"]
 |=====================================
-|*Marginal Tax Rate* |*Income Bracket*
+|Marginal Tax Rate |Income Bracket
 |10% |$0 - $7,825
 |15% |$7,826 -$31,850
 |25% |$31,851 -$77,100

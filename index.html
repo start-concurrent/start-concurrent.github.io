@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.6.2">
+<meta name="generator" content="Asciidoctor 1.5.6.1">
 <meta name="author" content="Barry Wittman, Aditya Mathur, Tim Korb">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -729,6 +729,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_solution_maze_of_doom">Solution: Maze of doom</a></li>
 <li><a href="#_concurrency_futures">Concurrency: Futures</a></li>
 <li><a href="#_exercises_18">Exercises</a></li>
+</ul>
+</li>
+<li><a href="#chapter:File_IO">File I/O</a>
+<ul class="sectlevel2">
 <li><a href="#_problem_a_picture_is_worth_1_000_bytes">Problem: A picture is worth 1,000 bytes</a></li>
 <li><a href="#_concepts_file_i_o">Concepts: File I/O</a></li>
 <li><a href="#_syntax_file_operations_in_java">Syntax: File operations in Java</a></li>
@@ -27182,7 +27186,7 @@ behavior (and even people starving!)</p>
 <p>Concurrency gives us the potential to make our programs faster but
 introduces a number of other problems. The way that threads interact can
 be unpredictable. Because they share memory, one thread can corrupt the
-value in another thread’s variables. We introduce synchronization tools
+value in another thread&#8217;s variables. We introduce synchronization tools
 in this chapter that can prevent threads from corrupting data, but these
 tools create new pitfalls. To explore these pitfalls, we give you
 another problem to solve.</p>
@@ -27275,11 +27279,11 @@ the answer should always be correct.</p>
 </div>
 <div class="paragraph">
 <p>Looking at the code, the problem might not be obvious. Everything
-centers on the statement <code>counter` in the `for` loop inside the
-`run()` method. But, this statement appears to execute in a single step!
-Each thread should increase the value of `counter` a total of
-`COUNT/THREADS` times, adding up to `1000000`. The trouble is that
-`counter</code> is not a single step. Recall that <code>counter++</code> is shorthand
+centers on the statement <code>counter++</code> in the <code>for</code> loop inside the
+<code>run()</code> method. But, this statement appears to execute in a single step!
+Each thread should increase the value of <code>counter</code> a total of
+<code>COUNT/THREADS</code> times, adding up to <code>1000000</code>. The trouble is that
+<code>counter++</code> is not a single step. Recall that <code>counter++</code> is shorthand
 for <code>counter = counter + 1</code>. To be even more explicit we could write it
 as follows.</p>
 </div>
@@ -27309,7 +27313,7 @@ another thread. The actual code that the JVM runs is much lower level
 than source code.</p>
 </div>
 <div class="paragraph">
-<p>We can’t easily force a non-atomic operation to be atomic, but there are
+<p>We can&#8217;t easily force a non-atomic operation to be atomic, but there are
 ways to restrict access to certain pieces of code under certain
 conditions. The name we give to a piece of code which should not be
 accessed by more than one thread at a time is a <em>critical section</em>. In
@@ -27340,7 +27344,7 @@ language.</p>
 exclusion is the <code>synchronized</code> keyword. There are two ways to use this
 keyword: with a method or with an arbitrary block of code. In the method
 version, you add the <code>synchronized</code> modifier before the return type.
-Let’s imagine a class with a private <code>String</code> field called <code>message</code>
+Let&#8217;s imagine a class with a private <code>String</code> field called <code>message</code>
 which is set to be <code>"Will Robinson!"</code> by the constructor. Now, we define
 the following method.</p>
 </div>
@@ -27425,7 +27429,7 @@ to get the lock and do all the other management needed to make the
 </div>
 <div class="paragraph">
 <p>If you have two critical sections which are unrelated to each other, you
-can use the fine-grained control the block style provides. First, you’ll
+can use the fine-grained control the block style provides. First, you&#8217;ll
 need some objects to use as locks, probably declared so that they can
 easily be shared, perhaps as static fields of a class.</p>
 </div>
@@ -27440,13 +27444,13 @@ easily be shared, perhaps as static fields of a class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock1</span> <span class="tok-o">){</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock1</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
     <span class="tok-c1">//do dangerous thing 1</span>
 <span class="tok-o">}</span>
 
 <span class="tok-c1">//do safe things</span>
 
-<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock2</span> <span class="tok-o">){</span>
+<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock2</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
     <span class="tok-c1">//do dangerous thing 2, unrelated to dangerous thing 1</span>
 <span class="tok-o">}</span></code></pre>
 </div>
@@ -27490,7 +27494,7 @@ counting thread.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>What’s the problem with this design? Notice that the counting thread is
+<p>What&#8217;s the problem with this design? Notice that the counting thread is
 running through the <code>while</code> loop over and over waiting for
 <code>votingComplete</code> to become <code>true</code>. On a single processor, the counting
 thread would slow down the job of the collecting thread which is trying
@@ -27529,7 +27533,7 @@ however, it gives up the corresponding lock it is holding until it wakes
 up and runs again. Why use the <code>while</code> loop at all, now? There is no
 guarantee that the condition you are waiting for is <code>true</code>. Many threads
 may be waiting on this particular lock. We use the <code>while</code> loop to check
-that <code>votingComplete</code> is <code>true</code> and wait again if it isn’t.</p>
+that <code>votingComplete</code> is <code>true</code> and wait again if it isn&#8217;t.</p>
 </div>
 <div class="paragraph">
 <p>In order to notify a waiting thread, the other thread calls the
@@ -27635,7 +27639,7 @@ following programming problem, similar to one you might find in real
 life.</p>
 </div>
 <div class="paragraph">
-<p>As a rising star in a bank’s IT department, you have been given the job
+<p>As a rising star in a bank&#8217;s IT department, you have been given the job
 of creating a new bank account class called <code>SynchronizedAccount</code>. This
 class must have methods to support the following operations: deposit,
 withdraw, and check balance. Each method should print a status message
@@ -28048,16 +28052,16 @@ getting ready at different times. They follow the pattern of getting
 ready for a while, waiting for their friends to get ready, and then
 calling their friends to see if the other two are ready. If all three
 are ready, then the friends will leave. Unfortunately, if a friend calls
-and either of the other two aren’t ready, he’ll become frustrated and
-stop being ready. Perhaps he’ll realize that he’s got time to take a
+and either of the other two aren&#8217;t ready, he&#8217;ll become frustrated and
+stop being ready. Perhaps he&#8217;ll realize that he&#8217;s got time to take a
 shower or get involved in some other activity for a while. After
-finishing that activity, he’ll become ready again and wait for his
+finishing that activity, he&#8217;ll become ready again and wait for his
 friends to become ready.</p>
 </div>
 <div class="paragraph">
 <p>If the timing is just right, the three friends will keep becoming ready,
 waiting for a while, and then becoming frustrated when they realize that
-their friends aren’t ready. Here is a rough simulation of this process
+their friends aren&#8217;t ready. Here is a rough simulation of this process
 in code.</p>
 </div>
 <div class="listingblock">
@@ -28143,19 +28147,19 @@ and repeats the process.</p>
 </div>
 <div class="paragraph">
 <p>At roughly 75 milliseconds into the simulation, the first friend becomes
-ready, but he doesn’t check with his friends until 150 milliseconds.
-Unfortunately, the second friend doesn’t become ready until 175
+ready, but he doesn&#8217;t check with his friends until 150 milliseconds.
+Unfortunately, the second friend doesn&#8217;t become ready until 175
 milliseconds. He then checks with his friends at 225 milliseconds,
 around which time the first friend is becoming ready a second time.
-However, the third friend isn’t ready until 275 milliseconds. When he
-then checks at 350 milliseconds, the first friend isn’t ready anymore.
+However, the third friend isn&#8217;t ready until 275 milliseconds. When he
+then checks at 350 milliseconds, the first friend isn&#8217;t ready anymore.
 On some systems the timing might drift such that the friends all become
 ready at the same time, but it could take a long, long while.</p>
 </div>
 <div class="paragraph">
 <p>In reality, human beings would not put off going to a party
 indefinitely. Some people would decide that it was too late to go.
-Others would go alone. Others would go over to their friends’ houses and
+Others would go alone. Others would go over to their friends' houses and
 demand to know what was taking so long. Computers are not nearly as
 sensible and must obey instructions, even if they cause useless
 repetitive patterns. Realistic examples of livelock are hard to show in
@@ -28418,7 +28422,7 @@ years, and research continues to find better solutions.</p>
 makes it illegal to use the <code>synchronized</code> keyword on constructors.
 During the creation of an object, it is possible to <em>leak</em> data to the
 outside world by adding a reference to the object under construction to
-some shared data structure. What’s the danger of leaking data in this
+some shared data structure. What&#8217;s the danger of leaking data in this
 way?</p>
 </li>
 <li>
@@ -28448,7 +28452,7 @@ synchronize the process?</p>
 life example of one.</p>
 </li>
 <li>
-<p><a href="#exercise:per_object_lock">[exercise:per_object_lock]</a> Let’s reexamine the code that
+<p><a href="#exercise:per_object_lock">[exercise:per_object_lock]</a> Let&#8217;s reexamine the code that
 increments a variable with several threads from
 Section <a href="#concepts:Thread_interaction">[concepts:Thread_interaction]</a>. We can rewrite the <code>run()</code>
 method as follows.</p>
@@ -28588,7 +28592,7 @@ you set the priorities of these new threads to <code>MAX_PRIORITY</code> or
 <p>An <em>applet</em> is a graphical Java program that runs inside of a special
 environment, usually a web browser. The beauty of an applet is that
 anyone with a Java-enabled web browser can run the program without any
-special knowledge or computer skills. Most users don’t even realize they
+special knowledge or computer skills. Most users don&#8217;t even realize they
 are running a program.</p>
 </div>
 <div class="imageblock">
@@ -28598,7 +28602,7 @@ are running a program.</p>
 <div class="title">Figure 54. The <code>MathTutorApplet</code> as seen through the Google Chrome browser. (a) Initial applet. (b) Selecting an operation to practice. (c) After some practice.</div>
 </div>
 <div class="paragraph">
-<p>Let’s write an applet that will allow young math students to practice
+<p>Let&#8217;s write an applet that will allow young math students to practice
 their arithmetic. Specifically, we are interested in addition,
 subtraction, multiplication, and division with small, positive integers.
 For this program, we will consider addition and subtraction basic and
@@ -28795,7 +28799,7 @@ used.</p>
 application, the difference between disposing and exiting is small.
 However, in a multi-threaded application, shutting down the JVM means
 killing off all the other threads, no matter what task they are
-performing. In general, the <code>System.exit()</code> should never be called,
+performing. In general, <code>System.exit()</code> should never be called,
 whether the program has a GUI or not.</p>
 </div>
 <div class="paragraph">
@@ -28902,7 +28906,7 @@ follows.</p>
 </div>
 <div class="paragraph">
 <p>This statement creates a panel named <code>soundPanel</code>. Thus far, the panel
-is empty. Let’s create two buttons and add these to <code>soundPanel</code>.</p>
+is empty. Let&#8217;s create two buttons and add these to <code>soundPanel</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -29035,7 +29039,7 @@ listener on a <code>JButton</code> or any other widget that generates an
 <p>As discussed in Chapter <a href="#chapter:Interfaces"><em>Interfaces</em></a>, an interface is a set of
 method signatures. If you implement an interface, you promise to have
 all of the methods in the interface. If a class implements
-<code>ActionListener</code>, it’s saying that it knows what to do when an action is
+<code>ActionListener</code>, it&#8217;s saying that it knows what to do when an action is
 performed. The following statements show how to add an <code>ActionListener</code>
 to a button and implement its <code>actionPerformed()</code> method.</p>
 </div>
@@ -29062,20 +29066,20 @@ to the clicking of the <code>chirp</code> button goes inside the
 </div>
 <div class="paragraph">
 <p>This syntax may look strange to you. <code>ActionListener</code> is an interface,
-which cannot be instantiated. What is that <code>new</code> keyword doing? It’s
+which cannot be instantiated. What is that <code>new</code> keyword doing? It&#8217;s
 doing something pretty amazing by creating an instance of an <em>anonymous
-class</em>. On the fly, we’re creating a class that has never existed
-before. It doesn’t even have a name. All we know about it is that it
+class</em>. On the fly, we&#8217;re creating a class that has never existed
+before. It doesn&#8217;t even have a name. All we know about it is that it
 implements the interface <code>ActionListener</code>.</p>
 </div>
 <div class="paragraph">
-<p>Note that there are braces after the constructor call, defining what’s
+<p>Note that there are braces after the constructor call, defining what&#8217;s
 inside of this class. Inside, we have only created an
 <code>actionPerformed()</code> method, but we could have created fields as well as
-other methods. It’s a little ugly to create a whole new class and
+other methods. It&#8217;s a little ugly to create a whole new class and
 instantiate it in the middle of calling the <code>addActionListener()</code>
-method, but it’s also very convenient. We need to supply an object that
-reacts to the event exactly the way we want it to. Since one doesn’t
+method, but it&#8217;s also very convenient. We need to supply an object that
+reacts to the event exactly the way we want it to. Since one doesn&#8217;t
 exist yet, we have to create it. Of course, it is possible to supply any
 object that implements the <code>ActionListener</code> interface, not just
 instances of anonymous classes. For more information about nested
@@ -29173,7 +29177,7 @@ button and implemented its <code>actionPerformed()</code> method with anonymous
 inner classes. An alternate way to use <code>ActionListener</code> is to implement
 <code>ActionListener</code> on the surrounding class and include an
 <code>actionPerformed()</code> method exactly once instead of creating several
-individual anonymous inner classes which each handle an event. Let’s
+individual anonymous inner classes which each handle an event. Let&#8217;s
 examine one such implementation in
 Program <a href="#program:AlternateActionListener">[program:AlternateActionListener]</a> and contrast it with
 Program <a href="#program:FrameWithPanelAndActions">[program:FrameWithPanelAndActions]</a>. Note that both programs
@@ -29591,7 +29595,7 @@ files.</p>
 <div class="sect4">
 <h5 id="_sounds">Sounds</h5>
 <div class="paragraph">
-<p>First, let’s see how to define an audio clip.</p>
+<p>First, let&#8217;s see how to define an audio clip.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -29672,7 +29676,7 @@ only has two sounds, but more could be added.</p>
 </div>
 <div class="paragraph">
 <p>We will add a new button labeled &#8220;Stop Sound&#8221; that stops the playback
-of sounds when clicked. Let’s assume that this program is only allowed
+of sounds when clicked. Let&#8217;s assume that this program is only allowed
 to play one sound at a time. When it starts, the GUI will look like
 Figure <a href="#SoundGameFigures">[SoundGameFigures]</a>(a). Note that the <code>stop</code> button is gray,
 indicating that it is disabled.</p>
@@ -29775,7 +29779,7 @@ playing.</p>
 <div class="paragraph">
 <p>Images are often useful when creating GUIs. In this section we show you
 how to use images to create icons and then use the icon to decorate
-buttons and labels. First, let’s see how an icon object can be created.
+buttons and labels. First, let&#8217;s see how an icon object can be created.
 Suppose we have a picture file named <code>smile.jpg</code> in a directory named
 <code>pictures</code>. Note that the <code>pictures</code> directory should be located in same
 directory as the class files for the program. The following statement
@@ -30061,7 +30065,7 @@ the layout manager will be forced to guess at your intentions.</p>
 <div class="content">
 <div class="paragraph">
 <p>We can write a program to displays pictures of animals and identify
-which animal the mouse is current hovering over. The animal’s name will
+which animal the mouse is current hovering over. The animal&#8217;s name will
 be displayed in the title of the frame.
 Figure <a href="#animalIdentifierFigure">[animalIdentifierFigure]</a> shows this GUI.</p>
 </div>
@@ -30792,7 +30796,7 @@ mark text as bold in HTML, you can use the <code>&lt;strong&gt;</code> tag as fo
 </div>
 <div class="paragraph">
 <p>To run <code>RainbowApplet</code> we need to create an HTML file that includes the
-applet’s class file inside the <code>&lt;applet&gt;</code> tag.</p>
+applet&#8217;s class file inside the <code>&lt;applet&gt;</code> tag.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 106. RainbowApplet HTML</div>
@@ -31035,7 +31039,7 @@ button clicks. If <code>submit</code> was clicked, we parse the text in the text
 field to get an <code>int</code> value and compare it to the answer. Depending on
 its correctness, we update the correct and incorrect counts, clear the
 problem label, and update the <code>score</code> label. Finally, we disable the
-<code>submit</code> button so that the user can’t submit an answer until another
+<code>submit</code> button so that the user can&#8217;t submit an answer until another
 problem has been given.</p>
 </div>
 <div class="paragraph">
@@ -31043,7 +31047,7 @@ problem has been given.</p>
 functionality as the <code>actionPerformed()</code> method from <code>MathTutor</code>. It
 updates <code>label</code> to contain a randomly generated problem with an
 operation that matches whichever menu item was picked. It also saves the
-answer into the <code>answer</code> field so that we can check the user’s response
+answer into the <code>answer</code> field so that we can check the user&#8217;s response
 later. Then, it enables the <code>submit</code> button since there is a problem to
 answer. No matter what object triggered the action, the last line of the
 method clears the text field.</p>
@@ -31120,7 +31124,7 @@ to do the job. When they are done, they inform the EDT so that it is
 able to update the GUI.</p>
 </div>
 <div class="paragraph">
-<p>Let’s look at a GUI with two <code>JButton</code> widgets and two <code>JLabel</code> widgets.
+<p>Let&#8217;s look at a GUI with two <code>JButton</code> widgets and two <code>JLabel</code> widgets.
 When one button is pressed, the EDT goes to sleep for 5 seconds before
 displaying an answer on the first label (in this case, approximately
 \(\sqrt{2}\)). When the other button is pressed, it increments
@@ -31589,8 +31593,7 @@ integer. Incorrectly casting objects can lead to
 <dt class="hdlist1">Loop Errors</dt>
 <dd>
 <p>Loops are a favorite place for bugs to hide. Three of the most common
-loop mistakes are:
-+</p>
+loop mistakes are:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -31619,8 +31622,7 @@ pointed at by the references.</p>
 <dt class="hdlist1">Array Errors</dt>
 <dd>
 <p>Arrays are often involved with loop errors. Two problems specific to
-arrays are:
-+</p>
+arrays are:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -31639,9 +31641,8 @@ object.</p>
 </dd>
 <dt class="hdlist1">Scope Errors</dt>
 <dd>
-<p>Some errors can be caused by a programmer’s misunderstanding about the
-visibility of a variable.
-+</p>
+<p>Some errors can be caused by a programmer&#8217;s misunderstanding about the
+visibility of a variable.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -31728,7 +31729,7 @@ test to see if they are in a range.</p>
 <p>Once you have found the error in your code, it can be tedious to remove
 all of your debug statements. Some programmers use a special print
 command that can be turned off using a global variable or compiler
-option. Others send their output to <code>stderr</code> so that it doesn’t
+option. Others send their output to <code>stderr</code> so that it doesn&#8217;t
 interfere with the legitimate output of the program. Much depends upon
 the system, the language, and the individual tastes of the programmer.</p>
 </div>
@@ -31965,7 +31966,7 @@ code, you can simply switch this value to <code>false</code>.</p>
 <p>A &#8220;modernized&#8221; method of using print statements is creating a simple
 GUI instead. In preparing materials for this textbook, we were
 occasionally frustrated by the fact that multiple threads can interfere
-with each other while printing on the screen: You can’t always tell
+with each other while printing on the screen: You can&#8217;t always tell
 which thread is printing which characters. By displaying the output of
 each thread in separate <code>JTextArea</code> or <code>JLabel</code> widgets on a simple GUI,
 you can disentangle the output of each thread.</p>
@@ -31976,7 +31977,7 @@ you can disentangle the output of each thread.</p>
 <div class="paragraph">
 <p>Since DrJava is a great educational tool and Eclipse is so widely used,
 we are going to review the step-through debugging features of each
-program. Similar tools are available with other IDE’s and for most
+program. Similar tools are available with other IDE&#8217;s and for most
 languages.</p>
 </div>
 <div class="paragraph">
@@ -32005,7 +32006,7 @@ and returns, popping the current method off the stack.</p>
 <div class="paragraph">
 <p>In the debugging pane, there will be a Watches tab that allows you to
 find out the value of a given variable in local scope. All you need to
-do is type the variable’s name, and its value and type should be
+do is type the variable&#8217;s name, and its value and type should be
 displayed. Next to the Threads tab, there should also be a Stack tab,
 showing the current method call stack.</p>
 </div>
@@ -32110,7 +32111,7 @@ the following loop does not terminate.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Each time <code>letter</code> reaches <code>Character.MAX_VALUE</code> which is <code>’\uFFFF’</code> or
+<p>Each time <code>letter</code> reaches <code>Character.MAX_VALUE</code> which is <code>'\uFFFF'</code> or
 <code>65535</code> as a numerical value, the next increment pushes its value back
 to 0. These kinds of errors with <code>byte</code> and <code>char</code> values are most
 common when variables of those types are being used as numbers. Some
@@ -32157,8 +32158,8 @@ too unwieldy.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-n">red</span> <span class="tok-o">=</span> <span class="tok-o">(</span><span class="tok-kt">byte</span><span class="tok-o">)</span><span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">min</span><span class="tok-o">(</span> <span class="tok-mi">255</span><span class="tok-o">,</span> <span class="tok-mi">2</span><span class="tok-o">*(</span><span class="tok-n">red</span> <span class="tok-o">&amp;</span> <span class="tok-mh">0xFF</span><span class="tok-o">));</span> <span class="tok-c1">//bitwise AND automatically upcasts</span>
-<span class="tok-n">to</span> <span class="tok-kt">int</span> <span class="tok-n">green</span> <span class="tok-o">=</span> <span class="tok-o">(</span><span class="tok-kt">byte</span><span class="tok-o">)</span><span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">min</span><span class="tok-o">(</span> <span class="tok-mi">255</span><span class="tok-o">,</span> <span class="tok-mi">2</span><span class="tok-o">*(</span><span class="tok-n">green</span> <span class="tok-o">&amp;</span> <span class="tok-mh">0xFF</span><span class="tok-o">));</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-n">red</span> <span class="tok-o">=</span> <span class="tok-o">(</span><span class="tok-kt">byte</span><span class="tok-o">)</span><span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">min</span><span class="tok-o">(</span> <span class="tok-mi">255</span><span class="tok-o">,</span> <span class="tok-mi">2</span><span class="tok-o">*(</span><span class="tok-n">red</span> <span class="tok-o">&amp;</span> <span class="tok-mh">0xFF</span><span class="tok-o">));</span> <span class="tok-c1">//bitwise AND automatically upcasts to int</span>
+<span class="tok-n">green</span> <span class="tok-o">=</span> <span class="tok-o">(</span><span class="tok-kt">byte</span><span class="tok-o">)</span><span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">min</span><span class="tok-o">(</span> <span class="tok-mi">255</span><span class="tok-o">,</span> <span class="tok-mi">2</span><span class="tok-o">*(</span><span class="tok-n">green</span> <span class="tok-o">&amp;</span> <span class="tok-mh">0xFF</span><span class="tok-o">));</span>
 <span class="tok-n">blue</span> <span class="tok-o">=</span> <span class="tok-o">(</span><span class="tok-kt">byte</span><span class="tok-o">)</span><span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">min</span><span class="tok-o">(</span> <span class="tok-mi">255</span><span class="tok-o">,</span> <span class="tok-mi">2</span><span class="tok-o">*(</span><span class="tok-n">blue</span> <span class="tok-o">&amp;</span> <span class="tok-mh">0xFF</span><span class="tok-o">));</span></code></pre>
 </div>
 </div>
@@ -32268,7 +32269,7 @@ Unfortunately, you have gotten so used to use a strictly less than for
 your ending condition, you forget to change it. You only get 49
 questions printed out. If your only purpose is making an exam, you can
 catch your mistake and move on. If you are writing a program that
-dispenses a quantity of heart medication into a patient’s IV in a
+dispenses a quantity of heart medication into a patient&#8217;s IV in a
 hospital, one iteration too few or too many could cause the patient to
 get too little of the drug to make a difference or too much of the drug
 to be safe.</p>
@@ -32302,7 +32303,7 @@ Unfortunately, the value of <code>count</code> is incremented for every turn of 
 loop, even the extra one for the negative number. To combat this
 problem, an <code>if</code> statement could be used inside of the loop or <code>count</code>
 could simply be initialized to <code>-1</code>. The mistake is a simple one, but it
-doesn’t jump out at you unless you trace a few executions. What is most
+doesn&#8217;t jump out at you unless you trace a few executions. What is most
 insidious is that, especially for large sets of input numbers, the error
 is going to be small. Catching this kind of bug will be discussed more
 throughly in the second half of this chapter, dealing with testing.</p>
@@ -32329,11 +32330,11 @@ the most classic is:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>It’s usually a beginning programmer who leaves a semicolon at the end of
+<p>It&#8217;s usually a beginning programmer who leaves a semicolon at the end of
 the <code>while</code> header, but even veterans can get a little enthusiastic
 about semicolons. Often a programmer confronted with such a bug (which
 causes no ouput, in this case) will scour the body of the loop for some
-clue as to why it isn’t advancing yet never carefully scrutinizing the
+clue as to why it isn&#8217;t advancing yet never carefully scrutinizing the
 condition. An extra semicolon the end of a <code>for</code> loop header will
 usually cause an error but will usually <strong>not</strong> cause an infinite loop.</p>
 </div>
@@ -32377,7 +32378,7 @@ are times when doing so gives the cleanest solution.</p>
 <div class="paragraph">
 <p>Many loop errors are caused by a bad header. Getting the an inequality
 backwards or switching increment and decrement will usually make a loop
-that runs a very long time or not at all. We’ll see the second
+that runs a very long time or not at all. We&#8217;ll see the second
 possibility just a little later.</p>
 </div>
 <div class="listingblock">
@@ -32562,7 +32563,7 @@ the bug cropping up and you have to reconstruct what it is.</p>
 <div class="paragraph">
 <p>We have all experienced an <code>ArrayIndexOutOfBoundsException</code>. Either a
 little carelessness with our indexes or a mistake about the size of the
-array can lead us to try to access an element that isn’t in the array.
+array can lead us to try to access an element that isn&#8217;t in the array.
 In the C language, a negative index is sometimes a legal location but
 never in Java. It is very common to go just slightly beyond the bounds
 of the array, particularly with a loop.</p>
@@ -32598,9 +32599,9 @@ method used to add a new <code>String</code> to the hashtable.</p>
 properly, but we may already have caused other problems. For one thing,
 we assumed that <code>word</code> began with either an upper or lower case letter.
 We are depending on other code to check the input and throw out words
-like <code>"\$1"</code> or <code>"-isms"</code>. Incidentally, we are also assuming that
+like <code>"$1"</code> or <code>"-isms"</code>. Incidentally, we are also assuming that
 <code>word</code> has at least one character in it. Even if we expect the input to
-the method to be error free, some error checking is always safe.</p>
+the method to be error free, the addition of error checking is rarely a bad idea.</p>
 </div>
 </div>
 </div>
@@ -32646,9 +32647,9 @@ hungry, hungry hippos.</p>
 <div class="sect3">
 <h4 id="_scope_errors">Scope errors</h4>
 <div class="paragraph">
-<p>We don’t have variables in real life, and, as a consequence, out
+<p>We don&#8217;t have variables in real life, and, as a consequence, out
 intuition about them is sometimes wrong. Which variable you are
-accessing at any given time can appear obvious, even if it really isn’t.</p>
+accessing at any given time can appear obvious, even if it really isn&#8217;t.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 116. Shadowing variables</div>
@@ -32905,7 +32906,7 @@ sequential execution. This situation arises when, usually due to overuse
 of synchronization tools, parallel code runs sequentially. Each segment
 of code, instead of running in parallel, is forced to wait for another
 to complete. A certain amount of serial execution is necessary to
-maintain program correctness and avoid race conditions, but Amdahl’s Law
+maintain program correctness and avoid race conditions, but Amdahl&#8217;s Law
 gives a rigid, mathematical characterization of how easily speedup can
 be lost if the serial execution takes up large portions of the code.
 Because setting up threads and using other concurrency tools does have
@@ -32921,7 +32922,7 @@ may be competing for a limited resource such as an I/O device or may be
 fighting over a small section of memory, causing cache misses. Tuning
 applications for maximum performance requires an expert understanding of
 the concurrency issues within software as well as the underlying OS and
-hardware characteristics. For now, it’s enough to be aware of the risk
+hardware characteristics. For now, it&#8217;s enough to be aware of the risk
 of sequential execution and be as careful as possible when applying
 locks and other synchronization tools.</p>
 </div>
@@ -32951,7 +32952,7 @@ work as well as possible for the sake of your grade. It is not such a
 far cry to imagine your job being on the line if you make a mistake as a
 professional programmer. But, what about your life? Perhaps you will
 never put your life in the hands of code you write, but odds are that
-you have already put your life in the hands of someone else’s code.
+you have already put your life in the hands of someone else&#8217;s code.
 Software controls airplanes, automobiles, medical equipment, and
 countless other applications where a bug in the code could actually
 result in loss of human life.</p>
@@ -33065,7 +33066,7 @@ each category, you can apply the same rules to designing new classes
 from a category you are already familiar with. Each category is called a
 design pattern. Java uses design patterns extensively in its API.
 Describing design patterns in greater depth is beyond the scope of this
-book, but you may want to consult the Gang of Four’s excellent book
+book, but you may want to consult the Gang of Four&#8217;s excellent book
 <em>Design Patterns</em>.</p>
 </div>
 <div class="paragraph">
@@ -33186,8 +33187,7 @@ kind of testing, the tester must partition data into ranges that
 function differently. The partition created is usually not really a
 partition in a mathematical sense as the sub-domains are overlapping.
 This is one reason why equilvalence partitioning is also referred to
-as <em>subdomain</em> testing.
-+
+as <em>subdomain</em> testing.<br>
 For example, a program controlling the temperature of the water in an
 aquarium may have legal input ranges between 32F and 212F. However, if
 the program warms the water when it is below 75F and cools it when it
@@ -33199,7 +33199,7 @@ different partitions.</p>
 <dd>
 <p>Once inputs have been partitioned into equivalent ranges, testers can
 focus on those values which are near the boundary of those ranges. For
-example, an input containing a person’s age may be allowed to range
+example, an input containing a person&#8217;s age may be allowed to range
 between 0 and 150. The values -1, 0, 1, 149, 150, and 151 are good
 candidates for input from the perspective of boundary value analysis.
 As with equivalence partitioning, boundary value analysis is useful
@@ -33301,8 +33301,8 @@ memory usage, run time, and other non-functional issues.</p>
 There are other testing tools for Java, and there are a wide array of
 tools for testing software in virtually any language. We cover JUnit
 here because it is widely accepted as a standard Java testing tool and
-because it is open-source. First, we’ll explain how to use JUnit, and
-then we’ll discuss some of the tools available to help test concurrent
+because it is open-source. First, we&#8217;ll explain how to use JUnit, and
+then we&#8217;ll discuss some of the tools available to help test concurrent
 software.</p>
 </div>
 <div class="sect3">
@@ -33371,7 +33371,7 @@ facilities in your code, you need the following import.</p>
 <p>Then, you need to set up a testing class just like you would any other
 class. The key difference is that each method in the testing class is
 designed to test some functionality of a code component. For example,
-let’s imagine that we want to test certain functionality of the Java
+let&#8217;s imagine that we want to test certain functionality of the Java
 <code>Math</code> library such as the <code>ceil()</code>, <code>pow()</code>, and <code>sin()</code> methods.</p>
 </div>
 <div class="paragraph">
@@ -33454,7 +33454,7 @@ of the <code>ceil()</code> test method as follows.</p>
 <code>AssertionError</code> if the two are not equal. There are overloaded versions
 of this method for <code>long</code> and <code>Object</code> types. Note that the preferred
 <code>assertEquals()</code> method for the <code>double</code> type takes three parameters,
-including an epsilon threshold in case the values don’t match exactly.</p>
+including an epsilon threshold in case the values don&#8217;t match exactly.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 118. JUnit math testing</div>
@@ -33517,14 +33517,14 @@ test is being ignored.</p>
 <h5 id="_running_junit">Running JUnit</h5>
 <div class="paragraph">
 <p>Once you have created your JUnit test classes, you will want to run
-them. There are tools built into IDE’s like Eclipse to make this easier,
+them. There are tools built into IDE&#8217;s like Eclipse to make this easier,
 but the command line is always an option. As we said before, you need to
 include the JUnit jar file in your classpath. You can either do this
 permanently, by adding it to a <code>CLASSPATH</code> environment variable in a way
 dependent on your OS, or for a particular run of a Java tool. Assuming
-that you haven’t added the jar file to your classpath permanently, let’s
+that you haven&#8217;t added the jar file to your classpath permanently, let&#8217;s
 say that you are using JUnit 4.5 from a jar file called <code>junit-4.5.jar</code>
-that can be found in <code>C:\ Utilities\Java\JUnit\</code>. To compile <code>MathTest</code>,
+that can be found in <code>C:\Utilities\Java\JUnit\</code>. To compile <code>MathTest</code>,
 you would type:</p>
 </div>
 <div class="listingblock">
@@ -33730,10 +33730,10 @@ electric field \(E\) at a given location due to a charge
 <div class="title">Example 120. Testing the distance methods</div>
 <div class="content">
 <div class="paragraph">
-<p>Let’s come up with a test for the <code>distance()</code> methods first. We’re
-going to need some other `PointCharge`s. Let’s make 4 altogether: one at
+<p>Let&#8217;s come up with a test for the <code>distance()</code> methods first. We&#8217;re
+going to need some other `PointCharge`s. Let&#8217;s make 4 altogether: one at
 the origin and three one meter along each positive axis. We can create
-these charges in a set up method. While we’re at it, we’ll give them a
+these charges in a set up method. While we&#8217;re at it, we&#8217;ll give them a
 variety of positive and negative charges.</p>
 </div>
 <div class="listingblock">
@@ -33778,7 +33778,7 @@ fails. We get:</p>
 <p>for the second assertion in the method. But why? If we comb through the
 <code>distance()</code> methods in <code>PointCharge</code>, they all look correct. The
 problem must be deeper. <code>PointCharge</code> does not have accessor methods for
-its location, and so we can’t test those. Checking the constructor, we
+its location, and so we can&#8217;t test those. Checking the constructor, we
 find the culprit: <code>this.z = y;</code>, a simple cut and paste error.</p>
 </div>
 <div class="paragraph">
@@ -33827,8 +33827,8 @@ simple, but it also illustrates the importance of serious testing.</p>
 <div class="title">Example 121. Testing the field magnitude method</div>
 <div class="content">
 <div class="paragraph">
-<p>Finally, let’s test the value of the <code>fieldMagnitude()</code> method. For
-simplicity, we’ll test the field at the locations of <code>charge1</code>,
+<p>Finally, let&#8217;s test the value of the <code>fieldMagnitude()</code> method. For
+simplicity, we&#8217;ll test the field at the locations of <code>charge1</code>,
 <code>charge3</code>, and <code>charge4</code> with respect to <code>charge2</code>.</p>
 </div>
 <div class="paragraph">
@@ -33844,7 +33844,7 @@ simplicity, we’ll test the field at the locations of <code>charge1</code>,
 with an order of magnitude 10 times larger. Perhaps the constant was
 omitted? Yes, our version of <code>fieldMagnitude()</code> left off a factor of
 <code>K</code>. Once we fix that, our code finally produces the <code>OK (3 tests)</code> we
-have been waiting to see from JUnit. Why didn’t we fail the assertions
+have been waiting to see from JUnit. Why didn&#8217;t we fail the assertions
 after the first one? Because of the exception handling mechanism, each
 JUnit test method stops once a failure has happened.</p>
 </div>
@@ -34073,7 +34073,7 @@ What bugs did you uncover?</p>
 </div>
 </li>
 <li>
-<p>James Gosling’s original specification for Java contained
+<p>James Gosling&#8217;s original specification for Java contained
 assertions, but they were not included until Java 1.4. One of the
 concerns about an assertion mechanism is the additional time required to
 process the assertions. Time a program of at least moderate length
@@ -34215,7 +34215,7 @@ use a <code>TurboRacecar</code> whenever a <code>Racecar</code> is required.</p>
 <h4 id="_dynamic_binding">Dynamic binding</h4>
 <div class="paragraph">
 <p>There is a little bit of magic that makes polymorphism work. When you
-compile your code, the <code>RaceTrack</code> doesn’t know which <code>getHorsePower()</code>
+compile your code, the <code>RaceTrack</code> doesn&#8217;t know which <code>getHorsePower()</code>
 method will eventually get called. Only at run time does it query the
 object in question and, if it is a <code>TurboRacecar</code>, use the overridden
 method that returns 1100. This feature of Java is called <em>dynamic
@@ -34312,7 +34312,7 @@ be suitable when a square is needed.</p>
 <code>takeVacation()</code> method because the only method in <code>ship</code> used by
 <code>takeVacation()</code> is the <code>travel()</code> method. However, the programmer
 specified that the parameter should be a <code>RocketShip</code>, and Java plays it
-safe. Just because it looks like there won’t be a problem, Java isn’t
+safe. Just because it looks like there won&#8217;t be a problem, Java isn&#8217;t
 going to take any chances on passing an overly general <code>Vehicle</code> when a
 <code>RocketShip</code> is required. If Java took chances, a problem could arise if
 the <code>takeVacation()</code> method was overridden by a method that did call
@@ -34323,7 +34323,7 @@ the <code>takeVacation()</code> method was overridden by a method that did call
 <code>Vehicle</code> or store a <code>RocketShip</code> in an array of <code>Vehicles</code>, but not the
 reverse. Java usually gives a compile time error if you try to put
 something too general into a location that is too specific. There are,
-however, some situations which are so tricky that Java doesn’t catch the
+however, some situations which are so tricky that Java doesn&#8217;t catch the
 error until runtime. Arrays, specifically, can cause problems. Examine
 the following code snippet:</p>
 </div>
@@ -34376,9 +34376,9 @@ following example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This class is useless for a number of reasons. For one thing, there’s no
+<p>This class is useless for a number of reasons. For one thing, there&#8217;s no
 way to find out the value of <code>variable</code> except by printing it out.
-Furthermore, there’s no way to change the value of <code>variable</code> after the
+Furthermore, there&#8217;s no way to change the value of <code>variable</code> after the
 object has been created. Finally, since an abstract class cannot be
 instantiated, the following code snippet will not compile.</p>
 </div>
@@ -34474,12 +34474,12 @@ an arithmetic or a geometric sequence as follows.</p>
 <p>The <code>Sequence</code> class does not specify <strong>how</strong> the sequence of numbers
 should be generated, but any derived class must implement the
 <code>getNextValue()</code> method in order to compile. By using an abstract class,
-we don’t have to create a base class which generates a meaningless
+we don&#8217;t have to create a base class which generates a meaningless
 sequence of numbers just for the sake of establishing the
 <code>getNextValue()</code> method.</p>
 </div>
 <div class="paragraph">
-<p>Here’s a more involved example of an abstract class that gives a first
+<p>Here&#8217;s a more involved example of an abstract class that gives a first
 step toward solving the bank account with a vengeance problem posed at
 the beginning of the chapter.</p>
 </div>
@@ -34503,7 +34503,7 @@ are going to use later.</p>
 <div class="paragraph">
 <p>We extend <code>SynchronizedAccount</code> and declare the new class to be
 abstract. In this example, we do not use any abstract methods, but,
-since each bank account has unique characteristics, we don’t want people
+since each bank account has unique characteristics, we don&#8217;t want people
 to be able to create a generic <code>BankAccount</code>.</p>
 </div>
 <div class="listingblock">
@@ -34572,7 +34572,7 @@ the parent methods after calling an <code>update()</code> method we discuss belo
 <code>update()</code> method is the other major addition made in <code>BankAccount</code>.
 Each time <code>update()</code> is called, the number of months since the last
 access is stored in the field <code>monthsPast</code> and the timestamp of the last
-access is stored in <code>lastAccess</code>. We didn’t need these time features
+access is stored in <code>lastAccess</code>. We didn&#8217;t need these time features
 before, but issues like earning interest or paying monthly service
 charges will make them necessary. This method is synchronized so that
 the two fields associated with the last access are updated atomically.</p>
@@ -34620,7 +34620,7 @@ some performance optimizations that would otherwise be impossible.</p>
 <h4 id="_casting">Casting</h4>
 <div class="paragraph">
 <p>If we shift the focus back to polymorphism, we have to admit that we
-have avoided one of the messier issues. It’s true that polymorphism
+have avoided one of the messier issues. It&#8217;s true that polymorphism
 gives us lots of power. For example, we can make a <code>Vehicle</code> array and
 store subclasses of <code>Vehicle</code> inside, like so:</p>
 </div>
@@ -34650,7 +34650,7 @@ the code magically work for each kind of <code>Vehicle</code>.</p>
 <div class="paragraph">
 <p>Each <code>Vehicle</code> will travel to Prague as it should. The only trouble is
 that we have hidden some information. We know that <code>vehicles[1]</code> is a
-<code>RocketShip</code>, but we can’t treat it like one.</p>
+<code>RocketShip</code>, but we can&#8217;t treat it like one.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -34759,7 +34759,7 @@ them from most specific to most general in terms of class hierarchy.</p>
 </div>
 <div class="paragraph">
 <p>However, there is another subtle rule that is necessary to keep
-polymorphism functioning smoothly. Let’s consider a <code>Fruit</code> class with
+polymorphism functioning smoothly. Let&#8217;s consider a <code>Fruit</code> class with
 an <code>eat()</code> method that throws an <code>UnripeFruitException</code>.</p>
 </div>
 <div class="listingblock">
@@ -34807,7 +34807,7 @@ exception and deal with the situation.</p>
 The rule is that the overriding method must throw a subset (not a proper
 subset, so it could be all of the original exceptions) of the exceptions
 that the overridden method throws. This rule is actually a concept
-called Hoare’s rule of consequence that pops up several places in
+called Hoare&#8217;s rule of consequence that pops up several places in
 programming languages. Essentially, if you start with something that
 works, tighten the requirements on the input (use a <code>Plum</code> instead of
 any <code>Fruit</code>), loosen the requirements on the output (throw fewer
@@ -34851,7 +34851,7 @@ hierarchy.</p>
 <p>We begin with the abstract <code>Animal</code> class. This class gives a base
 definition for animals which includes whether the animal is alive,
 whether the animal is happy, and whether it is warmblooded (declared
-<code>final</code> because an animal can’t switch between warmblooded and
+<code>final</code> because an animal can&#8217;t switch between warmblooded and
 coldblooded).</p>
 </div>
 <div class="listingblock">
@@ -35061,7 +35061,7 @@ due to the next class.</p>
 </div>
 <div class="paragraph">
 <p>The <code>DirectDepositAccount</code> class extends the <code>CheckingAccount</code> class.
-Note that the <code>update()</code> method hasn’t been overridden. We have added
+Note that the <code>update()</code> method hasn&#8217;t been overridden. We have added
 another <code>Calendar</code> object to keep track of the last time a direct
 deposit was made. Then, we do override the <code>getFee()</code> method. If there
 has been a recent direct deposit, the fee is nothing, otherwise, it
@@ -35331,15 +35331,15 @@ students, and international students using a class hierarchy. Normal
 employees pay a 6.2% social security tax and a 1.45% Medicare tax every
 year, but neither kind of student pays these taxes. All three groups pay
 normal income tax according to the following table.</p>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all center">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col>
+<col>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-center valign-top"><strong>Marginal Tax Rate</strong></th>
-<th class="tableblock halign-center valign-top"><strong>Income Bracket</strong></th>
+<th class="tableblock halign-center valign-top">Marginal Tax Rate</th>
+<th class="tableblock halign-center valign-top">Income Bracket</th>
 </tr>
 </thead>
 <tbody>
@@ -35473,43 +35473,36 @@ that is easy. The normal style of writing mathematical expressions is
 called <em>infix notation</em>, because the operators are written in between
 the operands they are used on. A much easier notation for automatic
 evaluation is called <em>postfix notation</em>, because an operator is placed
-after the operands it works on. Table <a href="#table:infix_and_postfix">[table:infix_and_postfix]</a> gives
+after the operands it works on. The following table gives
 a few examples of expressions written in both infix and postfix
 notation.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 2. Examples of expressions in infix and equivalent postfix forms.</caption>
+<table class="tableblock frame-all grid-all center">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
+<col>
+<col>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top"><strong>Infix</strong></th>
-<th class="tableblock halign-center valign-top"></th>
-<th class="tableblock halign-left valign-top"><strong>Postfix</strong></th>
+<th class="tableblock halign-left valign-top">Infix</th>
+<th class="tableblock halign-left valign-top">Postfix</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3 + 7</code></p></td>
-<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3 7 +</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>4 * 2</code></p></td>
-<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>4 2 *</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1 + 9 * 2</code></p></td>
-<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1 9 2 * +</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>(1 + 9) * 2</code></p></td>
-<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1 9 + 2 *</code></p></td>
 </tr>
 </tbody>
@@ -35537,8 +35530,8 @@ result back on the stack. When you run out of input, the value at the
 top of the stack is your answer.</p>
 </div>
 <div class="paragraph">
-<p>For example, with <code>1 9 2 <strong> +</code>, all three operands are pushed onto the
-stack. Then, the <code></strong></code> is read, and so <code>2</code> and <code>9</code> is popped off the stack
+<p>For example, with <code>1 9 2 * +</code>, all three operands are pushed onto the
+stack. Then, the <code>*</code> is read, and so <code>2</code> and <code>9</code> is popped off the stack
 and multiplied. The result <code>18</code> is pushed back on the stack. Then, the
 <code>+</code> is read, and <code>18</code> and <code>1</code> is popped off the stack and summed,
 resulting in <code>19</code>, which is pushed back on the stack and is the final
@@ -35613,7 +35606,7 @@ example, you have used arrays to store a sequence of values and class
 definitions to store (and operate on) collections of related values.
 These data structures have the property that they are <em>static</em> in size:
 Once allocated, they do not grow as the program runs. If you allocate an
-array to store 100 integers, you’ll get an error if you try to store 101
+array to store 100 integers, you&#8217;ll get an error if you try to store 101
 integers into it.</p>
 </div>
 <div class="paragraph">
@@ -35639,7 +35632,7 @@ to be reallocated and all the original elements copied over.</p>
 <div class="content">
 <img src="chapters/18-dynamic-data-structures/images/dynamicinsertion.svg" alt="dynamicinsertion" width="80%">
 </div>
-<div class="title">Figure 73. Insertion into full dynamic array requiring reallocation. Even if the array wasn’t full, all values after <code>14</code> would need to be moved back to insert <code>17</code> in order.</div>
+<div class="title">Figure 73. Insertion into full dynamic array requiring reallocation. Even if the array wasn&#8217;t full, all values after <code>14</code> would need to be moved back to insert <code>17</code> in order.</div>
 </div>
 <div class="paragraph">
 <p>Another drawback of dynamic arrays is that they are poorly suited for
@@ -35671,7 +35664,7 @@ sequence of objects. Each object contains some data value (such as a
 new element is needed, it can be created and linked into the list.
 Unfortunately, they can be slow if you need to access arbitrary elements
 in the list. The only way to reach an element in the list is to walk
-from element to element until you find what you’re looking for. If the
+from element to element until you find what you&#8217;re looking for. If the
 element is at the beginning (or the end) of the list, this process can
 be quick. If the element is in the middle, there is no fast way to get
 there.</p>
@@ -35737,7 +35730,7 @@ unspecified, so you must allow an arbitrary number to be handled.</p>
 <div class="paragraph">
 <p>One approach is to make a guess at how many names are in the input file
 and allocate an array of that size. If your guess is too small, and you
-don’t check array accesses, you’ll cause an exception once you have
+don&#8217;t check array accesses, you&#8217;ll cause an exception once you have
 filled the array and try to store the next name into the index one past
 the last. If your guess is too large, you could be wasting a significant
 amount of storage space.</p>
@@ -35979,7 +35972,7 @@ on average, the array will only be three-quarters full</p>
 <div class="sect3">
 <h4 id="linked-lists">Linked lists</h4>
 <div class="paragraph">
-<p>As we’ve seen, while dynamic arrays can grow to accommodate a large
+<p>As we&#8217;ve seen, while dynamic arrays can grow to accommodate a large
 number of items, the performance penalties of repeated copying and the
 space wasted by unoccupied array elements can negatively affect program
 behavior. In this section, we introduce the <em>linked list</em>, an
@@ -35989,7 +35982,7 @@ the expense of limitations on how the structure can be accessed.</p>
 </div>
 <div class="paragraph">
 <p>Consider again the problem of reading an arbitrary number of names from
-an input file and storing them. Since we don’t know in advance how many
+an input file and storing them. Since we don&#8217;t know in advance how many
 names there are, it may not be efficient to pre-allocate or dynamically
 grow an array to store them. Imagine, instead, that we could write each
 name on a small index card, and then link the index cards together to
@@ -36026,7 +36019,7 @@ classes]</a>.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that the type <code>next</code> is the same as the class it’s inside of! This
+<p>Note that the type <code>next</code> is the same as the class it&#8217;s inside of! This
 apparent circular reference works because the variable only <strong>references</strong>
 an object, but the object is not actually contained within the variable.
 In fact, the value of the link may be <code>null</code>, indicating that there are
@@ -36125,7 +36118,7 @@ the linked list. The last node in the list, which contains the first
 list classes">[figure:linked
 list classes]</a> shows a visualization of the contents of this
 implementation of a linked list. An &#8220;X&#8221; is used in place of an arrow
-that point to <code>null</code>.</p>
+that points to <code>null</code>.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -36340,7 +36333,7 @@ new node, and <code>next</code> field for the new node is set to <code>current</
 <div class="sect2">
 <h3 id="_syntax_abstract_data_types_adt">Syntax: Abstract data types (ADT)</h3>
 <div class="paragraph">
-<p>We’ve seen two examples so far of dynamic data structures: dynamic
+<p>We&#8217;ve seen two examples so far of dynamic data structures: dynamic
 arrays and linked lists. A great deal of complexity can go on inside
 these data structures, but code that uses these data structures does not
 need to be aware of the details of the internal implementation. Ideally,
@@ -36389,7 +36382,7 @@ beneath it.</p>
 <div class="paragraph">
 <p>You can find a simple implementation of a stack in the solution to the
 infix conversion problem in Section <a href="#solution:Infix_conversion">[solution:Infix_conversion]</a>, but
-we now examine the stack more deeply as an archetypal ADT. A stack’s
+we now examine the stack more deeply as an archetypal ADT. A stack&#8217;s
 restricted set of operations (pushing and popping) is adequate for many
 tasks and can be implemented in a number of different ways, some more
 efficient than others.</p>
@@ -36397,7 +36390,7 @@ efficient than others.</p>
 <div class="paragraph">
 <p>The acronym FILO (first in, last out) is sometimes used to describe a
 stack. The last item that has been pushed onto the stack is the first
-item to be popped off the stack. In the next section, we’ll study the
+item to be popped off the stack. In the next section, we&#8217;ll study the
 <em>queue</em>, which is a FIFO (first in, first out) data structure.</p>
 </div>
 </div>
@@ -38054,7 +38047,7 @@ version of <code>Queue</code>.</p>
 returned with a new attempt at world domination. Since he now knows that
 you can use concurrency to crack his security code, this time he has
 hidden his deadly virus in a secret location protected by a complex maze
-of walls and passageways. Fortunately, you’ve been able to get a copy of
+of walls and passageways. Fortunately, you&#8217;ve been able to get a copy of
 the maze floor plan, but now you must write a program to find a path
 through the maze so you can steal the deadly virus before the evil
 mastermind releases it on the world.</p>
@@ -38067,11 +38060,11 @@ mastermind releases it on the world.</p>
 </div>
 <div class="paragraph">
 <p>Finding a path through a maze involves systematically exploring twists
-and turns, keeping track of where you’ve been, backtracking out of dead
+and turns, keeping track of where you&#8217;ve been, backtracking out of dead
 ends, and producing a resulting path once you make it through. You
 already have the basic tools necessary to solve this problem. You can,
 for example, represent the maze with a two-dimensional array of
-characters, where a plus (<code>'+&#8216;) represents a wall and a space (&#8217; '</code>)
+characters, where a plus ( <code>'+'</code> ) represents a wall and a space ( <code>' '</code> )
 represents a passageway. You could create a path through the maze by
 replacing a contiguous (vertical and horizontal but not diagonal)
 sequence of <code>' '</code> characters by <code>'*'</code> characters, that lead from the
@@ -38079,7 +38072,7 @@ starting square to the final square where the deadly virus is located.</p>
 </div>
 <div class="paragraph">
 <p>The difficulty is dead ends or, worse, loops. How do you keep track of
-which paths you’ve tried that didn’t work? While you could use
+which paths you&#8217;ve tried that didn&#8217;t work? While you could use
 additional data structures to store this additional information,
 <em>recursion</em> is a solution technique that makes solving problems like
 this one surprisingly straightforward.</p>
@@ -38107,10 +38100,8 @@ problem solving in Java? How does the computer keep track of these
 self-references? The following subsections address precisely these
 questions.</p>
 </div>
-<div class="paragraph">
-<p>[[subsection:What_is_recursion?]]
-==== What is recursion?</p>
-</div>
+<div class="sect3">
+<h4 id="subsection:What_is_recursion">What is recursion?</h4>
 <div class="paragraph">
 <p>In the context of computer science and mathematics, recursion means
 describing some repetitive process in terms of itself. Many complex
@@ -38146,17 +38137,16 @@ age you were during year \(year\).</p>
 </div>
 <div class="paragraph">
 <p>\(age(year) =
-\begin{cases} 0 &amp; \text{\textbf{(Base Case)} if you were born in  $year$}
+\begin{cases} 0 &amp; \text{if you were born in $year$} &amp; \text{(Base Case)}
 \\
-  1 + age(year-1) &amp; \text{\textbf{(Recursive Case)} if you were born before
-  $year$}
+  1 + age(year-1) &amp; \text{if you were born before $year$} &amp; \text{(Recursive Case)}
 \end{cases}\)</p>
 </div>
 <div class="paragraph">
 <p>To be meaningful, recursive cases should be defined in terms of simpler
 or smaller values. In English, it is equally correct to say that you are
-now a year younger than you’ll be next year. Unfortunately, the age that
-you’ll be next year is not any closer to a base case, making that
+now a year younger than you&#8217;ll be next year. Unfortunately, the age that
+you&#8217;ll be next year is not any closer to a base case, making that
 recursion useless.</p>
 </div>
 <div class="imageblock">
@@ -38179,6 +38169,7 @@ branches with the previous shape, a tree is generated recursively.
 <em>Fractals</em> are images generated by similar recursive techniques.
 Although many real trees exhibit recursive tendencies, they do not
 follow rules consistently or rigidly.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_recursive_definitions">Recursive definitions</h4>
@@ -38209,9 +38200,9 @@ case and recursive case.</p>
 </div>
 <div class="paragraph">
 <p>\(x \times y =
-\begin{cases} x &amp; \text{\textbf{(Base Case)} if  $y = 1$}
+\begin{cases} x &amp; \text{if  $y = 1$} &amp; \text{(Base Case)}
 \\
-x + \left(x \times (y - 1)\right) &amp; \text{\textbf{(Recursive Case)} if $y &gt; 1$}
+x + \left(x \times (y - 1)\right) &amp; \text{if $y &gt; 1$} &amp; \text{(Recursive Case)}
 \end{cases}\)</p>
 </div>
 <div class="paragraph">
@@ -38236,9 +38227,9 @@ and sequences precisely without using ellipses (\(\ldots\)).</p>
 </div>
 <div class="paragraph">
 <p>\(n! =
-\begin{cases} 1 &amp; \text{\textbf{(Base Case)} if  $n = 0$}
+\begin{cases} 1 &amp; \text{if  $n = 0$} &amp; \text{(Base Case)}
 \\
-n \cdot (n-1)! &amp; \text{\textbf{(Recursive Case)} if $n&gt;0$}
+n \cdot (n-1)! &amp; \text{if $n&gt;0$} &amp; \text{(Recursive Case)}
 \end{cases}\)</p>
 </div>
 <div class="paragraph">
@@ -38268,10 +38259,10 @@ definition. Indeed, you may have noticed that we described each term as
 the sum of the two previous terms. We can formally define the
 \(n\)<sup>th</sup> Fibonacci number \(F_n\) as follows,
 starting with \(n=0\). \(F_n=
-\begin{cases} 1 &amp; \text{\textbf{(Base
-Cases)} if  $n=0$ or  $n = 1$}
+\begin{cases} 1 &amp; \text{if  $n=0$ or  $n = 1$} &amp; \text{(Base
+Cases)}
 \\
-F_{n-1}+F_{n-2} &amp; \text{\textbf{(Recursive Case)} if $n&gt;1$}
+F_{n-1}+F_{n-2} &amp; \text{if $n&gt;1$} &amp; \text{(Recursive Case)}
 \end{cases}\)</p>
 </div>
 <div class="paragraph">
@@ -38294,10 +38285,10 @@ operations on elements of a sequential data structure. We sum the
 elements of an array by iterating through them from first to last. We
 multiply two matrices by using nested <code>for</code> loops to sequence through
 the matrix contents in the proper order. Similarly, one method may make
-a sequence of one or more calls to other methods. We’re confident that
+a sequence of one or more calls to other methods. We&#8217;re confident that
 such computations terminate because we start at the beginning and work
 to the end of a finite structure. But what if the structure is not a
-simple linear or multidimensional array? The path we’re trying to find
+simple linear or multidimensional array? The path we&#8217;re trying to find
 through the maze is of unknown length and may not take a &#8220;straight
 line&#8221; through the array.</p>
 </div>
@@ -38433,11 +38424,11 @@ chapters may make it harder for you to embrace recursion.</p>
 <p>Iteration views the whole problem at once and tries to sequence all the
 pieces of the solution in some organized way. Recursion is only
 concerned with the current step in the solution. If the current step is
-one in which the answer is clear, you’re in a base case. Otherwise, the
+one in which the answer is clear, you&#8217;re in a base case. Otherwise, the
 solution takes one step toward the answer and then makes the leap of
 faith, allowing the recursion to take care of the rest. Programmers who
 are new to recursion are often tempted to do too much in each recursive
-call. Don’t rush it!</p>
+call. Don&#8217;t rush it!</p>
 </div>
 <div class="paragraph">
 <p>The use of recursion in languages like Java owes much to the development
@@ -38492,9 +38483,9 @@ function.</p>
 </div>
 <div class="paragraph">
 <p>\(n! =
-\begin{cases} 1 &amp; \text{\textbf{(Base Case)} if $n = 0$}
+\begin{cases} 1 &amp; \text{if $n = 0$} &amp; \text{(Base Case)}
 \\
-n \cdot (n-1)! &amp; \text{\textbf{(Recursive Case)} if $n&gt;0$}
+n \cdot (n-1)! &amp; \text{if $n&gt;0$} &amp; \text{(Recursive Case)}
 \end{cases}\)</p>
 </div>
 <div class="paragraph">
@@ -38527,10 +38518,10 @@ enough to fit inside of an <code>int</code>.</p>
 </div>
 <div class="paragraph">
 <p>\(F_n=
-\begin{cases} 1 &amp; \text{\textbf{(Base
-Cases)} if  $n=0$ or $n = 1$}
+\begin{cases} 1 &amp; \text{if  $n=0$ or $n = 1$} &amp; \text{(Base
+Cases)}
 \\
-F_{n-1}+F_{n-2} &amp; \text{\textbf{(Recursive Case)} if  $n&gt;1$}
+F_{n-1}+F_{n-2} &amp; \text{if  $n&gt;1$} &amp; \text{(Recursive Case)}
 \end{cases}\)</p>
 </div>
 <div class="paragraph">
@@ -38621,7 +38612,7 @@ behind the recursive solution follows.</p>
 <dl>
 <dt class="hdlist1">Base Case</dt>
 <dd>
-<p>Moving one disk is easy. Just move it from the pole it’s on to the
+<p>Moving one disk is easy. Just move it from the pole it&#8217;s on to the
 destination pole.</p>
 </dd>
 <dt class="hdlist1">Recursive Case</dt>
@@ -38686,15 +38677,15 @@ trivial: Given a rational number \(a\) and a positive integer
 \(n\), find the value of \(a^n\).</p>
 </div>
 <div class="paragraph">
-<p>It’s tempting to call <code>Math.pow(a, n)</code> or to use a short <code>for</code> loop to
+<p>It&#8217;s tempting to call <code>Math.pow(a, n)</code> or to use a short <code>for</code> loop to
 compute this value, but what if neither tool existed in Java? A simple
 recursive formulation can describe exponentiation.</p>
 </div>
 <div class="paragraph">
 <p>\(a^n =
-\begin{cases} a &amp; \text{\textbf{(Base case)} if $n=1$}
+\begin{cases} a &amp; \text{if $n=1$} &amp; \text{(Base case)}
 \\
-a \cdot a^{n - 1} &amp; \text{\textbf{(Recursive case)} if $n&gt;1$}
+a \cdot a^{n - 1} &amp; \text{if $n&gt;1$} &amp; \text{(Recursive case)}
 \end{cases}\)</p>
 </div>
 <div class="paragraph">
@@ -38729,9 +38720,9 @@ calls. Consider this alternative recursion definition of exponentiation.</p>
 </div>
 <div class="paragraph">
 <p>\(a^n =
-\begin{cases} a &amp; \text{\textbf{(Base Case)} if  $n=1$}
+\begin{cases} a &amp; \text{if  $n=1$} &amp; \text{(Base Case)}
 \\
-\left(a^{\frac{n}{2}}\right)^2 &amp; \text{\textbf{(Base Case)} if  $n&gt;1$}
+\left(a^{\frac{n}{2}}\right)^2 &amp; \text{if  $n&gt;1$} &amp; \text{(Base Case)}
 \end{cases}\)</p>
 </div>
 <div class="paragraph">
@@ -38758,7 +38749,7 @@ buy us? If we structure our method correctly, we cut the size of
 we made two recursive calls, we would no longer be more efficient than
 the previous method. That version took \(n\) recursive calls.
 How efficient is this version? The answer is the number of times you
-have to cut \(n\) in half before you get 1. Let’s call that
+have to cut \(n\) in half before you get 1. Let&#8217;s call that
 value \(x\). Recall that \(n\) is a power of 2,
 meaning that \(n = 2^k\) for some integer
 \(k \geq 0\).</p>
@@ -38847,7 +38838,7 @@ example of merge sort.</p>
 recursively. The idea of the sort is to break a list of items in half
 and recursively merge sort each half. Then, these two sorted halves are
 merged back together into the final sorted list. The base case of the
-recursion is when there’s only a single item in the list, since a list
+recursion is when there&#8217;s only a single item in the list, since a list
 with only one thing in it is, by definition, sorted.</p>
 </div>
 <div class="paragraph">
@@ -38875,7 +38866,7 @@ sort algorithm.</p>
 <p>The <code>mergeSort()</code> method is quite short and appears to do very little.
 It starts by creating arrays <code>a</code> and <code>b</code> and copying roughly half of the
 elements in <code>array</code> into each. We make <code>a</code> half the size of <code>array</code>, but
-we can’t do the same thing for <code>b</code> because an odd length for <code>array</code>
+we can&#8217;t do the same thing for <code>b</code> because an odd length for <code>array</code>
 would leave us without enough space in <code>a</code> and <code>b</code> to hold everything
 from <code>array</code>. Instead, we let <code>b</code> hold however much is leftover after
 the elements for <code>a</code> have been accounted for.</p>
@@ -38912,8 +38903,8 @@ method assumes that <code>a</code> and <code>b</code> are sorted and that the su
 lengths is the length of <code>array</code>. We want to compare each element in <code>a</code>
 and <code>b</code>, always taking the smaller and putting it into the next
 available location in <code>array</code>. Since the next smallest item could be in
-either <code>a</code> or <code>b</code>, we never know when we’ll run out of elements in
-either array. That’s why the first two <code>if</code> statements in the <code>merge()</code>
+either <code>a</code> or <code>b</code>, we never know when we&#8217;ll run out of elements in
+either array. That&#8217;s why the first two <code>if</code> statements in the <code>merge()</code>
 method check to see if the <code>bIndex</code> or the <code>aIndex</code> is already past the
 last element in its respective array. If so, the next element from the
 other array is automatically used. By the time the third <code>if</code> statement
@@ -38972,7 +38963,7 @@ manipulate recursive data structures.</p>
 <div class="paragraph">
 <p>How would you get the size of a linked list? The implementation in
 Program <a href="#program:LinkedList">[program:LinkedList]</a> keeps track of its size as it grows, but
-what if it didn’t? A standard way to count the elements in the list
+what if it didn&#8217;t? A standard way to count the elements in the list
 would be to start with a reference to the head of the list and a counter
 with value zero. As long as the reference is not <code>null</code>, add one to the
 counter and set the reference to the next element on the list.
@@ -39022,7 +39013,7 @@ list using this recursive procedure. Note that there is a non-recursive
 non-recursive method is called a <em>proxy method</em>. The recursive method
 requires access to the internals of the data structure. The proxy method
 calls the recursive method with the appropriate starting point (<code>head</code>),
-while providing a public way to get the list’s size without exposing its
+while providing a public way to get the list&#8217;s size without exposing its
 internals.</p>
 </div>
 <div class="listingblock">
@@ -39139,7 +39130,7 @@ the root.</p>
 <p>This recursive definition describes a tree that makes items with a
 natural ordering easy to find. If you are looking for an item, you first
 look at the root of the tree. If the item you want is in the root,
-you’ve found it! If the item you want is smaller than the root, go left.
+you&#8217;ve found it! If the item you want is smaller than the root, go left.
 If the item you want is larger than the root, go right. If you ever run
 out of tree (hit a <code>null</code>), the item is not in the tree.</p>
 </div>
@@ -39361,7 +39352,7 @@ can reuse code.</p>
 <p>Program <a href="#program:GenericTree">[program:GenericTree]</a> defines a generic version of the <code>Tree</code>
 class. This example is complicated by the fact that we need to be able
 to compare the value we want to store with the value in each <code>Node</code>
-object. We can’t make a tree with any arbitrary type. Objects of the
+object. We can&#8217;t make a tree with any arbitrary type. Objects of the
 type <strong>must</strong> have the ability to be compared to each other and ordered.
 Thus, we use a <em>bounded type parameter</em> specifying that the type <code>T</code>
 stored in each <code>Tree</code> must implement the <code>Comparable</code> interface. This
@@ -39481,15 +39472,15 @@ are available as the <code>TreeSet</code> and <code>TreeMap</code> classes.</p>
 <div class="paragraph">
 <p>Our algorithm for solving the maze follows the conventional
 pencil-and-paper method: trial and error! We mark locations in the maze
-with <code>'<strong>'</code> as we explore them. If we come to a dead end, we unmark the
-location (by replacing <code>'</strong>'</code> with <code>' '</code>) and return to our previous
+with <code>'*'</code> as we explore them. If we come to a dead end, we unmark the
+location (by replacing <code>'*'</code> with <code>' '</code>) and return to our previous
 location to try a different direction.</p>
 </div>
 <div class="paragraph">
 <p>Start at the beginning square of the maze, which must be a passageway.
 Mark that location as part of the path by putting <code>'*'</code> in the cell.
 Now, what can we do? There are, in general, four possible directions to
-head: up, down, left, or right. If that direction doesn’t take you
+head: up, down, left, or right. If that direction doesn&#8217;t take you
 outside the bounds of the array, then you find either a wall or a
 passageway. If you have been walking through the maze, you may also find
 a part of the current path (often the square you were on before the
@@ -39500,8 +39491,8 @@ current one).</p>
 in each of the four directions. If the direction did not take the scout
 out of bounds, he would find either a wall, a part of the current path
 (the path that led into that space), or an open passageway. If the scout
-doesn’t find an open passageway, he reports back that that direction
-doesn’t work.</p>
+doesn&#8217;t find an open passageway, he reports back that that direction
+doesn&#8217;t work.</p>
 </div>
 <div class="paragraph">
 <p>On the other hand, if the scout finds an open passageway, what does he
@@ -39510,7 +39501,7 @@ scouts of his own in each of the four possible directions.</p>
 </div>
 <div class="paragraph">
 <p>With careful, consistent coding, you and the scout follow the exact same
-process. And the scout’s scouts. And so on. There is, in fact, only one
+process. And the scout&#8217;s scouts. And so on. There is, in fact, only one
 method and instead of calling a scout method to investigate each of the
 squares in the four directions, you call yourself recursively.</p>
 </div>
@@ -39709,7 +39700,7 @@ interface, which is similar to the <code>Runnable</code> interface in that it
 allows you to specify a class whose objects can be started as
 independent threads. Both the <code>Future</code> interface and the <code>Callable</code> are
 generic interfaces that require to specify a type. Remember that futures
-are supposed to give back an answer, and that’s the type that you supply
+are supposed to give back an answer, and that&#8217;s the type that you supply
 as a parameter. For example, when creating a future that returns an
 <code>int</code> value, you would create a class that implemented the
 <code>Callable&lt;Integer&gt;</code> interface, requiring it to contain a method with the
@@ -39825,7 +39816,7 @@ they share.</p>
 futures. Since we know the number of futures ahead of time, an array
 would be ideal. Unfortunately, quirks in the way Java handles generics
 makes it illegal to create an array with a generic type. Instead, we
-create an <code>ArrayList</code> with the size we’ll need pre-allocated. Next, we
+create an <code>ArrayList</code> with the size we&#8217;ll need pre-allocated. Next, we
 create an <code>ExecutorService</code> with a thread pool of size <code>THREADS</code>.
 Finally, we find the amount of work done by each future by dividing <code>N</code>
 by <code>FUTURES</code>.</p>
@@ -39844,7 +39835,7 @@ by <code>FUTURES</code>.</p>
 <div class="paragraph">
 <p>In this section of code, we create each future and start it running.
 First, we instantiate a <code>RootSummer</code> object with the appropriate bounds
-for the work it’s going to compute. Then, we supply that object to the
+for the work it&#8217;s going to compute. Then, we supply that object to the
 <code>submit()</code> method on the <code>ExecutorService</code>, which returns a <code>Future</code>
 object. We could have saved a line of code by storing this return value
 directly into the list <code>futures</code>.</p>
@@ -39873,7 +39864,7 @@ directly into the list <code>futures</code>.</p>
 <div class="paragraph">
 <p>All that remains is to collect the values from each future. We iterate
 through the list of futures with a for-each loop and add the return
-value each future’s <code>get()</code> method to our running total <code>sum</code>. Because
+value each future&#8217;s <code>get()</code> method to our running total <code>sum</code>. Because
 <code>get()</code> is a blocking call, we have to catch an <code>InterruptedException</code>
 in case we are interrupted while waiting for the future to respond.
 However, we also have to catch an <code>ExecutionException</code> in case an
@@ -39998,12 +39989,11 @@ Use the following recursive definition of exponentiation to guide your
 implementation.</p>
 <div class="paragraph">
 <p>\(a^n =
-\begin{cases} a &amp; \text{\textbf{(Base Case)} if  $n=1$}
+\begin{cases} a &amp; \text{if  $n=1$} &amp; \text{(Base Case)}
 \\
-\left(a^{\frac{n}{2}}\right)^2 &amp; \text{\textbf{(Base Case)} if  $n&gt;1$ and even}
+\left(a^{\frac{n}{2}}\right)^2 &amp; \text{if  $n&gt;1$ and even} &amp; \text{(Base Case)}
 \\
-a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 &amp; \text{\textbf{(Base Case)} if  $n&gt;1$
-and odd}
+a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 &amp; \text{if  $n&gt;1$ and odd} &amp; \text{(Base Case)}
 \end{cases}\)</p>
 </div>
 </li>
@@ -40130,7 +40120,7 @@ recursive solution.)</p>
 <p>Exercise <a href="#exercise:binary_search">[exercise:binary_search]</a> from Chapter <a href="#chapter:Arrays"><em>Arrays</em></a>
 explains how binary search can be used to search for a value in a sorted
 array of values. The idea is to play a &#8220;high-low&#8221; game, first looking
-at the middle value. If the value is the one you’re looking for, you’re
+at the middle value. If the value is the one you&#8217;re looking for, you&#8217;re
 done. If it is too high, look in the lower half of the array. If it is
 too low, look in the upper half of the array. Implement binary search
 both iteratively and recursively. Populate an array with 100,000 <code>int</code>
@@ -40142,12 +40132,12 @@ process. Was the iterative or recursive approach faster? By how much?</p>
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p>[[chapter:File_I/O]]
-:imagesdir: chapters/20-file-io/images
-== File I/O</p>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="chapter:File_IO">File I/O</h2>
+<div class="sectionbody">
 <div class="sect2">
 <h3 id="_problem_a_picture_is_worth_1_000_bytes">Problem: A picture is worth 1,000 bytes</h3>
 <div class="paragraph">
@@ -41339,7 +41329,7 @@ computers, called <em>clients</em>, connect to in order to access some services
 or resources. When you surf the Internet, your computer is a client
 connecting to web servers all over the world. Writing a web server might
 seem like a daunting task. The web browser you run on your client
-computer (e.g. Firefox, Internet Explorer, or Safari) is, in modern
+computer (e.g. Chrome, Firefox, Internet Explorer, or Safari) is, in modern
 times, a very complicated program, capable of playing sounds and movies,
 browsing in multiple tabs, automatically encrypting and decrypting
 secure information, and, at the very least, correctly displaying web
@@ -42252,7 +42242,7 @@ multi-threaded versions?</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-05-29 11:59:23 EDT
+Last updated 2018-06-05 13:25:34 Eastern Daylight Time
 </div>
 </div>
 <script type="text/x-mathjax-config">
