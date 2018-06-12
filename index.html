@@ -27182,7 +27182,7 @@ behavior (and even people starving!)</p>
 <p>Concurrency gives us the potential to make our programs faster but
 introduces a number of other problems. The way that threads interact can
 be unpredictable. Because they share memory, one thread can corrupt the
-value in another thread’s variables. We introduce synchronization tools
+value in another thread&#8217;s variables. We introduce synchronization tools
 in this chapter that can prevent threads from corrupting data, but these
 tools create new pitfalls. To explore these pitfalls, we give you
 another problem to solve.</p>
@@ -27275,18 +27275,18 @@ the answer should always be correct.</p>
 </div>
 <div class="paragraph">
 <p>Looking at the code, the problem might not be obvious. Everything
-centers on the statement <code>counter` in the `for` loop inside the
-`run()` method. But, this statement appears to execute in a single step!
-Each thread should increase the value of `counter` a total of
-`COUNT/THREADS` times, adding up to `1000000`. The trouble is that
-`counter</code> is not a single step. Recall that <code>counter++</code> is shorthand
+centers on the statement <code>counter++</code> in the <code>for</code> loop inside the
+<code>run()</code> method. But, this statement appears to execute in a single step!
+Each thread should increase the value of <code>counter</code> a total of
+<code>COUNT/THREADS</code> times, adding up to <code>1000000</code>. The trouble is that
+<code>counter++</code> is not a single step. Recall that <code>counter++</code> is shorthand
 for <code>counter = counter + 1</code>. To be even more explicit we could write it
 as follows.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>temp = counter;
-counter = temp + 1;</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-n">temp</span> <span class="tok-o">=</span> <span class="tok-n">counter</span><span class="tok-o">;</span>
+<span class="tok-n">counter</span> <span class="tok-o">=</span> <span class="tok-n">temp</span> <span class="tok-o">+</span> <span class="tok-mi">1</span><span class="tok-o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -27309,7 +27309,7 @@ another thread. The actual code that the JVM runs is much lower level
 than source code.</p>
 </div>
 <div class="paragraph">
-<p>We can’t easily force a non-atomic operation to be atomic, but there are
+<p>We can&#8217;t easily force a non-atomic operation to be atomic, but there are
 ways to restrict access to certain pieces of code under certain
 conditions. The name we give to a piece of code which should not be
 accessed by more than one thread at a time is a <em>critical section</em>. In
@@ -27340,15 +27340,15 @@ language.</p>
 exclusion is the <code>synchronized</code> keyword. There are two ways to use this
 keyword: with a method or with an arbitrary block of code. In the method
 version, you add the <code>synchronized</code> modifier before the return type.
-Let’s imagine a class with a private <code>String</code> field called <code>message</code>
+Let&#8217;s imagine a class with a private <code>String</code> field called <code>message</code>
 which is set to be <code>"Will Robinson!"</code> by the constructor. Now, we define
 the following method.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public synchronized void danger() {
-    message = "Danger, " + message;
-}</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">synchronized</span> <span class="tok-kt">void</span> <span class="tok-nf">danger</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+    <span class="tok-n">message</span> <span class="tok-o">=</span> <span class="tok-s">&quot;Danger, &quot;</span> <span class="tok-o">+</span> <span class="tok-n">message</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -27374,12 +27374,12 @@ which call other synchronized methods.</p>
 <p>Consider method <code>safety()</code> which does the &#8220;opposite&#8221; of <code>danger()</code>, by
 removing occurrences of <code>"Danger, "</code> from the beginning of <code>message</code>.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public synchronized void safety() {
-    if( message.startsWith("Danger, ") )
-        message = message.substring( 8 );
-}</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">synchronized</span> <span class="tok-kt">void</span> <span class="tok-nf">safety</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+    <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">message</span><span class="tok-o">.</span><span class="tok-na">startsWith</span><span class="tok-o">(</span><span class="tok-s">&quot;Danger, &quot;</span><span class="tok-o">)</span> <span class="tok-o">)</span>
+        <span class="tok-n">message</span> <span class="tok-o">=</span> <span class="tok-n">message</span><span class="tok-o">.</span><span class="tok-na">substring</span><span class="tok-o">(</span> <span class="tok-mi">8</span> <span class="tok-o">);</span>
+<span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -27405,13 +27405,13 @@ your program could have.</p>
 of code allows more fine-grained control. The following version of
 <code>danger()</code> is equivalent to the earlier one.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public void danger() {
-    synchronized( this ) {
-        message = "Danger, " + message;
-    }
-}</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">danger</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+    <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-k">this</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-n">message</span> <span class="tok-o">=</span> <span class="tok-s">&quot;Danger, &quot;</span> <span class="tok-o">+</span> <span class="tok-n">message</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+<span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -27425,30 +27425,30 @@ to get the lock and do all the other management needed to make the
 </div>
 <div class="paragraph">
 <p>If you have two critical sections which are unrelated to each other, you
-can use the fine-grained control the block style provides. First, you’ll
+can use the fine-grained control the block style provides. First, you&#8217;ll
 need some objects to use as locks, probably declared so that they can
 easily be shared, perhaps as static fields of a class.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>private static Object lock1 = new Object();
-private static Object lock2 = new Object();</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-n">Object</span> <span class="tok-n">lock1</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Object</span><span class="tok-o">();</span>
+<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-n">Object</span> <span class="tok-n">lock2</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Object</span><span class="tok-o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Then, wherever you need control over concurrency, you use them as locks.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>synchronized( lock1 ){
-    //do dangerous thing 1
-}
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock1</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-c1">//do dangerous thing 1</span>
+<span class="tok-o">}</span>
 
-//do safe things
+<span class="tok-c1">//do safe things</span>
 
-synchronized( lock2 ){
-    //do dangerous thing 2, unrelated to dangerous thing 1
-}</pre>
+<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock2</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-c1">//do dangerous thing 2, unrelated to dangerous thing 1</span>
+<span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -27478,19 +27478,19 @@ counting. We could use a synchronized block and an indicator <code>boolean</code
 called <code>votingComplete</code> to allow the collector thread to signal to the
 counting thread.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>while( true ) {
-    synchronized( this ) {
-        if( votingComplete )
-            break;
-    }
-}
-countVotes();</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-kc">true</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-k">this</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">votingComplete</span> <span class="tok-o">)</span>
+            <span class="tok-k">break</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+<span class="tok-o">}</span>
+<span class="tok-n">countVotes</span><span class="tok-o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>What’s the problem with this design? Notice that the counting thread is
+<p>What&#8217;s the problem with this design? Notice that the counting thread is
 running through the <code>while</code> loop over and over waiting for
 <code>votingComplete</code> to become <code>true</code>. On a single processor, the counting
 thread would slow down the job of the collecting thread which is trying
@@ -27510,14 +27510,14 @@ Programming]</a>, there is a Not Runnable state which threads enter by
 calling <code>sleep()</code>, calling <code>wait()</code>, or performing blocking I/O. Using
 <code>wait()</code>, we can rewrite the vote counting thread.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>synchronized( this ) {
-    while( !votingComplete ) {
-        wait();
-    }
-}
-countVotes();</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-k">this</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-o">!</span><span class="tok-n">votingComplete</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-n">wait</span><span class="tok-o">();</span>
+    <span class="tok-o">}</span>
+<span class="tok-o">}</span>
+<span class="tok-n">countVotes</span><span class="tok-o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -27529,7 +27529,7 @@ however, it gives up the corresponding lock it is holding until it wakes
 up and runs again. Why use the <code>while</code> loop at all, now? There is no
 guarantee that the condition you are waiting for is <code>true</code>. Many threads
 may be waiting on this particular lock. We use the <code>while</code> loop to check
-that <code>votingComplete</code> is <code>true</code> and wait again if it isn’t.</p>
+that <code>votingComplete</code> is <code>true</code> and wait again if it isn&#8217;t.</p>
 </div>
 <div class="paragraph">
 <p>In order to notify a waiting thread, the other thread calls the
@@ -27538,13 +27538,13 @@ synchronized block or method. Here is corresponding code the vote
 collecting thread would use to notify the counting thread that voting is
 complete.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>// finish collecting votes
-synchronized( this ) {
-    votingComplete = true;
-    notifyAll();
-}</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-c1">// finish collecting votes</span>
+<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-k">this</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-n">votingComplete</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
+    <span class="tok-n">notifyAll</span><span class="tok-o">();</span>
+<span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -27635,7 +27635,7 @@ following programming problem, similar to one you might find in real
 life.</p>
 </div>
 <div class="paragraph">
-<p>As a rising star in a bank’s IT department, you have been given the job
+<p>As a rising star in a bank&#8217;s IT department, you have been given the job
 of creating a new bank account class called <code>SynchronizedAccount</code>. This
 class must have methods to support the following operations: deposit,
 withdraw, and check balance. Each method should print a status message
@@ -28048,16 +28048,16 @@ getting ready at different times. They follow the pattern of getting
 ready for a while, waiting for their friends to get ready, and then
 calling their friends to see if the other two are ready. If all three
 are ready, then the friends will leave. Unfortunately, if a friend calls
-and either of the other two aren’t ready, he’ll become frustrated and
-stop being ready. Perhaps he’ll realize that he’s got time to take a
+and either of the other two aren&#8217;t ready, he&#8217;ll become frustrated and
+stop being ready. Perhaps he&#8217;ll realize that he&#8217;s got time to take a
 shower or get involved in some other activity for a while. After
-finishing that activity, he’ll become ready again and wait for his
+finishing that activity, he&#8217;ll become ready again and wait for his
 friends to become ready.</p>
 </div>
 <div class="paragraph">
 <p>If the timing is just right, the three friends will keep becoming ready,
 waiting for a while, and then becoming frustrated when they realize that
-their friends aren’t ready. Here is a rough simulation of this process
+their friends aren&#8217;t ready. Here is a rough simulation of this process
 in code.</p>
 </div>
 <div class="listingblock">
@@ -28143,19 +28143,19 @@ and repeats the process.</p>
 </div>
 <div class="paragraph">
 <p>At roughly 75 milliseconds into the simulation, the first friend becomes
-ready, but he doesn’t check with his friends until 150 milliseconds.
-Unfortunately, the second friend doesn’t become ready until 175
+ready, but he doesn&#8217;t check with his friends until 150 milliseconds.
+Unfortunately, the second friend doesn&#8217;t become ready until 175
 milliseconds. He then checks with his friends at 225 milliseconds,
 around which time the first friend is becoming ready a second time.
-However, the third friend isn’t ready until 275 milliseconds. When he
-then checks at 350 milliseconds, the first friend isn’t ready anymore.
+However, the third friend isn&#8217;t ready until 275 milliseconds. When he
+then checks at 350 milliseconds, the first friend isn&#8217;t ready anymore.
 On some systems the timing might drift such that the friends all become
 ready at the same time, but it could take a long, long while.</p>
 </div>
 <div class="paragraph">
 <p>In reality, human beings would not put off going to a party
 indefinitely. Some people would decide that it was too late to go.
-Others would go alone. Others would go over to their friends’ houses and
+Others would go alone. Others would go over to their friends' houses and
 demand to know what was taking so long. Computers are not nearly as
 sensible and must obey instructions, even if they cause useless
 repetitive patterns. Realistic examples of livelock are hard to show in
@@ -28182,16 +28182,16 @@ multiplication">[example:Matrix
 multiplication]</a> and use the <code>synchronized</code> keyword to lock on the
 matrix itself.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public void run() {
-    synchronized( c ) {
-        for( int i = lower; i &lt; upper; i++ )
-            for( int j = 0; j &lt; c[i].length; j++ )
-                for( int k = 0; k &lt; b.length; k++ )
-                    c[i][j] += a[i][k] * b[k][j];
-    }
-}</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+    <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">c</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-n">lower</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">upper</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+            <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">j</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">j</span> <span class="tok-o">&lt;</span> <span class="tok-n">c</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">length</span><span class="tok-o">;</span> <span class="tok-n">j</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+                <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">k</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">k</span> <span class="tok-o">&lt;</span> <span class="tok-n">b</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">;</span> <span class="tok-n">k</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+                    <span class="tok-n">c</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">][</span><span class="tok-n">j</span><span class="tok-o">]</span> <span class="tok-o">+=</span> <span class="tok-n">a</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">][</span><span class="tok-n">k</span><span class="tok-o">]</span> <span class="tok-o">*</span> <span class="tok-n">b</span><span class="tok-o">[</span><span class="tok-n">k</span><span class="tok-o">][</span><span class="tok-n">j</span><span class="tok-o">];</span>
+    <span class="tok-o">}</span>
+<span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -28418,7 +28418,7 @@ years, and research continues to find better solutions.</p>
 makes it illegal to use the <code>synchronized</code> keyword on constructors.
 During the creation of an object, it is possible to <em>leak</em> data to the
 outside world by adding a reference to the object under construction to
-some shared data structure. What’s the danger of leaking data in this
+some shared data structure. What&#8217;s the danger of leaking data in this
 way?</p>
 </li>
 <li>
@@ -28448,16 +28448,16 @@ synchronize the process?</p>
 life example of one.</p>
 </li>
 <li>
-<p><a href="#exercise:per_object_lock">[exercise:per_object_lock]</a> Let’s reexamine the code that
+<p><a href="#exercise:per_object_lock">[exercise:per_object_lock]</a> Let&#8217;s reexamine the code that
 increments a variable with several threads from
 Section <a href="#concepts:Thread_interaction">[concepts:Thread_interaction]</a>. We can rewrite the <code>run()</code>
 method as follows.</p>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public synchronized void run() {
-    for( int i = 0; i &lt; COUNT / THREADS; i++ )
-        counter++;
-}</pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">synchronized</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+    <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">COUNT</span> <span class="tok-o">/</span> <span class="tok-n">THREADS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+        <span class="tok-n">counter</span><span class="tok-o">++;</span>
+<span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
