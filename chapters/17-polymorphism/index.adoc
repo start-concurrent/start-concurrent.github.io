@@ -122,11 +122,12 @@ include::programs/StaticTurboRacecar.java[]
 Assume that `RaceTrack` contains a method which prints out the
 horsepower of a `StaticRacecar` like so:
 
-....
+[source, java]
+-----
 public void printHorsepower( StaticRacecar car ) {
     System.out.print( car.HORSEPOWER );
 }
-....
+-----
 
 Even if you pass an object of type `StaticTurboRacecar`, the value 700
 will be printed out every time. In Java, all fields, whether normal,
@@ -161,11 +162,12 @@ include::programs/RocketShip.java[]
 Here is a method that requires a `RocketShip` but only uses its
 `travel()` method.
 
-....
+[source, java]
+-----
 public void takeVacation( RocketShip ship, String destination ) {
     ship.travel( destination );
 }
-....
+-----
 
 It seems as though we should be able to pass any `Vehicle` to the
 `takeVacation()` method because the only method in `ship` used by
@@ -185,10 +187,11 @@ however, some situations which are so tricky that Java doesn’t catch the
 error until runtime. Arrays, specifically, can cause problems. Examine
 the following code snippet:
 
-....
+[source, java]
+-----
 Vehicle[] transportation = new RocketShip[100];
 transportation[0] = new Vehicle();
-....
+-----
 
 On the first line, we are using a `Vehicle` array reference to store an
 array of 100 `RocketShip`s. But, in the second line, we try to store a
@@ -224,9 +227,10 @@ Furthermore, there’s no way to change the value of `variable` after the
 object has been created. Finally, since an abstract class cannot be
 instantiated, the following code snippet will not compile.
 
-....
+[source, java]
+-----
 Useless thing = new Useless( 14 );
-....
+-----
 
 Instead, we must create a new class that extends `Useless`.
 
@@ -239,10 +243,11 @@ include::programs/Useful.java[]
 Then, we can instantiate an object of type `Useful` and use it for
 something.
 
-....
+[source, java]
+-----
 Useless item = new Useful( 14 );
 item.print();
-....
+-----
 
 Note that, in accordance with the rules of Java, we can store a more
 specific object of type `Useful` into more general reference of type
@@ -370,9 +375,10 @@ is and prevent anything unexpected from happening.
 The most common example of a `final` class is the `String` class.
 Consider the following.
 
-....
+[source, java]
+-----
 public class SuperString extends String {}
-....
+-----
 
 This code will give a compiler error. `String` is perfect the way it is
 (or so the Java designers have decided). There is no reason to restrict
@@ -387,14 +393,15 @@ have avoided one of the messier issues. It’s true that polymorphism
 gives us lots of power. For example, we can make a `Vehicle` array and
 store subclasses of `Vehicle` inside, like so:
 
-....
+[source, java]
+-----
 Vehicle[] vehicles = new Vehicle[5];
 vehicles[0] = new Skateboard();
 vehicles[1] = new RocketShip();
 vehicles[2] = new SteamBoat();
 vehicles[3] = new Car();
 vehicles[4] = new Skateboard;
-....
+-----
 
 This process could be infinitely more complex. We could be reading data
 out of a file and dynamically creating different kinds of `Vehicle`
@@ -402,41 +409,46 @@ objects. But, the final product of an array of `Vehicle` objects is the
 important thing. Now, we can run through the array with a loop and have
 the code magically work for each kind of `Vehicle`.
 
-....
+[source, java]
+-----
 for( int i = 0; i < vehicles.length; i++ )
     vehicles[i].travel( "Prague" );
-....
+-----
 
 Each `Vehicle` will travel to Prague as it should. The only trouble is
 that we have hidden some information. We know that `vehicles[1]` is a
 `RocketShip`, but we can’t treat it like one.
 
-....
+[source, java]
+-----
 vehicles[1].blastOff();
-....
+-----
 
 This code will not compile.
 
-....
+[source, java]
+-----
 RocketShip ship = vehicles[1];
-....
+-----
 
 This code will not compile either. In both cases, we must use an
 explicit cast to tell the compiler that the object really *is* a
 `RocketShip`.
 
-....
+[source, java]
+-----
 RocketShip ship = (RocketShip)vehicles[1];
 ((RocketShip)vehicles[1]).blastOff();
-....
+-----
 
 Both lines of code will work. The compiler is always conservative. It
 never makes guesses about the type of something. For example:
 
-....
+[source, java]
+-----
 Vehicle ship = new RocketShip();
 ship.blastOff();
-....
+-----
 
 Even though `ship` *must* be a `RocketShip`, Java does not assume that.
 The compiler uses the reference type `Vehicle` to do the check and will
@@ -444,11 +456,12 @@ refuse to compile. Casting allows us to use our human intellect to
 overcome the shortsightedness of the compiler. Human intellect is
 unfortunately flawed. What happens if you cast improperly?
 
-....
+[source, java]
+-----
 Vehicle vehicle = new Skateboard();
 RocketShip ship = (RocketShip)vehicle;
 ship.blastOff();
-....
+-----
 
 In this example, we are trying to cast a `Skateboard` into a
 `RocketShip`. At compile time, no errors will be found. Because we use
@@ -463,13 +476,14 @@ instance of a particular class (or one of its derived classes). For
 example, we can make an object execute a special command if we know that
 the object is capable of it.
 
-....
+[source, java]
+-----
 public void visitDenver( Vehicle vehicle ) {
     if( vehicle instanceof RocketShip )
         ((RocketShip)vehicle).blastOff();
     vehicle.travel( "Denver" ); 
 }
-....
+-----
 
 Even inside the `if` statement where it must be the case that `vehicle`
 is a `RocketShip`, we still must perform an explicit cast. Sometimes
@@ -479,13 +493,14 @@ can use the `getClass()` method on any object and compare it to the
 static class object. Using this tool, we can rewrite the former example
 to be more specific.
 
-....
+[source, java]
+-----
 public void visitDenver( Vehicle vehicle ) {
     if( vehicle.getClass() ==  RocketShip.class )
         ((RocketShip)vehicle).blastOff();
     vehicle.travel( "Denver" ); 
 }
-....
+-----
 
 This version of the code will only call `blastOff()` for objects of
 class `RocketShip` and not for objects of a subclass like
@@ -504,26 +519,28 @@ However, there is another subtle rule that is necessary to keep
 polymorphism functioning smoothly. Let’s consider a `Fruit` class with
 an `eat()` method that throws an `UnripeFruitException`.
 
-....
+[source, java]
+-----
 public class Fruit {
     public void eat() throws UnripeFruitException {
         ...
     }
 }
-....
+-----
 
 Almost any fruit can be unripe, and it is unpleasant to try to eat an
 unripe fruit. But, there are other things that can go wrong when eating
 fruit. Consider the `Plum` class derived from `Fruit`.
 
-....
+[source, java]
+-----
 public class Plum extends Fruit {
     public void eat() throws
         UnripeFruitException, ChokingOnPitException {
         ...
     }
 }
-....
+-----
 
 In the `Plum` class, the `eat()` method has been overridden to tackle
 the special ways that eating a plum is different from eating fruit in
@@ -790,7 +807,8 @@ include::programs/Blowout.java[]
 +
 Given the following snippet of code, what is the output?
 +
-....
+[source, java]
+-----
 Sale sale = new Blowout();
 System.out.println( sale.discount );
 System.out.println( sale.getDiscount );
@@ -798,7 +816,7 @@ Blowout blowout = (Blowout)sale;
 System.out.println( blowout.discount );
 sale.setDiscount( 0.75 );
 System.out.println( sale.discount );
-....
+-----
 2.  What are the differences and similarities between abstract classes
 and interfaces?
 3.  Assume that the `Corn`, `Carrot`, and `Potato` classes are all
@@ -806,7 +824,8 @@ derived from `Vegetable`. Both `Carrot` and `Potato` classes have a
 `peel()` method, but `Corn` does not. Examine the following code and
 identify which line will cause an error and why.
 +
-....
+[source, java]
+-----
 Vegetable[] vegetables = new Vegetable[30];
 for( int i = 0; i < vegetables.length; i += 3 ) {
     vegetables[i] = new Corn();
@@ -819,14 +838,15 @@ while( index >= 0 ) {
     potato = (Potato)vegetable[index];
     potato.peel();
 }
-....
+-----
 4.  How many different meanings of the keyword `final` are there in
 Java, and what does each mean?
 5.  Assume that `Quicksand` is a subclass of `Danger`.
 +
 What is the output of the following code?
 +
-....
+[source, java]
+-----
 Quicksand quicksand = new Quicksand();
 if( quicksand instanceof Danger ) {
     System.out.printf( "Run for your lives!" );
@@ -837,7 +857,7 @@ if( quicksand instanceof Quicksand ) {
     " the faster you'll sink!" );
 if( quicksand.getClass() == Quicksand.class )
     System.out.printf( "You'll need to find a vine to escape!" );
-....
+-----
 +
 *Programming Practice*
 6.  Implement a program to assess income tax on normal employees,

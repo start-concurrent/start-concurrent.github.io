@@ -282,9 +282,10 @@ memory when doubling the size of the array.
 A potentially more serious problem is the way we set `names` to point at
 a new array.
 
-....
+[source, java]
+-----
     names = Arrays.copyOfRange(names, 0, names.length*2);
-....
+-----
 
 This line works because we know the only variable that references the
 array is `names`. If other variables referenced that array, they would
@@ -384,7 +385,8 @@ outer class, it is reasonable to make these fields public. If you need a
 refresher on static nested classes, refer to Section <<advanced:Nested
 classes>>.
 
-....
+[source, java]
+-----
 public class LinkedList {
     private static class Node {
         public String value;
@@ -393,7 +395,7 @@ public class LinkedList {
 
  //methods for interacting with the list
 }
-....
+-----
 
 Note that the type `next` is the same as the class it’s inside of! This
 apparent circular reference works because the variable only *references*
@@ -684,13 +686,14 @@ integers of a single digit. To make this program simpler, we introduce
 two new classes that are also useful in our infix to postfix converter.
 The first is `Term`.
 
-....
+[source, java]
+-----
 public class Term {
     private int value;
     public Term( int value ) { this.value = value; }
     public int getValue() { return value; }
 }
-....
+-----
 
 This class allows us to hold an `int` value. Although its structure is
 simple, we update the definition of `Term` later in the solution to the
@@ -826,11 +829,12 @@ Using a stack of `Object` references is generally more cumbersome, since
 you must cast values returned from `pop()` or `top()` to the appropriate
 data type.
 
-....
+[source, java]
+-----
     ObjectStack stack = new ObjectStack();
     stack.push("hello");
     String s = (String)stack.pop();
-....
+-----
 
 Without the cast to `(String)`, the compiler gives an error:
 `Type mismatch: cannot convert from Object to String`.
@@ -864,7 +868,8 @@ Defining a simple generic class in Java is done by appending a _type
 parameter_ within angle brackets (`<>`) to the end of the class name
 being defined.
 
-....
+[source, java]
+-----
 public class GenericClass<T> {
     ...
     T transform (T item) {
@@ -872,7 +877,7 @@ public class GenericClass<T> {
     }
     ...
 }
-....
+-----
 
 This code defines a new generic class (think class template)
 `GenericClass` with underlying type `T`. It includes a method
@@ -888,10 +893,11 @@ type parameter (`T` in this example).
 For example, to create and use an instance of `GenericClass` with
 underlying type `String`, you would type:
 
-....
+[source, java]
+-----
 GenericClass<String> genericString = new GenericClass<String>();
 String s = generic.transform("hello");
-....
+-----
 
 Because this use of the `GenericClass` class is defined for underlying
 type `String`, no casting is necessary to assign the result of the
@@ -900,10 +906,11 @@ type `String`, no casting is necessary to assign the result of the
 To create and use an instance of `GenericClass` with underlying type
 `Integer`, you would type:
 
-....
+[source, java]
+-----
 GenericClass<Integer> genericInteger = new GenericClass<Integer>();
 int i = generic.transform(27);
-....
+-----
 
 The same definition of `GenericClass` is used in both instances with
 different underlying data types *and* the compiler is able to verify at
@@ -915,10 +922,11 @@ the underlying type. This use, called a _raw type_, is essentially like
 not using generics at all. There is no compile-time type checking, and
 references must be cast as needed.
 
-....
+[source, java]
+-----
 GenericClass genericRaw = new GenericClass(); // raw type
 int i = (Integer) genericRaw.transform(27); // cast needed
-....
+-----
 
 The next two examples illustrate defining generic classes in Java.
 
@@ -1007,7 +1015,8 @@ include::programs/VectorExample.java[]
 Output from a typical run of Program <<program:VectorExample>> is shown
 below:
 
-....
+[source, java]
+-----
   9
   9
   8
@@ -1024,7 +1033,7 @@ below:
  10
 ---
 104 (14 values)
-....
+-----
 
 ====
 
@@ -1053,7 +1062,8 @@ include::programs/HashMapExample.java[]
 
 Shown below is the output for a simple input file.
 
-....
+[source, java]
+-----
 Keys
     kathy
     martha
@@ -1089,7 +1099,7 @@ margarette -> 57
 edward -> 12
 tim -> 57
 hamcost -> 2
-....
+-----
 
 ====
 
@@ -1240,7 +1250,8 @@ Without appropriate synchronization, the program may not correctly link
 all values into the queue nor remove them at the end. A typical
 error-prone output run is shown here:
 
-....
+[source, java]
+-----
 Thread ID added to queue: 9
 Thread ID added to queue: 14
 Thread ID added to queue: 13
@@ -1263,7 +1274,7 @@ Can't dequeue an empty queue!
 Thread ID removed from queue: 15
 Thread ID removed from queue: null
 Thread ID removed from queue: null
-....
+-----
 
 How does this implementation fail? Consider the situation in which two
 threads are attempting to put a value in the queue simultaneously (see
@@ -1306,7 +1317,8 @@ With both `enqueue()` and `dequeue()` methods synchronized as in
 Program <<program:LinkedListQueueTS>>, a typical output generated by the
 program is shown below.
 
-....
+[source, java]
+-----
 Thread ID added to queue: 9
 Thread ID added to queue: 14
 Thread ID added to queue: 12
@@ -1327,7 +1339,7 @@ Thread ID removed from queue: 14
 Thread ID removed from queue: 12
 Thread ID removed from queue: 10
 Thread ID removed from queue: 11
-....
+-----
 
 === Concurrency: Thread-safe libraries
 
@@ -1380,7 +1392,8 @@ include::programs/ArrayListExample.java[]
 includes a `null` reference in the output, indicating that the internal
 `ArrayList` data structure was not updated correctly.
 
-....
+[source, java]
+-----
 Thread-1: 0
 Thread-0: 0
 Thread-1: 1
@@ -1401,13 +1414,14 @@ Thread-1: 8
 Thread-0: 8
 Thread-0: 9
 Thread-1: 9
-....
+-----
 
 *With* the `synchronized` keyword, each run includes exactly the same
 number of entries from each thread, although the threads do not always
 alternate in strict lock-step.
 
-....
+[source, java]
+-----
 Thread-0: 0
 Thread-1: 0
 Thread-0: 1
@@ -1428,7 +1442,7 @@ Thread-1: 8
 Thread-0: 8
 Thread-1: 9
 Thread-0: 9
-....
+-----
 
 ====
 
@@ -1451,7 +1465,8 @@ full.
 Program <<program:LinkedListStack>>, draw a picture of the linked list
 structure after each of the following statements.
 +
-....
+[source, java]
+-----
     LinkedListStack stack = new LinkedListStack();
     stack.push("hello");
     stack.push("goodbye");
@@ -1460,7 +1475,7 @@ structure after each of the following statements.
     stack.push("cruel");
     stack.pop();
     stack.push("world");
-....
+-----
 7.  <<exercise:implementDASMethods>> Implement the methods `top()` and
 `isEmpty()` for the dynamic array implementation of the stack in
 Program <<program:DynamicArrayStack>>.
@@ -1468,7 +1483,8 @@ Program <<program:DynamicArrayStack>>.
 Program <<program:LinkedListQueue>>, draw a picture of the linked list
 structure after each of the following statements.
 +
-....
+[source, java]
+-----
     LinkedListStack queue = new LinkedListStack();
     stack.enqueue("hello");
     stack.enqueue("there");
@@ -1477,7 +1493,7 @@ structure after each of the following statements.
     stack.enqueue("cruel");
     stack.dequeue();
     stack.enqueue("goodbye");
-....
+-----
 +
 *Programming Practice*
 9.  <<exercise:Shrink_dynamic_array>> Implement a version of
@@ -1546,14 +1562,15 @@ with a type parameter of `Term` instead of `TermStack`.
 15. Interfaces can also be generic. Consider the following generic
 version of `Queue`.
 +
-....
+[source, java]
+-----
 public interface Queue<T> {
     void enqueue(T value);
     T dequeue();
     T front();
     boolean isEmpty();
 }
-....
+-----
 +
 Re-implement `LinkedListQueue` so that it is generic with type parameter
 `T` and implements interface `Queue<T>`.

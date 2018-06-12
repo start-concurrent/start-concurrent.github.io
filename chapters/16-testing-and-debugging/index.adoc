@@ -197,17 +197,19 @@ As we mentioned before, many languages have assertions as a built-in
 language construct. In Java, there are two forms this feature takes. The
 simpler can be done by typing the following.
 
-....
+[source, java]
+-----
 assert condition;
-....
+-----
 
 In this case, `condition` is a boolean value that is expected to be true
 for the program to function properly. The more complicated form of the
 feature can be used as follows.
 
-....
+[source, java]
+-----
 assert condition : value;
-....
+-----
 
 This form adds a value that can be attached to the assertion to give the
 user more information about the problem. This value can be any primitive
@@ -217,10 +219,11 @@ two.
 If you have never used an `assert` statement before, you might want to
 test it out by forcing an assertion to fail. You might try
 
-....
+[source, java]
+-----
 int x = 5;
 assert (x < 4) : "x is too large!";
-....
+-----
 
 Then, if you compile your program and run it through the JVM, you will
 be shocked when *absolutely nothing happens*. Actually, some of you with
@@ -233,15 +236,17 @@ assertions enabled at runtime. Assertions are intended to be a special
 debugging tool and ignored otherwise. To turn run program
 `AssertionTest` with assertions enabled, type
 
-....
+[source, java]
+-----
 java -ea AssertionTest
-....
+-----
 
 With this option, an exception should be thrown at runtime.
 
-....
+[source, java]
+-----
 Exception in thread "main" java.lang.AssertionError: x is too large!
-....
+-----
 
 There are other options allowing you to enable or disable assertions for
 specific packages or classes.
@@ -285,17 +290,19 @@ mutates periodically. The mutation returns `true` if successful and
 `false` if there was an unexpected error. You should *not* test for that
 failure inside an assert, as follows.
 
-....
+[source, java]
+-----
 assert bacteria.mutate() : "Mutation failed!";
-....
+-----
 
 With assertions disabled, the `bacteria` object will no longer mutate.
 Instead, your assertion should test only the result of the computation.
 
-....
+[source, java]
+-----
 boolean success = bacteria.mutate();
 assert success : "Mutation failed!";
-....
+-----
 
 As stated above, checking for bad input coming into `public` methods
 should not be done with assertions because turning off assertions will
@@ -419,7 +426,8 @@ latexmath:[\approx 1], and `d` latexmath:[\approx 0]. Nevertheless,
 the comparison `(d == 0.0)` in the `if` statement in this code will
 evaluate to `false`.
 
-....
+[source, java]
+-----
 double a, b, c, d;
 
 a = 4.0 / 3.0;
@@ -429,7 +437,7 @@ d = c - 1;
 System.out.println(d);
 if( d == 0.0 )
     System.out.println("Success!");
-....
+-----
 
 The output for this fragment is `-2.220446049250313E-16`. Computer
 scientists who specialize in numerical analysis have tricks for
@@ -462,10 +470,11 @@ of all of the possible values for `char`. Perhaps the programmer has
 forgotten the range of values a `char` can take. Perhaps surprisingly,
 the following loop does not terminate.
 
-....
+[source, java]
+-----
 for( char letter = '\0'; letter < 100000; letter++ )
     System.out.print( letter );
-....
+-----
 
 Each time `letter` reaches `Character.MAX_VALUE` which is `’\uFFFF’` or
 `65535` as a numerical value, the next increment pushes its value back
@@ -489,11 +498,12 @@ blue color values stored in three `byte` variables called `red`,
 `green`, and `blue`, a naive implementation of this filter might be as
 follows.
 
-....
+[source, java]
+-----
 red *= 2;
 green *= 2;
 blue *= 2;
-....
+-----
 
 In Java, this code would not work. The first problem is that, even
 though image standards are written with color values between 0 and 255,
@@ -509,11 +519,12 @@ the sign bit, scaling by 2, capping the values at 255, and then casting
 back into a `byte`. Despite the complicated description, the code is not
 too unwieldy.
 
-....
+[source, java]
+-----
 red = (byte)Math.min( 255, 2*(red & 0xFF)); //bitwise AND automatically upcasts
 to int green = (byte)Math.min( 255, 2*(green & 0xFF));
 blue = (byte)Math.min( 255, 2*(blue & 0xFF));
-....
+-----
 
 ====
 
@@ -531,11 +542,12 @@ programmer.
 Many other casting errors crop up commonly. The most classic example
 might be muddling floating point and integer types.
 
-....
+[source, java]
+-----
 int x = 5;
 int y = 3;
 double value = 2.0*(x/y);
-....
+-----
 
 Above, it is easy for a programmer to forget that the division of `x`
 and `y` is integer division. After all, the `2.0` is right there,
@@ -546,9 +558,10 @@ the division, and the answer stored into `value` is `2.0` and not the
 Newer programmers sometimes forget that an explicit cast from a floating
 point type to an integer type always uses truncation, never rounding.
 
-....
+[source, java]
+-----
 int three = (int)2.99999;
-....
+-----
 
 This assignment will always store `2` into `three`. The `Math.round()`
 method or some other additional step is needed to perform rounding.
@@ -557,10 +570,11 @@ Casting errors are not limited to primitive data types. Object casting
 will be discussed at length in Chapter <<chapter:Polymorphism>>. The
 biggest danger there is an incorrect explicit upcast.
 
-....
+[source, java]
+-----
 Fruit snack = new ChiliPepper();
 Apple apple = (Apple)snack;
-....
+-----
 
 In a botanical sense, a chili pepper is indeed a fruit and its parallel
 Java class is apparently a child of the `Fruit` class. For some reason,
@@ -596,10 +610,11 @@ latexmath:[n]. Alternatively, if you have a reason not to be
 zero-based, you can start at 1 and go up to and including
 latexmath:[n].
 
-....
+[source, java]
+-----
 for( int i = 1; i < 50; i++ )
     System.out.println("Question " + i + ".");
-....
+-----
 
 Perhaps you want to make a template for an exam. Instead of being
 zero-based, you start at 1 because most exams do not have a Question 0.
@@ -614,7 +629,8 @@ to be safe.
 
 Input is another tricky area when it comes to being off by one.
 
-....
+[source, java]
+-----
 int i = 0;
 double sum = 0;
 int count = 0;
@@ -626,7 +642,7 @@ while( i >= 0 ) {
     count++;
 }
 System.out.println("Average: " + (sum / count));
-....
+-----
 
 This fragment of code appears to be a perfectly innocent loop that finds
 the average of the numbers entered by a user. The loop uses a sentinel
@@ -653,14 +669,15 @@ example earlier to traversing a linked-list which has a cycle in it.
 Many infinite loops are caused by simple typographical errors. Perhaps
 the most classic is:
 
-....
+[source, java]
+-----
 int i = 1;
 while( i <= 100 );
 {
     System.out.println(i);
     i++;
 }
-....
+-----
 
 It’s usually a beginning programmer who leaves a semicolon at the end of
 the `while` header, but even veterans can get a little enthusiastic
@@ -670,7 +687,8 @@ clue as to why it isn’t advancing yet never carefully scrutinizing the
 condition. An extra semicolon the end of a `for` loop header will
 usually cause an error but will usually *not* cause an infinite loop.
 
-....
+[source, java]
+-----
 public double average(int[] array) {
     double sum = 0;
     int count = 0;
@@ -682,7 +700,7 @@ public double average(int[] array) {
     }
     return sum / count;
 }
-....
+-----
 
 This example is the kind that might be too confusing to appear in a
 textbook, but nearly everyone has written worse code while learning to
@@ -691,10 +709,11 @@ values in an array, but, for some reason, zero valued entries are not to
 be counted. The student probably meant to have the following `if`
 statement:
 
-....
+[source, java]
+-----
         if( array[i] == 0 )
             count--;
-....
+-----
 
 Those two small changes turn the method into a working but slightly
 inelegant solution. When debugging remember that index variables in
@@ -708,12 +727,13 @@ backwards or switching increment and decrement will usually make a loop
 that runs a very long time or not at all. We’ll see the second
 possibility just a little later.
 
-....
+[source, java]
+-----
 for (i = 10; i > 0; i++) {
   System.out.println(i + "!");
 }
 System.out.println("Blast-off!");
-....
+-----
 
 In this case, the programmer clearly wanted to count *down* from 10 to
 1, but after so much incrementing, he or she forgot to make `i`
@@ -730,7 +750,8 @@ execute zero times on `for` and `while` loops. For some input, doing so
 might be intended behavior. In other cases, no input will ever cause the
 loop to execute.
 
-....
+[source, java]
+-----
 int i = 0;
 double sum = 0;
 int count = -1;
@@ -742,7 +763,7 @@ while( i > 0 ) {
     count++;
 }
 System.out.println("Average: " + (sum / count));
-....
+-----
 
 We have just returned to our earlier example of averaging a set of
 numbers input by the user. This time we have intialized `count` to be -1
@@ -751,14 +772,15 @@ of the `while` loop from greater than or equal to strictly greater. As a
 consequence, the loop is never entered because the zero, the initial
 value of `i`, is too small.
 
-....
+[source, java]
+-----
 public static boolean isPrime( int n ) {
     for( int i = 1; i < n; i++ ) {
         if( n % i == 0 )
             return false;
     }
 }
-....
+-----
 
 Here is a simple method intended to test the number `n` for primality.
 Unfortunately, the programmer started the index `i` at 1 instead of 2.
@@ -766,7 +788,8 @@ As a consequence, this loop will only run once before finding that every
 number is divisible by 1. True, this is not a loop that executes zero
 times, but only once is still just as wrong.
 
-....
+[source, java]
+-----
 public static boolean isPrime( int n ) {
     for( int i = 2; i < n; i++ ) {
         if( n % i == 0 )
@@ -775,7 +798,7 @@ public static boolean isPrime( int n ) {
             return true;
     }
 }
-....
+-----
 
 This example is very similar code, trying to solve the same problem.
 Again, the loop only runs once because the programmer forgot that
@@ -801,28 +824,30 @@ problems. Comparing two references with the `==` operator will evaluate
 to `true` if and only if the two references point at the exact same
 object.
 
-....
+[source, java]
+-----
 String string1 = new String("Test");
 String string2 = new String("Test");
 if( string1 == string2 )
     System.out.println("Identical");
 else
     System.out.println("Different");
-....
+-----
 
 Because these two `String` references point to two different `String`
 objects, which happen to have identical contents, the `==` returns
 `false` and the output is `Different`. With `String` objects this matter
 is further confused by a Java optimization called `String` pooling.
 
-....
+[source, java]
+-----
 String string1 = "Test";
 String string2 = "Test";
 if( string1 == string2 )
     System.out.println("Identical");
 else
     System.out.println("Different");
-....
+-----
 
 Because Java keeps a pool of existing `String` values, only one copy of
 `"Test"` is in the pool, and both `string1` and `string2` point to it.
@@ -875,11 +900,12 @@ In the C language, a negative index is sometimes a legal location but
 never in Java. It is very common to go just slightly beyond the bounds
 of the array, particularly with a loop.
 
-....
+[source, java]
+-----
 int[] array = new int[100];
 for(int i = 0; i <= 100; i++ )
     array[i] = i;
-....
+-----
 
 In this example, the last iteration of the loop will access index `100`
 when `array` only goes up to index `99`.
@@ -890,12 +916,13 @@ a dictionary. If we want to hash based on the first letter of the word,
 we could have an array of length 26. Consider the following helper
 method used to add a new `String` to the hashtable.
 
-....
+[source, java]
+-----
 public void add(String word) {
     int index = word.toLowerCase().charAt(0) - 'a';
     list[index].add( word );
 }
-....
+-----
 
 We can assume that the `add()` method for a given linked list works
 properly, but we may already have caused other problems. For one thing,
@@ -918,10 +945,11 @@ value, zero in the case of an `int`. With an object data type, however,
 each element of the array is just a reference to `null` until it is
 initialized.
 
-....
+[source, java]
+-----
 Hippopotamus[] hippos = new Hippopotamus[15];
 hippos[3].feed();
-....
+-----
 
 This example causes a `NullPointerException`. New programmers are often
 confused by this error because, if they are expecting an error, they are
@@ -934,12 +962,13 @@ hungry, hungry hippos.
 
 ====
 
-....
+[source, java]
+-----
 Hippopotamus[] hippos = new Hippopotamus[15];
 for( int i = 0; i < hippos.length; i++ )
     hippos[i] = new Hippopotamus();
 hippos[3].feed();
-....
+-----
 
 ==== Scope errors
 
@@ -977,13 +1006,14 @@ about to initialize. Some programmers explicitly prefix all fields with
 `this` even though it is often redundant. Three additions of `this` will
 fix the problem in the preceding example.
 
-....
+[source, java]
+-----
     public void deepen( int darkness ) {
         this.darkness += darkness;
         if( this.darkness > 100 )
             this.darkness = 100;
     }
-....
+-----
 
 In Java, scope is also defined in terms of classes and their parent
 classes. A parent class variable can be shadowed by a child class
@@ -1041,11 +1071,12 @@ methods. Everything variable in Java is passed by value. However, when
 that value is itself a reference, it is possible to change the values
 that it references.
 
-....
+[source, java]
+-----
 public void increaseMagnitude( int number ) {
     number *= 10;
 }
-....
+-----
 
 A novice Java programmer might write a method like the above, expecting
 the value of `number` to increase by 10 in the calling code. Some
@@ -1057,11 +1088,12 @@ about the workings of Java.
 On the other hand, becoming used to the pass by reference style of Java
 can cause other errors.
 
-....
+[source, java]
+-----
 public void increaseMagnitude( int[] numbers ) {
     numbers[0] *= 10;
 }
-....
+-----
 
 In this similar example, the 0 index element of `numbers` is increased
 by a factor of 10. Unlike the previous code, the increase in the value
@@ -1527,12 +1559,13 @@ Three annotations are built into the language: `@Deprecated`,
 compatibility. The compiler will give a warning if you call deprecated
 code such as the following.
 
-....
+[source, java]
+-----
 @Deprecated
 public void oldMethod() {
     ...
 }
-....
+-----
 
 Many methods in the extensive Java API are deprecated, like
 `Thread.suspend()` due to its inherent deadlock risk. As of Java 5 when
@@ -1550,9 +1583,10 @@ you should download the latest jar file from http://www.junit.org and
 add the path to that jar file to your class path. To access the JUnit
 facilities in your code, you need the following import.
 
-....
+[source, java]
+-----
 import org.junit.*;
-....
+-----
 
 Then, you need to set up a testing class just like you would any other
 class. The key difference is that each method in the testing class is
@@ -1572,10 +1606,11 @@ reflect what is being tested.
 So, where do annotations come in? The header for the `ceil()` method
 would be as follows.
 
-....
+[source, java]
+-----
 @Test
 public void ceil()
-....
+-----
 
 The only thing necessary to use a method in a JUnit test is to annotate
 it with `@Test`. It is also necessary to make any function used for
@@ -1607,9 +1642,10 @@ enable assertions while running the test, but this approach means that
 your tests could all incorrectly pass if you forget to enable
 assertions. Instead, use the following import.
 
-....
+[source, java]
+-----
 import static org.junit.Assert.*;
-....
+-----
 
 With this static import, you will have access to many static methods
 that provide useful assertion functionality. The simplest of these is
@@ -1617,12 +1653,13 @@ that provide useful assertion functionality. The simplest of these is
 requiring assertions to be enabled. For example, we could code the body
 of the `ceil()` test method as follows.
 
-....
+[source, java]
+-----
 @Test
 public void ceil() {
     assertTrue( 4 == Math.ceil(3.1) );
 }
-....
+-----
 
 Another useful method is `assertEquals()` (and its close cousin
 `assertArrayEquals()`) which takes two parameters and throws an
@@ -1674,18 +1711,20 @@ say that you are using JUnit 4.5 from a jar file called `junit-4.5.jar`
 that can be found in `C:\ Utilities\Java\JUnit\`. To compile `MathTest`,
 you would type:
 
-....
+[source, java]
+-----
 javac -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar MathTest.java}
-....
+-----
 
 To actually run the code, you still need to include `junit-4.5.jar` in
 your classpath, but you also need to invoke the test runner called
 `org.junit.runner.JUnitCore` as follows:
 
-....
+[source, java]
+-----
 java -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar
     org.junit.runner.JUnitCore MathTest
-....
+-----
 
 If you had multiple test classes, you could just list them all after
 `org.junit.runner.JUnitCore` and all the methods marked `@Test` in them
@@ -1824,7 +1863,8 @@ the origin and three one meter along each positive axis. We can create
 these charges in a set up method. While we’re at it, we’ll give them a
 variety of positive and negative charges.
 
-....
+[source, java]
+-----
 @Before
 public void setUp() {
     charge1 = new PointCharge( 1, 0, 0, 0 );
@@ -1832,13 +1872,14 @@ public void setUp() {
     charge3 = new PointCharge( -1, 0, 1, 0 );
     charge4 = new PointCharge( 0, 0, 0, 1 );
 }
-....
+-----
 
 To test the `distance()` method thoroughly, we will check the distance
 from `charge1` to all the other charges as well as `charge2` to
 `charge3`.
 
-....
+[source, java]
+-----
 @Test
 public void distance() {
     assertEquals( 1.0, charge1.distance(charge2), 0.001 );
@@ -1846,16 +1887,17 @@ public void distance() {
     assertEquals( 1.0, charge1.distance(charge4), 0.001 );
     assertEquals( Math.sqrt(2.0), charge2.distance(charge3), 0.001 );
 }
-....
+-----
 
 The distances between `charge1` and the other three should be 1, and the
 distance between `charge2` and `charge3` should be about
 latexmath:[\sqrt{2}]. Yet, when we run this test with JUnit, the test
 fails. We get:
 
-....
+[source, java]
+-----
 java.lang.AssertionError: expected:<1.0> but was:<1.4142135623730951>
-....
+-----
 
 for the second assertion in the method. But why? If we comb through the
 `distance()` methods in `PointCharge`, they all look correct. The
@@ -1867,7 +1909,8 @@ With the `distance()` methods working, we can test other things. We are
 going to run a similar test for `scalarForce()` generated by plugging in
 appropriate values into the equation for latexmath:[F].
 
-....
+[source, java]
+-----
 @Test
 public void scalarForce() {
     assertEquals( 2*PointCharge.K, charge1.scalarForce(charge2), 0.001 );
@@ -1875,15 +1918,16 @@ public void scalarForce() {
     assertEquals( 0.0, charge1.scalarForce(charge4), 0.000001 );
     assertEquals( -PointCharge.K, charge2.scalarForce(charge3), 0.001 );
 }
-....
+-----
 
 When we run this test with JUnit, the last assertion fails. We get the
 following output.
 
-....
+[source, java]
+-----
 java.lang.AssertionError: expected:<-8.987551787368176E9>
     but was:<-1.797510357473635E10>
-....
+-----
 
 A close inspection reveals that the actual value is about twice the
 expected value. Where does this extra factor of 2 come from? Scanning
@@ -1907,9 +1951,10 @@ simplicity, we’ll test the field at the locations of `charge1`,
 
 This time the first assertion fails. We get the following output.
 
-....
+[source, java]
+-----
 java.lang.AssertionError: expected:<1.797510357473635E10> but was:<2.0>
-....
+-----
 
 `2.0` seems like a very strange result when we were expecting a value
 with an order of magnitude 10 times larger. Perhaps the constant was
@@ -1948,12 +1993,13 @@ be taken for it to be active?
 2.  What is the value of `j` after the following statements are
 executed?
 +
-....
+[source, java]
+-----
 int j = 1;
 int i;
 for( i = 0; i < 10; i++ );
     j += i;
-....
+-----
 +
 Assuming the programmer made an error, what category of programming
 error does it fall under?
@@ -1961,14 +2007,16 @@ error does it fall under?
 values. What is the conceptual error made in the following loop? How
 many times will it execute?
 +
-....
+[source, java]
+-----
 for( byte value = 0; value < 256; ++value )
     System.out.println("Byte: " + value);
-....
+-----
 4.  What are all the possible run-time errors that could occur in this
 method that reverses a section of an array?
 +
-....
+[source, java]
+-----
 public void reverse( Object[] array, int start, int end ) {
     Object temp;
     end--;  //up to but not including end
@@ -1980,13 +2028,14 @@ public void reverse( Object[] array, int start, int end ) {
         end--;
     }
 }
-....
+-----
 +
 What checks could be added to catch these errors?
 5.  Consider the following definition of a stack that holds `int`
 values.
 +
-....
+[source, java]
+-----
 public class IntegerStack {
     private static Node {
         public int data;
@@ -2006,7 +2055,7 @@ public class IntegerStack {
     public int top() { return head.data; }
     public boolean empty() { return head == null; }
 }
-....
+-----
 +
 What exceptions could be thrown when using this class? Where could they
 be thrown?
