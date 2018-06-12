@@ -388,14 +388,14 @@ By translating this mathematical definition almost directly into Java,
 we can generate a method that computes the factorial function.
 
 [source, java]
------
+----
     public static long factorial(int n) {
         if (n == 0)     //base case
             return 1;
         else            //recursive case
             return n * factorial(n-1);
     }
------
+----
 
 Note the base case and recursive case are exactly the same as in the
 recursive definition. The return type of the method is `long` because
@@ -420,14 +420,14 @@ Like factorial, this definition translates naturally into a recursive
 method in Java.
 
 [source, java]
------
+----
 public static int fibonacci(int n) {
     if( n == 0 || n == 1 )  //base cases
         return 1;
     else                    //recursive case
         return fibonacci(n-1) + fibonacci(n-2);
 }
------
+----
 
 One significant problem with this example is performance. In this case,
 the double recursion performs a great deal of redundant computation.
@@ -444,7 +444,7 @@ we first check to see if its value is in the array. If not, we perform
 the recursion and store the result in the array.
 
 [source, java]
------
+----
 public static int fibonacci( int n, int[] results ) {
     if( results[n] == 0 ) {
         if( n == 0 || n == 1 )
@@ -454,7 +454,7 @@ public static int fibonacci( int n, int[] results ) {
     }
     return results[n];
 }
------
+----
 
 This change makes the computation of the latexmath:[n]^th^ Fibonacci
 number much more efficient; however, even more efficient approaches are
@@ -539,14 +539,14 @@ definition into Java syntax yields a method that computes the correct
 value.
 
 [source, java]
------
+----
 public static double power(double a, int n) {
     if( n == 1 )    //base case
         return a;
     else            //recursive case
         return a*power(a, n - 1);
 }
------
+----
 
 Admittedly, this method only works for positive integer values of
 latexmath:[n]. Ignoring that limitation, what can we say about its
@@ -574,7 +574,7 @@ latexmath:[n] in half at each recursive step instead of only reducing
 latexmath:[n] by 1.
 
 [source, java]
------
+----
 public static double power(double a, int n) {
     if( n == 1 )    //base case
         return a;
@@ -583,7 +583,7 @@ public static double power(double a, int n) {
         return temp*temp;
     }
 }
------
+----
 
 Note that we only make the recursive call once and save it in `temp`. If
 we made two recursive calls, we would no longer be more efficient than
@@ -638,7 +638,7 @@ keeps track of the position in the array it is swapping with the
 `0` passed as an argument for `position`.
 
 [source, java]
------
+----
 public static void reverse( int[] array, int position ) {
     if( position < array.length/2 ) {
         int temp = array[position];
@@ -647,7 +647,7 @@ public static void reverse( int[] array, int position ) {
         reverse( array, position + 1 );
     }
 }
------
+----
 
 Note that nothing is done in the base case for this recursive method.
 The recursion swaps the first element of the array (at index `0`) with
@@ -676,7 +676,7 @@ Here is a method that recursively sorts an `int` array using the merge
 sort algorithm.
 
 [source, java]
------
+----
 public static void mergeSort( int[] array ) {
     if( array.length > 1 ) {
         int[] a = new int[array.length / 2];
@@ -690,7 +690,7 @@ public static void mergeSort( int[] array ) {
         merge( array, a, b );
     }
 }
------
+----
 
 The `mergeSort()` method is quite short and appears to do very little.
 It starts by creating arrays `a` and `b` and copying roughly half of the
@@ -706,7 +706,7 @@ helper method called `merge()`. This method is non-recursive and does
 much of the real work in the algorithm.
 
 [source, java]
------
+----
 public static void merge( int[] array, int[] a, int[] b ) {
     int aIndex = 0;
     int bIndex = 0;
@@ -721,7 +721,7 @@ public static void merge( int[] array, int[] a, int[] b ) {
             array[i] = b[bIndex++];
     }
 }
------
+----
 
 The `merge()` method loops through all the elements in `array`, filling
 them in. We keep two indexes, `aIndex` and `bIndex`, that keep track of
@@ -752,12 +752,12 @@ data structure is one that is defined in terms of itself. For example,
 class `X` is recursive if there is a field inside `X` with type `X`.
 
 [source, java]
------
+----
 public class X {
     private int a, b;
     private X x;
 }
------
+----
 
 The linked list examples from Chapter <<chapter:Dynamic Data
 Structures>> are recursive data structures, since a linked list node is
@@ -1001,11 +1001,11 @@ implements the interface `Comparable<T>`. The generic `Comparable`
 interface defined in the Java API is as follows.
 
 [source, java]
------
+----
 public interface Comparable<T> {
     int compareTo(T object);
 }
------
+----
 
 The syntax for generics in Java with type bounds is complex, and we only
 scratch the surface here. The good news is that these subtleties are
@@ -1210,9 +1210,9 @@ create. For example, we can create an `ExecutorService` with a pool of 8
 threads as follows.
 
 [source, java]
------
+----
 ExecutorService executor = Executors.newFixedThreadPool(8);
------
+----
 
 Once you have an `ExecutorService`, you can give it a `Callable` object
 of a particular type (such as `Callable<Integer>`) as a parameter to its
@@ -1346,10 +1346,10 @@ characters in between form a palindrome. Write a recursive method to
 test if a `String` is a palindrome, using the following signature.
 +
 [source, java]
------
+----
 public static boolean isPalindrome( String text, int start,
     int end )
------
+----
 +
 In this method, the `start` parameter is the index of the first
 character you are examining, and the `end` parameter is the index
@@ -1358,10 +1358,10 @@ initially be called with a `String`, `0`, and the length of the
 `String`, as follows.
 +
 [source, java]
------
+----
 boolean result =
     isPalindrome( "A man, a plan, a canal: Panama", 0, 30 );
------
+----
 6.  <<exercise:Fibonacci_without_array>> The efficient implementation of
 Fibonacci from Example <<example:Fibonacci_implemented_recursively>>
 eliminates redundant computation through memoization, storing values in
@@ -1370,9 +1370,9 @@ computations of the previous two Fibonacci numbers *without* the
 overhead of storing an array. Consider the following method signature.
 +
 [source, java]
------
+----
 public static int fibonacci(int previous, int current, int n)
------
+----
 +
 The next recursive call to the `fibonacci()` method passes in `n - 1`
 and suitably altered versions of `previous` and `current`. When `n`
@@ -1382,9 +1382,9 @@ number you were originally looking for.
 The method would be called as follows for any value of `n`.
 +
 [source, java]
------
+----
 int result = fibonacci( 0, 1, n );
------
+----
 +
 Complete the implementation of this recursive method.
 7.  <<exercise:efficient_exponentiation>> Write an implementation of

@@ -156,9 +156,9 @@ To create a `File` object, you can call the `File` constructor with a
 `String` specifying the name of the file.
 
 [source, java]
------
+----
 File file = new File("file.txt");
------
+----
 
 Doing so will create a virtual file object associated with the name
 `file.txt` (which may not exist yet) in the working directory of the
@@ -175,9 +175,9 @@ file in a particular location, we specify the _path_ in the `String`
 before the name of the file.
 
 [source, java]
------
+----
 File file = new File("/homes/owilde/programs/file.txt");
------
+----
 
 In this case, the prefix `"/homes/owilde/programs/"` is the path and
 `"file.txt"` is still the file name. Each slash (`'/'`) separates a
@@ -194,9 +194,9 @@ the path is slightly different. Creating a similar `File` object on
 Windows system might be done as follows.
 
 [source, java]
------
+----
 File file = new File("C:\\My Documents\\programs\\file.txt");
------
+----
 
 Then, the path specifies that we start in the `C` drive, go into the
 `My Documents` directory and then the `programs` directory. Windows
@@ -225,7 +225,7 @@ class, and once you have a `File` object, reading from a text file is
 the same as reading from the keyboard.
 
 [source, java]
------
+----
 Scanner in = null;
 try {
     in = new Scanner( file );
@@ -236,7 +236,7 @@ catch( FileNotFoundException e ) {
     System.out.println("File " + file.getName() + " not found!");
 }
 finally { if( in != null ) in.close(); }
------
+----
 
 Assuming that `file` is linked to a file which the program has read
 access to, this block of code will extract `int` values from the file
@@ -268,7 +268,7 @@ write a list of random numbers to the file we were reading from earlier,
 we could do it as follows.
 
 [source, java]
------
+----
 PrintWriter out = null;
 try {
     out = new PrintWriter( new FileOutputStream( file ) );
@@ -280,7 +280,7 @@ catch( FileNotFoundException e ) {
     System.out.println("File " + file.getName() + " not found!");
 }
 finally { if( out != null ) out.close(); }
------
+----
 
 Again, once you have a `PrintWriter` object, the methods for outputting
 data will be just like using `System.out`. In this case, we already had
@@ -290,10 +290,10 @@ would be equivalent to create the `PrintWriter` from above by supplying
 a path like so.
 
 [source, java]
------
+----
 PrintWriter out = new PrintWriter(
 new FileOutputStream( "/homes/owilde/programs/file.txt" ) );
------
+----
 
 Be sure to import `java.io.*` in order to have access to the
 `FileOutputStream` and `PrintWriter` classes.
@@ -314,18 +314,18 @@ The first object you’ll need to read input from a binary file is a
 create one.
 
 [source, java]
------
+----
 File file = new File( "file.bin" );
 FileInputStream in = new FileInputStream( file );
------
+----
 
 As it happens, `FileInputStream` also allows you to call its constructor
 with a `String` specifying the file path and name.
 
 [source, java]
------
+----
 FileInputStream in = new FileInputStream( "file.bin" );
------
+----
 
 The bad news is that you can’t do much with a `FileInputStream` object.
 Its methods allow you to read single bytes, either one at a time, or a
@@ -335,7 +335,7 @@ Working at the low level of bytes, we can still write useful code like
 the following method which prints the size of a file.
 
 [source, java]
------
+----
 public static void printFileSize( String fileName ) {
     FileInputStream in = null;
     try {
@@ -350,7 +350,7 @@ public static void printFileSize( String fileName ) {
     }
     finally { try{ in.close(); } catch(Exception e){} }
 }
------
+----
 
 Note the extra `try`-`catch` block inside of the `finally`. Like the
 other binary file I/O objects we will discuss in this chapter,
@@ -375,10 +375,10 @@ These objects exist, and they belong to the `ObjectInputStream` and
 `ObjectInputStream`, you supply a `FileInputStream` to its constructor.
 
 [source, java]
------
+----
 ObjectInputStream in =
     new ObjectInputStream( new FileInputStream( "baseball.bin" ) );
------
+----
 
 Now, let’s assume that `baseball.bin` contains baseball statistics. The
 first thing in the file is an `int` indicating the number of records it
@@ -388,7 +388,7 @@ Assuming that we’ve opened the file correctly above, we can read these
 statistics into three arrays with the following code.
 
 [source, java]
------
+----
 int records = in.readInt();
 int[] homeRuns = new int[records];
 int[] RBI = new int[records];
@@ -398,7 +398,7 @@ for( int i = 0; i < records; i++ ) {
     RBI[i] = in.readInt();
     battingAverage[i] = in.readFloat();
 }
------
+----
 
 Of course, all of the code should be enclosed in a `try` block with
 appropriate exception handling and `in.close()` in a `finally` block at
@@ -412,7 +412,7 @@ assumes that `homeRuns`, `RBI`, and `battingAverage` are filled with
 data and writes them to a file.
 
 [source, java]
------
+----
 ObjectOutputStream out = null;
 try {
     out = new ObjectOutputStream(
@@ -428,7 +428,7 @@ catch( Exception e ) {
     System.out.println( "File writing failed." );
 }
 finally { try{ out.close(); } catch( Exception e ){} }
------
+----
 
 Using `ObjectInputStream` and `ObjectOutputStream` in this way is not
 too difficult, but it seems cumbersome. The objects provide methods
@@ -449,7 +449,7 @@ using this new class can simplify the file I/O. The input will change to
 the following.
 
 [source, java]
------
+----
 ObjectInputStream in = null;
 try {
     in = new ObjectInputStream(
@@ -463,12 +463,12 @@ catch( Exception e ) {
     System.out.println( "File reading failed." );
 }
 finally { try{ in.close(); } catch(Exception e){} }
------
+----
 
 The output will become what follows.
 
 [source, java]
------
+----
 ObjectOutputStream out = null;
 try {
     out = new ObjectOutputStream(
@@ -481,7 +481,7 @@ catch( Exception e ) {
     System.out.println( "File writing failed." );
 }
 finally { try{ out.close(); } catch(Exception e){} }
------
+----
 
 This process of outputting an entire object at a time is called
 _serialization_. The `BaseballPlayer` class is very simple, but even
@@ -507,7 +507,7 @@ more mileage out of it. Consider that an array can be treated liked an
 below.
 
 [source, java]
------
+----
 ObjectInputStream in = null;
 try {
     in = new ObjectInputStream(
@@ -518,12 +518,12 @@ catch( Exception e ) {
     System.out.println( "File reading failed." );
 }
 finally { try{ in.close(); } catch(Exception e){} }
------
+----
 
 And the corresponding output code can be simplified as well.
 
 [source, java]
------
+----
 ObjectOutputStream out = null;
 try {
     out = new ObjectOutputStream(
@@ -534,7 +534,7 @@ catch( Exception e ) {
     System.out.println( "File writing failed." );
 }
 finally { try{ out.close(); } catch(Exception e){} }
------
+----
 
 It is worth noting that `DataInputStream` and `DataOutputStream` objects
 can be used in place of `ObjectInputStream` and `ObjectOutputStream`
@@ -704,16 +704,16 @@ entire sequence of numbers is getting saved and then lost. We can change
 this behavior by changing the line below.
 
 [source, java]
------
+----
 out = new PrintWriter ( new FileOutputStream("concurrent.out") );
------
+----
 
 We replace it with the following.
 
 [source, java]
------
+----
 out = new PrintWriter ( new FileOutputStream("concurrent.out", true) );
------
+----
 
 This second `boolean` parameter to the `FileOutputStream` constructor
 specifies that output will _append_ to the file instead of overwriting
@@ -840,10 +840,10 @@ The following is an example of the command used on a file called
 checksum.
 +
 [source, java]
------
+----
 sum -s wombat.dat
 6892 213 wombat.dat
------
+----
 +
 *Experiments*
 12. Write the RLE bitmap compression program in parallel so that a file

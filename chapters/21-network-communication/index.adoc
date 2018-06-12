@@ -202,9 +202,9 @@ if you wanted to write a web server, you might create a `ServerSocket`
 as follows.
 
 [source, java]
------
+----
 ServerSocket serverSocket = new ServerSocket( 80 );
------
+----
 
 Once the `ServerSocket` object has been created, the server will
 typically listen to the socket and try to accept incoming connections.
@@ -218,9 +218,9 @@ to do the communication. Commercial web servers often function in this
 way. The code for a server to listen for a connection is:
 
 [source, java]
------
+----
 Socket socket = serverSocket.accept();
------
+----
 
 The `accept()` method is a blocking method; thus, the server will wait
 for a connection before doing anything else.
@@ -229,9 +229,9 @@ Now, if you want to write the client which connects to such a server,
 you can create the `Socket` object directly.
 
 [source, java]
------
+----
 Socket socket = new Socket( "64.233.187.99", 80 );
------
+----
 
 The first parameter is a `String` specifying the address of the server,
 either as an IP address as shown or as domain like `"google.com"`. The
@@ -252,35 +252,35 @@ plain, human readable from the `Socket`, you can create a `Scanner`
 object as follows.
 
 [source, java]
------
+----
 Scanner in = new Scanner( socket.getInputStream() );
------
+----
 
 Over the network, it will be much more common to send files and other
 binary data. For that purpose you can create an `ObjectInputStream` or
 `DataInput\-Stream` from the `Socket` in much the same way.
 
 [source, java]
------
+----
 ObjectInputStream in = new ObjectInputStream( socket.getInputStream() );
------
+----
 
 It should be unsurprising that output is just as easy as input. Text
 output can be accomplished by creating a `PrintWriter`.
 
 [source, java]
------
+----
 PrintWriter out = new PrintWriter( socket.getOutputStream() );
------
+----
 
 Likewise, binary output can be accomplished by creating an
 `ObjectOutputStream` or a `DataOutputStream`.
 
 [source, java]
------
+----
 ObjectOutputStream out = new ObjectOutputStream(
     socket.getOutputStream() );
------
+----
 
 Once you have these input and output objects, you use them in the same
 way you would for file processing. There are a few minor differences to
@@ -299,7 +299,7 @@ waits for a connection, then reads 100 `int` values in binary form from
 the socket, and prints their sum.
 
 [source, java]
------
+----
 try{
     ServerSocket serverSocket = new ServerSocket( 4321 );
     Socket socket = serverSocket.accept();
@@ -312,14 +312,14 @@ try{
 }
 catch( IOException e )
 {}
------
+----
 
 Now, here’s a companion piece of client code which connects to port 4321
 and sends 100 `int` values in binary form, specifically, the first 100
 perfect squares.
 
 [source, java]
------
+----
 try{
     Socket socket = new Socket( "127.0.0.1", 4321 );
     ObjectOutputStream out = new ObjectOutputStream(
@@ -330,7 +330,7 @@ try{
 }
 catch( IOException e )
 {}
------
+----
 
 Note that this client code connects to the IP address `127.0.0.1`. This
 is a special loopback IP address. When you connect to this IP address,
