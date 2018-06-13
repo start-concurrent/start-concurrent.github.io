@@ -2,6 +2,13 @@
 :imagesdir: chapters/21-network-communication/images
 == Network Communication
 
+[quote, Neal Stephenson]
+____
+Arguing with anonymous strangers on the Internet is a sucker's game because they almost always
+turn out to be--or to be indistinguishable from--self-righteous sixteen-year-olds possessing
+infinite amounts of free time.
+____
+
 === Problem: Web server
 
 It is no accident that the previous chapter about file I/O is followed
@@ -68,7 +75,7 @@ We begin where nearly every discussion of computer networking begins,
 with the Open Systems Interconnection Basic Reference Model (or OSI
 model). As we mentioned before, the designers of Java wanted to make a
 networking API which was very similar to the file system API. This
-single API must be used for JVM’s running on Windows or on Mac OS or on
+single API must be used for JVM's running on Windows or on Mac OS or on
 Linux or any other operating system. Even with the same operating
 system, different computers have different hardware. Some computers have
 wired connections to a router or gateway. Others are connected
@@ -146,7 +153,7 @@ engineers.
 === Syntax: Networking in Java
 
 The seven layer model might seem overwhelming, but there are only a few
-key pieces that we’ll need on a regular basis. In fact, the system of
+key pieces that we'll need on a regular basis. In fact, the system of
 layers is designed to help people focus on the one or two layers
 specified to their needs and ignore the rest.
 
@@ -189,7 +196,7 @@ of a computer in a network, but a single computer may be performing many
 different kinds of network communications. For example, your computer
 could be running a web browser, an instant message application, an
 online game, and a number of other things. So that none of these
-programs become confused and get each others’ messages, each program
+programs become confused and get each others' messages, each program
 uses a separate port for communication. To the outside world, your
 computer usually only has a single address but thousands of available
 ports. Many of these ports are set aside for specific purposes. For
@@ -210,7 +217,7 @@ Once the `ServerSocket` object has been created, the server will
 typically listen to the socket and try to accept incoming connections.
 When a connection is accepted, a new `Socket` object is created for that
 connection. The purpose of the `ServerSocket` is just to set up this
-`Socket`. The `ServerSocket` doesn’t do any real communication on its
+`Socket`. The `ServerSocket` doesn't do any real communication on its
 own. This system may seem indirect, but it allows for greater
 flexibility. For example, a server could have a thread just listening
 for connections. When a connection is made, it could spawn a new thread
@@ -294,7 +301,7 @@ to be accumulated before it gets sent across the network. Without a
 .Simple client and server
 ====
 
-Here’s an example of a piece of server code which listens on port 4321
+Here's an example of a piece of server code which listens on port 4321
 waits for a connection, then reads 100 `int` values in binary form from
 the socket, and prints their sum.
 
@@ -314,7 +321,7 @@ catch( IOException e )
 {}
 ----
 
-Now, here’s a companion piece of client code which connects to port 4321
+Now, here's a companion piece of client code which connects to port 4321
 and sends 100 `int` values in binary form, specifically, the first 100
 perfect squares.
 
@@ -356,7 +363,7 @@ programs you are used to. For now, our chat program is be text only. .
 The functionality of the program is simple. Once connected to a single
 other chat program, the user will enter his or her name, then enter
 lines of text each followed by a newline. The program will insert the
-user’s name at the beginning of each line of text and then send it
+user's name at the beginning of each line of text and then send it
 across the network to the other chat program, which will display it. We
 encapsulate both client and server functionality in a class called
 `Chat`.
@@ -416,10 +423,10 @@ Below is the private inner class `Sender`. In this case it is convenient
 but not necessary to make `Sender` an inner class, especially since it
 is so short. The only piece of data `Sender` shares with `Chat` is the
 all important `socket` variable. The `Sender` begins by creating a
-`PrintWriter` object from the `socket`’s output stream. After reading a
+`PrintWriter` object from the `socket`'s output stream. After reading a
 name from the user, it waits for a line from the user. Each time a line
 is ready, it is printed and flushed, with the user name inserted at the
-beginning, through the `PrintWriter` connected to the `Socket`’s output
+beginning, through the `PrintWriter` connected to the `Socket`'s output
 stream. When the user types `quit`, the `Socket` will be closed.
 
 [source, java, linenums]
@@ -463,7 +470,7 @@ both binary and text mode.
 === Solution: Web server
 
 Here is our solution to the Web Server problem. As usual, our solution
-doesn’t provide all the error checking or features that a real web
+doesn't provide all the error checking or features that a real web
 server would, but it is entirely functional. When you compile and run
 the code, it will start a web server on port 8080 (an alternative port
 for HTTP) in the directory you run it from. Feel free to change those

@@ -2,6 +2,14 @@
 :imagesdir: chapters/20-file-io/images
 == File I/O
 
+[quote, The Dark Crystal]
+____
+*Kira:* What are those funny marks? +
+*Jen:* This is all writing. +
+*Kira:* What's writing? +
+*Jen:* Words that stay, my master said.
+____
+
 === Problem: A picture is worth 1,000 bytes
 
 If you are familiar with bitmap (bmp) files, you know that they can get
@@ -75,7 +83,7 @@ The data in volatile memory will only persist as long as there is
 electricity powering it. But programs do not run constantly, and neither
 do most computers. We need a place to store data between runs of a
 particular program. Likewise, we need a place to store data when our
-computer isn’t turned on. Both scenarios share a common solution:
+computer isn't turned on. Both scenarios share a common solution:
 secondary storage such as hard drives, flash drives, and optical media
 like CD-ROMs and DVD-ROMs.
 
@@ -162,7 +170,7 @@ File file = new File("file.txt");
 
 Doing so will create a virtual file object associated with the name
 `file.txt` (which may not exist yet) in the working directory of the
-Java program. In this case, the extension `.txt` doesn’t have any real
+Java program. In this case, the extension `.txt` doesn't have any real
 meaning. On many systems, the extension (like `.doc` or `.html`) is used
 by the operating system to guess which application should open the file.
 To Java, however, the extension is just part of the file name. A file
@@ -248,15 +256,15 @@ and `catch` are needed before the program will compile. Note that you
 will need to import `java.util.Scanner` or `java.util.*` just like any
 other time you use the `Scanner` class.
 
-And that’s all there is to it. After opening the file, using the
+And that's all there is to it. After opening the file, using the
 `Scanner` class will be almost the same as before. One difference is
 that you should close the `Scanner` object (and by extension the file)
 when you are done reading from it, as we do in the example. Closing
-files is key to writing robust code. You’ll notice that we put
+files is key to writing robust code. You'll notice that we put
 `in.close()` in a `finally` block. Using `finally` is a good habit for
 file I/O. File operations could fail for any number of reasons, but you
 will still need to close the file afterwards. We put in the `null` check
-in case the file didn’t exist and the reference `in` never pointed to a
+in case the file didn't exist and the reference `in` never pointed to a
 valid object. (We also begin by setting `in` to `null`. Otherwise, Java
 complains that it might not have been initialized.)
 
@@ -301,7 +309,7 @@ Be sure to import `java.io.*` in order to have access to the
 ==== Reading and writing binary files
 
 We covered text files first because the input and output is similar to
-console I/O. When reading and writing text files, it’s easy to verify
+console I/O. When reading and writing text files, it's easy to verify
 that what you wanted to write was written and what you read was what was
 in the file. Binary files, however, are more powerful. Data, as in the
 example with the integer 2127480645, can often be stored more compactly.
@@ -309,7 +317,7 @@ Even better, Java provides facilities for easily dumping (and later
 retrieving) primitive data types, objects, and even complex data
 structures to binary files.
 
-The first object you’ll need to read input from a binary file is a
+The first object you'll need to read input from a binary file is a
 `FileInputStream` object. As before, all you need is a `File` object to
 create one.
 
@@ -327,7 +335,7 @@ with a `String` specifying the file path and name.
 FileInputStream in = new FileInputStream( "file.bin" );
 ----
 
-The bad news is that you can’t do much with a `FileInputStream` object.
+The bad news is that you can't do much with a `FileInputStream` object.
 Its methods allow you to read single bytes, either one at a time, or a
 group of them into an array. The basic `read()` method returns the next
 byte in the file, or a -1 if the end of the file has been reached.
@@ -380,11 +388,11 @@ ObjectInputStream in =
     new ObjectInputStream( new FileInputStream( "baseball.bin" ) );
 ----
 
-Now, let’s assume that `baseball.bin` contains baseball statistics. The
+Now, let's assume that `baseball.bin` contains baseball statistics. The
 first thing in the file is an `int` indicating the number of records it
 contains. Then, for each record, it will list home runs, RBI, and
 batting average, as an `int`, an `int`, and a `float`, respectively.
-Assuming that we’ve opened the file correctly above, we can read these
+Assuming that we've opened the file correctly above, we can read these
 statistics into three arrays with the following code.
 
 [source, java]
@@ -444,8 +452,8 @@ include::programs/BaseballPlayer.java[]
 
 The new class `BaseballPlayer` encapsulates the three pieces of
 information we want. Note that it also implements the interface
-`Serializable`, but it doesn’t seem to implement any special methods to
-conform to the interface. We’ll discuss this more after we show how
+`Serializable`, but it doesn't seem to implement any special methods to
+conform to the interface. We'll discuss this more after we show how
 using this new class can simplify the file I/O. The input will change to
 the following.
 
@@ -546,7 +554,7 @@ objects if you only need to read and write primitive data.
 .Directory listing
 ====
 
-Let’s return to the `File` class and look at another example of how to
+Let's return to the `File` class and look at another example of how to
 use it. It is often useful to know the contents of a directory. At the
 Windows command prompt, this is usually done using the `dir` command; in
 Linux and Unix, the `ls` command is generally used. In a few lines of
@@ -572,9 +580,9 @@ it is a directory, and finally print the name given by `getName()`.
 .Radiuses stored in a file
 ====
 
-Now, let’s look at a data processing application of files. Let’s assume
+Now, let's look at a data processing application of files. Let's assume
 that there is a file called `radiuses.txt` which holds the radiuses of a
-number of circles formatted as text, one on each line of the file. It’s
+number of circles formatted as text, one on each line of the file. It's
 our job to read each radius, compute the area of the circle, and write
 those areas to a file called `areas.txt`, using the formula
 latexmath:[A = \pi r^2].
@@ -610,7 +618,7 @@ exception, because, in this case, it is just a signal to stop reading.
 === Solution: A picture is worth 1,000 bytes
 
 Now we will give the solution to the problem posed at the beginning of
-the chapter. First, let’s look at the class definition and `main()`
+the chapter. First, let's look at the class definition and `main()`
 method.
 
 [source, java, linenums]
@@ -645,8 +653,8 @@ a file named the same as the input file with `.compress` tacked on the
 end. Then, we read in bytes of data from the input file. As long as we
 keep seeing the same byte, we increment a counter. When we run into a
 new byte (or when we reach the limit of 127 of the same consecutive
-byte), we write the count and the byte we’ve been reading and move on.
-When `in.read()` returns `-1`, we know that we’ve reached the end of the
+byte), we write the count and the byte we've been reading and move on.
+When `in.read()` returns `-1`, we know that we've reached the end of the
 file and output the last count and last byte value. The method finishes
 with the usual `catch` and `finally` blocks needed to catch errors and
 safely close the output file.
@@ -666,7 +674,7 @@ the count specifies.
 === Concurrency: File I/O
 
 By now, you have seen threads behave in unpredictable ways because of
-the way they are reading and writing to shared variables. Well, isn’t a
+the way they are reading and writing to shared variables. Well, isn't a
 file a shared resource as well? What happens when two threads try to
 access a file at the same time? If both threads are reading from the
 file, everything should work fine. If the threads are both writing or
@@ -692,7 +700,7 @@ include::programs/ConcurrentFileAccess.java[]
 The code in this program should have no surprises. The `main()` method
 creates two `Thread` objects based on `ConcurrentFileAccess` objects,
 each with a different value for its `even` field. Then, the `main()`
-method starts the threads running. In each thread’s `run()` method, it
+method starts the threads running. In each thread's `run()` method, it
 opens the file and starts printing out even or odd numbers, depending on
 which thread it is. Afterwards, each thread closes the file and ends.
 
@@ -821,7 +829,7 @@ spell checker or from a Scrabble word list.
 11. Files can become corrupted when they are transferred over a network.
 It is common to make a _checksum_, a short code generated using the
 entire contents of a file. The checksum can be generated before and
-after file transmission. If both of the checksums match, there’s a good
+after file transmission. If both of the checksums match, there's a good
 chance that there were no transmission errors. Of course, there can be
 problems sending checksums, but checksums are much smaller and therefore
 less likely to be corrupted. Modern checksums are often generated using
