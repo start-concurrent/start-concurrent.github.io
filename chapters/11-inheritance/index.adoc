@@ -34,8 +34,7 @@ list of connections between them.
 The following is an example of input to make a circuit with six
 components.
 
-[source, java]
-----
+....
 6
 true
 false
@@ -47,7 +46,7 @@ OUTPUT 1
 3 2 1
 4 3
 5 4
-----
+....
 
 The first line specifies the total number of components. The next two
 components give either true or false inputs, depending on their name.
@@ -68,10 +67,9 @@ image::circuit.png[]
 We are only interested in the value of any OUTPUT gates. Thus, the
 program that is simulating this circuit would print the following.
 
-[source, java]
-----
+....
 OUTPUT 1: true
-----
+....
 
 There are many different ways to implement a solution to this problem.
 The total number of gates is given as the first input. Thus, you can
@@ -79,7 +77,7 @@ make an array of gates. When you go to connect them, the indexes given
 in the input will map naturally onto the gates in the array. But, what
 type should the array be? You could create a `Gate` class that could do
 the work of any conceivable gate, but the implementation would be
-awkward. All gates would have to have two inputs even if they don’t need
+awkward. All gates would have to have two inputs even if they don't need
 any. Adding different kinds of gates later (like a NAND, for example)
 would mean rewriting the `Gate` class.
 
@@ -104,7 +102,7 @@ Naturally, `And`, `Or`, and `Xor` are children of `BinaryOperator`,
 since they all have two inputs.
 
 If this large collection of classes seems bewildering, do not be
-discouraged. Each is very short and easy to write. We’ll explain what
+discouraged. Each is very short and easy to write. We'll explain what
 the inheritance relationship means and how to use it in the next few
 sections.
 
@@ -182,7 +180,7 @@ methods.
 ==== The `extends` keyword
 
 In order to make a child class in Java, we use the `extends` keyword.
-Let’s give an example using the `Fish` class defined below. This class
+Let's give an example using the `Fish` class defined below. This class
 creates a basic fish that can swim, feed, and die. We can check its
 color, location, and whether or not it is alive. When it runs out of
 energy, it dies.
@@ -221,7 +219,7 @@ The `Flounder` class can do everything a `Fish` can: It can swim, feed,
 and die. Now, we add the additional ability of changing color, since
 flounders are famous for their ability to mimic the ocean floor they
 swim over. Note that the `color` field in the `Fish` class has the
-`protected` access modifier, not `private`. We’ll come back to this
+`protected` access modifier, not `private`. We'll come back to this
 point.
 
 Here is a `Shark` class that extends `Fish` in another ways, by adding
@@ -238,7 +236,7 @@ Here we have added an `eat()` method that takes another `Fish` object as
 a parameter. First, the `Fish` parameter is killed; then the `eat()`
 method calls `feed()`, restoring the energy of the `Shark` object. Note
 that the `Shark` object is able to call the `feed()` method even though
-it isn’t defined inside of `Shark`. Because it inherits from `Fish`, it
+it isn't defined inside of `Shark`. Because it inherits from `Fish`, it
 has a version of `feed()`.
 
 ===== Single inheritance only
@@ -260,7 +258,7 @@ strange to create a class which is both a river and politician, but
 there is no rule in C++ which makes doing so impossible. If you did have
 a `RiverPolitician` class which inherits from both, what would happen
 when you call the `run()` method? How would the `RiverPolitician` class
-know which of its parents’ methods to pick? Surely, the way that a
+know which of its parents' methods to pick? Surely, the way that a
 politician runs for office is very different from the way a river runs
 along its banks.
 
@@ -349,7 +347,7 @@ well. This chain of constructors will continue, reaching all the way
 back to the ultimate ancestor, `Object`.
 
 When writing the constructor for a child class, the first line of it
-should be the call to the parent constructor. If you don’t explicitly
+should be the call to the parent constructor. If you don't explicitly
 call the parent constructor, its default (no parameter) constructor will
 be called. If the parent class does not have a default constructor, then
 leaving off an appropriate call to a parent constructor will result in a
@@ -473,11 +471,10 @@ System.out.println("B = " + objectB.getA() );
 
 The output of this code is:
 
-[source, java]
-----
+....
 A = 5
 B = 0
-----
+....
 
 Calling the `setA()` method on an `A` object sets the `a` field inside
 of `A`. Calling the overridden `setA()` method on a `B` object sets the
@@ -584,14 +581,14 @@ Most code that uses `Student` objects should be able to incorporate
 `GraduateStudent` objects easily. Code that creates `Student` objects
 from input will need slight modifications to handle the thesis topic.
 Also, old code that only expects values of `0`, `1`, `2`, or `3` for
-year may need to be modified so that it doesn’t break.
+year may need to be modified so that it doesn't break.
 
 ====
 
 .Polygons
 ====
 
-Let’s examine a class hierarchy used to create several different
+Let's examine a class hierarchy used to create several different
 polygons. Our base class needs to be general. It can represent any kind
 of closed polygon, using an array of `Point` objects. The `Point` class
 is a way to package up `x` and `y` values of type `int`. Each coordinate
@@ -702,10 +699,10 @@ include::programs/Gate.java[]
 ----
 
 
-The `Gate` class doesn’t do anything except set up ways to store a name
+The `Gate` class doesn't do anything except set up ways to store a name
 and to get a value. From `Gate`, we can define the most basic circuit
 components: gates whose value is either always true or always false. It
-doesn’t really matter what `getValue()` gives back for `Gate`, but we
+doesn't really matter what `getValue()` gives back for `Gate`, but we
 can say that it is `false`.
 
 [source, java, linenums]
@@ -756,7 +753,7 @@ include::programs/Not.java[]
 
 The `Output` class takes in an `int` value and uses it to make a
 numbered name. Its `getValue()` method simply returns the value of its
-input. The `Output` class doesn’t do anything except serve as a marker
+input. The `Output` class doesn't do anything except serve as a marker
 for circuit output. The `Not` class uses `"NOT"` as the name supplied to
 the `super` constructor and returns the logical NOT of the value of its
 input.
@@ -885,7 +882,7 @@ usable. Thus, you cannot override a public method with a private one,
 reducing the visibility of a method. We discuss a similar restriction
 with exceptions in Section <<subsection:Inheritance_and_exceptions>>.
 
-If it has these restrictions, why doesn’t Java prevent a synchronized
+If it has these restrictions, why doesn't Java prevent a synchronized
 method from being overridden by a non-synchronized method? In the first
 place, a non-synchronized method can be used anywhere a synchronized one
 could. (Unlike a private method, which is not accessible everywhere a
