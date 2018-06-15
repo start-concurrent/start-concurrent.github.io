@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.6.1">
+<meta name="author" content="Barry Wittman, Aditya Mathur, Tim Korb">
+<title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
+/* Remove comment around @import statement below when using as a custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
+audio,canvas,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+[hidden],template{display:none}
+script{display:none!important}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:transparent}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
+input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.spread{width:100%}
+p.lead,.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{font-size:1.21875em;line-height:1.6}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:none}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #ddddd8;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite:before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media only screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7;font-weight:bold}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
+.clearfix:after,.float-group:after{clear:both}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
+pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
+b.button:before{content:"[";padding:0 3px 0 2px}
+b.button:after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header:before,#header:after,#content:before,#content:after,#footnotes:before,#footnotes:after,#footer:before,#footer:after{content:" ";display:table}
+#header:after,#content:after,#footnotes:after,#footer:after{clear:both}
+#content{margin-top:1.25em}
+#content:before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #ddddd8}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #ddddd8;padding-bottom:8px}
+#header .details{border-bottom:1px solid #ddddd8;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span:before{content:"\00a0\2013\00a0"}
+#header .details br+span.author:before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark:before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber:after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #ddddd8;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #efefed;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media only screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}
+@media only screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+.sect1{padding-bottom:.625em}
+@media only screen and (min-width:768px){.sect1{padding-bottom:1.25em}}
+.sect1+.sect1{border-top:1px solid #efefed}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor:before,h2>a.anchor:before,h3>a.anchor:before,#toctitle>a.anchor:before,.sidebarblock>.content>.title>a.anchor:before,h4>a.anchor:before,h5>a.anchor:before,h6>a.anchor:before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
+.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:initial}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
+.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
+.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;padding:1em;font-size:.8125em}
+.literalblock pre.nowrap,.literalblock pre[class].nowrap,.listingblock pre.nowrap,.listingblock pre[class].nowrap{overflow-x:auto;white-space:pre;word-wrap:normal}
+@media only screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
+@media only screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
+.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]:before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
+.listingblock:hover code[data-lang]:before{display:block}
+.listingblock.terminal pre .command:before{content:attr(data-prompt);padding-right:.5em;color:#999}
+.listingblock.terminal pre .command:not([data-prompt]):before{content:"$"}
+table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
+table.pyhltable td.code{padding-left:.75em;padding-right:0}
+pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #ddddd8}
+pre.pygments .lineno{display:inline-block;margin-right:.25em}
+table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock blockquote p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote:before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.5em;margin-right:.5ex;text-align:right}
+.quoteblock .quoteblock{margin-left:0;margin-right:0;padding:.5em 0;border-left:3px solid rgba(0,0,0,.6)}
+.quoteblock .quoteblock blockquote{padding:0 0 0 .75em}
+.quoteblock .quoteblock blockquote:before{display:none}
+.verseblock{margin:0 1em 1.25em 1em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract{margin:0 0 1.25em 0;display:block}
+.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{text-align:left;word-spacing:0}
+.quoteblock.abstract blockquote:before,.quoteblock.abstract blockquote p:first-of-type:before{display:none}
+table.tableblock{max-width:100%;border-collapse:separate}
+table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px 0}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot{border-width:1px 0}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+td>div.verse{white-space:pre}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
+ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
+ul.inline>li>*{display:block}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist>table tr>td:first-of-type{padding:.4em .75em 0 .75em;line-height:1;vertical-align:top}
+.colist>table tr>td:first-of-type img{max-width:initial}
+.colist>table tr>td:last-of-type{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
+.imageblock.right,.imageblock[style*="float: right"]{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em 0;border-width:1px 0 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;text-indent:-1.05em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background-color:#00fafa}
+.black{color:#000}
+.black-background{background-color:#000}
+.blue{color:#0000bf}
+.blue-background{background-color:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background-color:#fa00fa}
+.gray{color:#606060}
+.gray-background{background-color:#7d7d7d}
+.green{color:#006000}
+.green-background{background-color:#007d00}
+.lime{color:#00bf00}
+.lime-background{background-color:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background-color:#7d0000}
+.navy{color:#000060}
+.navy-background{background-color:#00007d}
+.olive{color:#606000}
+.olive-background{background-color:#7d7d00}
+.purple{color:#600060}
+.purple-background{background-color:#7d007d}
+.red{color:#bf0000}
+.red-background{background-color:#fa0000}
+.silver{color:#909090}
+.silver-background{background-color:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background-color:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background-color:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background-color:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning:before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution:before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important:before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]:after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@media print{@page{margin:1.25cm .75cm}
+*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare):after,a[href^="https:"]:not(.bare):after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]:after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #ddddd8!important;padding-bottom:0!important}
+.sect1{padding-bottom:0!important}
+.sect1+.sect1{border:0!important}
+#header>h1:first-child{margin-top:1.25rem}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em 0}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span:before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]:before{display:block}
+#footer{background:none!important;padding:0 .9375em}
+#footer-text{color:rgba(0,0,0,.6)!important;font-size:.9em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<style>
+.listingblock .pygments .hll { background-color: #ffffcc }
+.listingblock .pygments, .listingblock .pygments code { background: #f8f8f8; }
+.listingblock .pygments .tok-c { color: #408080; font-style: italic } /* Comment */
+.listingblock .pygments .tok-err { border: 1px solid #FF0000 } /* Error */
+.listingblock .pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+.listingblock .pygments .tok-o { color: #666666 } /* Operator */
+.listingblock .pygments .tok-ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.listingblock .pygments .tok-cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.listingblock .pygments .tok-cp { color: #BC7A00 } /* Comment.Preproc */
+.listingblock .pygments .tok-cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.listingblock .pygments .tok-c1 { color: #408080; font-style: italic } /* Comment.Single */
+.listingblock .pygments .tok-cs { color: #408080; font-style: italic } /* Comment.Special */
+.listingblock .pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+.listingblock .pygments .tok-ge { font-style: italic } /* Generic.Emph */
+.listingblock .pygments .tok-gr { color: #FF0000 } /* Generic.Error */
+.listingblock .pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.listingblock .pygments .tok-gi { color: #00A000 } /* Generic.Inserted */
+.listingblock .pygments .tok-go { color: #888888 } /* Generic.Output */
+.listingblock .pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.listingblock .pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+.listingblock .pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.listingblock .pygments .tok-gt { color: #0044DD } /* Generic.Traceback */
+.listingblock .pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.listingblock .pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.listingblock .pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.listingblock .pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+.listingblock .pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.listingblock .pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+.listingblock .pygments .tok-m { color: #666666 } /* Literal.Number */
+.listingblock .pygments .tok-s { color: #BA2121 } /* Literal.String */
+.listingblock .pygments .tok-na { color: #7D9029 } /* Name.Attribute */
+.listingblock .pygments .tok-nb { color: #008000 } /* Name.Builtin */
+.listingblock .pygments .tok-nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.listingblock .pygments .tok-no { color: #880000 } /* Name.Constant */
+.listingblock .pygments .tok-nd { color: #AA22FF } /* Name.Decorator */
+.listingblock .pygments .tok-ni { color: #999999; font-weight: bold } /* Name.Entity */
+.listingblock .pygments .tok-ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.listingblock .pygments .tok-nf { color: #0000FF } /* Name.Function */
+.listingblock .pygments .tok-nl { color: #A0A000 } /* Name.Label */
+.listingblock .pygments .tok-nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.listingblock .pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+.listingblock .pygments .tok-nv { color: #19177C } /* Name.Variable */
+.listingblock .pygments .tok-ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.listingblock .pygments .tok-w { color: #bbbbbb } /* Text.Whitespace */
+.listingblock .pygments .tok-mb { color: #666666 } /* Literal.Number.Bin */
+.listingblock .pygments .tok-mf { color: #666666 } /* Literal.Number.Float */
+.listingblock .pygments .tok-mh { color: #666666 } /* Literal.Number.Hex */
+.listingblock .pygments .tok-mi { color: #666666 } /* Literal.Number.Integer */
+.listingblock .pygments .tok-mo { color: #666666 } /* Literal.Number.Oct */
+.listingblock .pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+.listingblock .pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+.listingblock .pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+.listingblock .pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+.listingblock .pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.listingblock .pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+.listingblock .pygments .tok-se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.listingblock .pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+.listingblock .pygments .tok-si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.listingblock .pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+.listingblock .pygments .tok-sr { color: #BB6688 } /* Literal.String.Regex */
+.listingblock .pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+.listingblock .pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+.listingblock .pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+.listingblock .pygments .tok-fm { color: #0000FF } /* Name.Function.Magic */
+.listingblock .pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+.listingblock .pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+.listingblock .pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+.listingblock .pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+.listingblock .pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>Start Concurrent: A Gentle Introduction to Concurrent Programming</h1>
+<div class="details">
+<span id="author" class="author">Barry Wittman</span><br>
+<span id="email" class="email"><a href="mailto:bwittman@gmail.com">bwittman@gmail.com</a></span><br>
+<span id="author2" class="author">Aditya Mathur</span><br>
+<span id="email2" class="email"><a href="mailto:apm@purdue.edu">apm@purdue.edu</a></span><br>
+<span id="author3" class="author">Tim Korb</span><br>
+<span id="email3" class="email"><a href="mailto:jtk@purdue.edu">jtk@purdue.edu</a></span><br>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="index.html#_computer_basics">Computer Basics</a>
+<ul class="sectlevel2">
+<li><a href="index.html#_problem_buying_a_computer">Problem: Buying a Computer</a></li>
+<li><a href="index.html#_concepts_hardware_and_software">Concepts: Hardware and Software</a></li>
+<li><a href="index.html#_syntax_data_representation">Syntax: Data Representation</a></li>
+<li><a href="index.html#_solution_buying_a_computer">Solution: Buying a computer</a></li>
+<li><a href="index.html#_summary">Summary</a></li>
+<li><a href="index.html#_problems">Problems</a></li>
+</ul>
+</li>
+<li><a href="chap1.html#chapter:Problem_Solving_and_Programming">Problem Solving and Programming</a>
+<ul class="sectlevel2">
+<li><a href="chap1.html#_problem_how_to_solve_problems">Problem: How to solve problems</a></li>
+<li><a href="chap1.html#_concepts_developing_software">Concepts: Developing software</a></li>
+<li><a href="chap1.html#_syntax_java_basics">Syntax: Java basics</a></li>
+<li><a href="chap1.html#_solution_how_to_solve_problems">Solution: How to solve problems</a></li>
+<li><a href="chap1.html#_concurrency_solving_problems_in_parallel">Concurrency: Solving problems in parallel</a></li>
+<li><a href="chap1.html#_summary_2">Summary</a></li>
+<li><a href="chap1.html#_exercises">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap2.html#chapter:Primitive_Types_and_Strings">Primitive Types and Strings</a>
+<ul class="sectlevel2">
+<li><a href="chap2.html#_problem_college_cost_calculator">Problem: College cost calculator</a></li>
+<li><a href="chap2.html#_concepts_types">Concepts: Types</a></li>
+<li><a href="chap2.html#_syntax_types_in_java">Syntax: Types in Java</a></li>
+<li><a href="chap2.html#_syntax_useful_libraries">Syntax: Useful libraries</a></li>
+<li><a href="chap2.html#_solution_college_cost_calculator">Solution: College cost calculator</a></li>
+<li><a href="chap2.html#_concurrency_expressions">Concurrency: Expressions</a></li>
+<li><a href="chap2.html#_summary_3">Summary</a></li>
+<li><a href="chap2.html#_exercises_2">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap3.html#chapter:Selection">Selection</a>
+<ul class="sectlevel2">
+<li><a href="chap3.html#section:Monty_Hall">Problem: Monty Hall simulation</a></li>
+<li><a href="chap3.html#_concepts_choosing_between_options">Concepts: Choosing between options</a></li>
+<li><a href="chap3.html#_syntax_selection_in_java">Syntax: Selection in Java</a></li>
+<li><a href="chap3.html#_solution_monty_hall">Solution: Monty Hall</a></li>
+<li><a href="chap3.html#_concurrency_selection">Concurrency: Selection</a></li>
+<li><a href="chap3.html#_exercises_3">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap4.html#chapter:Repetition">Repetition</a>
+<ul class="sectlevel2">
+<li><a href="chap4.html#_problem_dna_searching">Problem: DNA searching</a></li>
+<li><a href="chap4.html#_concepts_repetition">Concepts: Repetition</a></li>
+<li><a href="chap4.html#_syntax_loops_in_java">Syntax: Loops in Java</a></li>
+<li><a href="chap4.html#_solution_dna_searching">Solution: DNA searching</a></li>
+<li><a href="chap4.html#_concurrency_loops">Concurrency: Loops</a></li>
+<li><a href="chap4.html#_exercises_4">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap5.html#chapter:Arrays">Arrays</a>
+<ul class="sectlevel2">
+<li><a href="chap5.html#_introduction">Introduction</a></li>
+<li><a href="chap5.html#_problem_game_of_life">Problem: Game of Life</a></li>
+<li><a href="chap5.html#_concepts_lists_of_data">Concepts: Lists of data</a></li>
+<li><a href="chap5.html#_syntax_arrays_in_java">Syntax: Arrays in Java</a></li>
+<li><a href="chap5.html#_examples_array_usage">Examples: Array usage</a></li>
+<li><a href="chap5.html#_concepts_multidimensional_lists">Concepts: Multidimensional lists</a></li>
+<li><a href="chap5.html#_syntax_advanced_arrays_in_java">Syntax: Advanced arrays in Java</a></li>
+<li><a href="chap5.html#_examples_two_dimensional_arrays">Examples: Two-dimensional arrays</a></li>
+<li><a href="chap5.html#_advanced_special_array_tools_in_java">Advanced: Special array tools in Java</a></li>
+<li><a href="chap5.html#_solution_game_of_life">Solution: Game of Life</a></li>
+<li><a href="chap5.html#_concurrency_arrays">Concurrency: Arrays</a></li>
+<li><a href="chap5.html#_exercises_5">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap6.html#chapter:Simple_Graphical_User_Interfaces">Simple Graphical User Interfaces</a>
+<ul class="sectlevel2">
+<li><a href="chap6.html#_problem_codon_extractor">Problem: Codon extractor</a></li>
+<li><a href="chap6.html#GUIBasicsIntroductionSection">Concepts: User interaction</a></li>
+<li><a href="chap6.html#syntax:Dialogs_and_the_JOptionPane_class">Syntax: Dialogs and the <code>JOptionPane</code> class</a></li>
+<li><a href="chap6.html#_solution_codon_extractor">Solution: Codon extractor</a></li>
+<li><a href="chap6.html#_concurrency_simple_guis">Concurrency: Simple GUIs</a></li>
+<li><a href="chap6.html#_summary_4">Summary</a></li>
+<li><a href="chap6.html#_exercises_6">Exercises</a></li>
+</ul>
+</li>
+<li><a href="#chapter:Methods">Methods</a>
+<ul class="sectlevel2">
+<li><a href="#_problem_three_card_poker">Problem: Three card poker</a></li>
+<li><a href="#_concepts_dividing_work_into_segments">Concepts: Dividing work into segments</a></li>
+<li><a href="#_syntax_methods">Syntax: Methods</a></li>
+<li><a href="#_examples_defining_methods">Examples: Defining methods</a></li>
+<li><a href="#_solution_three_card_poker">Solution: Three card poker</a></li>
+<li><a href="#_concurrency_methods">Concurrency: Methods</a></li>
+<li><a href="#_exercises_7">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap8.html#chapter:Classes">Classes</a>
+<ul class="sectlevel2">
+<li><a href="chap8.html#_problem_nested_expressions">Problem: Nested expressions</a></li>
+<li><a href="chap8.html#_concepts_object_oriented_programming">Concepts: Object-oriented programming</a></li>
+<li><a href="chap8.html#_syntax_classes_in_java">Syntax: Classes in Java</a></li>
+<li><a href="chap8.html#_examples_classes">Examples: Classes</a></li>
+<li><a href="chap8.html#_advanced_nested_classes">Advanced: Nested classes</a></li>
+<li><a href="chap8.html#_solution_nested_expressions">Solution: Nested expressions</a></li>
+<li><a href="chap8.html#_concurrency_objects">Concurrency: Objects</a></li>
+<li><a href="chap8.html#_exercises_8">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap9.html#chapter:Interfaces">Interfaces</a>
+<ul class="sectlevel2">
+<li><a href="chap9.html#_problem_sort_it_out">Problem: Sort it out</a></li>
+<li><a href="chap9.html#_concepts_making_a_promise">Concepts: Making a promise</a></li>
+<li><a href="chap9.html#_syntax_interfaces">Syntax: Interfaces</a></li>
+<li><a href="chap9.html#_advanced_local_and_anonymous_classes">Advanced: Local and anonymous classes</a></li>
+<li><a href="chap9.html#_solution_sort_it_out">Solution: Sort it out</a></li>
+<li><a href="chap9.html#_concurrency_interfaces">Concurrency: Interfaces</a></li>
+<li><a href="chap9.html#_exercises_9">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap10.html#chapter:Inheritance">Inheritance</a>
+<ul class="sectlevel2">
+<li><a href="chap10.html#_problem_boolean_circuits">Problem: Boolean circuits</a></li>
+<li><a href="chap10.html#_concepts_refining_classes">Concepts: Refining classes</a></li>
+<li><a href="chap10.html#_syntax_inheritance_in_java">Syntax: Inheritance in Java</a></li>
+<li><a href="chap10.html#_examples_problem_solving_with_inheritance">Examples: Problem solving with inheritance</a></li>
+<li><a href="chap10.html#_solution_boolean_circuits">Solution: Boolean circuits</a></li>
+<li><a href="chap10.html#_concurrency_inheritance">Concurrency: Inheritance</a></li>
+<li><a href="chap10.html#_exercises_10">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap11.html#chapter:Exceptions">Exceptions</a>
+<ul class="sectlevel2">
+<li><a href="chap11.html#_problem_bank_burglary">Problem: Bank burglary</a></li>
+<li><a href="chap11.html#_concepts_error_handling">Concepts: Error handling</a></li>
+<li><a href="chap11.html#_syntax_exceptions_in_java">Syntax: Exceptions in Java</a></li>
+<li><a href="chap11.html#_solution_bank_burglary">Solution: Bank burglary</a></li>
+<li><a href="chap11.html#_concurrency_exceptions">Concurrency: Exceptions</a></li>
+<li><a href="chap11.html#_exercises_11">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap12.html#chapter:Concurrent_Programming">Concurrent Programming</a>
+<ul class="sectlevel2">
+<li><a href="chap12.html#_introduction_2">Introduction</a></li>
+<li><a href="chap12.html#_problem_deadly_virus">Problem: Deadly virus</a></li>
+<li><a href="chap12.html#_concepts_splitting_up_work">Concepts: Splitting up work</a></li>
+<li><a href="chap12.html#_syntax_threads_in_java">Syntax: Threads in Java</a></li>
+<li><a href="chap12.html#_examples_concurrency_and_speedup">Examples: Concurrency and speedup</a></li>
+<li><a href="chap12.html#_concepts_thread_scheduling">Concepts: Thread scheduling</a></li>
+<li><a href="chap12.html#_syntax_thread_states">Syntax: Thread states</a></li>
+<li><a href="chap12.html#_solution_deadly_virus">Solution: Deadly virus</a></li>
+<li><a href="chap12.html#_summary_5">Summary</a></li>
+<li><a href="chap12.html#_exercises_12">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap13.html#chapter:Synchronization">Synchronization</a>
+<ul class="sectlevel2">
+<li><a href="chap13.html#_introduction_3">Introduction</a></li>
+<li><a href="chap13.html#_problem_dining_philosophers">Problem: Dining philosophers</a></li>
+<li><a href="chap13.html#_concepts_thread_interaction">Concepts: Thread interaction</a></li>
+<li><a href="chap13.html#_syntax_thread_synchronization">Syntax: Thread synchronization</a></li>
+<li><a href="chap13.html#_pitfalls_synchronization_challenges">Pitfalls: Synchronization challenges</a></li>
+<li><a href="chap13.html#solution:dining_philosophers">Solution: Dining philosophers</a></li>
+<li><a href="chap13.html#_exercises_13">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap14.html#chapter:Constructing_Graphical_User_Interfaces">Constructing Graphical User Interfaces</a>
+<ul class="sectlevel2">
+<li><a href="chap14.html#_problem_math_applet">Problem: Math applet</a></li>
+<li><a href="chap14.html#_concepts_graphical_user_interfaces">Concepts: Graphical user interfaces</a></li>
+<li><a href="chap14.html#_syntax_guis_in_java">Syntax: GUIs in Java</a></li>
+<li><a href="chap14.html#_solution_math_applet">Solution: Math applet</a></li>
+<li><a href="chap14.html#_concurrency_guis">Concurrency: GUIs</a></li>
+<li><a href="chap14.html#_summary_6">Summary</a></li>
+<li><a href="chap14.html#_exercises_14">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap15.html#chapter:Testing_and_Debugging">Testing and Debugging</a>
+<ul class="sectlevel2">
+<li><a href="chap15.html#section:Fixing_bugs">Fixing bugs</a></li>
+<li><a href="chap15.html#_concepts_approaches_to_debugging">Concepts: Approaches to debugging</a></li>
+<li><a href="chap15.html#_syntax_java_debugging_tools">Syntax: Java debugging tools</a></li>
+<li><a href="chap15.html#_concurrency_parallel_bugs">Concurrency: Parallel bugs</a></li>
+<li><a href="chap15.html#_finding_and_avoiding_bugs">Finding and avoiding bugs</a></li>
+<li><a href="chap15.html#_concepts_design_implementation_and_testing">Concepts: Design, implementation, and testing</a></li>
+<li><a href="chap15.html#_syntax_java_testing_tools">Syntax: Java testing tools</a></li>
+<li><a href="chap15.html#_concurrency_testing_tools">Concurrency: Testing tools</a></li>
+<li><a href="chap15.html#_examples_testing_a_class">Examples: Testing a class</a></li>
+<li><a href="chap15.html#_exercises_15">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap16.html#chapter:Polymorphism">Polymorphism</a>
+<ul class="sectlevel2">
+<li><a href="chap16.html#_problem_banking_account_with_a_vengeance">Problem: Banking account with a vengeance</a></li>
+<li><a href="chap16.html#_concepts_polymorphism">Concepts: Polymorphism</a></li>
+<li><a href="chap16.html#_syntax_inheritance_tools_in_java">Syntax: Inheritance tools in Java</a></li>
+<li><a href="chap16.html#_solution_banking_account_with_a_vengeance">Solution: Banking account with a vengeance</a></li>
+<li><a href="chap16.html#_concurrency_atomic_libraries">Concurrency: Atomic libraries</a></li>
+<li><a href="chap16.html#_exercises_16">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap17.html#chapter:Dynamic_Data_Structures">Dynamic Data Structures</a>
+<ul class="sectlevel2">
+<li><a href="chap17.html#_problem_infix_conversion">Problem: Infix conversion</a></li>
+<li><a href="chap17.html#_concepts_dynamic_data_structures">Concepts: Dynamic data structures</a></li>
+<li><a href="chap17.html#_syntax_dynamic_arrays_and_linked_lists">Syntax: Dynamic arrays and linked lists</a></li>
+<li><a href="chap17.html#_syntax_abstract_data_types_adt">Syntax: Abstract data types (ADT)</a></li>
+<li><a href="chap17.html#_advanced_generic_data_structures">Advanced: Generic data structures</a></li>
+<li><a href="chap17.html#_solution_infix_conversion">Solution: Infix conversion</a></li>
+<li><a href="chap17.html#_concurrency_linked_lists_and_thread_safety">Concurrency: Linked lists and thread safety</a></li>
+<li><a href="chap17.html#_concurrency_thread_safe_libraries">Concurrency: Thread-safe libraries</a></li>
+<li><a href="chap17.html#_exercises_17">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap18.html#chapter:Recursion">Recursion</a>
+<ul class="sectlevel2">
+<li><a href="chap18.html#_problem_maze_of_doom">Problem: Maze of doom</a></li>
+<li><a href="chap18.html#_concepts_recursive_problem_solving">Concepts: Recursive problem solving</a></li>
+<li><a href="chap18.html#_syntax_recursive_methods">Syntax: Recursive methods</a></li>
+<li><a href="chap18.html#_syntax_recursive_data_structures">Syntax: Recursive data structures</a></li>
+<li><a href="chap18.html#_solution_maze_of_doom">Solution: Maze of doom</a></li>
+<li><a href="chap18.html#_concurrency_futures">Concurrency: Futures</a></li>
+<li><a href="chap18.html#_exercises_18">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap19.html#chapter:File_IO">File I/O</a>
+<ul class="sectlevel2">
+<li><a href="chap19.html#_problem_a_picture_is_worth_1_000_bytes">Problem: A picture is worth 1,000 bytes</a></li>
+<li><a href="chap19.html#_concepts_file_i_o">Concepts: File I/O</a></li>
+<li><a href="chap19.html#_syntax_file_operations_in_java">Syntax: File operations in Java</a></li>
+<li><a href="chap19.html#_examples_file_examples">Examples: File examples</a></li>
+<li><a href="chap19.html#_solution_a_picture_is_worth_1_000_bytes">Solution: A picture is worth 1,000 bytes</a></li>
+<li><a href="chap19.html#_concurrency_file_i_o">Concurrency: File I/O</a></li>
+<li><a href="chap19.html#_exercises_19">Exercises</a></li>
+</ul>
+</li>
+<li><a href="chap20.html#chapter:Network_Communication">Network Communication</a>
+<ul class="sectlevel2">
+<li><a href="chap20.html#_problem_web_server">Problem: Web server</a></li>
+<li><a href="chap20.html#_concepts_tcp_ip_communication">Concepts: TCP/IP communication</a></li>
+<li><a href="chap20.html#_syntax_networking_in_java">Syntax: Networking in Java</a></li>
+<li><a href="chap20.html#_solution_web_server">Solution: Web server</a></li>
+<li><a href="chap20.html#_concurrency_networking">Concurrency: Networking</a></li>
+<li><a href="chap20.html#_exercises_20">Exercises</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="chapter:Methods">Methods</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Polonius (Aside): Though this be madness, yet there is method in ’t.</p>
+</div>
+</blockquote>
+<div class="attribution">
+— William Shakespeare
+</div>
+</div>
+<div class="sect2">
+<h3 id="_problem_three_card_poker">Problem: Three card poker</h3>
+<div class="paragraph">
+<p>Gambling has held a fascination for humankind since its invention. As
+long as there have been mathematicians, they have studied the underlying
+mechanisms of probability and statistics that drive games of chance. A
+classic game of both statistics and strategy is poker. The problem we
+want to solve is programming one of the many variations of poker, called
+three card poker. Instead of bluffing, a player competes only with the
+house according to fixed rules without any room for psychology. A player
+is dealt three cards. If the player’s hand contains a pair or better, he
+or she wins a payoff greater than or equal to the money bet. If the
+player does not have a pair or better, he or she loses the money bet.
+Below is a table giving one possible set of payoffs for each possible
+hand.</p>
+</div>
+<table class="tableblock frame-all grid-all center">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Hand</th>
+<th class="tableblock halign-center valign-top">Payoff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Straight Flush</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">40</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Three of a Kind</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">30</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Straight</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">6</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Flush</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Pair</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Nothing</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If you are unfamiliar with poker rules or card games in general, here is
+a quick explanation of the various hands. A traditional English or
+American deck of cards is made up of 52 cards, organized into four
+suits: spades, hearts, diamonds, and clubs. In each suit, there are 13
+ranks: two, three, four, five, six, seven, eight, nine, ten, jack,
+queen, king, and ace.</p>
+</div>
+<div class="paragraph">
+<p>In three card poker, a straight is when the three cards can be arranged
+so that their ranks (ignoring suit) are in order. For example, a hand
+consisting of a Four of Diamonds, a Five of Spades, and a Six of Clubs
+would constitute a straight. An ace can serve as either the highest rank
+card (coming after a king) or the lowest rank card (coming before a two)
+and can help form a straight in either role (but not both at the same
+time). A flush is when all three cards have the same suit. For example,
+a Three of Hearts, a Seven of Hearts, and a Jack of Hearts would
+constitute a flush in three card poker. A straight flush, the highest
+hand, is made up of cards that form both a straight (by rank ordering)
+and a flush (by uniformity of suit). A three of a kind occurs when all
+three cards have the same rank, and a pair occurs when two of the cards
+have the same rank. When none of these conditions hold, the hand has no
+special designation in three card poker, and the bet is lost.</p>
+</div>
+<div class="paragraph">
+<p>Your task is to write a program that serves as a computerized version of
+the game. You must create a deck of 52 cards, thoroughly randomize them
+to simulate shuffling, and select the first three cards as a hand. You
+must then determine the highest designation that applies to the hand of
+cards and the corresponding winnings (if any).</p>
+</div>
+<div class="paragraph">
+<p>Any reasonable solution to this problem uses arrays, discussed in the
+previous chapter. Using only that knowledge, you should be able to
+create a three card poker game. However, the focus of this chapter is
+<em>methods</em>, which can be used to break the solution to a problem into
+logical pieces. By dividing the solution in this way, we will be able to
+solve the three card poker problem in a relatively short, elegant, and
+easy to read way.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_concepts_dividing_work_into_segments">Concepts: Dividing work into segments</h3>
+<div class="paragraph">
+<p>You should notice that the solutions to problems we have been working on
+have become increasingly complex as the book progresses. Partly, this
+tendency is due to the fact that interesting problems tend to have
+complex solutions. Partly, it is due to the fact that more advanced
+features in Java are generally designed to tackle more complicated
+problems.</p>
+</div>
+<div class="paragraph">
+<p>The tools we introduce in this chapter do not allow you to solve a
+problem you could not solve before. Instead, the tools in this chapter
+and in the next one make solving a problem easier and less susceptible
+to errors. A relatively long, complicated list of Java statements was
+necessary to solve problems like the statistics program or Conway’s Game
+of Life. Instead of solving those problems as a single monolithic
+segment of code, we can break our solutions into units called <em>static
+methods</em>.</p>
+</div>
+<div class="sect3">
+<h4 id="_reasons_for_code_static_code_methods">Reasons for <code>static</code> methods</h4>
+<div class="paragraph">
+<p>A static method is a short, named segment of code that has been packaged
+up so that it can be <em>called</em> from other parts of the program. Whenever
+the task performed by this method is needed, the execution of the
+program jumps to the code in the method, does the work it is supposed
+to, and then returns to whatever it was doing before.</p>
+</div>
+<div class="paragraph">
+<p>The reasons for using static methods can be boiled down to three
+essentials:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Modularity</dt>
+<dd>
+<p>Very little software development is done by individuals. Commercial
+software can have tens or even hundreds of programmers involved in
+designing, implementing, testing, and maintaining code. When the code
+is divided into individual methods, those methods can be written and
+tested by different people with minimal interference. It is much
+harder to work together on one giant block of code.</p>
+</dd>
+<dt class="hdlist1">Readability</dt>
+<dd>
+<p>Methods are <strong>named</strong> segments of code. When a method is called, its
+name is used. If a meaningful name is chosen, the line in the code
+that calls the method helps document the code by explaining what is
+happening. For example, if a method called <code>sort()</code> is used, a reader
+instantly understands that something is being sorted. If, instead of a
+separate <code>sort()</code> method, the code for selection sort were pasted into
+the same location, a reader might have to devote a few moments to
+understanding the meaning of those lines of code, particularly without
+comments.</p>
+</dd>
+<dt class="hdlist1">Reusability</dt>
+<dd>
+<p>The fact that a method can be called from anywhere in the code makes
+it reusable. To use the <code>sort()</code> example again, we might have to sort
+several different arrays in one program. Without methods, we would
+have to keep copying and pasting code over and over again. With
+methods, the total amount of source code can be smaller. In fact, if
+you find yourself copying and pasting code, it is often an indication
+that a method would be useful.
++
+This idea of reusability stretches beyond individual programs. A
+static method can be called from a different program entirely. If you
+create a method that is really useful, you are free to use it in other
+programs you may write. By doing so, you only have to makes changes in
+one place if you discover errors or want to increase its
+functionality.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_parallel_to_mathematical_functions">Parallel to mathematical functions</h4>
+<div class="paragraph">
+<p>We have been discussing the usefulness of static methods without saying
+exactly what they are. One way to get insight into methods is by
+acknowledging their similarity to functions from mathematics. In
+procedural (non-object oriented) languages like C, the equivalent of
+static methods are usually referred to as functions, in fact. Like
+functions in mathematics, a static method takes some number of inputs
+(though, as few as zero) and usually produces some output.</p>
+</div>
+<div class="paragraph">
+<p>You have already used several static methods from the <code>Math</code> class, such
+as <code>Math.sqrt()</code>. The expression \(f(x) = \sqrt{x}\) defines
+what \(f(x)\) does in the same way that the code inside of
+<code>Math.sqrt()</code> does. When you want to use \(f(x)\) for a
+specific value, you can set \(y = f(5)\) in the same way that
+you might type the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">double</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">sqrt</span><span class="tok-o">(</span><span class="tok-mi">5</span><span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the statement \(f(5)\), the value of \(x\) is
+replaced by \(5\). In the same way, some variable inside of
+<code>Math.sqrt()</code> takes on the value <code>5</code> when the method is called.</p>
+</div>
+<div class="paragraph">
+<p>It is important to understand this similarity between methods and
+mathematical functions because the designers of many programming
+languages have been directly influenced by the older notation. However,
+there are many differences between the two concepts as well.
+Mathematical functions can take more than one input, and so can Java
+methods. Methods can also take no input, while the whole point of a
+mathematical function is to map some input value(s) to some output
+value. Java methods do not necessarily even have output values. They may
+just <strong>do</strong> something.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_control_flow">Control flow</h4>
+<div class="paragraph">
+<p>We have discussed selection statements such as <code>if</code> and <code>switch</code> as well
+as three different looping structures, <code>for</code>, <code>while</code>, and <code>do-while</code>.
+Each of these Java language features is used for control flow. The
+selection statements allow your program to choose which code to execute.
+The loops allow your code to repeatedly execute certain code. Methods
+also affect control flow. When a method is called, the execution of the
+program jumps into the method, does all the work it needs to there, and
+then returns to the code that called it. Recall the very simple example
+from above.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">double</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">sqrt</span><span class="tok-o">(</span><span class="tok-mi">5</span><span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The JVM has allocated a variable of type <code>double</code> and is preparing to
+assign a value to it. Suddenly, the execution of the JVM jumps into the
+code inside of the <code>Math.sqrt()</code> method. It takes some non-trivial
+amount of work to compute the square root of a number. After that
+computation is finished, the flow of execution returns to the assignment
+that has been waiting all that time. Just like a mathematical function,
+we can treat the method call <code>Math.sqrt(5)</code> as if it were “magically”
+replaced by a <code>double</code> approximating the square root of 5.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_syntax_methods">Syntax: Methods</h3>
+<div class="paragraph">
+<p>By now, you should have a good feel for the concepts behind calling and
+even creating static methods and are probably getting impatient to use
+them. There are a number of issues of method syntax in Java you should
+be aware of. First, we describe how you can create your own static
+methods, then discuss the finer points of calling static methods, and
+finally explain how <em>class variables</em> can be used from many different
+methods.</p>
+</div>
+<div class="sect3">
+<h4 id="_defining_methods">Defining methods</h4>
+<div class="paragraph">
+<p>A very simple method that the <code>Math</code> class provides is the <code>Math.max()</code>
+method. This method selects the larger of two values that you give it as
+input.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">maximum</span> <span class="tok-o">=</span> <span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">max</span><span class="tok-o">(</span><span class="tok-mi">5</span><span class="tok-o">,</span> <span class="tok-mi">10</span><span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, the value stored into <code>maximum</code> is <code>10</code>. Despite its
+simplicity, we demonstrated how useful this method could be in our
+solution to Conway’s Game of Life from Chapter <a href="chap5.html#chapter:Arrays"><em>Arrays</em></a>. If we
+wanted to write this method ourselves, the code would be as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">max</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">a</span><span class="tok-o">,</span> <span class="tok-kt">int</span> <span class="tok-n">b</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">a</span> <span class="tok-o">&gt;=</span> <span class="tok-n">b</span> <span class="tok-o">)</span>
+        <span class="tok-k">return</span> <span class="tok-n">a</span><span class="tok-o">;</span>
+    <span class="tok-k">else</span>
+        <span class="tok-k">return</span> <span class="tok-n">b</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Even in such a small method, there are a lot of pieces of syntax to
+worry about. The first line of this method is called the <em>method
+header</em>. The <code>public</code> keyword in this header is used to denote that any
+code, even code from a different class, can call this method. We discuss
+restricting access to methods and variables more in the later part of
+this chapter. For now, assume that every method is <code>public</code>.</p>
+</div>
+<div class="paragraph">
+<p>The keyword <code>static</code> indicates that this method is static. Although we
+have used the term <em>static method</em> many times, we have not yet defined
+it. A static method is linked to a whole class, not to a specific object
+of that class–that is, a static method can be called without referencing
+an object of the class. Again, we discuss the finer points of objects
+and classes in the next chapter. For now, all methods are <code>static</code>.</p>
+</div>
+<div class="paragraph">
+<p>The third keyword in the method header is the familiar <code>int</code>, giving the
+return type of the method. Wherever this method is called, it can be
+treated like an <code>int</code> value, because that is what it gives back. In this
+case, the return type is obvious: The maximum of two <code>int</code> values must
+also be an <code>int</code> value. Any type can be used as a return value including
+all the primitive types and any reference or array types. The only
+limitation is that a method can only return a single item, but, since
+that item can be an array, this limitation is usually not important. It
+is also possible for a method to return nothing. In that case, the
+keyword <code>void</code> is used for the return type.</p>
+</div>
+<div class="paragraph">
+<p>Next in the method header is the identifier <code>max</code>, which is the name of
+the method. Any legal identifier that you can use for a variable name is
+valid for a method name as well. It is important to pick a name that is
+readable and gives a reader a clear idea about what the method does. A
+common convention is to name a method using a verb phrase, indicating
+the operation that is being done by that method (e.g., <code>computeTax</code>).
+Like variable names, the Java standard is to use camel notation,
+starting with a lowercase letter and capitalizing the first letter of
+each new word in the name.</p>
+</div>
+<div class="paragraph">
+<p>After the name of the method is the list of the <em>parameters</em>, separated
+by commas. In this case, each parameter has the <code>int</code> type. You are free
+to name your parameters whatever you want, though they should be
+meaningful. You can have as few as zero parameters, but there is an
+upper limit imposed by the JVM, usually 255. The body of the method
+follows the header of the method, surrounded by braces (<code>\{\}</code>). Unlike
+<code>if</code> statements and loops, the braces for methods are required.</p>
+</div>
+<div class="paragraph">
+<p>Inside the body of a method, the usual rules for Java control flow
+apply. Each line is executed line by line unless there are selection
+statements or loops. Calling methods inside of methods is allowed as
+well. In the <code>max()</code> method, we use an <code>if-else</code> construction to find
+the larger of <code>a</code> and <code>b</code>. A <code>return</code> statement immediately stops
+execution of the method, transfers execution back to the calling code,
+and gives back the value that comes after it. In this case, the value of
+<code>a</code> is returned if it is equal or larger, and the value of <code>b</code> is
+returned otherwise. Because a <code>return</code> statement immediately jumps out
+of a method, we could have written the method with one fewer line of
+code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">max</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">a</span><span class="tok-o">,</span> <span class="tok-kt">int</span> <span class="tok-n">b</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">a</span> <span class="tok-o">&gt;=</span> <span class="tok-n">b</span> <span class="tok-o">)</span>
+        <span class="tok-k">return</span> <span class="tok-n">a</span><span class="tok-o">;</span>
+    <span class="tok-k">return</span> <span class="tok-n">b</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The only way that the line <code>return b;</code> can be reached is if <code>a</code> had not
+already been returned.</p>
+</div>
+<div class="sect4">
+<h5 id="_the_code_main_code_method">The <code>main()</code> method</h5>
+<div class="paragraph">
+<p>If some of this syntax seems eerily familiar, remember that you have
+been coding static methods since your very first Java program. The
+<code>main()</code> method is just another static method, special only because the
+JVM chooses to start execution there. Let’s look at the <code>main()</code> method
+from a standard Hello, World! program.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span> <span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Hello, world!&quot;</span><span class="tok-o">);</span>
+    <span class="tok-k">return</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Just like the <code>max()</code> method, the header for <code>main()</code> starts with
+<code>public static</code>. Then, the return type for <code>main()</code> is <code>void</code> because
+the JVM is not expecting to get any answer back. The <code>main()</code> method has
+a single parameter, an array of type <code>String</code>. In this program, we do
+not use the <code>args</code> parameter, but it is available. For the <code>main()</code>
+method, this declaration is fine, because <code>main()</code> has to be uniform
+across all programs. However, when designing your own methods, you
+should not include unnecessary parameters.</p>
+</div>
+<div class="paragraph">
+<p>The final executable line in this <code>main()</code> method is a <code>return</code>
+statement. Because <code>main()</code> has a <code>void</code> return type, the <code>return</code>
+statement has no value to return. For <code>void</code> methods, a <code>return</code>
+statement is optional. You can use it to leave a method early, if
+desired. For a value-returning method, execution must reach a <code>return</code>
+statement with a valid value no matter what the input of the method is.
+If Java finds a way that execution could reach the end of a value
+returning method without reaching a <code>return</code> statement, it causes a
+compiler error.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="subsubsection:Overloaded_methods">Overloaded methods</h5>
+<div class="paragraph">
+<p>Since this declaration is in another class, it is OK to create a <code>max()</code>
+method even though there is already one in the <code>Math</code> class. However, it
+is possible to create more than one method with the same name in the
+same class, provided that their <em>signatures</em> are not the same. Two
+methods have the same <em>signature</em> if they have the same name and
+parameter types.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">max</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">a</span><span class="tok-o">,</span> <span class="tok-kt">int</span> <span class="tok-n">b</span><span class="tok-o">,</span> <span class="tok-kt">int</span> <span class="tok-n">c</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-k">return</span> <span class="tok-n">max</span><span class="tok-o">(</span><span class="tok-n">max</span><span class="tok-o">(</span><span class="tok-n">a</span><span class="tok-o">,</span> <span class="tok-n">b</span><span class="tok-o">),</span> <span class="tok-n">c</span><span class="tok-o">);</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, we have created yet another <code>max()</code> method, but this
+one takes three parameters instead of two. This method even calls the
+two parameter version of <code>max()</code>. Creating more than one method with the
+same name is called <em>overloading</em> those methods. Overloading methods is
+useful because it allows you to use the same method name for similar
+functionality, even when there are some underlying differences in the
+implementation. For example, the <code>Math</code> class provides four different,
+overloaded versions of the <code>max()</code> method, specialized for <code>int</code>,
+<code>long</code>, <code>float</code>, and <code>double</code> values, respectively.</p>
+</div>
+<div class="paragraph">
+<p>There are limitations on creating overloaded methods, of course. The
+compiler must be able to determine which method you intend to use. Thus,
+the signatures have to vary by type or number of parameters. A different
+return type is not enough.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_calling_methods">Calling methods</h4>
+<div class="paragraph">
+<p>After a method has been defined, it must be called before it does
+anything. You have plenty of experience calling static methods like
+<code>Math.sqrt()</code> and <code>Math.max()</code>. An example of the appropriate syntax was
+given earlier.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">maximum</span> <span class="tok-o">=</span> <span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">max</span><span class="tok-o">(</span><span class="tok-mi">5</span><span class="tok-o">,</span> <span class="tok-mi">10</span><span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Formally, the call starts with the name of the class (<code>Math</code>), followed
+by a dot, followed by the name of the method (<code>max</code>), followed by the
+list of <em>arguments</em> inside parentheses. These arguments are the values
+you want to <em>pass</em> into the method. Some books use the term <em>formal
+parameters</em> to describe the variables defined in the method signature
+and <em>actual parameters</em> to describe the values passed into the methods,
+but we stick with the simpler terms parameters and arguments.</p>
+</div>
+<div class="paragraph">
+<p>Of course, the number of arguments must match the number of parameters
+defined by the method, and the types must match as well. Java performs
+automatic casting when no precision is lost. Thus, you can always supply
+an <code>int</code> argument for a <code>double</code> parameter, but not the reverse.
+Arguments can be literal values, variables, or even other method calls
+that return the appropriate type.</p>
+</div>
+<div class="paragraph">
+<p>Using the <code>max()</code> method defined before, we could rewrite our simple
+example without a class name.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">maximum</span> <span class="tok-o">=</span> <span class="tok-n">max</span><span class="tok-o">(</span><span class="tok-mi">5</span><span class="tok-o">,</span> <span class="tok-mi">10</span><span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Whenever you call a static method from code that is inside the same
+class, you can leave out the class name.</p>
+</div>
+<div class="sect4">
+<h5 id="_binding">Binding</h5>
+<div class="paragraph">
+<p>Many new programmers are confused about the relationship between
+arguments and parameters. The process of supplying an argument to be
+used as a parameter is called <em>binding</em>. Through binding, a value or
+variable from the calling code is given a new name inside of a method.
+Consider the following method.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">add</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">a</span><span class="tok-o">,</span> <span class="tok-kt">int</span> <span class="tok-n">b</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-k">return</span> <span class="tok-n">a</span> <span class="tok-o">+</span> <span class="tok-n">b</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This absurdly short method adds two numbers together and returns the
+result, approximating the functionality of the <code>+</code> operator. We could
+call the method in the following context.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-mi">3</span><span class="tok-o">;</span>
+<span class="tok-kt">int</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-mi">5</span><span class="tok-o">;</span>
+<span class="tok-kt">int</span> <span class="tok-n">z</span> <span class="tok-o">=</span> <span class="tok-n">add</span><span class="tok-o">(</span> <span class="tok-n">x</span><span class="tok-o">,</span> <span class="tok-n">y</span> <span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Inside the method, the value of <code>x</code> is bound to the variable <code>a</code>, and
+the value of <code>y</code> is bound to the variable <code>b</code>. The <code>add()</code> method has
+its own <em>scope</em>. Scope means the area where a variable name is visible
+(or meaningful). Thus, <code>x</code> and <code>y</code> do not exist inside of the <code>add()</code>
+method, only the variables <code>a</code> and <code>b</code> do. Since methods have their own
+scope, variables in one method can have the same names as variables in
+another method without the compiler (or the programmer!) becoming
+confused. Consider the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">a</span> <span class="tok-o">=</span> <span class="tok-mi">3</span><span class="tok-o">;</span>
+<span class="tok-kt">int</span> <span class="tok-n">b</span> <span class="tok-o">=</span> <span class="tok-mi">5</span><span class="tok-o">;</span>
+<span class="tok-kt">int</span> <span class="tok-n">c</span> <span class="tok-o">=</span> <span class="tok-n">add</span><span class="tok-o">(</span> <span class="tok-n">b</span><span class="tok-o">,</span> <span class="tok-n">a</span> <span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here the variables <code>a</code> and <code>b</code> exist in both the calling code and inside
+the method, but the names are independent. The value of <code>a</code> in the
+calling code happens to be bound to a variable called <code>b</code> inside the
+method, but the JVM has no confusion about which <code>a</code> is which. Herein
+lies the value of methods: They are largely independent of whatever else
+is going on in the code, allowing the programmer to focus on a small,
+manageable task.</p>
+</div>
+<div class="paragraph">
+<p>Another important feature of Java is that the process of binding
+variables is <em>pass by value</em>, meaning that only the <strong>value</strong> of the
+argument is bound to the parameter. Whenever a method is called, the
+method creates a new variable for each parameter and copies the value of
+its argument into it. In practice, this approach means that a method
+cannot directly change the value of an argument. Consider the following
+method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">increment</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">counter</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-n">counter</span><span class="tok-o">++;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method takes the value of its argument and copies it into the new
+variable <code>counter</code>. Then, it increments <code>counter</code>, but the original
+argument is unchanged. Thus, the following fragment is an infinite loop.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
+<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">100</span> <span class="tok-o">)</span>
+    <span class="tok-n">increment</span><span class="tok-o">(</span> <span class="tok-n">i</span> <span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The value of <code>i</code> remains fixed at <code>0</code> for the entire program. The copy
+of <code>i</code> bound to <code>counter</code> increases to <code>1</code> every time <code>increment()</code> is
+called, but <code>i</code> remains unaffected.</p>
+</div>
+<div class="paragraph">
+<p>This is not to say that a method cannot affect the variables outside of
+itself. The primary way that it can do so is by using <code>return</code>
+statements. We can rewrite <code>increment()</code> to achieve this effect.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">increment</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">counter</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-n">counter</span><span class="tok-o">++;</span>
+    <span class="tok-k">return</span> <span class="tok-n">counter</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, we need to adjust the loop so that it stores the returned value
+instead of dropping it on the floor.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
+<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">100</span> <span class="tok-o">)</span>
+    <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-n">increment</span><span class="tok-o">(</span> <span class="tok-n">i</span> <span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A second way that methods can affect the values of outside variables is
+more indirect. In Java, every argument is passed by value, even arrays
+and objects. Practically, this means that, if a reference to an array is
+passed into a method, you cannot change which array it is pointing at.
+Since references are not values but names pointing at a particular
+location in memory, you can directly change the contents of that memory
+with a method, even if you can’t change which locations are being
+referenced. For example, the following method does <strong>not</strong> reverse the
+order of an array.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">badReverseArray</span><span class="tok-o">(</span> <span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">array</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">temp</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-kt">int</span><span class="tok-o">[</span><span class="tok-n">array</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">];</span>
+    <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">array</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+        <span class="tok-n">temp</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">array</span><span class="tok-o">[</span><span class="tok-n">array</span><span class="tok-o">.</span><span class="tok-na">length</span> <span class="tok-o">-</span> <span class="tok-n">i</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">];</span>
+    <span class="tok-n">array</span> <span class="tok-o">=</span> <span class="tok-n">temp</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Although this code does store a reversed version of <code>array</code> in <code>temp</code>,
+the last line of the method is meaningless: The array passed into the
+method still points to the original location in memory. We can rewrite
+the method to do the reversal <em>in place</em>, meaning that the values of the
+array are shuffled around, but the array still occupies the same memory
+locations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">goodReverseArray</span><span class="tok-o">(</span> <span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">array</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">temp</span><span class="tok-o">;</span>
+    <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">array</span><span class="tok-o">.</span><span class="tok-na">length</span> <span class="tok-o">/</span> <span class="tok-mi">2</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-n">temp</span> <span class="tok-o">=</span> <span class="tok-n">array</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">];</span>
+        <span class="tok-n">array</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">array</span><span class="tok-o">[</span><span class="tok-n">array</span><span class="tok-o">.</span><span class="tok-na">length</span> <span class="tok-o">-</span> <span class="tok-n">i</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">];</span>
+        <span class="tok-n">array</span><span class="tok-o">[</span><span class="tok-n">array</span><span class="tok-o">.</span><span class="tok-na">length</span> <span class="tok-o">-</span> <span class="tok-n">i</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">temp</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this version of the method, we swap the first element of the array
+with the last, the second with the second to last, and so on. We only go
+up to the halfway point of the array, otherwise we undo the reversal
+process. The values of the array are reversed, but they still occupy the
+same chunk of memory. It is possible to write a correct method more in
+the style of <code>badReverseArray()</code> which creates a temporary array, copies
+the original values into it, and then copies them back to the original
+array in reverse order, but it is less efficient to create the extra
+array and perform two copies.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="subsection:class_variables">Class variables</h4>
+<div class="paragraph">
+<p>According to the rules we have given so far, the only legal variables in
+the scope of a static method are the parameters and any other <em>local</em>
+variables declared inside the method. However, it is possible to create
+a variable that exists outside of static methods yet is visible inside
+all of them. These kinds of variables are called <em>class variables</em> (or
+sometimes <em>static fields</em> or <em>global variables</em>). These variables
+persist <strong>between</strong> method calls. The syntax for creating such a variable
+is to declare it outside of all methods (but inside the class) with an
+access modifier such as <code>public</code> or <code>private</code>, and the keyword <code>static</code>.
+For example, the following class includes a method called <code>record()</code>
+that increases the class variable <code>counter</code> every time it is called.</p>
+</div>
+<div id="program:Bookkeeper" class="listingblock">
+<div class="title">A program that keeps track of the number of times the <code>record()</code> method is called.</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Bookkeeper</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">counter</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>
+<span class="lineno"> 4 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 5 </span>		<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">random</span><span class="tok-o">()</span> <span class="tok-o">&gt;</span> <span class="tok-mf">0.001</span> <span class="tok-o">)</span>
+<span class="lineno"> 6 </span>			<span class="tok-n">record</span><span class="tok-o">();</span>
+<span class="lineno"> 7 </span>
+<span class="lineno"> 8 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Record was called &quot;</span> <span class="tok-o">+</span> <span class="tok-n">counter</span> <span class="tok-o">+</span>
+<span class="lineno"> 9 </span>			<span class="tok-s">&quot; times.&quot;</span><span class="tok-o">);</span>
+<span class="lineno">10 </span>	<span class="tok-o">}</span>
+<span class="lineno">11 </span>
+<span class="lineno">12 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">record</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno">13 </span>		<span class="tok-n">counter</span><span class="tok-o">++;</span>
+<span class="lineno">14 </span>	<span class="tok-o">}</span>
+<span class="lineno">15 </span><span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, this program calls the <code>record()</code> method some random number of
+times, and the variable <code>counter</code> keeps track of the number. Because
+both <code>main()</code> and <code>record()</code> are static methods, the value of <code>counter</code>
+is accessible to each of them. Many programmers frown on the use of
+class variables precisely because they are visible to many different
+methods. The idea of a method is to isolate pieces of code so that the
+complexity of a program can be divided into simple units. In the case of
+a public class variable, even code in other classes can modify its
+value. So many different pieces of code can modify the value that it may
+be difficult to keep the variable from being changed in an unexpected
+way. If another method used the <code>counter</code> variable to record the number
+of times it was called, the final value of <code>counter</code> would be the sum of
+the number of times the two methods were called. There might be some
+reason to keep track of such information, but it would be impossible to
+reconstruct what fraction of the value in <code>counter</code> came from one method
+and what fraction came from the other.</p>
+</div>
+<div class="paragraph">
+<p>Class variables have their uses, but they should generally be avoided.
+One exception to this rule is constants. Since a constant never changes,
+a class variable is a great place to store it, making the value
+available to any code that uses it. An example you have already used is
+<code>Math.PI</code>. As with static methods, a static field from another class can
+be accessed by using the class name, then a dot, then the name of the
+static field. Again, when the code using the field is in the same class,
+the class name can be dropped. A class constant is declared like a class
+variable, but with the addition of the <code>final</code> keyword. The following
+class allows a user to compute the one-dimensional force due to gravity,
+given by the equation \(F =
+\frac{Gm_1m_2}{r^2}\), where \(m_1\) is the mass of one
+object, \(m_2\) is the mass of another, \(r\) is the
+distance between their centers, and \(G\) is the gravitational
+constant,
+\(6.673 \times 10^{-11}\mbox{ N}\cdot\mbox{m}^2\cdot\mbox{kg}^{-2}\).</p>
+</div>
+<div id="program:Gravity" class="listingblock">
+<div class="title">A program that calculates the attraction due to gravity between two masses.</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Gravity</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">double</span> <span class="tok-n">G</span> <span class="tok-o">=</span> <span class="tok-mf">6.673e-11</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>
+<span class="lineno"> 4 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 5 </span>		<span class="tok-kt">double</span> <span class="tok-n">m1</span><span class="tok-o">,</span> <span class="tok-n">m2</span><span class="tok-o">,</span> <span class="tok-n">r</span><span class="tok-o">;</span>
+<span class="lineno"> 6 </span>		<span class="tok-n">Scanner</span> <span class="tok-n">in</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Scanner</span><span class="tok-o">(</span> <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">in</span> <span class="tok-o">);</span>
+<span class="lineno"> 7 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;What is the first mass?&quot;</span><span class="tok-o">);</span>
+<span class="lineno"> 8 </span>		<span class="tok-n">m1</span> <span class="tok-o">=</span> <span class="tok-n">in</span><span class="tok-o">.</span><span class="tok-na">nextDouble</span><span class="tok-o">();</span>
+<span class="lineno"> 9 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;What is the second mass?&quot;</span><span class="tok-o">);</span>
+<span class="lineno">10 </span>		<span class="tok-n">m2</span> <span class="tok-o">=</span> <span class="tok-n">in</span><span class="tok-o">.</span><span class="tok-na">nextDouble</span><span class="tok-o">();</span>
+<span class="lineno">11 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;What is the distance between them?&quot;</span><span class="tok-o">);</span>
+<span class="lineno">12 </span>		<span class="tok-n">r</span> <span class="tok-o">=</span> <span class="tok-n">in</span><span class="tok-o">.</span><span class="tok-na">nextDouble</span><span class="tok-o">();</span>
+<span class="lineno">13 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;The force of gravity is &quot;</span> <span class="tok-o">+</span>
+<span class="lineno">14 </span>			<span class="tok-n">force</span><span class="tok-o">(</span> <span class="tok-n">m1</span><span class="tok-o">,</span> <span class="tok-n">m2</span><span class="tok-o">,</span> <span class="tok-n">r</span> <span class="tok-o">)</span> <span class="tok-o">+</span> <span class="tok-s">&quot; N&quot;</span><span class="tok-o">);</span>
+<span class="lineno">15 </span>	<span class="tok-o">}</span>
+<span class="lineno">16 </span>
+<span class="lineno">17 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">double</span> <span class="tok-nf">force</span><span class="tok-o">(</span><span class="tok-kt">double</span> <span class="tok-n">m1</span><span class="tok-o">,</span> <span class="tok-kt">double</span> <span class="tok-n">m2</span><span class="tok-o">,</span> <span class="tok-kt">double</span> <span class="tok-n">r</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">18 </span>		<span class="tok-k">return</span> <span class="tok-n">G</span><span class="tok-o">*</span><span class="tok-n">m1</span><span class="tok-o">*</span><span class="tok-n">m2</span><span class="tok-o">/(</span><span class="tok-n">r</span><span class="tok-o">*</span><span class="tok-n">r</span><span class="tok-o">);</span>
+<span class="lineno">19 </span>	<span class="tok-o">}</span>
+<span class="lineno">20 </span><span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use named constants this way whenever you can. You can use the <code>public</code>
+modifier if you want all classes to have access to your constant
+(<code>Gravity.G</code> is a good example). You can use the <code>private</code> modifier if
+you want the constant to be accessible only inside your class, if it has
+no use outside, or if it contains secret information.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_examples_defining_methods">Examples: Defining methods</h3>
+<div class="paragraph">
+<p>Any large problem should be broken down into methods. Because the
+technique is useful in so many circumstances, it is difficult to give a
+set of examples that covers all the bases. Instead, our examples are
+short, easy to understand methods, focusing on Euclidean distance,
+testing for palindromes, and converting a <code>String</code> representation of an
+<code>int</code> to an <code>int</code>.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 58. Euclidean distance</div>
+<div class="content">
+<div class="paragraph">
+<p>The Euclidean distance between two points is the length of a straight
+line connecting them. It plays an important role in 3D graphics and
+games and is the basis for many other practical applications involving
+spatial relationships. Unfortunately, the real world is complicated
+enough that, even if the shortest distance between two points is a
+straight line, we can seldom travel along it.</p>
+</div>
+<div class="paragraph">
+<p>Given a two points in 3D space \((x_1, y_1, z_1)\) and
+\((x_2,
+y_2, z_2)\), we can compute the Euclidean distance between them with the
+equation: \(d = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2 + (z_1
+- z_2)^2}\) The following method applies this equation directly.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">double</span> <span class="tok-nf">distance</span><span class="tok-o">(</span><span class="tok-kt">double</span> <span class="tok-n">x1</span><span class="tok-o">,</span> <span class="tok-kt">double</span> <span class="tok-n">y1</span><span class="tok-o">,</span> <span class="tok-kt">double</span> <span class="tok-n">z1</span><span class="tok-o">,</span>
+                  <span class="tok-kt">double</span> <span class="tok-n">x2</span><span class="tok-o">,</span> <span class="tok-kt">double</span> <span class="tok-n">y2</span><span class="tok-o">,</span> <span class="tok-kt">double</span> <span class="tok-n">z2</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-kt">double</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-n">x1</span> <span class="tok-o">-</span> <span class="tok-n">x2</span><span class="tok-o">;</span>
+    <span class="tok-kt">double</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-n">y1</span> <span class="tok-o">-</span> <span class="tok-n">y2</span><span class="tok-o">;</span>
+    <span class="tok-kt">double</span> <span class="tok-n">z</span> <span class="tok-o">=</span> <span class="tok-n">z1</span> <span class="tok-o">-</span> <span class="tok-n">z2</span><span class="tok-o">;</span>
+    <span class="tok-k">return</span> <span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">sqrt</span><span class="tok-o">(</span> <span class="tok-n">x</span><span class="tok-o">*</span><span class="tok-n">x</span> <span class="tok-o">+</span> <span class="tok-n">y</span><span class="tok-o">*</span><span class="tok-n">y</span> <span class="tok-o">+</span> <span class="tok-n">z</span><span class="tok-o">*</span><span class="tok-n">z</span> <span class="tok-o">);</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This calculation is a good choice for a static method since it might be
+necessary to do this calculation many times and it does not depend on
+any other variables or program state.</p>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 59. Palindrome testing</div>
+<div class="content">
+<div class="paragraph">
+<p>A palindrome is a word or phrase (or even a number) that is the same
+spelled forwards and backwards. “Racecar,” “Madam, I’m Adam,” and
+“Satan, oscillate my metallic sonatas” are examples in English.
+Typically, spaces and punctuation are ignored. We are going to write a
+function that, given a <code>String</code>, returns <code>true</code> if it is a palindrome
+and <code>false</code> otherwise. To simplify the problem, we are <strong>not</strong> going to
+ignore spaces and punctuation. Thus, with our method, “racecar” counts
+as a palindrome, but neither of the other two examples would.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span> <span class="tok-nf">isPalindrome</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">text</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-n">text</span> <span class="tok-o">=</span> <span class="tok-n">text</span><span class="tok-o">.</span><span class="tok-na">toLowerCase</span><span class="tok-o">();</span>
+    <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">text</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">()</span> <span class="tok-o">/</span> <span class="tok-mi">2</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+        <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">text</span><span class="tok-o">.</span><span class="tok-na">charAt</span><span class="tok-o">(</span><span class="tok-n">i</span><span class="tok-o">)</span> <span class="tok-o">!=</span> <span class="tok-n">text</span><span class="tok-o">.</span><span class="tok-na">charAt</span><span class="tok-o">(</span><span class="tok-n">text</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">()</span> <span class="tok-o">-</span> <span class="tok-n">i</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">))</span>
+            <span class="tok-k">return</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+    <span class="tok-k">return</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because our method returns <code>true</code> or <code>false</code>, its return type must be
+<code>boolean</code>. Many methods that return a <code>boolean</code> value have a name
+starting with <code>is</code>, like our method. The first line of the body of our
+method changes <code>text</code> to lower case. The <code>String</code> method <code>toLowerCase()</code>
+creates a lower case copy of the <code>String</code> it is called on, in this case
+<code>text</code>. Then, we point the reference variable <code>text</code> at that new, lower
+case <code>String</code>. On the outside of this function, the <code>String</code> passed in
+does not change because the name <code>text</code> is passed by value.</p>
+</div>
+<div class="paragraph">
+<p>The loop iterates through the first half of <code>text</code>, comparing it to the
+second half. This loop reflects the asymmetry of these kinds of tests:
+You can’t be sure that <code>text</code> is a palindrome until you have checked the
+entire thing, but you immediately know that it is not if even a single
+pair of characters does not match. If the test in that <code>if</code> statement
+ever shows that the two <code>char</code> values are not equal, the <code>return false</code>
+statement jumps out of the method without completing the loop.</p>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 60. Parsing a number</div>
+<div class="content">
+<div class="paragraph">
+<p>When you read in a number using an object of the <code>Scanner</code> class, it
+converts (or <em>parses</em>) the text entered by the user into the appropriate
+type. For example, the <code>nextDouble()</code> method reads in some text and
+convert it into a <code>double</code>. When you use a <code>JOptionPane</code> method to read
+in input, it comes in as a <code>String</code>. If you want to use that data as a
+<code>double</code>, you must convert it using the <code>Double.parseDouble()</code> static
+method. Some Java programmer had to write this method. We are going to
+recreate a similar method to convert the <code>String</code> representation of a
+floating point number into a <code>double</code>. Our simple method ignores
+scientific notation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">double</span> <span class="tok-nf">parseDouble</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">value</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
+    <span class="tok-kt">boolean</span> <span class="tok-n">negative</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+    <span class="tok-kt">double</span> <span class="tok-n">temp</span> <span class="tok-o">=</span> <span class="tok-mf">0.0</span><span class="tok-o">;</span>
+    <span class="tok-kt">double</span> <span class="tok-n">fraction</span> <span class="tok-o">=</span> <span class="tok-mi">10</span><span class="tok-o">;</span>
+    <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">value</span><span class="tok-o">.</span><span class="tok-na">charAt</span><span class="tok-o">(</span><span class="tok-n">i</span><span class="tok-o">)</span> <span class="tok-o">==</span> <span class="tok-sc">'-'</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-n">negative</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
+        <span class="tok-n">i</span><span class="tok-o">++;</span>
+    <span class="tok-o">}</span>
+    <span class="tok-k">else</span> <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">value</span><span class="tok-o">.</span><span class="tok-na">charAt</span><span class="tok-o">(</span><span class="tok-n">i</span><span class="tok-o">)</span> <span class="tok-o">==</span> <span class="tok-sc">'+'</span> <span class="tok-o">)</span>
+        <span class="tok-n">i</span><span class="tok-o">++;</span>
+    <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">value</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">()</span> <span class="tok-o">&amp;&amp;</span> <span class="tok-n">value</span><span class="tok-o">.</span><span class="tok-na">charAt</span><span class="tok-o">(</span><span class="tok-n">i</span><span class="tok-o">)</span> <span class="tok-o">!=</span> <span class="tok-sc">'.'</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-n">temp</span> <span class="tok-o">*=</span> <span class="tok-mi">10</span><span class="tok-o">;</span>
+        <span class="tok-n">temp</span> <span class="tok-o">+=</span> <span class="tok-n">value</span><span class="tok-o">.</span><span class="tok-na">charAt</span><span class="tok-o">(</span><span class="tok-n">i</span><span class="tok-o">)</span> <span class="tok-o">-</span> <span class="tok-sc">'0'</span><span class="tok-o">;</span>
+        <span class="tok-n">i</span><span class="tok-o">++;</span>
+    <span class="tok-o">}</span>
+    <span class="tok-n">i</span><span class="tok-o">++;</span> <span class="tok-c1">//move past decimal point (if there)</span>
+    <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">value</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">()</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-n">temp</span> <span class="tok-o">+=</span> <span class="tok-o">(</span><span class="tok-n">value</span><span class="tok-o">.</span><span class="tok-na">charAt</span><span class="tok-o">(</span><span class="tok-n">i</span><span class="tok-o">)</span> <span class="tok-o">-</span> <span class="tok-sc">'0'</span><span class="tok-o">)</span> <span class="tok-o">/</span> <span class="tok-n">fraction</span><span class="tok-o">;</span>
+        <span class="tok-n">fraction</span> <span class="tok-o">*=</span> <span class="tok-mi">10</span><span class="tok-o">;</span>
+        <span class="tok-n">i</span><span class="tok-o">++;</span>
+    <span class="tok-o">}</span>
+    <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">negative</span> <span class="tok-o">)</span>
+        <span class="tok-n">temp</span> <span class="tok-o">=</span> <span class="tok-o">-</span><span class="tok-n">temp</span><span class="tok-o">;</span>
+    <span class="tok-k">return</span> <span class="tok-n">temp</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After declaring a few variables, this method first checks index <code>0</code> in
+the input <code>String</code> <code>value</code> to see if it is a <code>'-'</code> or a <code>'+'</code>. If it is
+a <code>'-'</code>, it sets <code>negative</code> to <code>true</code> and moves on. If it is a <code>'+'</code>, it
+simply moves on. Then, the method loops through <code>value</code> until it reaches
+the end or reaches a decimal point. As it iterates, it multiplies the
+current value of <code>temp</code> by 10 and adds in the next digit from <code>value</code>
+(after subtracting <code>'0'</code> so that the range is is from 0 to 9). This
+repetitive multiplication by 10 accounts for the increasing powers of 10
+in the base 10 number system. Since <code>temp</code> starts with a value of <code>0.0</code>,
+the first multiplication has no effect, as intended.</p>
+</div>
+<div class="paragraph">
+<p>After the first <code>while</code> loop, the index <code>i</code> is incremented once, to skip
+the decimal point, if there is one. If there is no decimal point, the
+loop must have exited because the end of <code>value</code> had been reached. The
+second <code>while</code> loop runs to the end of <code>value</code>, this time adding in each
+digit value divided by <code>fraction</code>, which is increased by a factor of 10
+each time. Doing so allows us to add smaller and smaller fractional
+digits to the total. We set <code>temp</code> to its opposite if the flag
+<code>negative</code> was set earlier and finally return <code>temp</code>.</p>
+</div>
+<div class="paragraph">
+<p>You should note that the real <code>Double.parseDouble()</code> method not only
+accepts <code>String</code> values in scientific notation but also does a great
+deal of error checking. Our code either crashes or gives inaccurate
+results on an empty <code>String</code>, a <code>String</code> containing non-numerical
+characters, or a <code>String</code> with more than one decimal point. Furthermore,
+this code does not use the best approach for minimizing floating-point
+precision errors.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_solution_three_card_poker">Solution: Three card poker</h3>
+<div class="paragraph">
+<p>Here we present our solution to the three card poker problem. We explain
+each method individually.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">ThreeCardPoker</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">SUITS</span> <span class="tok-o">=</span> <span class="tok-o">{</span><span class="tok-s">&quot;Spades&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;Hearts&quot;</span><span class="tok-o">,</span>
+<span class="lineno"> 3 </span>		<span class="tok-s">&quot;Diamonds&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;Clubs&quot;</span><span class="tok-o">};</span>
+<span class="lineno"> 4 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">RANKS</span> <span class="tok-o">=</span> <span class="tok-o">{</span><span class="tok-s">&quot;2&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;3&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;4&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;5&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;6&quot;</span><span class="tok-o">,</span>
+<span class="lineno"> 5 </span>		<span class="tok-s">&quot;7&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;8&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;9&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;10&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;Jack&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;Queen&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;King&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;Ace&quot;</span><span class="tok-o">};</span>
+<span class="lineno"> 6 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">STRAIGHT_FLUSH</span> <span class="tok-o">=</span> <span class="tok-mi">40</span><span class="tok-o">;</span>
+<span class="lineno"> 7 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">THREE_OF_A_KIND</span> <span class="tok-o">=</span> <span class="tok-mi">30</span><span class="tok-o">;</span>
+<span class="lineno"> 8 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">STRAIGHT</span> <span class="tok-o">=</span> <span class="tok-mi">6</span><span class="tok-o">;</span>
+<span class="lineno"> 9 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">FLUSH</span> <span class="tok-o">=</span> <span class="tok-mi">2</span><span class="tok-o">;</span>
+<span class="lineno">10 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">PAIR</span> <span class="tok-o">=</span> <span class="tok-mi">1</span><span class="tok-o">;</span>
+<span class="lineno">11 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">NOTHING</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before our <code>main()</code> method even begins, we have declared a number of
+class constants. Two constant arrays of <code>String</code> values provide us with
+an easy way to represent suits and ranks. The remaining six <code>int</code>
+constants are used to allocate a winning payoff to each possible
+outcome. Note that these constants can be declared anywhere inside the
+class, provided that they are outside of all methods. However, it is
+typical (and good style) to declare them at the top of the class.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>		<span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">deck</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-kt">int</span><span class="tok-o">[</span><span class="tok-mi">52</span><span class="tok-o">];</span>
+<span class="lineno"> 3 </span>		<span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">hand</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-kt">int</span><span class="tok-o">[</span><span class="tok-mi">3</span><span class="tok-o">];</span>
+<span class="lineno"> 4 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">deck</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+<span class="lineno"> 5 </span>			<span class="tok-n">deck</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">i</span><span class="tok-o">;</span>
+<span class="lineno"> 6 </span>		<span class="tok-n">shuffle</span><span class="tok-o">(</span> <span class="tok-n">deck</span> <span class="tok-o">);</span>
+<span class="lineno"> 7 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">hand</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+<span class="lineno"> 8 </span>			<span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">deck</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">];</span>
+<span class="lineno"> 9 </span>		<span class="tok-kt">int</span> <span class="tok-n">winnings</span> <span class="tok-o">=</span> <span class="tok-n">score</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">);</span>
+<span class="lineno">10 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Hand: &quot;</span><span class="tok-o">);</span>
+<span class="lineno">11 </span>		<span class="tok-n">print</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">);</span>
+<span class="lineno">12 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">winnings</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
+<span class="lineno">13 </span>			<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;You win nothing.&quot;</span><span class="tok-o">);</span>
+<span class="lineno">14 </span>		<span class="tok-k">else</span>
+<span class="lineno">15 </span>			<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;You win &quot;</span> <span class="tok-o">+</span> <span class="tok-n">winnings</span> <span class="tok-o">+</span>
+<span class="lineno">16 </span>			<span class="tok-s">&quot; times your bet.&quot;</span><span class="tok-o">);</span>
+<span class="lineno">17 </span>	<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the <code>main()</code> method, an array representing a deck of 52 cards is
+created first, followed by an array representing the 3 cards to be
+dealt. The deck is filled sequentially and then shuffled with a method.
+Next, the first 3 cards of the deck are copied into the array
+representing the hand of cards. The score of the hand is determined, and
+then the hand is printed out. We print the hand after determining the
+score because the hand is sorted in the process of determining the
+score, making the output easier to read. Finally, we print the
+appropriate output, depending on the score.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">shuffle</span><span class="tok-o">(</span><span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">deck</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">2 </span>		<span class="tok-kt">int</span> <span class="tok-n">index</span><span class="tok-o">,</span> <span class="tok-n">temp</span><span class="tok-o">;</span>
+<span class="lineno">3 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">deck</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">4 </span>			<span class="tok-n">index</span> <span class="tok-o">=</span> <span class="tok-n">i</span> <span class="tok-o">+</span> <span class="tok-o">(</span><span class="tok-kt">int</span><span class="tok-o">)((</span><span class="tok-n">deck</span><span class="tok-o">.</span><span class="tok-na">length</span> <span class="tok-o">-</span> <span class="tok-n">i</span><span class="tok-o">)*</span><span class="tok-n">Math</span><span class="tok-o">.</span><span class="tok-na">random</span><span class="tok-o">());</span>
+<span class="lineno">5 </span>			<span class="tok-n">temp</span> <span class="tok-o">=</span> <span class="tok-n">deck</span><span class="tok-o">[</span><span class="tok-n">index</span><span class="tok-o">];</span>
+<span class="lineno">6 </span>			<span class="tok-n">deck</span><span class="tok-o">[</span><span class="tok-n">index</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">deck</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">];</span>
+<span class="lineno">7 </span>			<span class="tok-n">deck</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">temp</span><span class="tok-o">;</span>
+<span class="lineno">8 </span>		<span class="tok-o">}</span>
+<span class="lineno">9 </span>	<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method shuffles the deck. Its approach is to swap the first element
+in the array of cards with one of the elements that follow, chosen
+randomly. Then, it swaps the second element in the array with any of the
+elements that follow it, and so on. If <code>Math.random()</code> truly gives us a
+uniformly generated random number in the range \([0,1)\), the
+final shuffled deck should be any one of the \(52!\) possible
+decks with equal probability.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">print</span><span class="tok-o">(</span><span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">hand</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">2 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">hand</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+<span class="lineno">3 </span>			<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-n">RANKS</span><span class="tok-o">[</span><span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">])]</span> <span class="tok-o">+</span> <span class="tok-s">&quot; of &quot;</span>
+<span class="lineno">4 </span>			<span class="tok-o">+</span> <span class="tok-n">SUITS</span><span class="tok-o">[</span><span class="tok-n">getSuit</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">])]);</span>
+<span class="lineno">5 </span>	<span class="tok-o">}</span>
+<span class="lineno">6 </span>
+<span class="lineno">7 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">getRank</span><span class="tok-o">(</span><span class="tok-kt">int</span> <span class="tok-n">value</span><span class="tok-o">)</span> <span class="tok-o">{</span> <span class="tok-k">return</span> <span class="tok-n">value</span> <span class="tok-o">%</span> <span class="tok-mi">13</span><span class="tok-o">;</span> <span class="tok-o">}</span>
+<span class="lineno">8 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">getSuit</span><span class="tok-o">(</span><span class="tok-kt">int</span> <span class="tok-n">value</span><span class="tok-o">)</span> <span class="tok-o">{</span> <span class="tok-k">return</span> <span class="tok-n">value</span> <span class="tok-o">/</span> <span class="tok-mi">13</span><span class="tok-o">;</span> <span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first of these methods prints out a human readable version of each
+card in an array (instead of 0 - 51). It does so using the second and
+third methods as helper methods. Method <code>getRank()</code> computes the rank of
+a card from its number, and method <code>getSuit()</code> computes the suit of a
+card from its number. The indexes obtained from these methods are used
+to index into the <code>RANKS</code> and <code>SUITS</code> arrays.</p>
+</div>
+<div class="paragraph">
+<p>In the C language, calling a method from a method defined earlier
+required a special declaration step called <em>prototyping</em> before both
+methods. Java does not have this complication, and the <code>getRank()</code> and
+<code>getSuit()</code> methods compile and function perfectly if they are written
+above <code>print()</code> or below it inside the class definition.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">score</span><span class="tok-o">(</span><span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">hand</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>		<span class="tok-n">sortByRank</span><span class="tok-o">(</span> <span class="tok-n">hand</span> <span class="tok-o">);</span>
+<span class="lineno"> 3 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">hasStraight</span><span class="tok-o">(</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">&amp;&amp;</span> <span class="tok-n">hasFlush</span><span class="tok-o">(</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">)</span>
+<span class="lineno"> 4 </span>			<span class="tok-k">return</span> <span class="tok-n">STRAIGHT_FLUSH</span><span class="tok-o">;</span>
+<span class="lineno"> 5 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">hasThree</span><span class="tok-o">(</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">)</span>
+<span class="lineno"> 6 </span>			<span class="tok-k">return</span> <span class="tok-n">THREE_OF_A_KIND</span><span class="tok-o">;</span>
+<span class="lineno"> 7 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">hasStraight</span><span class="tok-o">(</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">)</span>
+<span class="lineno"> 8 </span>			<span class="tok-k">return</span> <span class="tok-n">STRAIGHT</span><span class="tok-o">;</span>
+<span class="lineno"> 9 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">hasFlush</span><span class="tok-o">(</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">)</span>
+<span class="lineno">10 </span>			<span class="tok-k">return</span> <span class="tok-n">FLUSH</span><span class="tok-o">;</span>
+<span class="lineno">11 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">hasPair</span><span class="tok-o">(</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">)</span>
+<span class="lineno">12 </span>			<span class="tok-k">return</span> <span class="tok-n">PAIR</span><span class="tok-o">;</span>
+<span class="lineno">13 </span>		<span class="tok-k">return</span> <span class="tok-n">NOTHING</span><span class="tok-o">;</span>
+<span class="lineno">14 </span>	<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method computes the score by first sorting the hand and then
+testing progressively worse outcomes, starting with the best, a straight
+flush. As it moves down the list of outcomes, it calls appropriate
+methods to determine if a hand has a certain characteristic.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">sortByRank</span><span class="tok-o">(</span> <span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>		<span class="tok-kt">int</span> <span class="tok-n">smallest</span><span class="tok-o">,</span> <span class="tok-n">temp</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">hand</span><span class="tok-o">.</span><span class="tok-na">length</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 4 </span>			<span class="tok-n">smallest</span> <span class="tok-o">=</span> <span class="tok-n">i</span><span class="tok-o">;</span>
+<span class="lineno"> 5 </span>			<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">j</span> <span class="tok-o">=</span> <span class="tok-n">i</span> <span class="tok-o">+</span> <span class="tok-mi">1</span><span class="tok-o">;</span> <span class="tok-n">j</span> <span class="tok-o">&lt;</span> <span class="tok-n">hand</span><span class="tok-o">.</span><span class="tok-na">length</span><span class="tok-o">;</span> <span class="tok-n">j</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 6 </span>				<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">j</span><span class="tok-o">])</span> <span class="tok-o">&lt;</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">smallest</span><span class="tok-o">])</span> <span class="tok-o">)</span>
+<span class="lineno"> 7 </span>					<span class="tok-n">smallest</span> <span class="tok-o">=</span> <span class="tok-n">j</span><span class="tok-o">;</span>
+<span class="lineno"> 8 </span>			<span class="tok-o">}</span>
+<span class="lineno"> 9 </span>			<span class="tok-n">temp</span> <span class="tok-o">=</span> <span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">smallest</span><span class="tok-o">];</span>
+<span class="lineno">10 </span>			<span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">smallest</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">];</span>
+<span class="lineno">11 </span>			<span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">temp</span><span class="tok-o">;</span>
+<span class="lineno">12 </span>		<span class="tok-o">}</span>
+<span class="lineno">13 </span>	<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This code is an implementation of selection sort packaged into a method.
+Note that this method does actually change the values inside of the
+array <code>hand</code> even though it cannot change the array that <code>hand</code> points
+to. The array itself is passed by value, but its contents are
+effectively passed by reference.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span> <span class="tok-nf">hasPair</span><span class="tok-o">(</span> <span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>		<span class="tok-k">return</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">0</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">||</span>
+<span class="lineno"> 3 </span>		       <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">2</span><span class="tok-o">]);</span>
+<span class="lineno"> 4 </span>	<span class="tok-o">}</span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span> <span class="tok-nf">hasThree</span><span class="tok-o">(</span> <span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 7 </span>		<span class="tok-k">return</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">0</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">&amp;&amp;</span>
+<span class="lineno"> 8 </span>		       <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">2</span><span class="tok-o">]);</span>
+<span class="lineno"> 9 </span>	<span class="tok-o">}</span>
+<span class="lineno">10 </span>
+<span class="lineno">11 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span> <span class="tok-nf">hasFlush</span><span class="tok-o">(</span> <span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">12 </span>		<span class="tok-k">return</span> <span class="tok-n">getSuit</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">0</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-n">getSuit</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">&amp;&amp;</span>
+<span class="lineno">13 </span>		       <span class="tok-n">getSuit</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-n">getSuit</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">2</span><span class="tok-o">]);</span>
+<span class="lineno">14 </span>	<span class="tok-o">}</span>
+<span class="lineno">15 </span>
+<span class="lineno">16 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span> <span class="tok-nf">hasStraight</span><span class="tok-o">(</span> <span class="tok-kt">int</span><span class="tok-o">[]</span> <span class="tok-n">hand</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">17 </span>		<span class="tok-k">return</span> <span class="tok-o">(</span><span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">0</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">&amp;&amp;</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-mi">1</span>
+<span class="lineno">18 </span>				<span class="tok-o">&amp;&amp;</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">2</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-mi">12</span><span class="tok-o">)</span> <span class="tok-o">||</span> <span class="tok-c1">//ace low</span>
+<span class="lineno">19 </span>		       <span class="tok-o">(</span><span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">0</span><span class="tok-o">])</span> <span class="tok-o">+</span> <span class="tok-mi">1</span> <span class="tok-o">&amp;&amp;</span>
+<span class="lineno">20 </span>		        <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">2</span><span class="tok-o">])</span> <span class="tok-o">==</span> <span class="tok-n">getRank</span><span class="tok-o">(</span><span class="tok-n">hand</span><span class="tok-o">[</span><span class="tok-mi">1</span><span class="tok-o">])</span> <span class="tok-o">+</span> <span class="tok-mi">1</span><span class="tok-o">);</span>
+<span class="lineno">21 </span>	<span class="tok-o">}</span>
+<span class="lineno">22 </span><span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These four methods do the actual work of determining the attributes of a
+hand. They are all similar and would be more complex for five- or
+seven-card poker hands. Methods <code>hasPair()</code> and <code>hasStraight()</code> depend
+on the array being sorted previously. The code in <code>hasPair()</code> works by
+checking to see if the first and second or second and third cards have
+the same rank. The code in <code>hasThree()</code> checks to see if all the ranks
+are the same. The code in <code>hasFlush()</code> is the same as <code>hasThree()</code>
+except that it checks for suit instead of rank. Finally, <code>hasStraight()</code>
+checks to see if the ranks are all in ascending order, with an extra
+case to deal with the possibility of the ace counting as low.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_concurrency_methods">Concurrency: Methods</h3>
+<div class="paragraph">
+<p>In Java, it is impossible to have concurrency without methods. Methods
+are the way we break a large program into manageable pieces but are also
+part of the syntax that Java uses to create threads of execution. Each
+thread of execution is associated with a <code>Thread</code> object, but creating
+the object is not enough to start a new thread of execution running.
+Only when the <code>start()</code> method is called on the <code>Thread</code> object does the
+new thread start running.</p>
+</div>
+<div class="paragraph">
+<p>Hopefully, you have begun to visualize the execution of Java programs as
+an arrow that sits next to each line of code as it is executed. This
+arrow can jump to a choice and skip over other code using <code>if</code> and
+<code>switch</code> statements. Using loops, the arrow can jump backwards and
+repeatedly execute code it has just executed. As we have discussed in
+this chapter, it can jump into a method, execute the code in that
+method, and then return to its caller, going back right to where it left
+off before the call.</p>
+</div>
+<div class="paragraph">
+<p>When the <code>start()</code> method is called on a <code>Thread</code> object, however, the
+arrow returns to the caller, but it also splits itself into a second
+arrow that then executes the corresponding <code>run()</code> method and any
+methods it calls. Note that we are talking about a method called on a
+<code>Thread</code> object, not a static method called on the class as a whole.
+Calling <code>start()</code> is an instance method, which we discuss in
+Chapter <a href="chap8.html#chapter:Classes"><em>Classes</em></a>. Unlike the static methods we have discussed
+in this chapter, an instance method is tied to a particular object, but
+most of what you have learned about methods still applies.</p>
+</div>
+<div class="paragraph">
+<p>Methods are supposed to make programming easier by breaking programs
+into chunks small enough to think about. One of the only real dangers of
+methods is using class variables, as discussed in
+Section <a href="#subsection:class_variables">Class variables</a>. This problem becomes worse with
+multiple threads. With a single thread, two or more different methods
+can all affect the same class variable, perhaps in conflicting ways.
+With multiple threads, even the <strong>same</strong> method can interfere with itself.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 61. LCG without thread safety</div>
+<div class="content">
+<div class="paragraph">
+<p>A linear congruential generator (LCG) allows you to create a sequence of
+pseudorandom numbers using the equation
+\(x_i=(ax_{i-1}+b)\mod m\), deriving the next number from the
+previous one, and so on.</p>
+</div>
+<div id="program:UnsafeRandom" class="listingblock">
+<div class="title">This program implements an LCG similar to one sometimes used in the function <code>rand()</code> used in the C language.</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">UnsafeRandom</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">next</span> <span class="tok-o">=</span> <span class="tok-mi">1</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>	<span class="tok-kd">private</span> <span class="tok-kd">final</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">A</span> <span class="tok-o">=</span> <span class="tok-mi">1103515245</span><span class="tok-o">;</span>
+<span class="lineno"> 4 </span>	<span class="tok-kd">private</span> <span class="tok-kd">final</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">B</span> <span class="tok-o">=</span> <span class="tok-mi">12345</span><span class="tok-o">;</span>
+<span class="lineno"> 5 </span>	<span class="tok-kd">private</span> <span class="tok-kd">final</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">M</span> <span class="tok-o">=</span> <span class="tok-mi">32768</span><span class="tok-o">;</span>
+<span class="lineno"> 6 </span>
+<span class="lineno"> 7 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">nextInt</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno"> 8 </span>		<span class="tok-k">return</span> <span class="tok-n">next</span> <span class="tok-o">=</span> <span class="tok-o">(</span><span class="tok-n">A</span><span class="tok-o">*</span><span class="tok-n">next</span> <span class="tok-o">+</span> <span class="tok-n">B</span><span class="tok-o">)</span> <span class="tok-o">%</span> <span class="tok-n">M</span><span class="tok-o">;</span>
+<span class="lineno"> 9 </span>	<span class="tok-o">}</span>
+<span class="lineno">10 </span><span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>UnsafeRandom</code> program listed above always generates the same
+sequence of pseudorandom numbers, which can be very useful for debugging
+a program. However, if two or more threads are calling <code>nextInt()</code>, they
+probably are getting different sequences. One thread picks up some of
+the numbers, and the other picks up the missing numbers in between. If
+each thread wants to generate the same sequence of numbers, the method
+should be rewritten so that it takes in the previous number in the
+sequence. In that way, there is no shared state. Remember that using a
+(non-final) static field (class variable) should be avoided whenever
+possible.</p>
+</div>
+<div id="program:SafeRandom" class="listingblock">
+<div class="title">This program implements the same LCG safely by requiring the caller to supply the previous random number.</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">SafeRandom</span> <span class="tok-o">{</span>
+<span class="lineno">2 </span>	<span class="tok-kd">private</span> <span class="tok-kd">final</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">A</span> <span class="tok-o">=</span> <span class="tok-mi">1103515245</span><span class="tok-o">;</span>
+<span class="lineno">3 </span>	<span class="tok-kd">private</span> <span class="tok-kd">final</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">B</span> <span class="tok-o">=</span> <span class="tok-mi">12345</span><span class="tok-o">;</span>
+<span class="lineno">4 </span>	<span class="tok-kd">private</span> <span class="tok-kd">final</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">M</span> <span class="tok-o">=</span> <span class="tok-mi">32768</span><span class="tok-o">;</span>
+<span class="lineno">5 </span>
+<span class="lineno">6 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">nextInt</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">previous</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">7 </span>		<span class="tok-k">return</span> <span class="tok-o">(</span><span class="tok-n">A</span><span class="tok-o">*</span><span class="tok-n">previous</span> <span class="tok-o">+</span> <span class="tok-n">B</span><span class="tok-o">)</span> <span class="tok-o">%</span> <span class="tok-n">M</span><span class="tok-o">;</span>
+<span class="lineno">8 </span>	<span class="tok-o">}</span>
+<span class="lineno">9 </span><span class="tok-o">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 62. Unpredictable methods</div>
+<div class="content">
+<div class="paragraph">
+<p>By forcing each thread to carry its own state, we fixed the previous
+problem. In Chapter <a href="chap13.html#chapter:Synchronization"><em>Synchronization</em></a> we talk about the much
+nastier problem of two threads executing a method at exactly the same
+time. When that happens, very curious effects are possible. Consider the
+following program:</p>
+</div>
+<div id="program:AlwaysEven" class="listingblock">
+<div class="title">The <code>print()</code> method always prints <code>&quot;Even&quot;</code> when run with a single thread but can sometimes print <code>&quot;Odd&quot;</code> if called repeatedly with multiple threads.</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">AlwaysEven</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-mi">1</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>
+<span class="lineno"> 4 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">print</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno"> 5 </span>		<span class="tok-n">value</span><span class="tok-o">++;</span>
+<span class="lineno"> 6 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">value</span> <span class="tok-o">%</span> <span class="tok-mi">2</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
+<span class="lineno"> 7 </span>			<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Even&quot;</span><span class="tok-o">);</span>
+<span class="lineno"> 8 </span>		<span class="tok-k">else</span>
+<span class="lineno"> 9 </span>			<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Odd&quot;</span><span class="tok-o">);</span>
+<span class="lineno">10 </span>		<span class="tok-n">value</span><span class="tok-o">++;</span>
+<span class="lineno">11 </span>	<span class="tok-o">}</span>
+<span class="lineno">12 </span><span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With a single thread running, <code>value</code> always goes up to an even number
+before printing and then increments to the next odd number afterwards.
+If two or more threads are calling the <code>print()</code> method, <code>value</code> could
+be changed by one right before the other executes the <code>if</code> statements.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exercises_7">Exercises</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Describe three advantages of dividing long segments of code into
+static methods.</p>
+</li>
+<li>
+<p>Can you think of any disadvantages of dividing code into methods?
+Are there situations where using a method is unwise?</p>
+</li>
+<li>
+<p>If you wanted to declare a static method that would compute the
+mean, median, and standard deviation of an input array of <code>double</code>
+values, how would you return those three answers?</p>
+</li>
+<li>
+<p>Consider the following method definition.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">twice</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">2</span> <span class="tok-o">*</span> <span class="tok-n">i</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>How many times does the following loop run, and why?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-mi">2</span><span class="tok-o">;</span>
+<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">x</span> <span class="tok-o">&lt;</span> <span class="tok-mi">128</span> <span class="tok-o">)</span>
+    <span class="tok-n">twice</span><span class="tok-o">(</span><span class="tok-n">x</span><span class="tok-o">);</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Consider the following signatures of two overloaded methods.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">magic</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">rabbit</span><span class="tok-o">,</span> <span class="tok-kt">double</span> <span class="tok-n">hat</span> <span class="tok-o">)</span>
+<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">magic</span><span class="tok-o">(</span> <span class="tok-kt">double</span> <span class="tok-n">wand</span><span class="tok-o">,</span> <span class="tok-kt">int</span> <span class="tok-n">spell</span> <span class="tok-o">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which method would be invoked by the following call?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-n">magic</span><span class="tok-o">(</span> <span class="tok-mi">3</span><span class="tok-o">,</span> <span class="tok-mi">16</span> <span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What about the following?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kt">int</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-n">magic</span><span class="tok-o">(</span> <span class="tok-mf">3.2</span><span class="tok-o">,</span> <span class="tok-mf">16.4</span> <span class="tok-o">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use a compiler to check your answers.</p>
+</div>
+</li>
+<li>
+<p>The following class generates a sequence of even numbers. Each time
+the <code>next()</code> method is called, the next even number in the sequence is
+returned. What is the design problem with using a static field to keep
+track of the next value in the sequence?</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">EvenNumbers</span> <span class="tok-o">{</span>
+    <span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">counter</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">next</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-n">counter</span> <span class="tok-o">+=</span> <span class="tok-mi">2</span><span class="tok-o">;</span>
+        <span class="tok-k">return</span> <span class="tok-n">counter</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Programming Practice</strong></p>
+</div>
+</li>
+<li>
+<p>Write a static method called <code>cube()</code> that takes a single <code>double</code>
+value as a parameter and returns its value cubed. Do not use the
+<code>Math.pow()</code> method.</p>
+</li>
+<li>
+<p>Implement a static method that takes a single <code>int</code> value as a
+parameter and prints its digits in reverse. For example, if <code>103</code> was
+passed into this method, it would print <code>301</code> to the screen.</p>
+<div class="paragraph">
+<p>You can find out what digit is in the ones place of a number by taking
+its remainder modulus 10. Then, you can remove the digit in the ones
+place by dividing by 10. Do not convert the <code>int</code> value into a <code>String</code>.</p>
+</div>
+</li>
+<li>
+<p>Write a static method that takes an array of <code>int</code> values as a
+parameter and returns <code>true</code> if the array is in ascending order and
+<code>false</code> otherwise. Compare each element of the array to the next element
+of the array. If the current element is ever larger than the next
+element, the array is not sorted in ascending order. Note that you can
+only be sure that the array is in ascending order after you have checked
+all neighboring pairs.</p>
+</li>
+<li>
+<p>Write a static method that finds the
+\(\lfloor\log_2(n)\rfloor\) of an integer \(n\).
+Note that if \(\log_2 n = x\), it is also true that
+\(n = 2^x\). In other words, the \(\log_2\) operator
+tells you what power of \(2\) a number is. One way to define
+the \(\log_2 n\) is the number of times you have to divide
+\(n\) by \(2\) to get \(1\). Use this
+definition to make a loop that finds the value without using any calls
+to the <code>Math</code> library.</p>
+<div class="paragraph">
+<p>Here are some examples of the return values your method should give for
+various input values of \(n\).</p>
+</div>
+<table class="tableblock frame-all grid-all center">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">\(n\)</th>
+<th class="tableblock halign-center valign-top">Return Value</th>
+<th class="tableblock halign-center valign-top">\(n\)</th>
+<th class="tableblock halign-center valign-top">Return Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">16</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">100</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">6</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">512</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">9</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1000</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">9</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1024</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">10</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><a href="#exercise:palindromes">[exercise:palindromes]</a> Write a method that tests palindromes like
+the method from Example <a href="#example:Palindrome_testing">[example:Palindrome_testing]</a> but also ignores
+punctuation and spaces. Thus, <code>&quot;A man, a plan, a canal: Panama&quot;</code> should
+be counted as a palindrome by this new method.</p>
+</li>
+<li>
+<p>Re-implement the solution from Section <a href="#solution:Three_card_poker">[solution:Three_card_poker]</a>
+so that it uses a GUI constructed with <code>JOptionPane</code> to display the hand
+and the winnings.</p>
+</li>
+<li>
+<p>Five card poker is a much more common version of poker than the
+three card version we discussed in Section <a href="#problem:Three_card_poker">[problem:Three_card_poker]</a>.
+Using static methods, implement a two-player game of poker in which the
+deck is shuffled and then dealt into two hands of five cards each. Then,
+state which player’s hand wins. With five cards, determining which hand
+wins is a more complicated process. The rankings of the various possible
+hands from best to worst are as follows.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>All five cards belong to the same suit and have ranks in sequential
+order (with either ace high or low). If two people both have straight
+flushes, the higher ranked one wins. If they both have the same ranks,
+it is a tie.</p>
+</li>
+<li>
+<p>Four of the five cards have the same rank. If two people have four
+of a kind, the higher rank set of four wins.</p>
+</li>
+<li>
+<p>Three of the five cards have the same rank and the other two share
+another rank. If two people have a full house, the higher ranked set of
+three wins.</p>
+</li>
+<li>
+<p>All five cards have the same suit. If two people have flushes, the
+one with the highest card wins. If the highest card is a tie, the next
+highest is the tie breaker, and so on. If the two flushes have exactly
+the same ranks, the two flushes tie.</p>
+</li>
+<li>
+<p>All five cards have ranks in sequential order (with either ace high
+or low). If two people both have straight flushes, the higher ranked one
+wins. If they both have the same ranks, it is a tie.</p>
+</li>
+<li>
+<p>Three of the cards have the same rank. If two people have three of a
+kind, the higher ranked set of three wins.</p>
+</li>
+<li>
+<p>A pair of cards have the same rank and another pair of cards share
+another rank. If two people both have two pairs, the higher ranked pair
+is a tiebreaker. If the higher ranked pair is the same, the lower ranked
+pair is a tiebreaker. If the lower ranked pair is the same, the final
+unpaired card is the tiebreaker. If all the ranks of both hands match,
+it is a tie.</p>
+</li>
+<li>
+<p>A pair of cards has the same rank. If two people have pairs, the
+rank of the pair is a tiebreaker. If the pairs have the same rank, the
+remaining cards in each hand are tiebreakers, in descending rank order.</p>
+</li>
+<li>
+<p>If none of the other cases hold, the high card determines the value
+of the hand. If two people have the same highest card, the remaining
+cards in each hand are used as tiebreakers, in descending rank order.</p>
+<div class="paragraph">
+<p><strong>Experiments</strong></p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>In terms of time, there is a small overhead associated with calling
+a method and returning a value, but it is very hard to measure. Write a
+program with two <code>int</code> variables, <code>a</code> and <code>b</code>, where <code>a</code> starts with a
+value of <code>1</code> and <code>b</code> starts with a value of <code>2</code>. Run a <code>for</code> loop
+100,000,000 times. On each iteration first increase the value of <code>a</code> by
+the value of <code>b</code> and then increase the value of <code>b</code> by <code>a</code>. Time this
+loop with <code>System.nanoTime()</code> and then print out the time taken and the
+value of <code>a</code>. The value of <code>a</code> is not important, but the compiler will
+optimize away the math done with <code>a</code> and <code>b</code> unless we output the value.
+We recommend that you run this program repeatedly to get a sense of the
+average running time.</p>
+<div class="paragraph">
+<p>Now, instead of using the <code>+</code> operator to add <code>a</code> and <code>b</code>, use the
+following method.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-nf">add</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">a</span><span class="tok-o">,</span> <span class="tok-kt">int</span> <span class="tok-n">b</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+    <span class="tok-k">return</span> <span class="tok-n">a</span> <span class="tok-o">+</span> <span class="tok-n">b</span><span class="tok-o">;</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, run your program repeatedly with this modification. What is the
+difference in running time between the version that uses a method and
+the version that does addition directly?</p>
+</div>
+<div class="paragraph">
+<p>Depending on your JVM, it’s quite possible that there’s almost no
+difference. The JVM does a lot of optimizations including <em>inlining</em>,
+which replaces a call to a method with the actual code inside the
+method.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2018-06-05 13:25:34 Eastern Daylight Time
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.0/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>
