@@ -11,7 +11,7 @@ ____
 
 Concurrent programs allow multiple threads to be scheduled and executed,
 but the programmer does not have a great deal of control over when
-threads execute. As explained in Section <<concepts:Thread_scheduling>>,
+threads execute. As explained in <<concepts:Thread_scheduling>>,
 the JVM and the underlying OS are responsible for scheduling threads
 onto processor cores.
 
@@ -296,7 +296,7 @@ is executing synchronized code, it can call `wait()`. Instead of busy
 waiting, a thread which has called `wait()` will be removed from the
 list of running threads. It will wait in a dormant state until someone
 comes along and notifies the thread that its waiting is done. If you
-recall the threadstate diagram from Chapter <<chapter:Concurrent
+recall the threadstate diagram from <<chapter:Concurrent
 Programming>>, there is a Not Runnable state which threads enter by
 calling `sleep()`, calling `wait()`, or performing blocking I/O. Using
 `wait()`, we can rewrite the vote counting thread.
@@ -625,7 +625,7 @@ with humorous intent. If a philosopher is never able to acquire
 chopsticks, that philosopher will quite literally starve.
 
 Starvation does not necessarily mean deadlock, however. Examine the
-implementation in Example <<example:Bank_account>> for the bank account.
+implementation in <<example:Bank_account>> for the bank account.
 That solution is correct in the sense that it preserves mutual
 exclusion. No combination of balance checks, deposits, or withdrawals
 will cause the balance to be incorrect. Money will neither be created
@@ -732,7 +732,7 @@ with synchronization tools may produce a program which gives the right
 answer but does not exploit any parallelism.
 
 For example, we can take the `run()` method from the parallel
-implementation of matrix multiply given in Example <<example:Matrix
+implementation of matrix multiply given in <<example:Matrix
 multiplication>> and use the `synchronized` keyword to lock on the
 matrix itself.
 
@@ -762,7 +762,7 @@ more.
 
 ==== Priority inversion
 
-In Chapter <<chapter:Concurrent_Programming>> we suggest that you use
+In <<chapter:Concurrent_Programming>> we suggest that you use
 thread priorities rarely. Even good reasons to use priorities can be
 thwarted by _priority inversion_. In priority inversion, a lower
 priority thread holds a lock needed by a higher priority thread,
@@ -799,7 +799,7 @@ include::programs/DiningPhilosopher.java[lines=1..8]
 
 
 We begin with the same setup as the deadlocking version given in
-Section <<subsection:deadlock>>. Unlike that example, we include a
+<<subsection:deadlock>>. Unlike that example, we include a
 `main()` method here for completeness. In `main()`, we set all the
 chopsticks to `false` (unused), create and start a thread for each
 philosopher, and then wait for them to finish.
@@ -905,7 +905,7 @@ synchronize the process?
 life example of one.
 7.  <<exercise:per_object_lock>> Let's reexamine the code that
 increments a variable with several threads from
-Section <<concepts:Thread_interaction>>. We can rewrite the `run()`
+<<concepts:Thread_interaction>>. We can rewrite the `run()`
 method as follows.
 +
 [source,java]
@@ -918,7 +918,7 @@ public synchronized void run() {
 +
 Will this change fix the race condition? Why or why not?
 8.  <<exercise:deadlock_conditions>> Examine our deadlock example from
-Example <<example:Deadlock_sum>>. Explain why this example fulfills all
+<<example:Deadlock_sum>>. Explain why this example fulfills all
 four conditions for deadlock. Be specific about which threads and which
 resources are needed to show each condition.
 9.  <<exercise:priority_inversion>> What is priority inversion? Why can
@@ -926,7 +926,7 @@ a low priority thread holding a lock be particularly problematic?
 +
 *Programming Practice*
 10. <<exercise:better_producer/consumer>> In
-Example <<example:Producer/consumer>> the `Buffer` class used to
+<<example:Producer/consumer>> the `Buffer` class used to
 implement a solution to the producer/consumer problem only has a single
 lock. When the buffer is empty and a producer puts an item in it, both
 producers and consumers are woken up. A similar situation happens
@@ -934,9 +934,9 @@ whenever the buffer is full and a consumer removes an item. Re-implement
 this solution with two locks so that a producer putting an item into an
 empty buffer only wakes up consumers and a consumer removing an item
 from a full buffer only wakes up producers.
-11. <<exercise:fair_bank_account>> In Example <<example:Bank_account>>
+11. <<exercise:fair_bank_account>> In <<example:Bank_account>>
 we used the class `SynchronizedAccount` to solve a bank account problem.
-As we mention in Section <<section:starvation_and_livelock>>, depositing
+As we mention in <<section:starvation_and_livelock>>, depositing
 and withdrawing threads can be starved out by a steady supply of balance
 checking threads. Add additional synchronization tools to
 `SynchronizedAccount` so that balance checking threads will take turns
@@ -944,7 +944,7 @@ with depositing and withdrawing threads. If there are no depositing or
 withdrawing threads, make your implementation continue to allow an
 unlimited number of balance checking threads to read concurrently.
 12. <<exercise:philosophers_with_hunger>> The solution to the dining
-philosophers problem given in Section <<solution:dining_philosophers>>
+philosophers problem given in <<solution:dining_philosophers>>
 suffers from the problem that a philosopher could be starved by the two
 philosophers on either side of her, if she happened to get unlucky. Add
 variables to each philosopher which indicate hunger and the last time a
