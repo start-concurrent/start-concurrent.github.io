@@ -115,6 +115,7 @@ Consider a simple video game that consists of the following tasks.
 4.  repaint screen
 5.  end game
 
+[[figure-video_game_tasks]]
 [.text-center]
 .Execution of tasks in a video game. (a) Sequential execution on a single core. (b) Concurrent execution on two cores. Arrows show the flow of execution and data transfer.
 image::video-game-tasks.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
@@ -124,7 +125,7 @@ Suppose that tasks B and D are independent and can be executed
 concurrently if two cores are available. Task D continually updates the
 screen with the old data until task C updates the information.
 
-Figure <<figure:video_game_tasks>>(a) and (b) show how the tasks in this
+<<figure-video_game_tasks>>(a) and (b) show how the tasks in this
 video game can be sequenced, respectively, on a single core or on two
 cores. All tasks are executed sequentially on a single-core processor.
 In a dual-core processor tasks B and C can execute on one core while
@@ -150,12 +151,13 @@ On a dual-core processor, these two tasks can be executed on separate
 cores and the results from each combined to generate the value of the
 expression by the main task.
 
+[[figure-math_evaluation]]
 [.text-center]
 .Evaluation of a mathematical expression (a) sequentially on a single core and (b) concurrently on two cores. Arrows show the flow of execution and data transfer. Bold typeface indicates the operation being performed.
 image::mathematical-expression-evaluation.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
 
 
-Figure <<figure:math_evaluation>> shows how this expression can be
+<<figure-math_evaluation>> shows how this expression can be
 evaluated on single core and dual-core processors. Sometimes, using
 multiple cores to evaluate an expression like this will take less time
 than a single core. However, there is no guarantee that using multiple
@@ -225,13 +227,14 @@ Assuming that latexmath:[N] is even, both cores process exactly the
 same amount of data. For odd latexmath:[N], one of the cores processes
 one more data item than the other.
 
+[[figure-array_decomposition]]
 [.text-center]
 .Computing the sum of a function of each element of an array.
 image::arrayDecomposition.svg[scaledwidth=60%,pdfwidth=60%,width=60%]
 
 After latexmath:[S_1] and latexmath:[S_2] have been computed, one of
 the cores can add these two numbers together to get latexmath:[S].
-This strategy is illustrated in Figure <<figure:array_decomposition>>.
+This strategy is illustrated in <<figure-array_decomposition>>.
 After the two cores have completed their work on each half of the array,
 the individual sums are added together to produce the final sum.
 ====
@@ -249,6 +252,7 @@ program will compute each element of matrix latexmath:[C] one at a
 time. However, a concurrent program can compute more than one element of
 latexmath:[C] simultaneously using multiple cores.
 
+[[figure-matrix_decomposition]]
 [.text-center]
 .Data decomposition to multiply two latexmath:[4\times 4] matrices. The two cores perform the same multiplication tasks but on different data from matrix latexmath:[A]. The two cores compute the top and bottom two rows of latexmath:[C], respectively.
 image::matrixDecomposition.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
@@ -256,7 +260,7 @@ image::matrixDecomposition.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
 
 In this problem, the task is to multiply matrices latexmath:[A] and
 latexmath:[B]. Through domain decomposition, we can replicate this
-task on each core. As shown in Figure <<figure:matrix_decomposition>>,
+task on each core. As shown in <<figure-matrix_decomposition>>,
 each core computes only a portion of latexmath:[C]. For example, if
 latexmath:[A] and latexmath:[B] are latexmath:[4\times 4]
 matrices, we can ask one core to compute the product of the first two
@@ -294,11 +298,11 @@ this chapter.
 Consider dividing the tasks in <<example:Video_game_tasks>> into
 two threads. Tasks B and C in can be packaged into thread 1, and task D
 can be packaged into thread 2. This division is shown in
-Figure <<figure:tasks_in_threads>>(a).
+<<figure-tasks_in_threads>>(a).
 
 Tasks to evaluate different subexpressions in <<example:Math
 expression tasks>> can also be divided into two threads as shown in
-Figure <<figure:tasks_in_threads>>(b). In many problems there are
+<<figure-tasks_in_threads>>(b). In many problems there are
 several reasonable ways of dividing a set of subtasks into threads.
 
 Note that these figures look exactly like the earlier figures, except
@@ -323,6 +327,7 @@ again be assigned to two distinct threads that operate on different
 parts of the input matrix latexmath:[A] to generate the corresponding
 portions of the output matrix latexmath:[C].
 
+[[figure-tasks_in_threads]]
 .(a) Tasks in a video game shown packaged into two threads. (b) Tasks to evaluate a mathematical expression shown packaged into two threads. Each thread may or may not run on the same core as the other.
 image::task-thread-packaging.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
@@ -404,15 +409,14 @@ applications begin with a single main thread which starts in a `main()`
 method. Additional threads must start somewhere, and that place is the
 `run()` method. A Java application will continue to run as long as at
 least one thread is active. The following example shows two threads,
-each evaluating a separate subexpression as in Figure <<figure:tasks in
-threads>>(b).
+each evaluating a separate subexpression as in <<figure-tasks_in_threads>>(b).
 
 .Thread samples
 ====
 
 We will create `Thread1` and `Thread2` classes. The threads of execution
 created by instances of these classes compute, respectively, the two
-subexpressions in Figure <<figure:tasks_in_threads>>(b) and save the
+subexpressions in <<figure-tasks_in_threads>>(b) and save the
 computed values.
 
 [source, java, linenums]
@@ -528,7 +532,7 @@ include::programs/MathExpression.java[]
 
 We want to make it absolutely clear when threads are created, start
 executing, and finish. These details are crucial for the finer points of
-concurrent Java programming. In Figure <<figure:tasks_in_threads>>, it
+concurrent Java programming. In <<figure-tasks_in_threads>>, it
 appears as if execution of the concurrent math expression evaluation
 begins with Thread 1 which spawns Thread 2. Although that figure
 explains the basics of task decomposition well, the details are messier
@@ -539,18 +543,19 @@ In the code above, execution starts with the `main()` method in
 for them to finish. Then, it reads the values from the objects after
 they have stopped executing. We could have put the `main()` method in
 the `Thread1` class, omitting the `MathExpression` class entirely. Doing
-so would make the execution match Figure <<figure:tasks_in_threads>>
+so would make the execution match <<figure-tasks_in_threads>>
 more closely, but it would make the two `Thread` subclasses less
 symmetrical: The main thread and `thread1` would both independently
 execute code inside the `Thread1` class while only `thread2` would
 execute code inside the `Thread2` class.
 
+[[figure-thread_execution]]
 [.text-center]
 .Creation, starting, and joining of threads in `MathExpression`, `Thread1`, and `Thread2`.
 image::thread-lifecycle.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
 
 
-Figure <<figure:thread_execution>> shows the execution of `thread1` and
+<<figure-thread_execution>> shows the execution of `thread1` and
 `thread2` and the main thread. Note that the creation and start of the
 main thread is done implicitly by the JVM while `thread1` and `thread2`
 are created explicitly and started by the main thread. Even after the
@@ -1080,12 +1085,13 @@ does not demand a particular implementation. A JVM could ignore a
 `Thread.yield()` call completely, but most JVMs will move on to the next
 thread in the schedule.
 
+[[figure-thread_states]]
 [.text-center]
 .Thread states and transitions.
 image::thread-states.svg[scaledwidth=80%,pdfwidth=80%,width=80%]
 
 
-Figure <<figure:thread_states>> shows the lifecycle of a thread. A
+<<figure-thread_states>> shows the lifecycle of a thread. A
 thread begins its life in the New Thread state, after the constructor is
 called. When the `start()` method is called, the thread begins to run
 and transitions to the Runnable state. Being Runnable doesn't
@@ -1338,7 +1344,7 @@ the `Thread.yield()` method each affect thread scheduling?
 <<example:Math_expression_tasks>>. Suppose that the multiply and
 exponentiation operations require 1 and 10 time units, respectively.
 Compute the number of time units required to evaluate the expression as
-in Figure <<figure:math_evaluation>>(a) and (b).
+in <<figure-math_evaluation>>(a) and (b).
 5.  <<exercise:multicore-exercise>> Suppose that a computer has one
 quadcore processor. Can the tasks in Examples <<example:Video game
 tasks>> and <<example:Math_expression_tasks>> be further subdivided to
@@ -1522,6 +1528,7 @@ latexmath:[\frac{k}{2}] working at the second stage,
 latexmath:[\frac{k}{4}] working at the third, and so on, until a
 single thread completes the summing process.
 +
+[[figure-tree_summation]]
 .Example of concurrent tree-style summation with 8 threads.
 image::treesummation.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
@@ -1537,7 +1544,7 @@ thread with a number divisible by 8 should add the partial sum from its
 neighbor, and so on. Thread 0 will perform the final summation.
 Consequently, the main thread only needs to wait for thread 0. So that
 each thread can wait for other threads, the `threads` array will need to
-be a static field. Figure <<figure:tree_summation>> illustrates this
+be a static field. <<figure-tree_summation>> illustrates this
 process.
 +
 Once you have implemented this design, test it against the original
