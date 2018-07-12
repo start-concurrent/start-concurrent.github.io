@@ -1,4 +1,3 @@
-[[chapter:Methods]]
 :imagesdir: chapters/08-methods/images
 == Methods
 
@@ -16,7 +15,7 @@ classic game of both statistics and strategy is poker. The problem we
 want to solve is programming one of the many variations of poker, called
 three card poker. Instead of bluffing, a player competes only with the
 house according to fixed rules without any room for psychology. A player
-is dealt three cards. If the player’s hand contains a pair or better, he
+is dealt three cards. If the player's hand contains a pair or better, he
 or she wins a payoff greater than or equal to the money bet. If the
 player does not have a pair or better, he or she loses the money bet.
 Below is a table giving one possible set of payoffs for each possible
@@ -82,7 +81,7 @@ The tools we introduce in this chapter do not allow you to solve a
 problem you could not solve before. Instead, the tools in this chapter
 and in the next one make solving a problem easier and less susceptible
 to errors. A relatively long, complicated list of Java statements was
-necessary to solve problems like the statistics program or Conway’s Game
+necessary to solve problems like the statistics program or Conway's Game
 of Life. Instead of solving those problems as a single monolithic
 segment of code, we can break our solutions into units called _static
 methods_.
@@ -216,7 +215,7 @@ int maximum = Math.max(5, 10);
 
 In this case, the value stored into `maximum` is `10`. Despite its
 simplicity, we demonstrated how useful this method could be in our
-solution to Conway’s Game of Life from <<chapter:Arrays>>. If we
+solution to Conway's Game of Life from <<Arrays>>. If we
 wanted to write this method ourselves, the code would be as follows.
 
 [source,java]
@@ -301,7 +300,7 @@ already been returned.
 If some of this syntax seems eerily familiar, remember that you have
 been coding static methods since your very first Java program. The
 `main()` method is just another static method, special only because the
-JVM chooses to start execution there. Let’s look at the `main()` method
+JVM chooses to start execution there. Let's look at the `main()` method
 from a standard Hello, World! program.
 
 [source,java]
@@ -509,7 +508,7 @@ and objects. Practically, this means that, if a reference to an array is
 passed into a method, you cannot change which array it is pointing at.
 Since references are not values but names pointing at a particular
 location in memory, you can directly change the contents of that memory
-with a method, even if you can’t change which locations are being
+with a method, even if you can't change which locations are being
 referenced. For example, the following method does *not* reverse the
 order of an array.
 
@@ -552,7 +551,6 @@ the original values into it, and then copies them back to the original
 array in reverse order, but it is less efficient to create the extra
 array and perform two copies.
 
-[[subsection:class_variables]]
 ==== Class variables
 
 According to the rules we have given so far, the only legal variables in
@@ -667,7 +665,7 @@ any other variables or program state.
 ====
 
 A palindrome is a word or phrase (or even a number) that is the same
-spelled forwards and backwards. "`Racecar,`" "`Madam, I’m Adam,`" and
+spelled forwards and backwards. "`Racecar,`" "`Madam, I'm Adam,`" and
 "`Satan, oscillate my metallic sonatas`" are examples in English.
 Typically, spaces and punctuation are ignored. We are going to write a
 function that, given a `String`, returns `true` if it is a palindrome
@@ -697,13 +695,16 @@ does not change because the name `text` is passed by value.
 
 The loop iterates through the first half of `text`, comparing it to the
 second half. This loop reflects the asymmetry of these kinds of tests:
-You can’t be sure that `text` is a palindrome until you have checked the
+You can't be sure that `text` is a palindrome until you have checked the
 entire thing, but you immediately know that it is not if even a single
 pair of characters does not match. If the test in that `if` statement
 ever shows that the two `char` values are not equal, the `return false`
 statement jumps out of the method without completing the loop.
-
 ====
+
+****
+<<exercise8.11, Exercise 8.11>>
+****
 
 .Parsing a number
 ====
@@ -912,14 +913,14 @@ arrow that then executes the corresponding `run()` method and any
 methods it calls. Note that we are talking about a method called on a
 `Thread` object, not a static method called on the class as a whole.
 Calling `start()` is an instance method, which we discuss in
-<<chapter:Classes>>. Unlike the static methods we have discussed
+<<Classes>>. Unlike the static methods we have discussed
 in this chapter, an instance method is tied to a particular object, but
 most of what you have learned about methods still applies.
 
 Methods are supposed to make programming easier by breaking programs
 into chunks small enough to think about. One of the only real dangers of
 methods is using class variables, as discussed in
-<<subsection:class_variables>>. This problem becomes worse with
+<<Class variables>>. This problem becomes worse with
 multiple threads. With a single thread, two or more different methods
 can all affect the same class variable, perhaps in conflicting ways.
 With multiple threads, even the *same* method can interfere with itself.
@@ -963,7 +964,7 @@ include::programs/SafeRandom.java[]
 ====
 
 By forcing each thread to carry its own state, we fixed the previous
-problem. In <<chapter:Synchronization>> we talk about the much
+problem. In <<Synchronization>> we talk about the much
 nastier problem of two threads executing a method at exactly the same
 time. When that happens, very curious effects are possible. Consider the
 following program:
@@ -985,14 +986,14 @@ be changed by one right before the other executes the `if` statements.
 === Exercises
 *Conceptual Problems*
 
-1.  Describe three advantages of dividing long segments of code into
+1. [[exercise8.1]] Describe three advantages of dividing long segments of code into
 static methods.
-2.  Can you think of any disadvantages of dividing code into methods?
+2. [[exercise8.2]] Can you think of any disadvantages of dividing code into methods?
 Are there situations where using a method is unwise?
-3.  If you wanted to declare a static method that would compute the
+3. [[exercise8.3]] If you wanted to declare a static method that would compute the
 mean, median, and standard deviation of an input array of `double`
 values, how would you return those three answers?
-4.  Consider the following method definition.
+4. [[exercise8.4]] Consider the following method definition.
 +
 [source,java]
 ----
@@ -1009,7 +1010,7 @@ int x = 2;
 while( x < 128 )
     twice(x);
 ----
-5.  Consider the following signatures of two overloaded methods.
+5. [[exercise8.5]] Consider the following signatures of two overloaded methods.
 +
 [source,java]
 ----
@@ -1032,7 +1033,7 @@ int y = magic( 3.2, 16.4 );
 ----
 +
 Use a compiler to check your answers.
-6.  The following class generates a sequence of even numbers. Each time
+6. [[exercise8.6]] The following class generates a sequence of even numbers. Each time
 the `next()` method is called, the next even number in the sequence is
 returned. What is the design problem with using a static field to keep
 track of the next value in the sequence?
@@ -1050,24 +1051,24 @@ public class EvenNumbers {
 ----
 +
 *Programming Practice*
-7.  Write a static method called `cube()` that takes a single `double`
+7. [[exercise8.7]] Write a static method called `cube()` that takes a single `double`
 value as a parameter and returns its value cubed. Do not use the
 `Math.pow()` method.
-8.  Implement a static method that takes a single `int` value as a
+8. [[exercise8.8]] Implement a static method that takes a single `int` value as a
 parameter and prints its digits in reverse. For example, if `103` was
 passed into this method, it would print `301` to the screen.
 +
 You can find out what digit is in the ones place of a number by taking
 its remainder modulus 10. Then, you can remove the digit in the ones
 place by dividing by 10. Do not convert the `int` value into a `String`.
-9.  Write a static method that takes an array of `int` values as a
+9.  [[exercise8.9]] Write a static method that takes an array of `int` values as a
 parameter and returns `true` if the array is in ascending order and
 `false` otherwise. Compare each element of the array to the next element
 of the array. If the current element is ever larger than the next
 element, the array is not sorted in ascending order. Note that you can
 only be sure that the array is in ascending order after you have checked
 all neighboring pairs.
-10. Write a static method that finds the
+10. [[exercise8.10]] Write a static method that finds the
 latexmath:[\lfloor\log_2(n)\rfloor] of an integer latexmath:[n].
 Note that if latexmath:[\log_2 n = x], it is also true that
 latexmath:[n = 2^x]. In other words, the latexmath:[\log_2] operator
@@ -1089,18 +1090,18 @@ various input values of latexmath:[n].
 |8 |3 |1000 |9
 |10 |3 |1024 |10
 |=============================
-11. <<exercise:palindromes>> Write a method that tests palindromes like
+11. [[exercise8.11]] Write a method that tests palindromes like
 the method from <<example:Palindrome_testing>> but also ignores
 punctuation and spaces. Thus, `"A man, a plan, a canal: Panama"` should
 be counted as a palindrome by this new method.
-12. Re-implement the solution from <<solution:Three_card_poker>>
+12. [[exercise8.12]] Re-implement the solution from <<Solution: Three card poker>>
 so that it uses a GUI constructed with `JOptionPane` to display the hand
 and the winnings.
-13. Five card poker is a much more common version of poker than the
-three card version we discussed in <<problem:Three_card_poker>>.
+13. [[exercise8.13]] Five card poker is a much more common version of poker than the
+three card version we discussed in <<Problem: Three card poker>>.
 Using static methods, implement a two-player game of poker in which the
 deck is shuffled and then dealt into two hands of five cards each. Then,
-state which player’s hand wins. With five cards, determining which hand
+state which player's hand wins. With five cards, determining which hand
 wins is a more complicated process. The rankings of the various possible
 hands from best to worst are as follows.
 a.  All five cards belong to the same suit and have ranks in sequential
@@ -1135,7 +1136,7 @@ of the hand. If two people have the same highest card, the remaining
 cards in each hand are used as tiebreakers, in descending rank order.
 +
 *Experiments*
-14. In terms of time, there is a small overhead associated with calling
+14. [[exercise8.14]] In terms of time, there is a small overhead associated with calling
 a method and returning a value, but it is very hard to measure. Write a
 program with two `int` variables, `a` and `b`, where `a` starts with a
 value of `1` and `b` starts with a value of `2`. Run a `for` loop
@@ -1161,7 +1162,7 @@ Again, run your program repeatedly with this modification. What is the
 difference in running time between the version that uses a method and
 the version that does addition directly?
 +
-Depending on your JVM, it’s quite possible that there’s almost no
+Depending on your JVM, it's quite possible that there's almost no
 difference. The JVM does a lot of optimizations including _inlining_,
 which replaces a call to a method with the actual code inside the
 method.
