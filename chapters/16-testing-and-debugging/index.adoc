@@ -1,4 +1,3 @@
-[[chapter:Testing_and_Debugging]]
 :imagesdir: chapters/16-testing-and-debugging/images
 == Testing and Debugging
 
@@ -7,7 +6,6 @@ ____
 I never make stupid mistakes. Only very, very clever ones.
 ____
 
-[[section:Fixing_bugs]]
 === Fixing bugs
 
 This chapter is about finding, fixing, and, more importantly, preventing
@@ -414,7 +412,7 @@ The difference between a good programmer and a bad programmer is often
 just experience. Having seen a bug before means you know to expect it in
 the future. There is no substitute for pulling your hair out over a bug
 for hours before finally squashing it, but we will give a few examples
-corresponding to the common bugs listed in <<section:Fixing_bugs>>.
+corresponding to the common bugs listed in <<Fixing bugs>>.
 
 .Precision errors
 ====
@@ -422,8 +420,8 @@ corresponding to the common bugs listed in <<section:Fixing_bugs>>.
 Precision can cause some subtle errors, especially with `float` types.
 Here is an example of a program attributed to Cleve Moler that gives
 some estimation of the threshold for floating point precision. Note that
-`a` latexmath:[\approx 4/3], making `b` latexmath:[\approx 1/3], `c`
-latexmath:[\approx 1], and `d` latexmath:[\approx 0]. Nevertheless,
+`a` ≈ 4/3, making `b` ≈ 1/3, `c`
+≈ 1, and `d` ≈ 0. Nevertheless,
 the comparison `(d == 0.0)` in the `if` statement in this code will
 evaluate to `false`.
 
@@ -568,7 +566,7 @@ This assignment will always store `2` into `three`. The `Math.round()`
 method or some other additional step is needed to perform rounding.
 
 Casting errors are not limited to primitive data types. Object casting
-will be discussed at length in <<chapter:Polymorphism>>. The
+will be discussed at length in <<Polymorphism>>. The
 biggest danger there is an incorrect explicit upcast.
 
 [source,java]
@@ -588,7 +586,7 @@ superclass of the item you generally expect to be in there. If a large
 team is working on a body of code which such a list in it, half of the
 team might expect the list to contain only `Apple` objects while the
 other expected only `ChiliPepper` objects. The use of generics,
-discussed in <<chapter:Dynamic_Data_Structures>>, can reduce the
+discussed in <<Dynamic Data Structures>>, can reduce the
 number of casting errors of this kind, but some applications require a
 list to hold many different types with a common superclass. In those
 cases, some amount of explicit (and therefore dangerous) casting will
@@ -1045,7 +1043,7 @@ her strength to other values. When strength is tested, it will use the
 seems to be accidental here. When classes have large numbers of fields,
 making such a mistake becomes easier.
 
-[source,numberLines]
+[source,java, linenums]
 ----
 Bodybuilder builder = new BraggingBodybuilder();
 builder.strength = 15;/*@\label{line:strength=15}@*/
@@ -1137,7 +1135,7 @@ blindly use a null reference without checking it first, causing a
 
 We will only briefly discuss parallel bugs here because we have already
 gone into depth about the dangers of parallel programming in
-<<chapter:Synchronization>>. Except in the case of deadlocks and
+<<Synchronization>>. Except in the case of deadlocks and
 livelocks, the real trouble with parallel bugs is that they make the
 appearance of ordinary sequential bugs become nondeterministic.
 
@@ -1715,20 +1713,19 @@ say that you are using JUnit 4.5 from a jar file called `junit-4.5.jar`
 that can be found in `C:\Utilities\Java\JUnit\`. To compile `MathTest`,
 you would type:
 
-[source, java]
-----
-javac -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar MathTest.java}
-----
+
+....
+javac -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar MathTest.java
+....
 
 To actually run the code, you still need to include `junit-4.5.jar` in
 your classpath, but you also need to invoke the test runner called
 `org.junit.runner.JUnitCore` as follows:
 
-[source, java]
-----
+....
 java -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar
     org.junit.runner.JUnitCore MathTest
-----
+....
 
 If you had multiple test classes, you could just list them all after
 `org.junit.runner.JUnitCore` and all the methods marked `@Test` in them
@@ -1899,10 +1896,9 @@ distance between `charge2` and `charge3` should be about
 latexmath:[\sqrt{2}]. Yet, when we run this test with JUnit, the test
 fails. We get:
 
-[source, java]
-----
+....
 java.lang.AssertionError: expected:<1.0> but was:<1.4142135623730951>
-----
+....
 
 for the second assertion in the method. But why? If we comb through the
 `distance()` methods in `PointCharge`, they all look correct. The
@@ -1928,11 +1924,10 @@ public void scalarForce() {
 When we run this test with JUnit, the last assertion fails. We get the
 following output.
 
-[source, java]
-----
+....
 java.lang.AssertionError: expected:<-8.987551787368176E9>
     but was:<-1.797510357473635E10>
-----
+....
 
 A close inspection reveals that the actual value is about twice the
 expected value. Where does this extra factor of 2 come from? Scanning
@@ -1956,10 +1951,9 @@ simplicity, we'll test the field at the locations of `charge1`,
 
 This time the first assertion fails. We get the following output.
 
-[source, java]
-----
+....
 java.lang.AssertionError: expected:<1.797510357473635E10> but was:<2.0>
-----
+....
 
 `2.0` seems like a very strange result when we were expecting a value
 with an order of magnitude 10 times larger. Perhaps the constant was
@@ -1996,9 +1990,9 @@ include::programs/TestPointCharge.java[]
 === Exercises
 *Conceptual Problems*
 
-1.  What is the purpose of the `assert` keyword in Java? What steps must
+1. [[exercise16.1]] What is the purpose of the `assert` keyword in Java? What steps must
 be taken for it to be active?
-2.  What is the value of `j` after the following statements are
+2. [[exercise16.2]] What is the value of `j` after the following statements are
 executed?
 +
 [source,java]
@@ -2011,7 +2005,7 @@ for( i = 0; i < 10; i++ );
 +
 Assuming the programmer made an error, what category of programming
 error does it fall under?
-3.  The following loop is intended to print out all possible `byte`
+3. [[exercise16.3]] The following loop is intended to print out all possible `byte`
 values. What is the conceptual error made in the following loop? How
 many times will it execute?
 +
@@ -2020,7 +2014,7 @@ many times will it execute?
 for( byte value = 0; value < 256; ++value )
     System.out.println("Byte: " + value);
 ----
-4.  What are all the possible run-time errors that could occur in this
+4. [[exercise16.4]] What are all the possible run-time errors that could occur in this
 method that reverses a section of an array?
 +
 [source,java]
@@ -2039,7 +2033,7 @@ public void reverse( Object[] array, int start, int end ) {
 ----
 +
 What checks could be added to catch these errors?
-5.  Consider the following definition of a stack that holds `int`
+5. [[exercise16.5]] Consider the following definition of a stack that holds `int`
 values.
 +
 [source,java]
@@ -2067,17 +2061,17 @@ public class IntegerStack {
 +
 What exceptions could be thrown when using this class? Where could they
 be thrown?
-6.  This question sometimes comes up in job interviews. Imagine that you
+6. [[exercise16.6]] This question sometimes comes up in job interviews. Imagine that you
 have a simple singly linked list such as the one described in
-<<chapter:Dynamic_Data_Structures>>. What if there is a loop in
+<<Dynamic Data Structures>>. What if there is a loop in
 the list such that the last element in the list points to an earlier
 element in the list? For this reason, a simple traversal of the list
 will go on forever. How could you detect such a problem during program
 execution?
-7.  What is the difference between black box testing and white box
+7. [[exercise16.7]] What is the difference between black box testing and white box
 testing? What kinds of bugs are more likely to be caught by black box
 testing? By white box testing?
-8.  The Microsoft Zune is a portable media player in competition with
+8. [[exercise16.8]] The Microsoft Zune is a portable media player in competition with
 the Apple iPod. The first generation Zune 30 received negative publicity
 because many of them froze on December 31, 2008 due to a leap year bug.
 It is possible to find segments of the source code that caused this
@@ -2089,11 +2083,11 @@ however, the Zune became stuck in an infinite loop. What kind of testing
 should Microsoft have done to prevent this bug?
 +
 *Programming Practice*
-9.  Apply JUnit testing to the last major assignment you did in class.
+9.  [[exercise16.9]] Apply JUnit testing to the last major assignment you did in class.
 What bugs did you uncover?
 +
 *Experiments*
-10. James Gosling's original specification for Java contained
+10. [[exercise16.10]] James Gosling's original specification for Java contained
 assertions, but they were not included until Java 1.4. One of the
 concerns about an assertion mechanism is the additional time required to
 process the assertions. Time a program of at least moderate length
@@ -2101,13 +2095,13 @@ before adding `assert` statements to its methods. If you use `assert`
 statements to check method input and output thoroughly, you should see a
 slight decrease in performance when assertions are enabled. When
 disabled, you should see almost none. How great is the performance hit?
-11. Take another look at your last programming assignment. Calculate the
+11. [[exercise16.11]] Take another look at your last programming assignment. Calculate the
 number of branches based on `if` and `switch` statements and compute 2
 raised to that power. Time your program executing once under normal
 circumstances. Multiply that time by the number of different
 possibilities you would need to exercise every possible combination of
 branches in your program. How long would it take?
-12. Take a concurrent program you have written that relies on explicit
+12. [[exercise16.12]] Take a concurrent program you have written that relies on explicit
 synchronization mechanisms for correctness. Remove all synchronization
 tools and run the code many times, testing for race conditions. Then,
 instrument the code with ConTest and run it many more times. Do you see
