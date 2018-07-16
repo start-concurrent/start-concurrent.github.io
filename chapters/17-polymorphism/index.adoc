@@ -1,4 +1,3 @@
-[[chapter:Polymorphism]]
 :imagesdir: chapters/17-polymorphism/images
 == Polymorphism
 
@@ -9,7 +8,7 @@ ____
 
 === Problem: Banking account with a vengeance
 
-In <<chapter:Synchronization>>, we introduced the
+In <<Synchronization>>, we introduced the
 `SynchronizedAccount` class that guarantees that checking the balance,
 making deposits, and making withdrawals will all be safe even in a
 multi-threaded environment. Unfortunately, `SynchronizedAccount` gives
@@ -40,7 +39,7 @@ latexmath:[\frac{1}{12}] of the annual rate. However, if the balance
 is below $1000, a $25 service fee is charged each month, regardless of
 how low the balance becomes.
 
-In <<chapter:Inheritance>> you were exposed to concepts in
+In <<Inheritance>> you were exposed to concepts in
 inheritance. We are now returning to these concepts and exploring them
 further. In the first place, concurrency is on the table now, and you
 must be careful to keep your derived classes thread-safe. In the second,
@@ -790,8 +789,11 @@ Consequently, the `++` operation was changed to an `incrementAndGet()`
 method call, and a `get()` method call was needed to get the final
 value. If you run this program, the final answer should always be
 1000000, no matter what.
-
 ====
+
+****
+<<exercise17.9, Exercise 17.9>>
+****
 
 The `java.util.concurrent.atomic` package includes `AtomicBoolean` and
 `AtomicLong` as well as `AtomicInteger`. Likewise, the
@@ -799,7 +801,7 @@ The `java.util.concurrent.atomic` package includes `AtomicBoolean` and
 perform atomic array accesses. For general purposes, the
 `AtomicReference<V>` class provides an atomic way to store a reference
 to any object. (The `<V>` is a generic type parameter, which will be
-discussed in <<chapter:Dynamic_Data_Structures>>.)
+discussed in <<Dynamic Data Structures>>.)
 
 Although you could use the `synchronized` keyword to create each one of
 these classes yourself, the result would not be as efficient. The atomic
@@ -813,10 +815,14 @@ fighting over which thread has the lock, the operation is very fast.
 Many high performance concurrent applications depends on CAS
 implementations.
 
+****
+<<exercise17.11, Exercise 17.11>>
+****
+
 === Exercises
 *Conceptual Problems*
 
-1.  Consider the following two classes:
+1. [[exercise17.1]] Consider the following two classes:
 +
 [source, java, linenums]
 [[program:Sale, Sale]]
@@ -844,9 +850,9 @@ System.out.println( blowout.discount );
 sale.setDiscount( 0.75 );
 System.out.println( sale.discount );
 ----
-2.  What are the differences and similarities between abstract classes
+2. [[exercise17.2]] What are the differences and similarities between abstract classes
 and interfaces?
-3.  Assume that the `Corn`, `Carrot`, and `Potato` classes are all
+3. [[exercise17.3]] Assume that the `Corn`, `Carrot`, and `Potato` classes are all
 derived from `Vegetable`. Both `Carrot` and `Potato` classes have a
 `peel()` method, but `Corn` does not. Examine the following code and
 identify which line will cause an error and why.
@@ -866,9 +872,9 @@ while( index >= 0 ) {
     potato.peel();
 }
 ----
-4.  How many different meanings of the keyword `final` are there in
+4. [[exercise17.4]] How many different meanings of the keyword `final` are there in
 Java, and what does each mean?
-5.  Assume that `Quicksand` is a subclass of `Danger`.
+5. [[exercise17.5]]  Assume that `Quicksand` is a subclass of `Danger`.
 +
 What is the output of the following code?
 +
@@ -887,7 +893,7 @@ if( quicksand.getClass() == Quicksand.class )
 ----
 +
 *Programming Practice*
-6.  Implement a program to assess income tax on normal employees,
+6. [[exercise17.6]] Implement a program to assess income tax on normal employees,
 students, and international students using a class hierarchy. Normal
 employees pay a 6.2% social security tax and a 1.45% Medicare tax every
 year, but neither kind of student pays these taxes. All three groups pay
@@ -909,13 +915,13 @@ example, if someone makes $10,000, she pays 10% tax on the first $7,825
 of her income and 15% on the remaining $2,175. The exception is
 international students whose country has a treaty with the U.S. so that
 they do not have to pay tax on the first $50,000 of income.
-7.  Refer to the sort given in <<solution:Sort_it_out>> as the
+7. [[exercise17.7]] Refer to the sort given in <<Solution: Sort it out>> as the
 solution to the Sort It Out problem. Add another `boolean` to the
 parameters of the sort which specifies whether the sort is ascending or
 descending. Make the needed changes throughout the code to add this
 functionality.
-8.  <<exercise:parallel_bubble_sort>> Again refer to the sort from
-<<solution:Sort_it_out>>. The goal now is to parallelize the
+8.  [[exercise17.8]] Again refer to the sort from
+<<Solution: Sort it out>>. The goal now is to parallelize the
 sort. Change the sort to work with `int` values then write some code
 which will generate an array of random `int` values. Design your code so
 that you can spawn latexmath:[n] threads. Partition the single array
@@ -932,7 +938,7 @@ two arrays and put it in the result. Then increment the index from the
 array you took the data from as well as the index of the result array.
 Make sure that you are careful not to go beyond the end of the arrays
 which are being merged.
-9.  <<exercise:use_atomics>> Re-implement the original
+9. [[exercise17.9]] Re-implement the original
 `SynchronizedAccount` class from <<example:Bank_account>> using
 atomic classes. For simplicity, you can change the `balance` type from
 `double` to `AtomicInteger` since there is no `AtomicDouble` class. How
@@ -940,14 +946,14 @@ much has this simplified the implementation? Is the `readers` field
 still necessary? Why or why not?
 +
 *Experiments*
-10. Once you have implemented the sort in parallel from
-Exercise <<exercise:parallel_bubble_sort>>, time it against the
+10. [[exercise17.10]] Once you have implemented the sort in parallel from
+<<exercise17.8, Exercise 17.8>>, time it against the
 sequential version. Try 2, 4, and 8 different threads, particularly if
 you have 8 cores. Be sure to create one random array and use the same
 array for both the parallel and sequential versions. Try array sizes of
-1000, 100000, and 1000000. Did the performance increase as much as you
+1,000, 100,000, and 1,000,000. Did the performance increase as much as you
 expect?
-11. <<exercise:test_atomics>> Take Program <<program:NoRaceCondition>>
+11. [[exercise17.11]] Take Program <<program:NoRaceCondition>>
 and increase `COUNT` to `100000000`. Run it several times and time how
 long it takes to run to completion.
 +

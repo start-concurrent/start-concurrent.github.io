@@ -1,4 +1,3 @@
-[[chapter:Dynamic_Data_Structures]]
 :imagesdir: chapters/18-dynamic-data-structures/images
 == Dynamic Data Structures
 
@@ -9,19 +8,18 @@ ____
 
 === Problem: Infix conversion
 
-If a math teacher writes the expression latexmath:[(1 + 7\times8 -
-6\times(4 + 5) \div  3)] on the blackboard and asks a group of 10 year
-old children to solve it, different children may give different answers.
+If a math teacher writes the expression 1 + 7 × 8 -
+6 × (4 + 5) ÷ 3 on the blackboard and asks a group of 10-year-old children to solve it, different children may give different answers.
 The difficulty is that the children may not understand the order of
 operations. Modern graphing calculators and many computer programs can,
 of course, evaluate such expressions correctly, but how do they do it?
 You intuitively grasp order of operations (left to right, multiplication
 and division take higher precedence than addition and subtraction), but
-encoding that intuition into a computer program is more difficult.
+encoding that intuition into a computer program takes effort.
 
 One way a computer scientist might approach this problem is to turn the
-mathematical expression from one that is difficult to evaluate to one
-that is easy. The normal style of writing mathematical expressions is
+mathematical expression from one that's difficult to evaluate to one
+that's easy. The normal style of writing mathematical expressions is
 called _infix notation_, because the operators are written in between
 the operands they are used on. A much easier notation for automatic
 evaluation is called _postfix notation_, because an operator is placed
@@ -43,7 +41,7 @@ notation has the benefit of exactly specifying the order of operations
 without using any precedence rules and without needing parentheses to
 clarify. To understand how to compute an expression in postfix notation,
 we rely on the idea of a stack, which we first introduces in
-<<chapter:Classes>> and examine in much greater depth here.
+<<Classes>> and examine in much greater depth here.
 
 Recall that a stack has three operations: _push_, _pop_, and _top_. It
 works like a stack of physical objects. The push operation places an
@@ -95,7 +93,7 @@ the stack, treat `(` as if it has even lower precedence than `+` and
 Following this algorithm, we are able to write a program that converts
 infix notation to postfix notation. We further restrict our problem to
 the case when the only operands are positive integers in the range
-latexmath:[[0, 9]]. Since each is a single character, parsing the
+[0, 9]. Since each is a single character, parsing the
 input is much easier. The same ideas for postfix conversion holds no
 matter how the input is formatted, but parsing arbitrarily formatted
 numbers is a difficult problem in its own right. This restriction also
@@ -104,8 +102,7 @@ makes spaces unnecessary.
 To solve the infix conversion problem, we need to create a stack data
 structure whose elements are terms from an infix expression, where a
 term is an operator, operand, or a parenthesis. We created a stack to
-solve the nesting expression problem in <<solution:Nested
-expressions>>, but we explore stacks in this chapter as one of many
+solve the nesting expression problem in <<Nested expressions>>, but we explore stacks in this chapter as one of many
 different kinds of dynamic data structure.
 
 === Concepts: Dynamic data structures
@@ -121,7 +118,7 @@ integers into it.
 In this chapter, we examine _dynamic_ data structures: As more data is
 read or processed, these data structures grow and shrink in memory to
 store what is needed. The stack used to solve the nesting expressions
-problem from <<chapter:Classes>> is not actually a dynamic data
+problem from <<Classes>> is not actually a dynamic data
 structure since it is defined with a fixed maximum size. In this
 chapter, we implement a true stack as well as many other kinds of
 dynamic data structures.
@@ -148,7 +145,6 @@ after it must be moved forward one position. Thus, insertions and
 deletions at the end of a dynamic array are usually efficient, but
 insertions and deletions in the middle are very time consuming.
 
-[[subsection:Linked_lists]]
 ==== Linked lists
 
 The second kind of dynamic data structure is based on objects that link
@@ -202,7 +198,7 @@ value, pop a value, and tell us what value is on top. The internal
 workings of the stack are irrelevant (as long as they are efficient). It
 is possible to use either a dynamic array or a linked list to implement
 a stack ADT. A queue is another ADT we discuss in
-<<syntax:Abstract_data_types_(ADT)>>, but there are many other
+<<Syntax: Abstract data types (ADT)>>, but there are many other
 useful ADTs.
 
 === Syntax: Dynamic arrays and linked lists
@@ -238,6 +234,8 @@ of the file, storing each name in successive array locations. If the
 number of names in the input is larger than the size of the array, it
 generates an exception.
 
+
+
 Since programs that generate uncaught exceptions are, in general, a bad
 idea, our first change to this program should be either to catch the
 exception or check the index before storing the name in the array. In
@@ -260,6 +258,10 @@ recompile, and re-run the program), but that option may not be available
 to us if the program has been distributed to users around the world.
 Instead, we fix the problem on the fly by allocating a larger array,
 copying the old array into the new array, and continuing.
+
+****
+<<exercise18.3, Exercise 18.3>>
+****
 
 Program <<program:ReadAndGrowArray>> begins like the previous program by
 allocating a fixed array. However, it now catches the
@@ -284,6 +286,10 @@ counter increment to outside the `try`-`catch` block.
 Can this new, improved program still fail? Yes, but only for *very
 large* input, in the case when the Java virtual machine runs out of
 memory when doubling the size of the array.
+
+****
+<<exercise18.4, Exercise 18.4>>
+****
 
 A potentially more serious problem is the way we set `names` to point at
 a new array.
@@ -329,8 +335,13 @@ include::programs/DynamicArray.java[]
 
 Note that the `set()` and `sort()` methods are both `synchronized` in
 case this class is used by multiple threads simultaneously.
-Exercise <<exercise:dynamicArrayTestExercise>> explores the need to
+<<exercise18.12, Exercise 18.12>> explores the need to
 synchronize these methods in the presence of multiple threads.
+
+****
+<<exercise18.9, Exercise 18.9>> +
+<<exercise18.12, Exercise 18.12>>
+****
 
 Program <<program:UseDynamicArray>> illustrates how to modify and extend
 Program <<program:ReadIntoFixedArray>> to use this new class. Since the
@@ -358,9 +369,12 @@ potentially serious performance penalties. If the initial array is too
 small, compared to the final size, then it will have been doubled and
 the elements copied multiple times, resulting in slower execution. After
 a resize, the array is only half full, resulting in wasted space. Even
-on average, the array will only be three-quarters full
+on average, the array will only be three-quarters full.
 
-[[linked-lists]]
+****
+<<exercise18.5, Exercise 18.5>>
+****
+
 ==== Linked lists
 
 As we've seen, while dynamic arrays can grow to accommodate a large
@@ -391,8 +405,7 @@ modification. The nested class has two fields, one containing the data
 to be stored and the other containing a link or reference to the next
 object, or _node_, in the list. Since they are only accessed by the
 outer class, it is reasonable to make these fields public. If you need a
-refresher on static nested classes, refer to <<advanced:Nested
-classes>>.
+refresher on static nested classes, refer to <<Advanced: Nested classes>>.
 
 [source,java]
 ----
@@ -583,14 +596,14 @@ _stacks_ and _queues_, and sample classes that implement them.
 ==== Stacks
 
 We have already used stacks to solve problems in
-<<chapter:Classes>>. Recall that a stack data structure behaves
+<<Classes>>. Recall that a stack data structure behaves
 like a stack of books on your desk. When you place a book on the stack
 it covers the books that are already there. When you take a book off the
 stack, you remove the book most recently placed there, exposing the one
 beneath it.
 
 You can find a simple implementation of a stack in the solution to the
-infix conversion problem in <<solution:Infix_conversion>>, but
+infix conversion problem in <<Solution: Infix conversion>>, but
 we now examine the stack more deeply as an archetypal ADT. A stack's
 restricted set of operations (pushing and popping) is adequate for many
 tasks and can be implemented in a number of different ways, some more
@@ -653,7 +666,7 @@ The `pop()` method needs to return the `value` of the `head` node and
 remove that node from the linked list. It does this by replacing the
 `head` node with the node pointed at by the `next` link in `head`. The
 `pop()` method from the simpler stack used in the solution to the nested
-expressions problem in <<solution:Nested_expressions>> merely
+expressions problem in <<Solution: Nested expressions>> merely
 removed the top and did not return the value. Most real-world stack
 implementations of `pop()` *do* return this value, giving programmers
 more flexibility.
@@ -678,15 +691,18 @@ include::programs/DynamicArrayStack.java[]
 This stack implementation using a dynamic array omits the `top()` and
 `isEmpty()` methods (causing a compiler error in
 Program <<program:DynamicArrayStack>> until the `Stack` interface is
-properly implemented). Exercise <<exercise:implementDASMethods>> has you
-provide implementations of these methods.
+properly implemented).
+
+****
+<<exercise18.7, Exercise 18.7>>
+****
 
 .Postfix computation
 ====
 
 At the beginning of the chapter, we introduced the problem of converting
 an expression from infix to postfix notation. In
-<<solution:Infix_conversion>>, we give the solution to this
+<<Solution: Infix conversion>>, we give the solution to this
 problem, but without a program that can evaluate a postfix expression,
 the conversion tool is not very useful.
 
@@ -1004,7 +1020,7 @@ different underlying types. We illustrate three examples here: `Vector`,
 class, which is a great deal more powerful than the `LinkedList` class
 defined in this chapter. Any class that implements the `Iterable`
 interface can be used in the for-each loops described in
-<<subsection:The_for-each_loop>>. The `ArrayDeque`, `ArrayList`,
+<<The for-each loop>>. The `ArrayDeque`, `ArrayList`,
 `HashSet`, `TreeSet`, and `Vector`, classes all implement `Iterable`. In
 our examples, a `Vector` object and a `Set` (returned by the
 `entrySet()` method of a `HashMap`) are used as targest of for-each
@@ -1039,8 +1055,7 @@ include::programs/VectorExample.java[]
 Output from a typical run of Program <<program:VectorExample>> is shown
 below:
 
-[source, java]
-----
+....
   9
   9
   8
@@ -1057,7 +1072,7 @@ below:
  10
 ---
 104 (14 values)
-----
+....
 
 ====
 
@@ -1087,8 +1102,7 @@ include::programs/HashMapExample.java[]
 
 Shown below is the output for a simple input file.
 
-[source, java]
-----
+....
 Keys
     kathy
     martha
@@ -1124,7 +1138,7 @@ margarette -> 57
 edward -> 12
 tim -> 57
 hamcost -> 2
-----
+....
 
 ====
 
@@ -1276,8 +1290,7 @@ Without appropriate synchronization, the program may not correctly link
 all values into the queue nor remove them at the end. A typical
 error-prone output run is shown here:
 
-[source, java]
-----
+....
 Thread ID added to queue: 9
 Thread ID added to queue: 14
 Thread ID added to queue: 13
@@ -1300,7 +1313,7 @@ Can't dequeue an empty queue!
 Thread ID removed from queue: 15
 Thread ID removed from queue: null
 Thread ID removed from queue: null
-----
+....
 
 How does this implementation fail? Consider the situation in which two
 threads are attempting to put a value in the queue simultaneously (see
@@ -1318,7 +1331,7 @@ is now lost.
 This problem can be fixed by ensuring that once one thread starts
 examining and modifying queue variables, no other thread can access the
 same variables until the first one is finished. As shown in
-<<chapter:Synchronization>>, this mutual exclusion can be
+<<Synchronization>>, this mutual exclusion can be
 achieved by using the `synchronized` keyword on methods that need to
 have exclusive access to object variables. In this queue implementation,
 we need to synchronize access by threads that are using either the
@@ -1344,8 +1357,7 @@ With both `enqueue()` and `dequeue()` methods synchronized as in
 Program <<program:LinkedListQueueTS>>, a typical output generated by the
 program is shown below.
 
-[source, java]
-----
+....
 Thread ID added to queue: 9
 Thread ID added to queue: 14
 Thread ID added to queue: 12
@@ -1366,11 +1378,11 @@ Thread ID removed from queue: 14
 Thread ID removed from queue: 12
 Thread ID removed from queue: 10
 Thread ID removed from queue: 11
-----
+....
 
 === Concurrency: Thread-safe libraries
 
-As we mentioned in <<concurrency:Objects>>, some libraries are
+As we mentioned in <<Concurrency: Objects>>, some libraries are
 thread-safe and some are not. The Java Collections Framework (JCF) is a
 very useful library, but it is also a library that requires thread
 safety to be at the forefront of your mind.
@@ -1383,7 +1395,7 @@ queue of items. The `Map` interface gives the basic operations for a
 dictionary, a collection of key-value pairs, one implementation of which
 is the `HashMap` from <<example:Maps>>.
 
-As we mentioned in <<chapter:Interfaces>>, an interface cannot
+As we mentioned in <<Interfaces>>, an interface cannot
 mark a method with the `synchronized` keyword. Consequently, the JCF can
 make no guarantee about the thread safety of a container based on which
 interface it implements. The programmer must read the documentation
@@ -1420,8 +1432,7 @@ include::programs/ArrayListExample.java[]
 includes a `null` reference in the output, indicating that the internal
 `ArrayList` data structure was not updated correctly.
 
-[source, java]
-----
+....
 Thread-1: 0
 Thread-0: 0
 Thread-1: 1
@@ -1442,14 +1453,13 @@ Thread-1: 8
 Thread-0: 8
 Thread-0: 9
 Thread-1: 9
-----
+....
 
 *With* the `synchronized` keyword, each run includes exactly the same
 number of entries from each thread, although the threads do not always
 alternate in strict lock-step.
 
-[source, java]
-----
+....
 Thread-0: 0
 Thread-1: 0
 Thread-0: 1
@@ -1470,27 +1480,27 @@ Thread-1: 8
 Thread-0: 8
 Thread-1: 9
 Thread-0: 9
-----
+....
 
 ====
 
 === Exercises
 *Conceptual Problems*
 
-1.  Explain the difference between static data structures and dynamic
+1. [[exercise18.1]] Explain the difference between static data structures and dynamic
 data structures.
-2.  In which situations is it better to use a dynamic array? In which
+2.  [[exercise18.2]] In which situations is it better to use a dynamic array? In which
 situations is it better to use a linked list? Explain why in each case.
-3.  <<exercise:exceptionGeneratedExercise>> On which line in
+3.  [[exercise18.3]] On which line in
 Program <<program:ReadIntoFixedArray>> is an exception generated?
-4.  <<exercise:postIncrementExercise>> In
+4.  [[exercise18.4]] In
 Program <<program:ReadAndGrowArray>>, is it possible to post-increment
 `n` inside the `try` clause rather than at the bottom of the `while`
 loop?
-5.  <<exercise:proveThreeQuartersFull>> Explain why the `names` array in
+5.  [[exercise18.5]] Explain why the `names` array in
 Program <<program:UseDynamicArray>> is, on average, only three-quarters
 full.
-6.  Based on the stack implementation in
+6. [[exercise18.6]] Based on the stack implementation in
 Program <<program:LinkedListStack>>, draw a picture of the linked list
 structure after each of the following statements.
 +
@@ -1505,10 +1515,10 @@ structure after each of the following statements.
     stack.pop();
     stack.push("world");
 ----
-7.  <<exercise:implementDASMethods>> Implement the methods `top()` and
+7.  [[exercise18.7]] Implement the methods `top()` and
 `isEmpty()` for the dynamic array implementation of the stack in
 Program <<program:DynamicArrayStack>>.
-8.  Based on queue implementation in
+8. [[exercise18.8]] Based on queue implementation in
 Program <<program:LinkedListQueue>>, draw a picture of the linked list
 structure after each of the following statements.
 +
@@ -1525,12 +1535,12 @@ structure after each of the following statements.
 ----
 +
 *Programming Practice*
-9.  <<exercise:Shrink_dynamic_array>> Implement a version of
+9.  [[exercise18.9]] Implement a version of
 `DynamicArray` that shrinks the size of its internal storage array to
 half its size when only one quarter of its capacity is being used. This
 design can save significant amounts of space if a large number of items
 are added to the dynamic array at once and then removed.
-10. Consider Program <<program:LinkedListWithTail>> which defines the
+10. [[exercise18.10]] Consider Program <<program:LinkedListWithTail>> which defines the
 `LinkedListWithTail` class for storing a linked list of `String` values.
 Add a `public reverse()` method to the class which reverses the order of
 the nodes in the linked list. The key idea is make a new linked list
@@ -1539,7 +1549,7 @@ linked list. Put the next node *in front* of the head in the new linked
 list and remove it from the old. Continue the process until there is
 nothing left in the original list. Be sure to reset the `head` and
 `tail` references correctly after the reversal.
-11. In <<subsection:Linked_lists>>, we use two kinds of linked
+11. [[exercise18.11]] In <<Linked lists>>, we use two kinds of linked
 lists to store data, but copy all of that data back into an array before
 sorting it. We use third linked list class (`SortedLinkedList`) to
 insert data and maintain a sorted order. However, it is possible to add
@@ -1547,8 +1557,7 @@ data in non-sorted order to a linked list and then sort it afterwards.
 Add a `sort()` method to the `LinkedListWithTail` class that performs a
 bubble sort on the nodes inside.
 +
-The algorithm for a bubble sort is described in <<problem:Sort
-it out>>. The idea is to make repeated passes through a list, swapping
+The algorithm for a bubble sort is described in <<Problem: Sort it out>>. The idea is to make repeated passes through a list, swapping
 two adjacent items if they are out of order. You keep making passes over
 the list until no adjacent items are out of order. For a this `sort()`
 method, you will need to use the `compareTo()` method to compare the
@@ -1556,8 +1565,8 @@ method, you will need to use the `compareTo()` method to compare the
 have special cases that update the `head` and `tail` pointers if those
 nodes are swapped with other nodes. Note that bubble sort is not the
 fastest way to sort a linked list. We introduce a faster approach in
-<<chapter:Recursion>>.
-12. <<exercise:dynamicArrayTestExercise>> Create JUnit test cases to
+<<Recursion>>.
+12. [[exercise18.12]] Create JUnit test cases to
 verify that the `synchronized` keywords are needed on the `set()` and
 `sort()` methods of the `DynamicArray` example
 (Program <<program:DynamicArray>>). To test the `set()` method, you can
@@ -1569,7 +1578,7 @@ occasionally overwriting the value at the fixed location). To test the
 array at the same time. Check to see if the array is, in fact, actually
 sorted after the threads have exited. For both tests, you may need to
 repeat the operations a number of times to trigger the race condition.
-13. To make an infix calculator that can handle floating point values or
+13. [[exercise18.13]] To make an infix calculator that can handle floating point values or
 even just integers with more than one digit, you need to make a pass
 over the input, parsing the sequence of characters into terms. When an
 expression is in infix notation, the order of terms is an operand
@@ -1583,12 +1592,12 @@ parenthesis, you continue to look for an operator.
 Using this first pass over input to separate terms as well as the
 `parseDouble()` method from <<example:Parsing_a_number>> to
 compute the equivalent `double` values of operands, rewrite the solution
-from <<solution:Infix_conversion>> to convert your terms into
+from <<Solution: Infix conversion>> to convert your terms into
 postfix ordering and then calculate the answer.
-14. Re-implement the solution to the infix conversion problem given in
-<<solution:Infix_conversion>> so that it uses `GenericStack`
+14. [[exercise18.14]] Re-implement the solution to the infix conversion problem given in
+<<Solution: Infix conversion>> so that it uses `GenericStack`
 with a type parameter of `Term` instead of `TermStack`.
-15. Interfaces can also be generic. Consider the following generic
+15. [[exercise18.15]] Interfaces can also be generic. Consider the following generic
 version of `Queue`.
 +
 [source,java]

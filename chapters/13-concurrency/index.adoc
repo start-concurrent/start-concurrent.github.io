@@ -1,4 +1,3 @@
-[[chapter:Concurrent_Programming]]
 :imagesdir: chapters/13-concurrency/images
 == Concurrent Programming
 
@@ -63,14 +62,18 @@ some care to coordinate these workers. First of all, we still need to
 get the right answer. A concurrent solution is worthless if it is
 incorrect, and by reading and writing to the same shared memory, answers
 found by one core can corrupt answers found by other cores. Preventing
-that problem will be addressed in <<chapter:Synchronization>>.
+that problem will be addressed in <<Synchronization>>.
 If we are sure the concurrent solution is correct, we also want to
 improve performance in some way. Perhaps we want the task to finish more
 quickly. Perhaps we have an interactive system that should continue to
 handle user requests even though it is working on a solution in the
 background. Again, if the overhead of coordinating our workers takes
 more time than a sequential solution or makes the system less
-responsive, it is not useful.
+responsive, it's not useful.
+
+****
+<<exercise13.10, Exercise 13.10>> 
+****
 
 There are two main ways to split up work. The first is called _task
 decomposition_. In this approach, each worker is given a different job
@@ -99,6 +102,10 @@ Task decomposition is often easier than domain decomposition because
 many tasks have natural divisions. Unfortunately, it is not always an
 effective way to use multiple cores on a computer. If one task finishes
 long before the others, a core might sit idle.
+
+****
+<<exercise13.9, Exercise 13.9>> 
+****
 
 The next two examples give simple illustrations of the process of
 splitting a task into smaller subtasks in the context of multicore
@@ -163,8 +170,12 @@ multiple cores to evaluate an expression like this will take less time
 than a single core. However, there is no guarantee that using multiple
 cores will always be faster, because tasks take time to set up and to
 communicate with each other.
-
 ====
+
+****
+<<exercise13.4, Exercise 13.4>> +
+<<exercise13.5, Exercise 13.5>>
+****
 
 These examples illustrate how a task can be divided into two or more
 subtasks executed by different cores of a processor. We use a dual-core
@@ -511,6 +522,10 @@ In earlier versions of Java, there was a `stop()` method which would
 stop an executing thread. Although this method still exists, it has been
 deprecated and should not be used.
 
+****
+<<exercise13.1, Exercise 13.1>>
+****
+
 .Math expression threads
 ====
 
@@ -621,6 +636,10 @@ to design classes that implement `Runnable` instead of inheriting from
 implements `Runnable`, it is free to inherit from another parent class
 with the features you want.
 
+****
+<<exercise13.2, Exercise 13.2>>
+****
+
 .Array of threads
 ====
 
@@ -697,6 +716,11 @@ latexmath:[t_c<t_s], making the speedup greater than 1. However,
 simply writing a concurrent program does not necessarily make it faster
 than the sequential version.
 
+****
+<<exercise13.6, Exercise 13.6>> +
+<<exercise13.8, Exercise 13.8>>
+****
+
 To determine speedup, we need to measure latexmath:[t_s] and
 latexmath:[t_c]. Time in a Java program can easily be measured with
 the following two static methods in the `System` class.
@@ -740,8 +764,12 @@ System.out.println("Elapsed time: " + (end - start) + " ms");
 The output will give the execution time for `work()` measured in
 milliseconds. To get the execution time in nanoseconds, use the
 `System.nanoTime()` method instead.
-
 ====
+
+****
+<<exercise13.15, Exercise 13.15>> +
+<<exercise13.16, Exercise 13.16>>
+****
 
 Now that we have the tools to measure execution time, we can measure
 speedup. The next few examples show the speedup (or lack of it) that we
@@ -766,8 +794,11 @@ the concurrent program with two threads executes much slower than the
 sequential program. In this example, the cost of creating, running, and
 joining threads outweighed the benefits of concurrent calculation on two
 cores.
-
 ====
+
+****
+<<exercise13.7, Exercise 13.7>>
+****
 
 .Array summation
 ====
@@ -823,7 +854,7 @@ be shared by all instances of `SumThread`. Then each thread is created
 with lower and upper bounds that mark its array partition. If the
 process using the array length and the number of threads to determine
 upper and lower bounds doesn't make sense, refer to
-<<concurrency:Arrays>> which describes the fair division of work
+<<Concurrency: Arrays>> which describes the fair division of work
 to threads. If the length of the array is not divisible by the number of
 threads, simple division isn't enough. After creating each thread, its
 `start()` method is called.
@@ -840,8 +871,13 @@ complete. When each thread is done, the main thread adds its value to
 the running total. If the main thread is interrupted while waiting for a
 thread to complete, the stack trace is printed. Otherwise, the final sum
 is printed out.
-
 ====
+
+****
+<<exercise13.12, Exercise 13.12>> +
+<<exercise13.19, Exercise 13.19>> +
+<<exercise13.20, Exercise 13.20>>
+****
 
 .Matrix multiplication
 ====
@@ -895,7 +931,7 @@ critical that each thread is assigned a set of rows that does not
 overlap with the rows another thread has. Not only would having multiple
 threads compute the same row be inefficient, it could very likely lead
 to an incorrect result, as we will see in
-<<chapter:Synchronization>>.
+<<Synchronization>>.
 
 The following client code uses an array of `MatrixThread` objects to
 perform a matrix multiplication. We assume that an `int` constant named
@@ -927,7 +963,7 @@ catch( InterruptedException e ) {
 
 We loop through the array, creating a `MatrixThread` object for each
 location. As in the previous example, we use the approach described in
-<<concurrency:Arrays>> to allocate rows to each thread fairly.
+<<Concurrency: Arrays>> to allocate rows to each thread fairly.
 Each new `MatrixThread` object is given a reference to each of the three
 matrices as well as an inclusive starting and an exclusive ending row.
 After the `MatrixThread` objects are created, we start them running with
@@ -961,8 +997,12 @@ Only with latexmath:[1000\times1000] matrices did we see improved
 performance when using two threads. In that case, we achieved a speedup
 of 1.45, marked with an asterisk. In the other two cases, performance
 became worse.
-
 ====
+
+****
+<<exercise13.14, Exercise 13.14>> +
+<<exercise13.17, Exercise 13.17>>
+****
 
 === Concepts: Thread scheduling
 
@@ -995,8 +1035,8 @@ information about when they will and will not need processor time. A
 thread may need to wait for a specific event and will not need to run
 until then. Java allows threads to interact with the scheduler through
 `Thread.sleep()` and `Thread.yield()`, which we will discuss in
-<<syntax:Thread_states>>, and through the `wait()`, method which
-we will discuss in <<chapter:Synchronization>>.
+<<Syntax: Thread states>>, and through the `wait()`, method which
+we will discuss in <<Synchronization>>.
 
 ==== Nondeterminism
 
@@ -1016,8 +1056,12 @@ threads, and both programs are complex mountains of code which try to
 balance many factors. If you create three threads, there is no guarantee
 that the first will run first, the second second, and the third third,
 not even if it happens that way the first 10 times you run the program.
-Exercise <<exercise:NumberedThread>> shows that the pattern of thread
+<<exercise13.18, Exercise 13.18>> shows that the pattern of thread
 execution can vary a lot.
+
+****
+<<exercise13.18, Exercise 13.18>>
+****
 
 In all the programs before this chapter, the same sequence of input
 would always produce the same sequence of output. Perhaps the biggest
@@ -1065,6 +1109,10 @@ parallel programming, partly because it can be useful in solving some
 problems in this chapter, and partly because we want you to understand
 the reasons why we need better techniques for thread communication.
 
+****
+<<exercise13.11, Exercise 13.11>>
+****
+
 === Syntax: Thread states
 
 A widely used Java tool for manipulating scheduling is the
@@ -1084,6 +1132,11 @@ anything when a `Thread.yield()` call happens. The Java specification
 does not demand a particular implementation. A JVM could ignore a
 `Thread.yield()` call completely, but most JVMs will move on to the next
 thread in the schedule.
+
+****
+<<exercise13.3, Exercise 13.3>> +
+<<exercise13.13, Exercise 13.13>>
+****
 
 [[figure-thread_states]]
 [.text-center]
@@ -1252,7 +1305,7 @@ its own `done` to `false`.
 In short, coordinating two or more threads together is a difficult
 problem. None of the solutions we give here are fully acceptable. We
 introduce better tools for coordination and synchronization in
-<<chapter:Synchronization>>.
+<<Synchronization>>.
 
 ====
 
@@ -1293,7 +1346,7 @@ Static constants hold both the number to be factored and the number of
 threads. In the `main()` method, we create an array of threads for
 storage. Then, we create each `FactorThread` object, assigning upper and
 lower bounds at the same time, using the standard technique from
-<<concurrency:Arrays>> to divide the work fairly. Because we
+<<Concurrency: Arrays>> to divide the work fairly. Because we
 know the number we're dividing isn't even, we start with 3. By only
 going up to the square root of the number, we know that we will only
 find the smaller of the two factors. In that way we can avoid having one
@@ -1332,24 +1385,24 @@ concurrent programs.
 === Exercises
 *Conceptual Problems*
 
-1.  <<exercise:thread_methods>> The `start()`, `run()`, and `join()`
+1.  [[exercise13.1]] The `start()`, `run()`, and `join()`
 methods are essential parts of the process of using threads in Java.
 Explain the purpose of each method.
-2.  <<exercise:Thread_vs._Runnable>> What is the difference between
+2.  [[exercise13.2]] What is the difference between
 extending the `Thread` class and implementing the `Runnable` interface?
 When should you use one over the other?
-3.  <<exercise:sleep_and_yield>> How do the `Thread.sleep()` method and
+3.  [[exercise13.3]] How do the `Thread.sleep()` method and
 the `Thread.yield()` method each affect thread scheduling?
-4.  <<exercise:math_expression>> Consider the expression in
+4.  [[exercise13.4]] Consider the expression in
 <<example:Math_expression_tasks>>. Suppose that the multiply and
 exponentiation operations require 1 and 10 time units, respectively.
 Compute the number of time units required to evaluate the expression as
 in <<figure-math_evaluation>>(a) and (b).
-5.  <<exercise:multicore-exercise>> Suppose that a computer has one
+5.  [[exercise13.5]] Suppose that a computer has one
 quadcore processor. Can the tasks in Examples <<example:Video game
 tasks>> and <<example:Math_expression_tasks>> be further subdivided to
 improve performance on four cores? Why or why not?
-6.  <<exercise:speedup>> Consider the definition of speedup from
+6.  [[exercise13.6]] Consider the definition of speedup from
 <<examples:Concurrency_and_speedup>>. Let's assume you have a
 job 1,000,000 units in size. A thread can process 10,000 units of work
 every second. It takes an additional 100 units of work to create a new
@@ -1357,10 +1410,10 @@ thread. What is the speedup if you have a dual-core processor and create
 2 threads? What if you have a quadcore processor and create 4 threads?
 Or an 8-core processor and create 8 threads? You may assume that a
 thread does not need to communicate after it has been created.
-7.  <<exercise:speedup_bounds>> In which situations can speedup be
+7.  [[exercise13.7]] In which situations can speedup be
 smaller than the number of processors? Is it ever possible for speedup
 to be greater than the number of processors?
-8.  <<exercise:Amdahl>> Amdahl's Law is a mathematical description of
+8.  [[exercise13.8]] Amdahl's Law is a mathematical description of
 the maximum amount you can improve a system by only improving a part of
 it. One form of it states that the maximum speedup attainable in a
 parallel program is latexmath:[\frac{1}{1 - P}] where latexmath:[P]
@@ -1368,7 +1421,7 @@ is the fraction of the program which can be parallelized to an arbitrary
 degree. If 30% of the work in a program can be fully parallelized but
 the rest is completely serial, what is the speedup with 2 processors? 4?
 8? What implications does Amdahl's Law have?
-9.  <<exercise:task_parallelization>> Consider the following table of
+9.  [[exercise13.9]] Consider the following table of
 tasks:
 +
 [.center%autowidth%header,cols="<.^,^.^,^.^,<.^",]
@@ -1392,7 +1445,7 @@ minimum amount of time needed to perform all tasks with only a single
 person? What is the minimum amount of time needed to perform all tasks
 with an unlimited number of people? What is the smallest number of
 people needed to achieve this minimum time?
-10. <<exercise:interleavings>> Consider the following code snippet.
+10. [[exercise13.10]] Consider the following code snippet.
 +
 [source,java]
 ----
@@ -1414,12 +1467,12 @@ threads but that `x` is a shared variable, what are the possible values
 of these snippets can be interleaved in any way.
 +
 *Programming Practice*
-11. <<exercise:polling>> Re-implement the array summing problem from
+11. [[exercise13.11]] Re-implement the array summing problem from
 <<example:Array_summation>> using polling instead of `join()`
 calls. Your program should not use a single call to `join()`. Polling is
 not an ideal way to solve this problem, but it is worth experimenting
 with the technique.
-12. <<exercise:echo_effect>> Composers often work with multiple tracks
+12. [[exercise13.12]] Composers often work with multiple tracks
 of music. One track might contain solo vocals, another drums, a third
 one violins, and so on. After recording the entire take, a mix engineer
 might want to apply special effects such as an echo to one or more
@@ -1457,11 +1510,11 @@ and `b` to create the desired echo effect.
 +
 Write a threaded program that computes the values in `out` in parallel
 for an arbitrary number of threads.
-13. <<exercise:sleep_timer>> Write a program which takes a number of
+13. [[exercise13.13]] Write a program which takes a number of
 minutes and seconds as input. In this program, implement a timer using
 `Thread.sleep()` calls. Each second, print the remaining time to the
 screen. How accurate is your timer?
-14. <<exercise:concurrent_approximation>> As you know,
+14. [[exercise13.14]] As you know,
 latexmath:[\pi\approx
 3.1416]. A more precise value can be found by writing a program which
 approximates the area of a circle. The area of a circle can be
@@ -1481,18 +1534,18 @@ When your program finishes running, you can compare your value against
 `Math.PI` for accuracy.
 +
 *Experiments*
-15. <<exercise:time-measurement>> Use the `currentTimeMillis()` method
+15. [[exercise13.15]] Use the `currentTimeMillis()` method
 to measure the time taken to execute a relatively long-running piece of
 Java code you have written. Execute your program several times and
 compare the execution time you obtain during different executions. Why
 do you think the execution times are different?
-16. <<exercise:thread_overhead>> Thread creation overhead is an
+16. [[exercise13.16]] Thread creation overhead is an
 important consideration in writing efficient parallel programs. Write a
 program which creates a large number of threads which do nothing. Test
 how long it takes to create and join various numbers of threads. See if
 you can determine how long a single thread creation operation takes on
 your system, on average.
-17. <<exercise:matrix_multiply>> Create serial and concurrent
+17. [[exercise13.17]] Create serial and concurrent
 implementations of matrix multiplication like those described in
 <<example:Matrix_multiplication>>.
 a.  Experiment with different matrix sizes and thread counts to see how
@@ -1500,19 +1553,19 @@ the speedup performance changes. If possible, run your tests on machines
 with different numbers of cores or processors.
 b.  Given a machine with latexmath:[k>1] cores, what is the maximum
 speedup you can expect to obtain?
-18. <<exercise:NumberedThread>> Repeatedly run the code in
+18. [[exercise13.18]] Repeatedly run the code in
 <<example:Array_of_threads>> which creates several
 `NumberedThread` objects. Can you discover any patterns in the order
 that the threads print? Add a loop and some additional instrumentation
 to the `NumberedThread` class which will allow you to measure how long
 each thread runs before the next thread has a turn.
-19. <<exercise:ArraySum>> Create serial and parallel implementations of
+19. [[exercise13.19]] Create serial and parallel implementations of
 the array summing problem solved in <<example:Array_summation>>.
 Experiment with different array sizes and thread counts to see how
 performance changes. How does the speedup differ from matrix multiply?
 What happens if you simply sum the numbers instead of taking the sine
 first?
-20. <<exercise:TreeSum>> The solution to the array summing problem in
+20. [[exercise13.20]] The solution to the array summing problem in
 <<example:Array_summation>> seems to use concurrency
 half-heartedly. After all the threads have computed their sums, the main
 thread sums up the partial sums sequentially.
