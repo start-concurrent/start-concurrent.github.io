@@ -371,6 +371,7 @@ if you only rely on `notify()`.
 <<exercise14.4, Exercise 14.4>>
 ****
 
+[[producerConsumerExample]]
 .Producer/consumer
 ====
 
@@ -416,6 +417,7 @@ threads back to concurrent execution as quickly as possible.
 <<exercise14.10, Exercise 14.10>>
 ****
 
+[[bankAccountExample]]
 .Bank account
 ====
 
@@ -556,10 +558,9 @@ above, we have already gotten ourselves into trouble.
 ----
 include::programs/DeadlockPhilosopher.java[lines=22..46]
 ----
-
-
 ====
 
+[[deadlockSumExample]]
 .Deadlock sum
 ====
 
@@ -656,7 +657,7 @@ with humorous intent. If a philosopher is never able to acquire
 chopsticks, that philosopher will quite literally starve.
 
 Starvation does not necessarily mean deadlock, however. Examine the
-implementation in <<example:Bank_account>> for the bank account.
+implementation in <<bankAccountExample>> for the bank account.
 That solution is correct in the sense that it preserves mutual
 exclusion. No combination of balance checks, deposits, or withdrawals
 will cause the balance to be incorrect. Money will neither be created
@@ -767,8 +768,7 @@ with synchronization tools may produce a program which gives the right
 answer but does not exploit any parallelism.
 
 For example, we can take the `run()` method from the parallel
-implementation of matrix multiply given in <<example:Matrix
-multiplication>> and use the `synchronized` keyword to lock on the
+implementation of matrix multiply given in <<matrixMultiplicationExample>> and use the `synchronized` keyword to lock on the
 matrix itself.
 
 [source,java]
@@ -961,7 +961,7 @@ public synchronized void run() {
 +
 Will this change fix the race condition? Why or why not?
 8.  [[exercise14.8]] Examine our deadlock example from
-<<example:Deadlock_sum>>. Explain why this example fulfills all
+<<deadlockSumExample>>. Explain why this example fulfills all
 four conditions for deadlock. Be specific about which threads and which
 resources are needed to show each condition.
 9.  [[exercise14.9]] What is priority inversion? Why can
@@ -969,7 +969,7 @@ a low priority thread holding a lock be particularly problematic?
 +
 *Programming Practice*
 10. [[exercise14.10]] In
-<<example:Producer/consumer>> the `Buffer` class used to
+<<producerConsumerExample>> the `Buffer` class used to
 implement a solution to the producer/consumer problem only has a single
 lock. When the buffer is empty and a producer puts an item in it, both
 producers and consumers are woken up. A similar situation happens
@@ -977,7 +977,7 @@ whenever the buffer is full and a consumer removes an item. Re-implement
 this solution with two locks so that a producer putting an item into an
 empty buffer only wakes up consumers and a consumer removing an item
 from a full buffer only wakes up producers.
-11. [[exercise14.11]] In <<example:Bank_account>>
+11. [[exercise14.11]] In <<bankAccountExample>>
 we used the class `SynchronizedAccount` to solve a bank account problem.
 As we mention in <<Starvation and livelock>>, depositing
 and withdrawing threads can be starved out by a steady supply of balance
