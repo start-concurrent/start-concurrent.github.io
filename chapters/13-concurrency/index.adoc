@@ -111,6 +111,7 @@ The next two examples give simple illustrations of the process of
 splitting a task into smaller subtasks in the context of multicore
 programming.
 
+[[videoGameTasksExample]]
 .Video game tasks
 ====
 
@@ -144,6 +145,7 @@ B or C to complete.
 
 ====
 
+[[mathExpressionTasksExample]]
 .Math expression tasks
 ====
 
@@ -214,6 +216,8 @@ answer is called the _reduce_ step.
 We illustrate the domain decomposition strategy in the next two
 examples.
 
+
+[[arraySummationPreviewExample]]
 .Array summation preview
 ====
 
@@ -250,7 +254,7 @@ After the two cores have completed their work on each half of the array,
 the individual sums are added together to produce the final sum.
 ====
 
-
+[[matrixMultiplicationPreviewExample]]
 .Matrix multiplication preview
 ====
 
@@ -306,13 +310,12 @@ it takes care to package up the right set of tasks into a single thread
 of execution. Recall the previous examples of concurrent programming in
 this chapter.
 
-Consider dividing the tasks in <<example:Video_game_tasks>> into
+Consider dividing the tasks in <<videoGameTasksExample>> into
 two threads. Tasks B and C in can be packaged into thread 1, and task D
 can be packaged into thread 2. This division is shown in
 <<figure-tasks_in_threads>>(a).
 
-Tasks to evaluate different subexpressions in <<example:Math
-expression tasks>> can also be divided into two threads as shown in
+Tasks to evaluate different subexpressions in <<mathExpressionTasksExample>> can also be divided into two threads as shown in
 <<figure-tasks_in_threads>>(b). In many problems there are
 several reasonable ways of dividing a set of subtasks into threads.
 
@@ -326,14 +329,12 @@ thread started these threads running. Every Java program, concurrent or
 sequential, starts with one thread. We will refer to this thread as the
 _main_ thread since it contains the `main()` method.
 
-Examples <<example:Array_summation_preview>> and <<example:Matrix
-multiplication preview>> use multiple identical tasks. But these tasks
-operate on different data. Nevertheless, in <<example:Array
-summation preview>>, the two tasks can be assigned two threads that
+<<arraySummationPreviewExample>> and <<matrixMultiplicationPreviewExample>> use multiple identical tasks. But these tasks
+operate on different data. Nevertheless, in <<arraySummationPreviewExample>>, the two tasks can be assigned two threads that
 operate on different portions of the input array. The task of summing
 the results from the two threads can either be a separate thread or a
 subtask included in one of the other threads. In
-<<example:Matrix_multiplication_preview>>, the two tasks can
+<<matrixMultiplicationPreviewExample>>, the two tasks can
 again be assigned to two distinct threads that operate on different
 parts of the input matrix latexmath:[A] to generate the corresponding
 portions of the output matrix latexmath:[C].
@@ -422,6 +423,8 @@ method. Additional threads must start somewhere, and that place is the
 least one thread is active. The following example shows two threads,
 each evaluating a separate subexpression as in <<figure-tasks_in_threads>>(b).
 
+
+[[threadSamplesExample]]
 .Thread samples
 ====
 
@@ -446,7 +449,7 @@ include::programs/Thread2.java[]
 
 The `run()` method in each thread above computes a subexpression and
 saves its value. We show how these threads can be executed to solve the
-math expression problem in <<example:Math_expression_threads>>.
+math expression problem in <<mathExpressionThreadsExample>>.
 
 ====
 
@@ -526,12 +529,12 @@ deprecated and should not be used.
 <<exercise13.1, Exercise 13.1>>
 ****
 
+[[mathExpressionThreadsExample]]
 .Math expression threads
 ====
 
 Now that we have the syntax to start threads and wait for them to
-finish, we can use the threads defined in <<example:Thread
-samples>> with a main thread to make our first complete concurrent
+finish, we can use the threads defined in <<threadSamplesExample>> with a main thread to make our first complete concurrent
 program. The main thread in class `MathExpression` creates and starts
 the worker threads `thread1` and `thread2` and waits for their
 completion. When the two threads complete their execution, we can ask
@@ -580,7 +583,6 @@ accessed.
 
 ====
 
-[[subsection:runnable]]
 ==== The `Runnable` interface
 
 Although it is possible to create Java threads by inheriting from the
@@ -640,6 +642,7 @@ with the features you want.
 <<exercise13.2, Exercise 13.2>>
 ****
 
+[[arrayOfThreadsExample]]
 .Array of threads
 ====
 
@@ -778,8 +781,7 @@ can achieve using a concurrent solution to a few simple problems.
 .Math expression speedup
 ====
 
-Recall the concurrent program in <<example:Math expression
-threads>> to evaluate a simple mathematical expression. This program
+Recall the concurrent program in <<mathExpressionThreadsExample>> to evaluate a simple mathematical expression. This program
 uses two threads. We executed this multi-threaded program on an iMac
 computer with an Intel Core 2 Duo running at 2.16 Ghz. The execution
 time was measured at 1,660,000 nanoseconds. We also wrote a simple
@@ -800,10 +802,11 @@ cores.
 <<exercise13.7, Exercise 13.7>>
 ****
 
+[[arraySummationExample]]
 .Array summation
 ====
 
-In <<example:Array_summation_preview>>, we introduced the
+In <<arraySummationPreviewExample>>, we introduced the
 problem of applying a function to every value in an array and then
 summing the results. Let's say that we want to apply the sine function
 to each value. To solve this problem concurrently, we partition the
@@ -879,10 +882,11 @@ is printed out.
 <<exercise13.20, Exercise 13.20>>
 ****
 
+[[matrixMultiplicationExample]]
 .Matrix multiplication
 ====
 
-In <<example:Matrix_multiplication_preview>>, we discussed the
+In <<matrixMultiplicationPreviewExample>>, we discussed the
 importance of matrix operations in many applications. Now that we know
 the necessary Java syntax, we can write a concurrent program to multiply
 two square matrices latexmath:[A] and latexmath:[B] and compute the
@@ -890,7 +894,7 @@ resultant matrix latexmath:[C]. If these matrices have latexmath:[n]
 rows and latexmath:[n] columns, the value at the latexmath:[i]^th^
 row and latexmath:[j]^th^ column of latexmath:[C] is
 
-latexmath:[C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \hdots +
+latexmath:[C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \ldots +
 A_{in}B_{nj}]
 
 In Java, it is natural for us to store matrices as 2-dimensional arrays.
@@ -1394,16 +1398,15 @@ When should you use one over the other?
 3.  [[exercise13.3]] How do the `Thread.sleep()` method and
 the `Thread.yield()` method each affect thread scheduling?
 4.  [[exercise13.4]] Consider the expression in
-<<example:Math_expression_tasks>>. Suppose that the multiply and
+<<mathExpressionTasksExample>>. Suppose that the multiply and
 exponentiation operations require 1 and 10 time units, respectively.
 Compute the number of time units required to evaluate the expression as
 in <<figure-math_evaluation>>(a) and (b).
 5.  [[exercise13.5]] Suppose that a computer has one
-quadcore processor. Can the tasks in Examples <<example:Video game
-tasks>> and <<example:Math_expression_tasks>> be further subdivided to
+quadcore processor. Can the tasks in <<videoGameTasksExample>> and <<mathExpressionTasksExample>> be further subdivided to
 improve performance on four cores? Why or why not?
 6.  [[exercise13.6]] Consider the definition of speedup from
-<<examples:Concurrency_and_speedup>>. Let's assume you have a
+<<Examples: Concurrency and speedup>>. Let's assume you have a
 job 1,000,000 units in size. A thread can process 10,000 units of work
 every second. It takes an additional 100 units of work to create a new
 thread. What is the speedup if you have a dual-core processor and create
@@ -1468,7 +1471,7 @@ of these snippets can be interleaved in any way.
 +
 *Programming Practice*
 11. [[exercise13.11]] Re-implement the array summing problem from
-<<example:Array_summation>> using polling instead of `join()`
+<<arraySummationExample>> using polling instead of `join()`
 calls. Your program should not use a single call to `join()`. Polling is
 not an ideal way to solve this problem, but it is worth experimenting
 with the technique.
@@ -1547,26 +1550,26 @@ you can determine how long a single thread creation operation takes on
 your system, on average.
 17. [[exercise13.17]] Create serial and concurrent
 implementations of matrix multiplication like those described in
-<<example:Matrix_multiplication>>.
+<<matrixMultiplicationExample>>.
 a.  Experiment with different matrix sizes and thread counts to see how
 the speedup performance changes. If possible, run your tests on machines
 with different numbers of cores or processors.
 b.  Given a machine with latexmath:[k>1] cores, what is the maximum
 speedup you can expect to obtain?
 18. [[exercise13.18]] Repeatedly run the code in
-<<example:Array_of_threads>> which creates several
+<<arrayOfThreadsExample>> which creates several
 `NumberedThread` objects. Can you discover any patterns in the order
 that the threads print? Add a loop and some additional instrumentation
 to the `NumberedThread` class which will allow you to measure how long
 each thread runs before the next thread has a turn.
 19. [[exercise13.19]] Create serial and parallel implementations of
-the array summing problem solved in <<example:Array_summation>>.
+the array summing problem solved in <<arraySummationExample>>.
 Experiment with different array sizes and thread counts to see how
 performance changes. How does the speedup differ from matrix multiply?
 What happens if you simply sum the numbers instead of taking the sine
 first?
 20. [[exercise13.20]] The solution to the array summing problem in
-<<example:Array_summation>> seems to use concurrency
+<<arraySummationExample>> seems to use concurrency
 half-heartedly. After all the threads have computed their sums, the main
 thread sums up the partial sums sequentially.
 +
