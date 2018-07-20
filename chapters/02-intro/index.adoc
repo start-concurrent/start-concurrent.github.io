@@ -812,6 +812,7 @@ problem. We have not added the code to compute the answer or display it.
 
 ====
 
+[[inputForDistanceComputationExample]]
 .Input for distance computation
 ====
 
@@ -830,31 +831,26 @@ Subproblem 3:::
 <<DistanceProgram>> solves each of these subproblems in order,
 using the command-line input and output tools we have just discussed.
 
-.Computes the distance a moving object travels.
-[source, java, linenums]
-[[DistanceProgram]]
-----
-include::programs/Distance.java[]
-----
-
 The program starts with import statements, the class definition, and the
 definition of the `main()` method. At the beginning of the `main()`
 method, we have code to declare and initialize a variable of type
 `Scanner` named `in`. We also declare variables of type `double` to hold
 the input speed and time and the resulting distance.
 
-Starting at line <<solutionSubProblemOneScanner>>, we solve subproblem
-1, prompting the user for the speed and the time and using our `Scanner`
-object to read them in. Because they are both floating-point values with
-type `double`, we use the `nextDouble()` method for input.
+.Computes the distance a moving object travels.
+[source, java, linenums]
+[[DistanceProgram]]
+----
+include::programs/Distance.java[]
+----
+<1> Starts solving subproblem 1, prompting the user for the speed and the time and using our `Scanner` object to read them in. Because they are both floating-point values with type `double`, we use the `nextDouble()` method for input.
+<2> Computes the distance traveled by multiplying `speed` by `time` and storing the result in
+`distance`.
 
-At line <<solutionSubProblemTwoScanner>>, we compute the distance
-traveled by multiplying `speed` by `time` and storing the result in
-`distance`. The last three lines of the `main()` method solve subproblem
+The last three lines of the `main()` method solve subproblem
 3 by outputting `"Distance traveled: "`, the computed distance, and
 `" miles."`. If you run the program, all three items are printed on the
 same line on the terminal.
-
 ====
 
 ==== GUI input and output
@@ -1011,16 +1007,11 @@ use the GUI-based input tools in `JOptionPane`.
 ----
 include::programs/GetInputGUI.java[]
 ----
-
-The code in this program is very similar to
-<<GetInputCLIProgram>> until line <<inputDialogLineOne>>. At
-that point, we use the `showInputDialog()` method to read a `String`
-version of the height from the user. On the next line, we have to
+<1> At this point the code in this program diverges from <<GetInputCLIProgram>>. We use the `showInputDialog()` method to read a `String` version of the height from the user. On the next line, we have to
 convert this `String` version into the `double` version that we store in
 the `height` variable. The next four lines read in the coefficient of
 restitution and the number of bounces and convert them to their
 appropriate numerical types.
-
 ====
 
 ==== A few operations
@@ -1389,7 +1380,7 @@ displaying the height that was computed. In the final, integrated
 program, the portion of the code that corresponds to solving subproblem
 1 is below.
 
-[source, java, linenums]
+[source, java]
 ----
 include::programs/BouncingBallCLI.java[lines=1..28]
 ----
@@ -1398,7 +1389,7 @@ include::programs/BouncingBallCLI.java[lines=1..28]
 With the imports, class declaration, and `main()` method set up by the
 solution to subproblem 1, the solution to subproblem 2 is very short.
 
-[source, java, linenums]
+[source, java]
 ----
 include::programs/BouncingBallCLI.java[lines=30..31]
 ----
@@ -1408,7 +1399,7 @@ The solution to subproblem 3 and the braces that mark the end of the
 `main()` method and then the end of the class only take up a few
 additional lines.
 
-[source, java, linenums]
+[source, java]
 ----
 include::programs/BouncingBallCLI.java[lines=33..39]
 ----
@@ -1686,24 +1677,21 @@ parallelism and concurrency.
 1.  [[exercise2.1]] When solving a problem using a
 computer, what problem is solved by the programmer and what problem is
 solved by the program written by the programmer? Are they the same?
-2.  [[exercise2.2]] In <<Input for distance computation>>, we declared all variables to be of type
+2.  [[exercise2.2]] In <<DistanceProgram>>, we declared all variables to be of type
 `double`. How would the program behave differently if we had declared
 all the variables with type `int`?
-3.  What is the purpose of the statement at
-line <<createScannerGetInputDataObject>> in
+3.  What is the purpose of the statement `Scanner in = new Scanner(System.in);` in
 <<GetInputCLIProgram>>?
 4.  Explain the difference between a declaration and an assignment
 statement.
 5.  [[exercise2.5]] Is the following
-statement from line <<sampleDeclarationAndExecutableStatement>> of
-<<BouncingBallGUIProgram>> a declaration, an assignment, or a
+statement from <<BouncingBallGUIProgram>> a declaration, an assignment, or a
 combination of the two?
 +
 [source, java]
 ----
-String response = JOptionPane.showInputDialog(
-    null, enterHeight, title,
-    JOptionPane.QUESTION_MESSAGE);
+String response = JOptionPane.showInputDialog(null,
+	enterHeight, title, JOptionPane.QUESTION_MESSAGE);
 ----
 6.  [[exercise2.6]] When would you
 prefer using the `JOptionPane` class for output over
@@ -1778,7 +1766,7 @@ mentions the color of the ball.
 17. Rewrite your solution to <<exercise2.16,Exercise 2.16>>
 so that it uses a `JOptionPane`-based GUI instead of `Scanner` and
 `System.out.print()`.
-18. [[exercise2.18]] In <<Input for distance computation>>, we assumed that the speed is given in miles
+18. [[exercise2.18]] In <<inputForDistanceComputationExample>>, we assumed that the speed is given in miles
 per hour and the time in hours. Change <<DistanceProgram>> to
 compute the distance traveled by a moving object given its speed in
 miles per hour but time in seconds. You will need to perform a
