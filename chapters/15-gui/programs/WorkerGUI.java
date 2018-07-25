@@ -32,7 +32,7 @@ public class WorkerGUI extends JFrame implements ActionListener {
 			SwingWorker worker = new SwingWorker<String, Void>() {		    
 			    public String doInBackground() {
 			    	try {
-			            Thread.sleep(5000);/*@\label{responsive sleep}@*/
+			            Thread.sleep(5000);
 			        } catch( Exception ignore ) {}
 			        return "Answer: " + Math.sqrt(2.0);
 			    }

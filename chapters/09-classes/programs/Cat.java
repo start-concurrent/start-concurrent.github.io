@@ -2,7 +2,7 @@ public class Cat {
 	private int lives = 9;
 	
 	public boolean useCuriosity() {			
-		if( lives > 1 ) { /*@\label{life check}@*/
+		if( lives > 1 ) { // <1>
 			lives--;
 			System.out.println("Down to life " + lives);
 			return true;

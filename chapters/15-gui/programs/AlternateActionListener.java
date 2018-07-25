@@ -9,7 +9,7 @@ public class AlternateActionListener implements ActionListener {
   JButton exitButton = new JButton("Exit"); 
   JTextField message = new JTextField("Listen to nature!");
   
-  public AlternateActionListener (){/*@\label{alternateActionListenerLine}@*/
+  public AlternateActionListener (){ // <1>
     chirpButton.addActionListener(this); 
     barkButton.addActionListener(this);
     exitButton.addActionListener(this);
@@ -19,24 +19,23 @@ public class AlternateActionListener implements ActionListener {
 	soundPanel.add(exitButton);    
     soundCheck.add(soundPanel);
     soundCheck.setSize(200,125);
-    soundCheck.setDefaultCloseOperation(
-    	JFrame.DISPOSE_ON_CLOSE);
+    soundCheck.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     soundCheck.setVisible(true);       
   }     
   
-  public void actionPerformed(ActionEvent e){/*@\label{actionPerformedLine}@*/
-    Object button = e.getSource(); /*@\label{identifyObjectLine}@*/
-    if(button == chirpButton) 
-      message.setText("Chirp requested."); 
+  public void actionPerformed(ActionEvent e){ // <2>
+    Object button = e.getSource(); // <3>
+    if(button == chirpButton) // <4>
+		message.setText("Chirp requested."); 
     else if(button == barkButton) 
-      message.setText("Bark requested.");
+		message.setText("Bark requested.");
     else {
-      System.out.println("Exit");
-      soundCheck.dispose();
+		System.out.println("Exit");
+		soundCheck.dispose();
     }
   }
   
-  public static void main(String[] args){
+  public static void main(String[] args){ // <5>
     new AlternateActionListener(); 
   }   
 }

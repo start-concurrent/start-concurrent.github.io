@@ -8,8 +8,7 @@ public class MathTutorApplet extends JApplet
     private JMenuItem subtract = new JMenuItem("Subtraction");
     private JMenuItem multiply = new JMenuItem("Multiply");
     private JMenuItem divide = new JMenuItem ("Divide");
-    private JLabel score =
-    	new JLabel("Score: 0 Correct 0 Incorrect");
+    private JLabel score = new JLabel("Score: 0 Correct 0 Incorrect");
     private JLabel label = new JLabel();
     private JTextField field = new JTextField(10);
     private JButton submit = new JButton("Submit");
@@ -21,8 +20,7 @@ public class MathTutorApplet extends JApplet
         JMenuBar menuBar = new JMenuBar();
         JMenu type = new JMenu("Type");
         JMenu operations = new JMenu("Operations");    
-        JCheckBoxMenuItem advanced =
-        	new JCheckBoxMenuItem("Advanced");
+        JCheckBoxMenuItem advanced = new JCheckBoxMenuItem("Advanced");
     	// Add ActionListeners to menu items and buttons        
     	add.addActionListener(this);
         subtract.addActionListener(this);
@@ -47,14 +45,14 @@ public class MathTutorApplet extends JApplet
         menuBar.add(operations);        
         setJMenuBar(menuBar);
 		//Add widgets to applet content
-        add( score, BorderLayout.NORTH );
-        add( label, BorderLayout.WEST );
-        add( field, BorderLayout.EAST );
-        add( submit, BorderLayout.SOUTH );
+        add(score, BorderLayout.NORTH);
+        add(label, BorderLayout.WEST);
+        add(field, BorderLayout.EAST);
+        add(submit, BorderLayout.SOUTH);
     }
     
     public void itemStateChanged(ItemEvent e) {
-    	if(e.getStateChange() == ItemEvent.SELECTED ) {
+    	if(e.getStateChange() == ItemEvent.SELECTED) {
             add.setEnabled(false);
             subtract.setEnabled(false);
             multiply.setEnabled(true); 
@@ -78,7 +76,7 @@ public class MathTutorApplet extends JApplet
     			incorrect++;    		    		
 			label.setText("");
     		score.setText("Score: " + correct + " Correct " +
-    				incorrect + " Incorrect");
+    			incorrect + " Incorrect");
 			submit.setEnabled(false);
     	}
     	else {    		
