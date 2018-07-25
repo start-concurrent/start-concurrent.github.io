@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class ReadAndGrowArray {
 	public static void main(String[] args) {
-		String[] names = new String[10];/*@\label{lineNames}@*/		
+		String[] names = new String[10];
 		Scanner in = new Scanner(System.in);
 		int n = 0;
 		String name = null;
@@ -13,9 +13,8 @@ public class ReadAndGrowArray {
 			try {
 				names[n] = name;
 			}
-			catch( ArrayIndexOutOfBoundsException e ) {/*@\label{exceptionRAGA}@*/
-				names = Arrays.copyOfRange(names, 0,/*@\label{lineCopy}@*/
-							names.length*2);
+			catch( ArrayIndexOutOfBoundsException e ) { // <1>
+				names = Arrays.copyOfRange(names, 0, names.length*2); // <2>
 				names[n] = name;
 			}
 			n++;

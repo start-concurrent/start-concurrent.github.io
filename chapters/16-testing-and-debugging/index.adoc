@@ -1043,25 +1043,25 @@ her strength to other values. When strength is tested, it will use the
 seems to be accidental here. When classes have large numbers of fields,
 making such a mistake becomes easier.
 
+Dynamic and static binding complicate this scope problem further. The
+fragment of code below using the class definitions from above highlights these
+complications.
+
 [source,java, linenums]
 ----
 Bodybuilder builder = new BraggingBodybuilder();
-builder.strength = 15;/*@\label{line:strength=15}@*/
+builder.strength = 15; // <1>
 BraggingBodybuilder bragger = (BraggingBodybuilder)builder;
 bragger.brag();
-bragger.strength = 20;/*@\label{line:strength=20}@*/
+bragger.strength = 20; // <2>
 bragger.brag();
 ----
+<1> Because fields are statically bound to the class of the
+object, the `strength` field for `Bodybuilder` will be set to 15.
+<2> However, the `strength` field for `BraggingBodybuilder`
+will be set to 20 here.
 
-Dynamic and static binding complicate this scope problem further. This
-fragment of code using the class definitions above highlights these
-complications. Because fields are statically bound to the class of the
-object, the `strength` field for `Bodybuilder` will be set to 15 on line
-<<line:strength=15>>, and the `strength` field for `BraggingBodybuilder`
-will be set to 20 on line <<line:strength=20>>. Thus, the first call to
-`brag()` will print out `My strength is 10!`, but the second call will
-print out `My strength is 20!`.
-
+Thus, the first call to `brag()` will print out `My strength is 10!`, but the second call will print out `My strength is 20!`.
 ====
 
 .Reference vs. value

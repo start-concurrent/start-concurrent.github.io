@@ -717,14 +717,14 @@ this behavior by changing the line below.
 
 [source, java]
 ----
-out = new PrintWriter ( new FileOutputStream("concurrent.out") );
+out = new PrintWriter( new FileOutputStream("concurrent.out") );
 ----
 
 We replace it with the following.
 
 [source, java]
 ----
-out = new PrintWriter ( new FileOutputStream("concurrent.out", true) );
+out = new PrintWriter( new FileOutputStream("concurrent.out", true) );
 ----
 
 This second `boolean` parameter to the `FileOutputStream` constructor
@@ -732,7 +732,7 @@ specifies that output will _append_ to the file instead of overwriting
 it.
 
 After this change, what does the file look like when we run the program?
-Since we are going to append to any preexisting file, make sure that you
+Since we're going to append to any preexisting file, make sure that you
 delete `concurrent.out` before running the program again. The file may
 look different on different systems. The file probably contains long
 runs of numbers from each thread. In fact, it is quite possible to have
@@ -741,8 +741,7 @@ the other.
 
 For performance reasons, file operations are usually done in batches.
 Instead of writing each number to the file as the thread produces it,
-output is usually stored in a buffer which is written as a whole. If we
-call `out.flush()` after line <<output_data_concurrently>>, we can flush
+output is usually stored in a buffer which is written as a whole. By calling `out.flush()` after each the `out.println()` call, we can flush
 the buffer to the file after each number is generated. Doing so will not
 be as efficient, but it may give us some insight into how concurrent
 writes on files work.

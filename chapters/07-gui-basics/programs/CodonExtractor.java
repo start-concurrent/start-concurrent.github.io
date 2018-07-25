@@ -3,17 +3,17 @@ import javax.swing.*;
 public class CodonExtractor {
 	public static void main(String [] args) {       
 		int continueProgram;
-        do {
+        do { // <1>
         	// Read DNA sequence
             String input = JOptionPane.showInputDialog(
-            		"Enter a DNA sequence");/*@\label{DNAInputLine}@*/
-            input = input.toUpperCase(); // Make upper case
+            		"Enter a DNA sequence"); // <2>
+            input = input.toUpperCase(); // <3>
 			String message = "Do you want to continue?";
-            if( isValid(input) ) // Check for validity 
-                displayCodons(input); // Find codons
+            if( isValid(input) ) // <4>
+                displayCodons(input); // <5>
             else
 				message = "Invalid DNA Sequence.\n" + message;
-			continueProgram = JOptionPane.showConfirmDialog(
+			continueProgram = JOptionPane.showConfirmDialog( // <6>
 				null, message, "Alert", JOptionPane.YES_NO_OPTION);            
         } while(continueProgram == JOptionPane.YES_OPTION);
         JOptionPane.showMessageDialog(null,
@@ -33,7 +33,7 @@ public class CodonExtractor {
     public static void displayCodons(String DNA) {                
         String message = "";
 		// Get as many complete codons as possible
-        for (int i = 0; i < DNA.length() - 2; i += 3)
+        for (int i = 0; i < DNA.length() - 2; i += 3) // <1>
             message += "\n" + DNA.substring(i, i + 3);
 		// 1-2 bases might be left over
         int remaining = DNA.length() % 3;        
@@ -45,7 +45,7 @@ public class CodonExtractor {
             	DNA.length()) + "*";
         message = "DNA length: " + DNA.length() +
         	"\n\nCodons: " + message;
-        JOptionPane.showMessageDialog(null, message,
-        	"Codons in DNA", JOptionPane.INFORMATION_MESSAGE);/*@\label{codonDisplayLine2}@*/   
+        JOptionPane.showMessageDialog(null, message, // <2>
+        	"Codons in DNA", JOptionPane.INFORMATION_MESSAGE);
     }
 }

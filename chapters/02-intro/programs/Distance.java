@@ -9,13 +9,13 @@ public class Distance {
         
         // Solution to subproblem 1: Read input
         // Prompt the user and get speed and time
-        System.out.print("Enter the speed: "); /*@\label{solutionSubProblemOneScanner}@*/
-        speed = in.nextDouble();/*@\label{getSpeed}@*/
+        System.out.print("Enter the speed: "); // <1>		
+        speed = in.nextDouble();
         System.out.print("Enter the time: ");
-        time = in.nextDouble();/*@\label{getDuration}@*/     
+        time = in.nextDouble();
         
         // Solution to subproblem 2: Compute distance
-        distance = speed*time;/*@\label{solutionSubProblemTwoScanner}@*/
+        distance = speed*time; // <2>
 
         // Solution to subproblem 3: Display output
         System.out.print("Distance traveled: ");

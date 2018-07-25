@@ -1041,27 +1041,23 @@ has, losing one every time it becomes curious.
 .Thread safety
 ====
 
-.Records the number of lives a cat has left. Each `Cat` object starts with 9, but loses one each time it uses its curiosity. If no more lives remain, an error message is output.
-[source, java, linenums]
-[[CatProgram]]
-----
-include::programs/Cat.java[]
-----
-
 If the relationship between curiosity and mortality is the only feature
-of a cat you are trying to model, this class appears to function well.
+of a cat you are trying to model, the class below appears to function well.
 If the `useCuriosity()` method is invoked, it removes a life or prints
 an error message if the cat has run out of lives. In a single-threaded
 situation, this object would work perfectly. No cat would be able to
 lose more than 9 lives.
 
 In a multi-threaded situation, there is no telling when a thread might
-pause in executing the `useCuriosity()` method. If 100 threads all
-called `useCuriosity()`, each one might successfully pass the `if`
-statement on line <<life_check>> before any had decremented `lives`.
-Once past the check, nothing would prevent them from continuing on and
-decrementing `lives`, resulting in a cat who lost 100 lives, resulting
-in a total of -91 lives. Such a scenario makes no sense.
+pause in executing the `useCuriosity()` method. 
+
+.Records the number of lives a cat has left. Each `Cat` object starts with 9, but loses one each time it uses its curiosity. If no more lives remain, an error message is output.
+[source, java, linenums]
+[[CatProgram]]
+----
+include::programs/Cat.java[]
+----
+<1> If 100 threads all called `useCuriosity()`, each one might successfully pass the `if` on this line before any had decremented `lives`. Once past the check, nothing would prevent them from continuing on and decrementing `lives`, resulting in a cat who lost 100 lives, resulting in a total of -91 lives. Such a scenario makes no sense.
 
 In <<Synchronization>>, we discuss how to prevent this
 problem, using the `synchronized` keyword to allow only a single thread
@@ -1069,7 +1065,6 @@ at a time to execute the body of a method. The goal is to make
 `useCuriosity()` _thread-safe_, meaning that its behavior is consistent
 and correct no matter how many threads try to execute it at the same
 time.
-
 ====
 
 As you work through this book and begin to write your own concurrent

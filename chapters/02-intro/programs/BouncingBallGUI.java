@@ -9,12 +9,11 @@ public class BouncingBallGUI {
         
         // Declare user prompt strings
         String enterHeight = "Enter the height: ";
-        String enterCoefficient =
-        	"Enter restitution coefficient: ";
+        String enterCoefficient = "Enter restitution coefficient: ";
         String enterBounces = "Enter the number of bounces: ";
         
         // Prompt the user, get data, and convert it
-        String response = JOptionPane.showInputDialog(null,/*@\label{sampleDeclarationAndExecutableStatement}@*/
+        String response = JOptionPane.showInputDialog(null,
         	enterHeight, title, JOptionPane.QUESTION_MESSAGE);
         height = Double.parseDouble(response);
         response = JOptionPane.showInputDialog(null,
@@ -31,7 +30,7 @@ public class BouncingBallGUI {
         String message = "After " + bounces +
 			" bounces the height of the ball is: " +
 			bounceHeight + " feet";
-	    JOptionPane.showMessageDialog(null, message, title,
-	    	JOptionPane.INFORMATION_MESSAGE);       
+	    JOptionPane.showMessageDialog(null,
+			message, title, JOptionPane.INFORMATION_MESSAGE);       
     }  
 }

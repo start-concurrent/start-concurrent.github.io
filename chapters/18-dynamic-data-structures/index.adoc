@@ -264,12 +264,7 @@ copying the old array into the new array, and continuing.
 ****
 
 <<ReadAndGrowArrayProgram>> begins like the previous program by
-allocating a fixed array. However, it now catches the
-`ArrayOutOfBoundsException` at line <<exceptionRAGA>> if it tries to
-store too many names into the array. The `catch` clause allocates a new
-array, twice the size of the original (current) array, copies the
-existing array into it, and replaces the reference to the current array
-with a reference to the new array.
+allocating a fixed array. 
 
 .Reads names into an array, enlarging the array as necessary.
 [source, java, linenums]
@@ -277,6 +272,8 @@ with a reference to the new array.
 ----
 include::programs/ReadAndGrowArray.java[]
 ----
+<1> At this point, it now catches the `ArrayOutOfBoundsException` if there isn't enough space for another name in the array.
+<2> The `catch` clause allocates a new array, twice the size of the original (current) array, copies the existing array into it, and replaces the reference to the current array with a reference to the new array.
 
 Note that it was necessary to refactor the code in
 <<ReadIntoFixedArrayProgram>> slightly: Add the `name` variable
@@ -1317,12 +1314,11 @@ Thread ID removed from queue: null
 ....
 
 How does this implementation fail? Consider the situation in which two
-threads are attempting to put a value in the queue simultaneously (see
-line <<linePutQueue>> in <<LinkedListQueueProgram>>). Suppose
+threads are attempting to put a value in the queue simultaneously by calling the `enqueue()` methode in <<LinkedListQueueProgram>>. Suppose
 the first thread tests the queue and finds it empty (`isEmpty()` returns
 `true`) but is then interrupted. If a second thread gets control it will
 also see that the queue is empty then sets the `head` and `tail`
-variables to the new `Node` object `temp` at line <<lineNewLLN>> and
+variables to the new `Node` object `temp` and
 return. The first thread will eventually wake up, still thinking that
 the queue is empty, and also set the `head` and `tail` variables to its
 own new `Node` `temp`. But these assignments overwrite the assignments
@@ -1413,14 +1409,7 @@ remove an element from the same `ArrayList` at the same time, the
 incorrect.
 
 <<ArrayListExampleProgram>> is an example of synchronizing
-updates to the `ArrayList` class with multiple threads. The program
-creates an `ArrayList` and places a reference to it in the static class
-variable `list`. It then creates and starts two threads. Each thread
-repeats a loop 10 times, appending a `String` to the `ArrayList` on each
-iteration. To increase the likelihood of concurrent update attempts, the
-thread sleeps for a millisecond on each iteration. To prevent concurrent
-updates from actually happening, each thread synchronizes on the common
-(shared) class variable `list` at line <<aleSync>>.
+updates to the `ArrayList` class with multiple threads. 
 
 .Example of thread-safe use of an `ArrayList`.
 [source, java, linenums]
@@ -1428,6 +1417,11 @@ updates from actually happening, each thread synchronizes on the common
 ----
 include::programs/ArrayListExample.java[]
 ----
+<1> The program creates an `ArrayList` and places a reference to it in the static class variable `list`.
+<2> It then creates and starts two threads.
+<3> Each thread repeats a loop 10 times, appending a `String` to the `ArrayList` on each iteration. To increase the likelihood of concurrent update attempts, the thread sleeps for a millisecond on each iteration.
+<4> To prevent concurrent updates from actually happening, each thread synchronizes on the shared class variable `list`.
+
 
 *Without* the `synchronized` keyword, a typical run, shown below,
 includes a `null` reference in the output, indicating that the internal
@@ -1569,8 +1563,7 @@ fastest way to sort a linked list. We introduce a faster approach in
 <<Recursion>>.
 12. [[exercise18.12]] Create JUnit test cases to
 verify that the `synchronized` keywords are needed on the `set()` and
-`sort()` methods of the `DynamicArray` example
-(<<DynamicArrayProgram>>). To test the `set()` method, you can
+`sort()` methods of the `DynamicArray` example from <<DynamicArrayProgram>>. To test the `set()` method, you can
 create one thread that repeatedly sets, gets, and tests a changing value
 at a fixed location (e.g., 0) and another thread that continuously
 appends to the array (causing it to grow by copy and replace, thus
