@@ -6,6 +6,6 @@ public class CustomIconDialog{
 		String title = "Custom Icon";
 		String message = "Some bats eat 3,000 mosquitoes a night.";
 		JOptionPane.showMessageDialog(null, message, title,
-			JOptionPane.INFORMATION_MESSAGE, new ImageIcon(file));/*@\label{customIconLine}@*/ 
+			JOptionPane.INFORMATION_MESSAGE, new ImageIcon(file)); // <1>
     }
 }

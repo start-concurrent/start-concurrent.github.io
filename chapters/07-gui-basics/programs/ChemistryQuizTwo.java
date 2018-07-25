@@ -6,15 +6,15 @@ public class ChemistryQuizTwo {
         String query = "Which is the heaviest element?";
 		String[] elements = {"Iron", "Uranium",	"Copernicium",
 			"Nitrogen"};
-        String response = (String)JOptionPane.showInputDialog(null, /*@\label{chemistryInputDialogListLineTwo}@*/
+        String response = (String)JOptionPane.showInputDialog(null, // <1>
         	query, title, JOptionPane.QUESTION_MESSAGE, null,
         	elements, null);
 		String message;
-        if(response.equals("Copernicium"))
+        if(response.equals("Copernicium")) // <2>
 			message = "You're right!";
         else
 			message = "Sorry, correct answer: Copernicium.";               
-		JOptionPane.showMessageDialog(null, message, title,
+		JOptionPane.showMessageDialog(null, message, title, // <3>
 			JOptionPane.INFORMATION_MESSAGE);
     }   
 }
