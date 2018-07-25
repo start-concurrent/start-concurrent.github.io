@@ -6,11 +6,11 @@ public class MazeSolver {
 
 	public static void main( String[] args ) {
 		MazeSolver solver = new MazeSolver();
-		if( solver.solve(0, 0) )/*@\label{mazeRCall}@*/
+		if( solver.solve(0, 0) )
 			System.out.println("\nSolved!");
 		else
 			System.out.println("\nNot solvable!");
-		solver.print();/*@\label{mazeRPrint}@*/
+		solver.print();
 	}	
 
 	public MazeSolver() {
@@ -36,20 +36,20 @@ public class MazeSolver {
 		}
 	}
 
-	public boolean solve( int row, int column ) {/*@\label{mazeRBegin}@*/
-		if( row < 0 || column < 0 || row >= rows || column >= columns)/*@\label{mazeROutside}@*/
+	public boolean solve( int row, int column ) {
+		if( row < 0 || column < 0 || row >= rows || column >= columns)
 			return false;
-		else if( maze[row][column] == 'E' )/*@\label{mazeRDone}@*/
+		else if( maze[row][column] == 'E' )
 			return true;
-		else if( maze[row][column] != ' ')/*@\label{mazeRBlocked}@*/
+		else if( maze[row][column] != ' ')
 			return false;
 		else {
 			maze[row][column] = '*';
-			if( solve(row - 1, column) || solve(row + 1, column) ||/*@\label{mazeRRecursive}@*/
+			if( solve(row - 1, column) || solve(row + 1, column) ||
 				solve(row, column - 1) || solve(row, column + 1) )
 				return true;
 			else {
-				maze[row][column] = ' ';/*@\label{mazeRBlank}@*/
+				maze[row][column] = ' ';
 				return false;
 			}
 		}

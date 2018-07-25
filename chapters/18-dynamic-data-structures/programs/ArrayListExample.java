@@ -4,12 +4,11 @@ public class ArrayListExample extends Thread {
 	private static ArrayList<String> list;
 
 	public static void main(String[] args) {
-		Thread t1 = new ArrayListExample();
+		list = new ArrayList<String>(); // <1>
+		
+		Thread t1 = new ArrayListExample(); // <2>
 		Thread t2 = new ArrayListExample();
-
-		list = new ArrayList<String>();
-
-		t1.start();
+		t1.start(); 
 		t2.start();
 		
 		try {
@@ -21,9 +20,9 @@ public class ArrayListExample extends Thread {
 			System.out.println(s);
 	}
 	
-	public void run() {
+	public void run() { // <3>
 		for (int i = 0; i < 10; i++) {
-			synchronized (list) {/*@\label{aleSync}@*/
+			synchronized (list) { // <4>
 				list.add(this.getName() + ": " + i);
 			}
 			try { Thread.sleep(1);	}

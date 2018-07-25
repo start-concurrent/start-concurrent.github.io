@@ -7,13 +7,13 @@ public class LinkedListQueue implements Queue {
     private Node head = null;
     private Node tail = null;    
 	
-	public void enqueue(String value) {/*@\label{linePutQueue}@*/
+	public void enqueue(String value) {
 		Node temp = new Node();
 		temp.value = value;
 		temp.next = null;
 		
 		if( isEmpty() )
-			head = tail = temp; /*@\label{lineNewLLN}@*/
+			head = tail = temp;
 		else {			
 			tail.next = temp;
 			tail = temp;			
