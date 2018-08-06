@@ -1,3 +1,0 @@
-interface Priceable {
-	double getPrice();
-}
