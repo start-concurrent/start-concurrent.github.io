@@ -2,14 +2,14 @@ import java.util.*;
 
 public class Distance {
     public static void main(String[] args) {
-	    // Create an object named in for input
-	    Scanner in = new Scanner(System.in);   
+        // Create an object named in for input
+        Scanner in = new Scanner(System.in);   
         double speed, time;  
         double distance; // Distance to be computed       
         
         // Solution to subproblem 1: Read input
         // Prompt the user and get speed and time
-        System.out.print("Enter the speed: "); // <1>		
+        System.out.print("Enter the speed: "); // <1>       
         speed = in.nextDouble();
         System.out.print("Enter the time: ");
         time = in.nextDouble();

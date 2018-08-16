@@ -1,9 +1,9 @@
 import java.util.*; 
 
 public class BouncingBallCLI {
-	public static void main(String[] args) {
-    	// Solution to subproblem 1
-    	// Create an object named in for input
+    public static void main(String[] args) {
+        // Solution to subproblem 1
+        // Create an object named in for input
         Scanner in = new Scanner(System.in); /*@\label{scannerObjectLine}@*/
         
         // Declare variables to hold input data
@@ -13,7 +13,7 @@ public class BouncingBallCLI {
         // Declare user prompt strings
         String enterHeight = "Enter the height: ";
         String enterCoefficient =
-        	"Enter restitution coefficient: ";
+            "Enter restitution coefficient: ";
         String enterBounces = "Enter the number of bounces: ";
                  
         System.out.println("Bouncing Ball");
@@ -32,8 +32,8 @@ public class BouncingBallCLI {
 
         // Solution to subproblem 3
         String message = "After " + bounces +
-    		" bounces the height of the ball is: " +
-    		bounceHeight + " feet"; 
+            " bounces the height of the ball is: " +
+            bounceHeight + " feet"; 
         System.out.println(message);/*@\label{constructorExecutionIntegratedEnds}@*/
     }   
 }

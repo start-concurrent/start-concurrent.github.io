@@ -1,3 +1,3 @@
 public interface Weighable {
-	double getWeight();
+    double getWeight();
 }

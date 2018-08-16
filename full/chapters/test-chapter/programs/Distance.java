@@ -2,8 +2,8 @@ import java.util.*;
 
 public class Distance {
     public static void main(String[] args) {
-	    // Create an object named in for input
-	    Scanner in = new Scanner(System.in);   
+        // Create an object named in for input
+        Scanner in = new Scanner(System.in);   
         double speed, time;  
         double distance; // Distance to be computed       
         

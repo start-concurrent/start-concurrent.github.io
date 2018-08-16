@@ -24,35 +24,35 @@ public class SoundGame {
     soundGame.add(soundPanel);
     stop.setEnabled(false); // <1>
     chirp.addActionListener(new ActionListener() { // <2>
-		public void actionPerformed(ActionEvent e){
-			message.setText("Chirp sound playing.");
-			bark.setEnabled(false);
-			chirpClip.loop();
-			stop.setEnabled(true);
+        public void actionPerformed(ActionEvent e){
+            message.setText("Chirp sound playing.");
+            bark.setEnabled(false);
+            chirpClip.loop();
+            stop.setEnabled(true);
       }
     });
     bark.addActionListener(new ActionListener(){ // <3>
-		public void actionPerformed(ActionEvent e){
-			message.setText("Bark sound playing.");
-			chirp.setEnabled(false);
-			barkClip.loop(); 
-			stop.setEnabled(true);
+        public void actionPerformed(ActionEvent e){
+            message.setText("Bark sound playing.");
+            chirp.setEnabled(false);
+            barkClip.loop(); 
+            stop.setEnabled(true);
       }
     });
     stop.addActionListener(new ActionListener(){ // <4>
-		public void actionPerformed(ActionEvent e){
-			message.setText("Click Chirp or Bark.");
-			chirpClip.stop();
-			bark.setEnabled(true);
-			barkClip.stop();
-			chirp.setEnabled(true);
-			stop.setEnabled(false);
+        public void actionPerformed(ActionEvent e){
+            message.setText("Click Chirp or Bark.");
+            chirpClip.stop();
+            bark.setEnabled(true);
+            barkClip.stop();
+            chirp.setEnabled(true);
+            stop.setEnabled(false);
       }
     });
     exit.addActionListener(new ActionListener(){ // <5>
-		public void actionPerformed(ActionEvent e){
-			System.out.println("Exit");
-			soundGame.dispose();
+        public void actionPerformed(ActionEvent e){
+            System.out.println("Exit");
+            soundGame.dispose();
       }
     });
     soundGame.setSize(175,175); //Set size in pixels

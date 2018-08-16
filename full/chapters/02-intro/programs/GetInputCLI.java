@@ -1,8 +1,8 @@
 import java.util.*; 
 
 public class GetInputCLI {
-	public static void main(String[] args) {
-    	// Create an object named in for input
+    public static void main(String[] args) {
+        // Create an object named in for input
         Scanner in = new Scanner(System.in);
         
         // Declare variables to hold input data

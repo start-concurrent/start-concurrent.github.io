@@ -503,7 +503,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Start Concurrent: A Gentle Introduction to Concurrent Programming</h1>
 <div class="details">
 <span id="author" class="author">Barry Wittman</span><br>
-<span id="email" class="email"><a href="mailto:bwittman@gmail.com">bwittman@gmail.com</a></span><br>
+<span id="email" class="email"><a href="mailto:wittman1@otterbein.edu">wittman1@otterbein.edu</a></span><br>
 <span id="author2" class="author">Tim Korb</span><br>
 <span id="email2" class="email"><a href="mailto:jtk@purdue.edu">jtk@purdue.edu</a></span><br>
 <span id="author3" class="author">Aditya Mathur</span><br>
@@ -846,30 +846,30 @@ condition</em>. Below is a simple example of a race condition in Java.</p>
 <div class="title">Program 51. Short example of a race condition.</div>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">RaceCondition</span> <span class="tok-kd">extends</span> <span class="tok-n">Thread</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">counter</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
-<span class="lineno"> 3 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">THREADS</span> <span class="tok-o">=</span> <span class="tok-mi">4</span><span class="tok-o">;</span>
-<span class="lineno"> 4 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">COUNT</span> <span class="tok-o">=</span> <span class="tok-mi">1000000</span><span class="tok-o">;</span>
+<span class="lineno"> 2 </span>    <span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">counter</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">THREADS</span> <span class="tok-o">=</span> <span class="tok-mi">4</span><span class="tok-o">;</span>
+<span class="lineno"> 4 </span>    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">COUNT</span> <span class="tok-o">=</span> <span class="tok-mi">1000000</span><span class="tok-o">;</span>
 <span class="lineno"> 5 </span>
-<span class="lineno"> 6 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span> <span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 7 </span>		<span class="tok-n">RaceCondition</span><span class="tok-o">[]</span> <span class="tok-n">threads</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">RaceCondition</span><span class="tok-o">[</span><span class="tok-n">THREADS</span><span class="tok-o">];</span>
-<span class="lineno"> 8 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">THREADS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 9 </span>			<span class="tok-n">threads</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">RaceCondition</span><span class="tok-o">();</span>
-<span class="lineno">10 </span>			<span class="tok-n">threads</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">start</span><span class="tok-o">();</span>
-<span class="lineno">11 </span>		<span class="tok-o">}</span>
-<span class="lineno">12 </span>		<span class="tok-k">try</span> <span class="tok-o">{</span>
-<span class="lineno">13 </span>			<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">THREADS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
-<span class="lineno">14 </span>				<span class="tok-n">threads</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">join</span><span class="tok-o">();</span>
-<span class="lineno">15 </span>		<span class="tok-o">}</span>
-<span class="lineno">16 </span>		<span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">17 </span>			<span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno">18 </span>		<span class="tok-o">}</span>
-<span class="lineno">19 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Counter:\t&quot;</span> <span class="tok-o">+</span> <span class="tok-n">counter</span> <span class="tok-o">);</span>
-<span class="lineno">20 </span>	<span class="tok-o">}</span>
+<span class="lineno"> 6 </span>    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span> <span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 7 </span>        <span class="tok-n">RaceCondition</span><span class="tok-o">[]</span> <span class="tok-n">threads</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">RaceCondition</span><span class="tok-o">[</span><span class="tok-n">THREADS</span><span class="tok-o">];</span>
+<span class="lineno"> 8 </span>        <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">THREADS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 9 </span>            <span class="tok-n">threads</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">RaceCondition</span><span class="tok-o">();</span>
+<span class="lineno">10 </span>            <span class="tok-n">threads</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">start</span><span class="tok-o">();</span>
+<span class="lineno">11 </span>        <span class="tok-o">}</span>
+<span class="lineno">12 </span>        <span class="tok-k">try</span> <span class="tok-o">{</span>
+<span class="lineno">13 </span>            <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">THREADS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+<span class="lineno">14 </span>                <span class="tok-n">threads</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">join</span><span class="tok-o">();</span>
+<span class="lineno">15 </span>        <span class="tok-o">}</span>
+<span class="lineno">16 </span>        <span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">17 </span>            <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno">18 </span>        <span class="tok-o">}</span>
+<span class="lineno">19 </span>        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Counter:\t&quot;</span> <span class="tok-o">+</span> <span class="tok-n">counter</span> <span class="tok-o">);</span>
+<span class="lineno">20 </span>    <span class="tok-o">}</span>
 <span class="lineno">21 </span>
-<span class="lineno">22 </span>	<span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno">23 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">COUNT</span> <span class="tok-o">/</span> <span class="tok-n">THREADS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
-<span class="lineno">24 </span>			<span class="tok-n">counter</span><span class="tok-o">++;</span>
-<span class="lineno">25 </span>	<span class="tok-o">}</span>
+<span class="lineno">22 </span>    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno">23 </span>        <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">COUNT</span> <span class="tok-o">/</span> <span class="tok-n">THREADS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+<span class="lineno">24 </span>            <span class="tok-n">counter</span><span class="tok-o">++;</span>
+<span class="lineno">25 </span>    <span class="tok-o">}</span>
 <span class="lineno">26 </span><span class="tok-o">}</span></code></pre>
 </div>
 </div>
@@ -1233,28 +1233,28 @@ buffer, but all accesses will be controlled.</p>
 <div class="title">Program 52. Example of a synchronized buffer.</div>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Buffer</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>	<span class="tok-kd">public</span> <span class="tok-kd">final</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">SIZE</span> <span class="tok-o">=</span> <span class="tok-mi">10</span><span class="tok-o">;</span>
-<span class="lineno"> 3 </span>	<span class="tok-kd">private</span> <span class="tok-n">Object</span><span class="tok-o">[]</span> <span class="tok-n">objects</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Object</span><span class="tok-o">[</span><span class="tok-n">SIZE</span><span class="tok-o">];</span>
-<span class="lineno"> 4 </span>	<span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">count</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
+<span class="lineno"> 2 </span>    <span class="tok-kd">public</span> <span class="tok-kd">final</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">SIZE</span> <span class="tok-o">=</span> <span class="tok-mi">10</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>    <span class="tok-kd">private</span> <span class="tok-n">Object</span><span class="tok-o">[]</span> <span class="tok-n">objects</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Object</span><span class="tok-o">[</span><span class="tok-n">SIZE</span><span class="tok-o">];</span>
+<span class="lineno"> 4 </span>    <span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">count</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
 <span class="lineno"> 5 </span>
-<span class="lineno"> 6 </span>	<span class="tok-kd">public</span> <span class="tok-kd">synchronized</span> <span class="tok-kt">void</span> <span class="tok-nf">addItem</span><span class="tok-o">(</span> <span class="tok-n">Object</span> <span class="tok-n">object</span> <span class="tok-o">)</span>
-<span class="lineno"> 7 </span>		<span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
-<span class="lineno"> 8 </span>		<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">count</span> <span class="tok-o">==</span> <span class="tok-n">SIZE</span> <span class="tok-o">)</span>
-<span class="lineno"> 9 </span>			<span class="tok-n">wait</span><span class="tok-o">();</span>
-<span class="lineno">10 </span>		<span class="tok-n">objects</span><span class="tok-o">[</span><span class="tok-n">count</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">object</span><span class="tok-o">;</span>
-<span class="lineno">11 </span>		<span class="tok-n">count</span><span class="tok-o">++;</span>
-<span class="lineno">12 </span>		<span class="tok-n">notifyAll</span><span class="tok-o">();</span>
-<span class="lineno">13 </span>	<span class="tok-o">}</span>
+<span class="lineno"> 6 </span>    <span class="tok-kd">public</span> <span class="tok-kd">synchronized</span> <span class="tok-kt">void</span> <span class="tok-nf">addItem</span><span class="tok-o">(</span> <span class="tok-n">Object</span> <span class="tok-n">object</span> <span class="tok-o">)</span>
+<span class="lineno"> 7 </span>        <span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
+<span class="lineno"> 8 </span>        <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">count</span> <span class="tok-o">==</span> <span class="tok-n">SIZE</span> <span class="tok-o">)</span>
+<span class="lineno"> 9 </span>            <span class="tok-n">wait</span><span class="tok-o">();</span>
+<span class="lineno">10 </span>        <span class="tok-n">objects</span><span class="tok-o">[</span><span class="tok-n">count</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-n">object</span><span class="tok-o">;</span>
+<span class="lineno">11 </span>        <span class="tok-n">count</span><span class="tok-o">++;</span>
+<span class="lineno">12 </span>        <span class="tok-n">notifyAll</span><span class="tok-o">();</span>
+<span class="lineno">13 </span>    <span class="tok-o">}</span>
 <span class="lineno">14 </span>
-<span class="lineno">15 </span>	<span class="tok-kd">public</span> <span class="tok-kd">synchronized</span> <span class="tok-n">Object</span> <span class="tok-nf">removeItem</span><span class="tok-o">()</span>
-<span class="lineno">16 </span>		<span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
-<span class="lineno">17 </span>		<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">count</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
-<span class="lineno">18 </span>			<span class="tok-n">wait</span><span class="tok-o">();</span>
-<span class="lineno">19 </span>		<span class="tok-n">count</span><span class="tok-o">--;</span>
-<span class="lineno">20 </span>		<span class="tok-n">Object</span> <span class="tok-n">object</span> <span class="tok-o">=</span> <span class="tok-n">objects</span><span class="tok-o">[</span><span class="tok-n">count</span><span class="tok-o">];</span>
-<span class="lineno">21 </span>		<span class="tok-n">notifyAll</span><span class="tok-o">();</span>
-<span class="lineno">22 </span>		<span class="tok-k">return</span> <span class="tok-n">object</span><span class="tok-o">;</span>
-<span class="lineno">23 </span>	<span class="tok-o">}</span>
+<span class="lineno">15 </span>    <span class="tok-kd">public</span> <span class="tok-kd">synchronized</span> <span class="tok-n">Object</span> <span class="tok-nf">removeItem</span><span class="tok-o">()</span>
+<span class="lineno">16 </span>        <span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
+<span class="lineno">17 </span>        <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">count</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
+<span class="lineno">18 </span>            <span class="tok-n">wait</span><span class="tok-o">();</span>
+<span class="lineno">19 </span>        <span class="tok-n">count</span><span class="tok-o">--;</span>
+<span class="lineno">20 </span>        <span class="tok-n">Object</span> <span class="tok-n">object</span> <span class="tok-o">=</span> <span class="tok-n">objects</span><span class="tok-o">[</span><span class="tok-n">count</span><span class="tok-o">];</span>
+<span class="lineno">21 </span>        <span class="tok-n">notifyAll</span><span class="tok-o">();</span>
+<span class="lineno">22 </span>        <span class="tok-k">return</span> <span class="tok-n">object</span><span class="tok-o">;</span>
+<span class="lineno">23 </span>    <span class="tok-o">}</span>
 <span class="lineno">24 </span><span class="tok-o">}</span></code></pre>
 </div>
 </div>
@@ -1321,8 +1321,8 @@ at any given time.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">SynchronizedAccount</span> <span class="tok-o">{</span>
-<span class="lineno">2 </span>	<span class="tok-kd">private</span> <span class="tok-kt">double</span> <span class="tok-n">balance</span> <span class="tok-o">=</span> <span class="tok-mf">0.0</span><span class="tok-o">;</span>
-<span class="lineno">3 </span>	<span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">readers</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span></code></pre>
+<span class="lineno">2 </span>    <span class="tok-kd">private</span> <span class="tok-kt">double</span> <span class="tok-n">balance</span> <span class="tok-o">=</span> <span class="tok-mf">0.0</span><span class="tok-o">;</span>
+<span class="lineno">3 </span>    <span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">readers</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1340,18 +1340,18 @@ account can continue.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kt">double</span> <span class="tok-nf">getBalance</span><span class="tok-o">()</span>	<span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-kt">double</span> <span class="tok-n">amount</span><span class="tok-o">;</span>
-<span class="lineno"> 3 </span>		<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-k">this</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 4 </span>			<span class="tok-n">readers</span><span class="tok-o">++;</span>
-<span class="lineno"> 5 </span>		<span class="tok-o">}</span>
-<span class="lineno"> 6 </span>		<span class="tok-n">amount</span> <span class="tok-o">=</span> <span class="tok-n">balance</span><span class="tok-o">;</span>
-<span class="lineno"> 7 </span>		<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-k">this</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 8 </span>			<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-o">--</span><span class="tok-n">readers</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
-<span class="lineno"> 9 </span>				<span class="tok-n">notifyAll</span><span class="tok-o">();</span>
-<span class="lineno">10 </span>		<span class="tok-o">}</span>
-<span class="lineno">11 </span>		<span class="tok-k">return</span> <span class="tok-n">amount</span><span class="tok-o">;</span>
-<span class="lineno">12 </span>	<span class="tok-o">}</span></code></pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">public</span> <span class="tok-kt">double</span> <span class="tok-nf">getBalance</span><span class="tok-o">()</span>  <span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-kt">double</span> <span class="tok-n">amount</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>        <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-k">this</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 4 </span>            <span class="tok-n">readers</span><span class="tok-o">++;</span>
+<span class="lineno"> 5 </span>        <span class="tok-o">}</span>
+<span class="lineno"> 6 </span>        <span class="tok-n">amount</span> <span class="tok-o">=</span> <span class="tok-n">balance</span><span class="tok-o">;</span>
+<span class="lineno"> 7 </span>        <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-k">this</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 8 </span>            <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-o">--</span><span class="tok-n">readers</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
+<span class="lineno"> 9 </span>                <span class="tok-n">notifyAll</span><span class="tok-o">();</span>
+<span class="lineno">10 </span>        <span class="tok-o">}</span>
+<span class="lineno">11 </span>        <span class="tok-k">return</span> <span class="tok-n">amount</span><span class="tok-o">;</span>
+<span class="lineno">12 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1361,22 +1361,22 @@ controls.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">deposit</span><span class="tok-o">(</span> <span class="tok-kt">double</span> <span class="tok-n">amount</span> <span class="tok-o">)</span>
-<span class="lineno"> 2 </span>		<span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
-<span class="lineno"> 3 </span>		<span class="tok-n">changeBalance</span><span class="tok-o">(</span> <span class="tok-n">amount</span> <span class="tok-o">);</span>
-<span class="lineno"> 4 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Deposited $&quot;</span> <span class="tok-o">+</span> <span class="tok-n">amount</span> <span class="tok-o">+</span> <span class="tok-s">&quot;.&quot;</span> <span class="tok-o">);</span>
-<span class="lineno"> 5 </span>	<span class="tok-o">}</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">deposit</span><span class="tok-o">(</span> <span class="tok-kt">double</span> <span class="tok-n">amount</span> <span class="tok-o">)</span>
+<span class="lineno"> 2 </span>        <span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
+<span class="lineno"> 3 </span>        <span class="tok-n">changeBalance</span><span class="tok-o">(</span> <span class="tok-n">amount</span> <span class="tok-o">);</span>
+<span class="lineno"> 4 </span>        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Deposited $&quot;</span> <span class="tok-o">+</span> <span class="tok-n">amount</span> <span class="tok-o">+</span> <span class="tok-s">&quot;.&quot;</span> <span class="tok-o">);</span>
+<span class="lineno"> 5 </span>    <span class="tok-o">}</span>
 <span class="lineno"> 6 </span>
-<span class="lineno"> 7 </span>	<span class="tok-kd">public</span> <span class="tok-kt">boolean</span> <span class="tok-nf">withdraw</span><span class="tok-o">(</span> <span class="tok-kt">double</span> <span class="tok-n">amount</span> <span class="tok-o">)</span>
-<span class="lineno"> 8 </span>		<span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
-<span class="lineno"> 9 </span>		<span class="tok-kt">boolean</span> <span class="tok-n">success</span> <span class="tok-o">=</span> <span class="tok-n">changeBalance</span><span class="tok-o">(</span> <span class="tok-o">-</span><span class="tok-n">amount</span> <span class="tok-o">);</span>
-<span class="lineno">10 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">success</span> <span class="tok-o">)</span>
-<span class="lineno">11 </span>			<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Withdrew $&quot;</span> <span class="tok-o">+</span> <span class="tok-n">amount</span> <span class="tok-o">+</span> <span class="tok-s">&quot;.&quot;</span> <span class="tok-o">);</span>
-<span class="lineno">12 </span>		<span class="tok-k">else</span>
-<span class="lineno">13 </span>			<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Failed to withdraw $&quot;</span> <span class="tok-o">+</span>
-<span class="lineno">14 </span>				<span class="tok-n">amount</span> <span class="tok-o">+</span> <span class="tok-s">&quot;: insufficient funds.&quot;</span> <span class="tok-o">);</span>
-<span class="lineno">15 </span>		<span class="tok-k">return</span> <span class="tok-n">success</span><span class="tok-o">;</span>
-<span class="lineno">16 </span>	<span class="tok-o">}</span></code></pre>
+<span class="lineno"> 7 </span>    <span class="tok-kd">public</span> <span class="tok-kt">boolean</span> <span class="tok-nf">withdraw</span><span class="tok-o">(</span> <span class="tok-kt">double</span> <span class="tok-n">amount</span> <span class="tok-o">)</span>
+<span class="lineno"> 8 </span>        <span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
+<span class="lineno"> 9 </span>        <span class="tok-kt">boolean</span> <span class="tok-n">success</span> <span class="tok-o">=</span> <span class="tok-n">changeBalance</span><span class="tok-o">(</span> <span class="tok-o">-</span><span class="tok-n">amount</span> <span class="tok-o">);</span>
+<span class="lineno">10 </span>        <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">success</span> <span class="tok-o">)</span>
+<span class="lineno">11 </span>            <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Withdrew $&quot;</span> <span class="tok-o">+</span> <span class="tok-n">amount</span> <span class="tok-o">+</span> <span class="tok-s">&quot;.&quot;</span> <span class="tok-o">);</span>
+<span class="lineno">12 </span>        <span class="tok-k">else</span>
+<span class="lineno">13 </span>            <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Failed to withdraw $&quot;</span> <span class="tok-o">+</span>
+<span class="lineno">14 </span>                <span class="tok-n">amount</span> <span class="tok-o">+</span> <span class="tok-s">&quot;: insufficient funds.&quot;</span> <span class="tok-o">);</span>
+<span class="lineno">15 </span>        <span class="tok-k">return</span> <span class="tok-n">success</span><span class="tok-o">;</span>
+<span class="lineno">16 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1388,15 +1388,15 @@ the balance of the account.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">private</span> <span class="tok-kd">synchronized</span> <span class="tok-kt">boolean</span> <span class="tok-nf">changeBalance</span><span class="tok-o">(</span> <span class="tok-kt">double</span> <span class="tok-n">amount</span> <span class="tok-o">)</span>
-<span class="lineno"> 2 </span>		<span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
-<span class="lineno"> 3 </span>		<span class="tok-kt">boolean</span> <span class="tok-n">success</span><span class="tok-o">;</span>
-<span class="lineno"> 4 </span>		<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">readers</span> <span class="tok-o">&gt;</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
-<span class="lineno"> 5 </span>				<span class="tok-n">wait</span><span class="tok-o">();</span>
-<span class="lineno"> 6 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">success</span> <span class="tok-o">=</span> <span class="tok-o">(</span><span class="tok-n">balance</span> <span class="tok-o">+</span> <span class="tok-n">amount</span> <span class="tok-o">&gt;</span> <span class="tok-mi">0</span><span class="tok-o">)</span> <span class="tok-o">)</span>
-<span class="lineno"> 7 </span>			<span class="tok-n">balance</span> <span class="tok-o">+=</span> <span class="tok-n">amount</span><span class="tok-o">;</span>
-<span class="lineno"> 8 </span>		<span class="tok-k">return</span> <span class="tok-n">success</span><span class="tok-o">;</span>
-<span class="lineno"> 9 </span>	<span class="tok-o">}</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">private</span> <span class="tok-kd">synchronized</span> <span class="tok-kt">boolean</span> <span class="tok-nf">changeBalance</span><span class="tok-o">(</span> <span class="tok-kt">double</span> <span class="tok-n">amount</span> <span class="tok-o">)</span>
+<span class="lineno"> 2 </span>        <span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
+<span class="lineno"> 3 </span>        <span class="tok-kt">boolean</span> <span class="tok-n">success</span><span class="tok-o">;</span>
+<span class="lineno"> 4 </span>        <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">readers</span> <span class="tok-o">&gt;</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
+<span class="lineno"> 5 </span>                <span class="tok-n">wait</span><span class="tok-o">();</span>
+<span class="lineno"> 6 </span>        <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">success</span> <span class="tok-o">=</span> <span class="tok-o">(</span><span class="tok-n">balance</span> <span class="tok-o">+</span> <span class="tok-n">amount</span> <span class="tok-o">&gt;</span> <span class="tok-mi">0</span><span class="tok-o">)</span> <span class="tok-o">)</span>
+<span class="lineno"> 7 </span>            <span class="tok-n">balance</span> <span class="tok-o">+=</span> <span class="tok-n">amount</span><span class="tok-o">;</span>
+<span class="lineno"> 8 </span>        <span class="tok-k">return</span> <span class="tok-n">success</span><span class="tok-o">;</span>
+<span class="lineno"> 9 </span>    <span class="tok-o">}</span>
 <span class="lineno">10 </span><span class="tok-o">}</span></code></pre>
 </div>
 </div>
@@ -1457,13 +1457,13 @@ that scenario illustrated in code.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">DeadlockPhilosopher</span> <span class="tok-kd">extends</span> <span class="tok-n">Thread</span> <span class="tok-o">{</span>
-<span class="lineno">2 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">SEATS</span> <span class="tok-o">=</span> <span class="tok-mi">5</span><span class="tok-o">;</span>
-<span class="lineno">3 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span><span class="tok-o">[]</span> <span class="tok-n">chopsticks</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-kt">boolean</span><span class="tok-o">[</span><span class="tok-n">SEATS</span><span class="tok-o">];</span>
-<span class="lineno">4 </span>	<span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
+<span class="lineno">2 </span>    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">SEATS</span> <span class="tok-o">=</span> <span class="tok-mi">5</span><span class="tok-o">;</span>
+<span class="lineno">3 </span>    <span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span><span class="tok-o">[]</span> <span class="tok-n">chopsticks</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-kt">boolean</span><span class="tok-o">[</span><span class="tok-n">SEATS</span><span class="tok-o">];</span>
+<span class="lineno">4 </span>    <span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
 <span class="lineno">5 </span>
-<span class="lineno">6 </span>	<span class="tok-kd">public</span> <span class="tok-nf">DeadlockPhilosopher</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">seat</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">7 </span>		<span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">seat</span> <span class="tok-o">=</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
-<span class="lineno">8 </span>	<span class="tok-o">}</span></code></pre>
+<span class="lineno">6 </span>    <span class="tok-kd">public</span> <span class="tok-nf">DeadlockPhilosopher</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">seat</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">7 </span>        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">seat</span> <span class="tok-o">=</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
+<span class="lineno">8 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1477,17 +1477,17 @@ guarantee that the philosophers will deadlock every time.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-k">try</span>	<span class="tok-o">{</span>
-<span class="lineno"> 3 </span>			<span class="tok-n">getChopstick</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">);</span>
-<span class="lineno"> 4 </span>			<span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">50</span><span class="tok-o">);</span>
-<span class="lineno"> 5 </span>			<span class="tok-n">getChopstick</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">-</span> <span class="tok-mi">1</span> <span class="tok-o">);</span>
-<span class="lineno"> 6 </span>		<span class="tok-o">}</span>
-<span class="lineno"> 7 </span>		<span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 8 </span>			<span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno"> 9 </span>		<span class="tok-o">}</span>
-<span class="lineno">10 </span>		<span class="tok-n">eat</span><span class="tok-o">();</span>
-<span class="lineno">11 </span>	<span class="tok-o">}</span></code></pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-k">try</span> <span class="tok-o">{</span>
+<span class="lineno"> 3 </span>            <span class="tok-n">getChopstick</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">);</span>
+<span class="lineno"> 4 </span>            <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">50</span><span class="tok-o">);</span>
+<span class="lineno"> 5 </span>            <span class="tok-n">getChopstick</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">-</span> <span class="tok-mi">1</span> <span class="tok-o">);</span>
+<span class="lineno"> 6 </span>        <span class="tok-o">}</span>
+<span class="lineno"> 7 </span>        <span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 8 </span>            <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno"> 9 </span>        <span class="tok-o">}</span>
+<span class="lineno">10 </span>        <span class="tok-n">eat</span><span class="tok-o">();</span>
+<span class="lineno">11 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1497,30 +1497,30 @@ above, we have already gotten ourselves into trouble.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">getChopstick</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">location</span> <span class="tok-o">)</span>
-<span class="lineno"> 2 </span>		<span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
-<span class="lineno"> 3 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">location</span> <span class="tok-o">&lt;</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
-<span class="lineno"> 4 </span>			<span class="tok-n">location</span> <span class="tok-o">+=</span> <span class="tok-n">SEATS</span><span class="tok-o">;</span>
-<span class="lineno"> 5 </span>		<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 6 </span>			<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location</span><span class="tok-o">]</span> <span class="tok-o">)</span>
-<span class="lineno"> 7 </span>				<span class="tok-n">chopsticks</span><span class="tok-o">.</span><span class="tok-na">wait</span><span class="tok-o">();</span>
-<span class="lineno"> 8 </span>			<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
-<span class="lineno"> 9 </span>		<span class="tok-o">}</span>
-<span class="lineno">10 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Philosopher &quot;</span> <span class="tok-o">+</span> <span class="tok-n">seat</span> <span class="tok-o">+</span>
-<span class="lineno">11 </span>			<span class="tok-s">&quot; picked up chopstick &quot;</span> <span class="tok-o">+</span> <span class="tok-n">location</span> <span class="tok-o">+</span> <span class="tok-s">&quot;.&quot;</span><span class="tok-o">);</span>
-<span class="lineno">12 </span>	<span class="tok-o">}</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">getChopstick</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">location</span> <span class="tok-o">)</span>
+<span class="lineno"> 2 </span>        <span class="tok-kd">throws</span> <span class="tok-n">InterruptedException</span> <span class="tok-o">{</span>
+<span class="lineno"> 3 </span>        <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">location</span> <span class="tok-o">&lt;</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
+<span class="lineno"> 4 </span>            <span class="tok-n">location</span> <span class="tok-o">+=</span> <span class="tok-n">SEATS</span><span class="tok-o">;</span>
+<span class="lineno"> 5 </span>        <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 6 </span>            <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location</span><span class="tok-o">]</span> <span class="tok-o">)</span>
+<span class="lineno"> 7 </span>                <span class="tok-n">chopsticks</span><span class="tok-o">.</span><span class="tok-na">wait</span><span class="tok-o">();</span>
+<span class="lineno"> 8 </span>            <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
+<span class="lineno"> 9 </span>        <span class="tok-o">}</span>
+<span class="lineno">10 </span>        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Philosopher &quot;</span> <span class="tok-o">+</span> <span class="tok-n">seat</span> <span class="tok-o">+</span>
+<span class="lineno">11 </span>            <span class="tok-s">&quot; picked up chopstick &quot;</span> <span class="tok-o">+</span> <span class="tok-n">location</span> <span class="tok-o">+</span> <span class="tok-s">&quot;.&quot;</span><span class="tok-o">);</span>
+<span class="lineno">12 </span>    <span class="tok-o">}</span>
 <span class="lineno">13 </span>
-<span class="lineno">14 </span>	<span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">eat</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno">15 </span>		<span class="tok-c1">//done eating, put back chopsticks</span>
-<span class="lineno">16 </span>		<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">17 </span>			<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">seat</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
-<span class="lineno">18 </span>			<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">==</span> <span class="tok-mi">0</span><span class="tok-o">)</span>
-<span class="lineno">19 </span>				<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">SEATS</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
-<span class="lineno">20 </span>			<span class="tok-k">else</span>
-<span class="lineno">21 </span>				<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">seat</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
-<span class="lineno">22 </span>			<span class="tok-n">chopsticks</span><span class="tok-o">.</span><span class="tok-na">notifyAll</span><span class="tok-o">();</span>
-<span class="lineno">23 </span>		<span class="tok-o">}</span>
-<span class="lineno">24 </span>	<span class="tok-o">}</span>
+<span class="lineno">14 </span>    <span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">eat</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno">15 </span>        <span class="tok-c1">//done eating, put back chopsticks</span>
+<span class="lineno">16 </span>        <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">17 </span>            <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">seat</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+<span class="lineno">18 </span>            <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">==</span> <span class="tok-mi">0</span><span class="tok-o">)</span>
+<span class="lineno">19 </span>                <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">SEATS</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+<span class="lineno">20 </span>            <span class="tok-k">else</span>
+<span class="lineno">21 </span>                <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">seat</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+<span class="lineno">22 </span>            <span class="tok-n">chopsticks</span><span class="tok-o">.</span><span class="tok-na">notifyAll</span><span class="tok-o">();</span>
+<span class="lineno">23 </span>        <span class="tok-o">}</span>
+<span class="lineno">24 </span>    <span class="tok-o">}</span>
 <span class="lineno">25 </span><span class="tok-o">}</span></code></pre>
 </div>
 </div>
@@ -1547,10 +1547,10 @@ because access to <code>Random</code> objects is synchronized.)</p>
 <pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span><span class="tok-kn">import</span> <span class="tok-nn">java.util.Random</span><span class="tok-o">;</span>
 <span class="lineno">2 </span>
 <span class="lineno">3 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Deadlock</span> <span class="tok-kd">extends</span> <span class="tok-n">Thread</span> <span class="tok-o">{</span>
-<span class="lineno">4 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-n">Random</span> <span class="tok-n">random1</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Random</span><span class="tok-o">();</span>
-<span class="lineno">5 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-n">Random</span> <span class="tok-n">random2</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Random</span><span class="tok-o">();</span>
-<span class="lineno">6 </span>	<span class="tok-kd">private</span> <span class="tok-kt">boolean</span> <span class="tok-n">reverse</span><span class="tok-o">;</span>
-<span class="lineno">7 </span>	<span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">sum</span><span class="tok-o">;</span></code></pre>
+<span class="lineno">4 </span>    <span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-n">Random</span> <span class="tok-n">random1</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Random</span><span class="tok-o">();</span>
+<span class="lineno">5 </span>    <span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-n">Random</span> <span class="tok-n">random2</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Random</span><span class="tok-o">();</span>
+<span class="lineno">6 </span>    <span class="tok-kd">private</span> <span class="tok-kt">boolean</span> <span class="tok-n">reverse</span><span class="tok-o">;</span>
+<span class="lineno">7 </span>    <span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">sum</span><span class="tok-o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1560,19 +1560,19 @@ spawns two new threads, passing <code>true</code> to one and <code>false</code> 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span><span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-n">Thread</span> <span class="tok-n">thread1</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Deadlock</span><span class="tok-o">(</span> <span class="tok-kc">true</span> <span class="tok-o">);</span>
-<span class="lineno"> 3 </span>		<span class="tok-n">Thread</span> <span class="tok-n">thread2</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Deadlock</span><span class="tok-o">(</span> <span class="tok-kc">false</span> <span class="tok-o">);</span>
-<span class="lineno"> 4 </span>		<span class="tok-n">thread1</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
-<span class="lineno"> 5 </span>		<span class="tok-n">thread2</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
-<span class="lineno"> 6 </span>		<span class="tok-k">try</span> <span class="tok-o">{</span>
-<span class="lineno"> 7 </span>			<span class="tok-n">thread1</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
-<span class="lineno"> 8 </span>			<span class="tok-n">thread2</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
-<span class="lineno"> 9 </span>		<span class="tok-o">}</span>
-<span class="lineno">10 </span>		<span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">11 </span>			<span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno">12 </span>		<span class="tok-o">}</span>
-<span class="lineno">13 </span>	<span class="tok-o">}</span></code></pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-n">Thread</span> <span class="tok-n">thread1</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Deadlock</span><span class="tok-o">(</span> <span class="tok-kc">true</span> <span class="tok-o">);</span>
+<span class="lineno"> 3 </span>        <span class="tok-n">Thread</span> <span class="tok-n">thread2</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Deadlock</span><span class="tok-o">(</span> <span class="tok-kc">false</span> <span class="tok-o">);</span>
+<span class="lineno"> 4 </span>        <span class="tok-n">thread1</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
+<span class="lineno"> 5 </span>        <span class="tok-n">thread2</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
+<span class="lineno"> 6 </span>        <span class="tok-k">try</span> <span class="tok-o">{</span>
+<span class="lineno"> 7 </span>            <span class="tok-n">thread1</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
+<span class="lineno"> 8 </span>            <span class="tok-n">thread2</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
+<span class="lineno"> 9 </span>        <span class="tok-o">}</span>
+<span class="lineno">10 </span>        <span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">11 </span>            <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno">12 </span>        <span class="tok-o">}</span>
+<span class="lineno">13 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1581,9 +1581,9 @@ spawns two new threads, passing <code>true</code> to one and <code>false</code> 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span>	<span class="tok-kd">public</span> <span class="tok-nf">Deadlock</span><span class="tok-o">(</span> <span class="tok-kt">boolean</span> <span class="tok-n">reverse</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">2 </span>		<span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">reverse</span> <span class="tok-o">=</span> <span class="tok-n">reverse</span><span class="tok-o">;</span>
-<span class="lineno">3 </span>	<span class="tok-o">}</span></code></pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span>    <span class="tok-kd">public</span> <span class="tok-nf">Deadlock</span><span class="tok-o">(</span> <span class="tok-kt">boolean</span> <span class="tok-n">reverse</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">2 </span>        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">reverse</span> <span class="tok-o">=</span> <span class="tok-n">reverse</span><span class="tok-o">;</span>
+<span class="lineno">3 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1596,38 +1596,38 @@ between. The non-reversed thread tries to lock on <code>random1</code> and then
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">reverse</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 3 </span>	        <span class="tok-kd">synchronized</span><span class="tok-o">(</span><span class="tok-n">random2</span><span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 4 </span>			  <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span>
-<span class="lineno"> 5 </span>				<span class="tok-s">&quot;Reversed Thread: synchronized on random2&quot;</span><span class="tok-o">);</span>
-<span class="lineno"> 6 </span>			  <span class="tok-k">try</span><span class="tok-o">{</span> <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">50</span><span class="tok-o">);</span> <span class="tok-o">}</span>
-<span class="lineno"> 7 </span>			  <span class="tok-k">catch</span> <span class="tok-o">(</span><span class="tok-n">InterruptedException</span> <span class="tok-n">e</span><span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 8 </span>				  <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno"> 9 </span>			  <span class="tok-o">}</span>
-<span class="lineno">10 </span>			  <span class="tok-kd">synchronized</span><span class="tok-o">(</span><span class="tok-n">random1</span><span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">11 </span>			    <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span>
-<span class="lineno">12 </span>					<span class="tok-s">&quot;Reversed Thread: synchronized on random1&quot;</span><span class="tok-o">);</span>
-<span class="lineno">13 </span>			    <span class="tok-n">sum</span> <span class="tok-o">=</span> <span class="tok-n">random1</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">()</span> <span class="tok-o">+</span> <span class="tok-n">random2</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">();</span>
-<span class="lineno">14 </span>			  <span class="tok-o">}</span>
-<span class="lineno">15 </span>	        <span class="tok-o">}</span>
-<span class="lineno">16 </span>	    <span class="tok-o">}</span>
-<span class="lineno">17 </span>		<span class="tok-k">else</span> <span class="tok-o">{</span>
-<span class="lineno">18 </span>	        <span class="tok-kd">synchronized</span><span class="tok-o">(</span><span class="tok-n">random1</span><span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">19 </span>			  <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span>
-<span class="lineno">20 </span>				<span class="tok-s">&quot;Normal Thread: synchronized on random1&quot;</span><span class="tok-o">);</span>
-<span class="lineno">21 </span>			  <span class="tok-k">try</span> <span class="tok-o">{</span> <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">50</span><span class="tok-o">);</span> <span class="tok-o">}</span>
-<span class="lineno">22 </span>			  <span class="tok-k">catch</span> <span class="tok-o">(</span><span class="tok-n">InterruptedException</span> <span class="tok-n">e</span><span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">23 </span>				  <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno">24 </span>			  <span class="tok-o">}</span>
-<span class="lineno">25 </span>			  <span class="tok-kd">synchronized</span><span class="tok-o">(</span><span class="tok-n">random2</span><span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">26 </span>			    <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span>
-<span class="lineno">27 </span>					<span class="tok-s">&quot;Normal Thread: synchronized on random2&quot;</span><span class="tok-o">);</span>
-<span class="lineno">28 </span>			    <span class="tok-n">sum</span> <span class="tok-o">=</span> <span class="tok-n">random1</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">()</span> <span class="tok-o">+</span> <span class="tok-n">random2</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">();</span>
-<span class="lineno">29 </span>			  <span class="tok-o">}</span>
-<span class="lineno">30 </span>		        <span class="tok-o">}</span>
-<span class="lineno">31 </span>		<span class="tok-o">}</span>
-<span class="lineno">32 </span>	<span class="tok-o">}</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">reverse</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 3 </span>            <span class="tok-kd">synchronized</span><span class="tok-o">(</span><span class="tok-n">random2</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 4 </span>              <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span>
+<span class="lineno"> 5 </span>                <span class="tok-s">&quot;Reversed Thread: synchronized on random2&quot;</span><span class="tok-o">);</span>
+<span class="lineno"> 6 </span>              <span class="tok-k">try</span><span class="tok-o">{</span> <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">50</span><span class="tok-o">);</span> <span class="tok-o">}</span>
+<span class="lineno"> 7 </span>              <span class="tok-k">catch</span> <span class="tok-o">(</span><span class="tok-n">InterruptedException</span> <span class="tok-n">e</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 8 </span>                  <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno"> 9 </span>              <span class="tok-o">}</span>
+<span class="lineno">10 </span>              <span class="tok-kd">synchronized</span><span class="tok-o">(</span><span class="tok-n">random1</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">11 </span>                <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span>
+<span class="lineno">12 </span>                    <span class="tok-s">&quot;Reversed Thread: synchronized on random1&quot;</span><span class="tok-o">);</span>
+<span class="lineno">13 </span>                <span class="tok-n">sum</span> <span class="tok-o">=</span> <span class="tok-n">random1</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">()</span> <span class="tok-o">+</span> <span class="tok-n">random2</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">();</span>
+<span class="lineno">14 </span>              <span class="tok-o">}</span>
+<span class="lineno">15 </span>            <span class="tok-o">}</span>
+<span class="lineno">16 </span>        <span class="tok-o">}</span>
+<span class="lineno">17 </span>        <span class="tok-k">else</span> <span class="tok-o">{</span>
+<span class="lineno">18 </span>            <span class="tok-kd">synchronized</span><span class="tok-o">(</span><span class="tok-n">random1</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">19 </span>              <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span>
+<span class="lineno">20 </span>                <span class="tok-s">&quot;Normal Thread: synchronized on random1&quot;</span><span class="tok-o">);</span>
+<span class="lineno">21 </span>              <span class="tok-k">try</span> <span class="tok-o">{</span> <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">50</span><span class="tok-o">);</span> <span class="tok-o">}</span>
+<span class="lineno">22 </span>              <span class="tok-k">catch</span> <span class="tok-o">(</span><span class="tok-n">InterruptedException</span> <span class="tok-n">e</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">23 </span>                  <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno">24 </span>              <span class="tok-o">}</span>
+<span class="lineno">25 </span>              <span class="tok-kd">synchronized</span><span class="tok-o">(</span><span class="tok-n">random2</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">26 </span>                <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span>
+<span class="lineno">27 </span>                    <span class="tok-s">&quot;Normal Thread: synchronized on random2&quot;</span><span class="tok-o">);</span>
+<span class="lineno">28 </span>                <span class="tok-n">sum</span> <span class="tok-o">=</span> <span class="tok-n">random1</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">()</span> <span class="tok-o">+</span> <span class="tok-n">random2</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">();</span>
+<span class="lineno">29 </span>              <span class="tok-o">}</span>
+<span class="lineno">30 </span>                <span class="tok-o">}</span>
+<span class="lineno">31 </span>        <span class="tok-o">}</span>
+<span class="lineno">32 </span>    <span class="tok-o">}</span>
 <span class="lineno">33 </span><span class="tok-o">}</span></code></pre>
 </div>
 </div>
@@ -1737,13 +1737,13 @@ in code.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Livelock</span> <span class="tok-kd">extends</span> <span class="tok-n">Thread</span> <span class="tok-o">{</span>
-<span class="lineno">2 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">totalReady</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
-<span class="lineno">3 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-n">Object</span> <span class="tok-n">lock</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Object</span><span class="tok-o">();</span>
+<span class="lineno">2 </span>    <span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">int</span> <span class="tok-n">totalReady</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span>
+<span class="lineno">3 </span>    <span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-n">Object</span> <span class="tok-n">lock</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Object</span><span class="tok-o">();</span>
 <span class="lineno">4 </span>
-<span class="lineno">5 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span><span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">6 </span>		<span class="tok-n">Livelock</span> <span class="tok-n">friend1</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Livelock</span><span class="tok-o">();</span>
-<span class="lineno">7 </span>		<span class="tok-n">Livelock</span> <span class="tok-n">friend2</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Livelock</span><span class="tok-o">();</span>
-<span class="lineno">8 </span>		<span class="tok-n">Livelock</span> <span class="tok-n">friend3</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Livelock</span><span class="tok-o">();</span></code></pre>
+<span class="lineno">5 </span>    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span><span class="tok-o">[]</span> <span class="tok-n">args</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">6 </span>        <span class="tok-n">Livelock</span> <span class="tok-n">friend1</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Livelock</span><span class="tok-o">();</span>
+<span class="lineno">7 </span>        <span class="tok-n">Livelock</span> <span class="tok-n">friend2</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Livelock</span><span class="tok-o">();</span>
+<span class="lineno">8 </span>        <span class="tok-n">Livelock</span> <span class="tok-n">friend3</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Livelock</span><span class="tok-o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1755,22 +1755,22 @@ objects representing each of the friends.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>		<span class="tok-k">try</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>			<span class="tok-n">friend1</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
-<span class="lineno"> 3 </span>			<span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">100</span><span class="tok-o">);</span>
-<span class="lineno"> 4 </span>			<span class="tok-n">friend2</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
-<span class="lineno"> 5 </span>			<span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">100</span><span class="tok-o">);</span>
-<span class="lineno"> 6 </span>			<span class="tok-n">friend3</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>        <span class="tok-k">try</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>            <span class="tok-n">friend1</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
+<span class="lineno"> 3 </span>            <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">100</span><span class="tok-o">);</span>
+<span class="lineno"> 4 </span>            <span class="tok-n">friend2</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
+<span class="lineno"> 5 </span>            <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">100</span><span class="tok-o">);</span>
+<span class="lineno"> 6 </span>            <span class="tok-n">friend3</span><span class="tok-o">.</span><span class="tok-na">start</span><span class="tok-o">();</span>
 <span class="lineno"> 7 </span>
-<span class="lineno"> 8 </span>			<span class="tok-n">friend1</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
-<span class="lineno"> 9 </span>			<span class="tok-n">friend2</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
-<span class="lineno">10 </span>			<span class="tok-n">friend3</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
-<span class="lineno">11 </span>		<span class="tok-o">}</span>
-<span class="lineno">12 </span>		<span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">13 </span>			<span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno">14 </span>		<span class="tok-o">}</span>
-<span class="lineno">15 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;All ready!&quot;</span><span class="tok-o">);</span>
-<span class="lineno">16 </span>	<span class="tok-o">}</span></code></pre>
+<span class="lineno"> 8 </span>            <span class="tok-n">friend1</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
+<span class="lineno"> 9 </span>            <span class="tok-n">friend2</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
+<span class="lineno">10 </span>            <span class="tok-n">friend3</span><span class="tok-o">.</span><span class="tok-na">join</span><span class="tok-o">();</span>
+<span class="lineno">11 </span>        <span class="tok-o">}</span>
+<span class="lineno">12 </span>        <span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">13 </span>            <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno">14 </span>        <span class="tok-o">}</span>
+<span class="lineno">15 </span>        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;All ready!&quot;</span><span class="tok-o">);</span>
+<span class="lineno">16 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1781,28 +1781,28 @@ successful, it will print <code>All ready!</code> to the screen.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-kt">boolean</span> <span class="tok-n">done</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-kt">boolean</span> <span class="tok-n">done</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
 <span class="lineno"> 3 </span>
-<span class="lineno"> 4 </span>		<span class="tok-k">try</span> <span class="tok-o">{</span>
-<span class="lineno"> 5 </span>			<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-o">!</span><span class="tok-n">done</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 6 </span>				<span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">75</span><span class="tok-o">);</span> <span class="tok-c1">//prepare for party</span>
-<span class="lineno"> 7 </span>				<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 8 </span>					<span class="tok-n">totalReady</span><span class="tok-o">++;</span>
-<span class="lineno"> 9 </span>				<span class="tok-o">}</span>
-<span class="lineno">10 </span>				<span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">75</span><span class="tok-o">);</span> <span class="tok-c1">//wait for friends</span>
-<span class="lineno">11 </span>				<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">12 </span>					<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">totalReady</span> <span class="tok-o">&gt;=</span> <span class="tok-mi">3</span> <span class="tok-o">)</span>
-<span class="lineno">13 </span>						<span class="tok-n">done</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
-<span class="lineno">14 </span>					<span class="tok-k">else</span>
-<span class="lineno">15 </span>						<span class="tok-n">totalReady</span><span class="tok-o">--;</span>
-<span class="lineno">16 </span>				<span class="tok-o">}</span>
-<span class="lineno">17 </span>			<span class="tok-o">}</span>
-<span class="lineno">18 </span>		<span class="tok-o">}</span>
-<span class="lineno">19 </span>		<span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">20 </span>			<span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno">21 </span>		<span class="tok-o">}</span>
-<span class="lineno">22 </span>	<span class="tok-o">}</span>
+<span class="lineno"> 4 </span>        <span class="tok-k">try</span> <span class="tok-o">{</span>
+<span class="lineno"> 5 </span>            <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-o">!</span><span class="tok-n">done</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 6 </span>                <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">75</span><span class="tok-o">);</span> <span class="tok-c1">//prepare for party</span>
+<span class="lineno"> 7 </span>                <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 8 </span>                    <span class="tok-n">totalReady</span><span class="tok-o">++;</span>
+<span class="lineno"> 9 </span>                <span class="tok-o">}</span>
+<span class="lineno">10 </span>                <span class="tok-n">Thread</span><span class="tok-o">.</span><span class="tok-na">sleep</span><span class="tok-o">(</span><span class="tok-mi">75</span><span class="tok-o">);</span> <span class="tok-c1">//wait for friends</span>
+<span class="lineno">11 </span>                <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">lock</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">12 </span>                    <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">totalReady</span> <span class="tok-o">&gt;=</span> <span class="tok-mi">3</span> <span class="tok-o">)</span>
+<span class="lineno">13 </span>                        <span class="tok-n">done</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
+<span class="lineno">14 </span>                    <span class="tok-k">else</span>
+<span class="lineno">15 </span>                        <span class="tok-n">totalReady</span><span class="tok-o">--;</span>
+<span class="lineno">16 </span>                <span class="tok-o">}</span>
+<span class="lineno">17 </span>            <span class="tok-o">}</span>
+<span class="lineno">18 </span>        <span class="tok-o">}</span>
+<span class="lineno">19 </span>        <span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">20 </span>            <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno">21 </span>        <span class="tok-o">}</span>
+<span class="lineno">22 </span>    <span class="tok-o">}</span>
 <span class="lineno">23 </span><span class="tok-o">}</span></code></pre>
 </div>
 </div>
@@ -1929,13 +1929,13 @@ either pick up both chopsticks or neither.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno">1 </span><span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">DiningPhilosopher</span> <span class="tok-kd">extends</span> <span class="tok-n">Thread</span> <span class="tok-o">{</span>
-<span class="lineno">2 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">SEATS</span> <span class="tok-o">=</span> <span class="tok-mi">5</span><span class="tok-o">;</span>
-<span class="lineno">3 </span>	<span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span><span class="tok-o">[]</span> <span class="tok-n">chopsticks</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-kt">boolean</span><span class="tok-o">[</span><span class="tok-n">SEATS</span><span class="tok-o">];</span>
-<span class="lineno">4 </span>	<span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
+<span class="lineno">2 </span>    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kd">final</span> <span class="tok-kt">int</span> <span class="tok-n">SEATS</span> <span class="tok-o">=</span> <span class="tok-mi">5</span><span class="tok-o">;</span>
+<span class="lineno">3 </span>    <span class="tok-kd">private</span> <span class="tok-kd">static</span> <span class="tok-kt">boolean</span><span class="tok-o">[]</span> <span class="tok-n">chopsticks</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-kt">boolean</span><span class="tok-o">[</span><span class="tok-n">SEATS</span><span class="tok-o">];</span>
+<span class="lineno">4 </span>    <span class="tok-kd">private</span> <span class="tok-kt">int</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
 <span class="lineno">5 </span>
-<span class="lineno">6 </span>	<span class="tok-kd">public</span> <span class="tok-nf">DiningPhilosopher</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">seat</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">7 </span>		<span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">seat</span> <span class="tok-o">=</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
-<span class="lineno">8 </span>	<span class="tok-o">}</span></code></pre>
+<span class="lineno">6 </span>    <span class="tok-kd">public</span> <span class="tok-nf">DiningPhilosopher</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">seat</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">7 </span>        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">seat</span> <span class="tok-o">=</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
+<span class="lineno">8 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1947,24 +1947,24 @@ philosopher, and then wait for them to finish.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">args</span><span class="tok-o">[])</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">SEATS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
-<span class="lineno"> 3 </span>			<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
-<span class="lineno"> 4 </span>		<span class="tok-n">DiningPhilosopher</span><span class="tok-o">[]</span> <span class="tok-n">philosophers</span> <span class="tok-o">=</span>
-<span class="lineno"> 5 </span>			<span class="tok-k">new</span> <span class="tok-n">DiningPhilosopher</span><span class="tok-o">[</span><span class="tok-n">SEATS</span><span class="tok-o">];</span>
-<span class="lineno"> 6 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">SEATS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 7 </span>			<span class="tok-n">philosophers</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">DiningPhilosopher</span><span class="tok-o">(</span> <span class="tok-n">i</span> <span class="tok-o">);</span>
-<span class="lineno"> 8 </span>			<span class="tok-n">philosophers</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">start</span><span class="tok-o">();</span>
-<span class="lineno"> 9 </span>		<span class="tok-o">}</span>
-<span class="lineno">10 </span>		<span class="tok-k">try</span>	<span class="tok-o">{</span>
-<span class="lineno">11 </span>			<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">SEATS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
-<span class="lineno">12 </span>				<span class="tok-n">philosophers</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">join</span><span class="tok-o">();</span>
-<span class="lineno">13 </span>		<span class="tok-o">}</span>
-<span class="lineno">14 </span>		<span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">15 </span>			<span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno">16 </span>		<span class="tok-o">}</span>
-<span class="lineno">17 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;All philosophers done.&quot;</span><span class="tok-o">);</span>
-<span class="lineno">18 </span>	<span class="tok-o">}</span></code></pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">public</span> <span class="tok-kd">static</span> <span class="tok-kt">void</span> <span class="tok-nf">main</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">args</span><span class="tok-o">[])</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">SEATS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+<span class="lineno"> 3 </span>            <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+<span class="lineno"> 4 </span>        <span class="tok-n">DiningPhilosopher</span><span class="tok-o">[]</span> <span class="tok-n">philosophers</span> <span class="tok-o">=</span>
+<span class="lineno"> 5 </span>            <span class="tok-k">new</span> <span class="tok-n">DiningPhilosopher</span><span class="tok-o">[</span><span class="tok-n">SEATS</span><span class="tok-o">];</span>
+<span class="lineno"> 6 </span>        <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">SEATS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 7 </span>            <span class="tok-n">philosophers</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">DiningPhilosopher</span><span class="tok-o">(</span> <span class="tok-n">i</span> <span class="tok-o">);</span>
+<span class="lineno"> 8 </span>            <span class="tok-n">philosophers</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">start</span><span class="tok-o">();</span>
+<span class="lineno"> 9 </span>        <span class="tok-o">}</span>
+<span class="lineno">10 </span>        <span class="tok-k">try</span> <span class="tok-o">{</span>
+<span class="lineno">11 </span>            <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">SEATS</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span>
+<span class="lineno">12 </span>                <span class="tok-n">philosophers</span><span class="tok-o">[</span><span class="tok-n">i</span><span class="tok-o">].</span><span class="tok-na">join</span><span class="tok-o">();</span>
+<span class="lineno">13 </span>        <span class="tok-o">}</span>
+<span class="lineno">14 </span>        <span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">15 </span>            <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno">16 </span>        <span class="tok-o">}</span>
+<span class="lineno">17 </span>        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;All philosophers done.&quot;</span><span class="tok-o">);</span>
+<span class="lineno">18 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1977,23 +1977,23 @@ deterministic.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">100</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 3 </span>			<span class="tok-n">think</span><span class="tok-o">();</span>
-<span class="lineno"> 4 </span>			<span class="tok-n">getChopsticks</span><span class="tok-o">();</span>
-<span class="lineno"> 5 </span>			<span class="tok-n">eat</span><span class="tok-o">();</span>
-<span class="lineno"> 6 </span>		<span class="tok-o">}</span>
-<span class="lineno"> 7 </span>	<span class="tok-o">}</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">run</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-k">for</span><span class="tok-o">(</span> <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-o">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">100</span><span class="tok-o">;</span> <span class="tok-n">i</span><span class="tok-o">++</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 3 </span>            <span class="tok-n">think</span><span class="tok-o">();</span>
+<span class="lineno"> 4 </span>            <span class="tok-n">getChopsticks</span><span class="tok-o">();</span>
+<span class="lineno"> 5 </span>            <span class="tok-n">eat</span><span class="tok-o">();</span>
+<span class="lineno"> 6 </span>        <span class="tok-o">}</span>
+<span class="lineno"> 7 </span>    <span class="tok-o">}</span>
 <span class="lineno"> 8 </span>
-<span class="lineno"> 9 </span>	<span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">think</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno">10 </span>		<span class="tok-n">Random</span> <span class="tok-n">random</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Random</span><span class="tok-o">();</span>
-<span class="lineno">11 </span>		<span class="tok-k">try</span> <span class="tok-o">{</span>
-<span class="lineno">12 </span>			<span class="tok-n">sleep</span><span class="tok-o">(</span> <span class="tok-n">random</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">(</span><span class="tok-mi">20</span><span class="tok-o">)</span> <span class="tok-o">+</span> <span class="tok-mi">10</span> <span class="tok-o">);</span>
-<span class="lineno">13 </span>		<span class="tok-o">}</span>
-<span class="lineno">14 </span>		<span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">15 </span>			<span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno">16 </span>		<span class="tok-o">}</span>
-<span class="lineno">17 </span>	<span class="tok-o">}</span></code></pre>
+<span class="lineno"> 9 </span>    <span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">think</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno">10 </span>        <span class="tok-n">Random</span> <span class="tok-n">random</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">Random</span><span class="tok-o">();</span>
+<span class="lineno">11 </span>        <span class="tok-k">try</span> <span class="tok-o">{</span>
+<span class="lineno">12 </span>            <span class="tok-n">sleep</span><span class="tok-o">(</span> <span class="tok-n">random</span><span class="tok-o">.</span><span class="tok-na">nextInt</span><span class="tok-o">(</span><span class="tok-mi">20</span><span class="tok-o">)</span> <span class="tok-o">+</span> <span class="tok-mi">10</span> <span class="tok-o">);</span>
+<span class="lineno">13 </span>        <span class="tok-o">}</span>
+<span class="lineno">14 </span>        <span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">15 </span>            <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno">16 </span>        <span class="tok-o">}</span>
+<span class="lineno">17 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2004,30 +2004,30 @@ waits.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">getChopsticks</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-kt">int</span> <span class="tok-n">location1</span> <span class="tok-o">=</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
-<span class="lineno"> 3 </span>		<span class="tok-kt">int</span> <span class="tok-n">location2</span><span class="tok-o">;</span>
-<span class="lineno"> 4 </span>		<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
-<span class="lineno"> 5 </span>			<span class="tok-n">location2</span> <span class="tok-o">=</span> <span class="tok-n">SEATS</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">;</span>
-<span class="lineno"> 6 </span>		<span class="tok-k">else</span>
-<span class="lineno"> 7 </span>			<span class="tok-n">location2</span> <span class="tok-o">=</span> <span class="tok-n">seat</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">;</span>
-<span class="lineno"> 8 </span>		<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 9 </span>			<span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location1</span><span class="tok-o">]</span>
-<span class="lineno">10 </span>				<span class="tok-o">||</span> <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location2</span><span class="tok-o">]</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno">11 </span>				<span class="tok-k">try</span> <span class="tok-o">{</span>
-<span class="lineno">12 </span>					<span class="tok-n">chopsticks</span><span class="tok-o">.</span><span class="tok-na">wait</span><span class="tok-o">();</span>
-<span class="lineno">13 </span>				<span class="tok-o">}</span>
-<span class="lineno">14 </span>				<span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span>	<span class="tok-o">{</span>
-<span class="lineno">15 </span>					<span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
-<span class="lineno">16 </span>				<span class="tok-o">}</span>
-<span class="lineno">17 </span>			<span class="tok-o">}</span>
-<span class="lineno">18 </span>			<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
-<span class="lineno">19 </span>			<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location2</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
-<span class="lineno">20 </span>		<span class="tok-o">}</span>
-<span class="lineno">21 </span>		<span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Philosopher &quot;</span> <span class="tok-o">+</span> <span class="tok-n">seat</span> <span class="tok-o">+</span>
-<span class="lineno">22 </span>			<span class="tok-s">&quot; picked up chopsticks &quot;</span> <span class="tok-o">+</span> <span class="tok-n">location1</span> <span class="tok-o">+</span> <span class="tok-s">&quot; and &quot;</span>
-<span class="lineno">23 </span>			<span class="tok-o">+</span> <span class="tok-n">location2</span> <span class="tok-o">+</span> <span class="tok-s">&quot;.&quot;</span><span class="tok-o">);</span>
-<span class="lineno">24 </span>	<span class="tok-o">}</span></code></pre>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">getChopsticks</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-kt">int</span> <span class="tok-n">location1</span> <span class="tok-o">=</span> <span class="tok-n">seat</span><span class="tok-o">;</span>
+<span class="lineno"> 3 </span>        <span class="tok-kt">int</span> <span class="tok-n">location2</span><span class="tok-o">;</span>
+<span class="lineno"> 4 </span>        <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">==</span> <span class="tok-mi">0</span> <span class="tok-o">)</span>
+<span class="lineno"> 5 </span>            <span class="tok-n">location2</span> <span class="tok-o">=</span> <span class="tok-n">SEATS</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">;</span>
+<span class="lineno"> 6 </span>        <span class="tok-k">else</span>
+<span class="lineno"> 7 </span>            <span class="tok-n">location2</span> <span class="tok-o">=</span> <span class="tok-n">seat</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">;</span>
+<span class="lineno"> 8 </span>        <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 9 </span>            <span class="tok-k">while</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location1</span><span class="tok-o">]</span>
+<span class="lineno">10 </span>                <span class="tok-o">||</span> <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location2</span><span class="tok-o">]</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">11 </span>                <span class="tok-k">try</span> <span class="tok-o">{</span>
+<span class="lineno">12 </span>                    <span class="tok-n">chopsticks</span><span class="tok-o">.</span><span class="tok-na">wait</span><span class="tok-o">();</span>
+<span class="lineno">13 </span>                <span class="tok-o">}</span>
+<span class="lineno">14 </span>                <span class="tok-k">catch</span><span class="tok-o">(</span> <span class="tok-n">InterruptedException</span> <span class="tok-n">e</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno">15 </span>                    <span class="tok-n">e</span><span class="tok-o">.</span><span class="tok-na">printStackTrace</span><span class="tok-o">();</span>
+<span class="lineno">16 </span>                <span class="tok-o">}</span>
+<span class="lineno">17 </span>            <span class="tok-o">}</span>
+<span class="lineno">18 </span>            <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
+<span class="lineno">19 </span>            <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">location2</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">true</span><span class="tok-o">;</span>
+<span class="lineno">20 </span>        <span class="tok-o">}</span>
+<span class="lineno">21 </span>        <span class="tok-n">System</span><span class="tok-o">.</span><span class="tok-na">out</span><span class="tok-o">.</span><span class="tok-na">println</span><span class="tok-o">(</span><span class="tok-s">&quot;Philosopher &quot;</span> <span class="tok-o">+</span> <span class="tok-n">seat</span> <span class="tok-o">+</span>
+<span class="lineno">22 </span>            <span class="tok-s">&quot; picked up chopsticks &quot;</span> <span class="tok-o">+</span> <span class="tok-n">location1</span> <span class="tok-o">+</span> <span class="tok-s">&quot; and &quot;</span>
+<span class="lineno">23 </span>            <span class="tok-o">+</span> <span class="tok-n">location2</span> <span class="tok-o">+</span> <span class="tok-s">&quot;.&quot;</span><span class="tok-o">);</span>
+<span class="lineno">24 </span>    <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2041,17 +2041,17 @@ available.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>	<span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">eat</span><span class="tok-o">()</span> <span class="tok-o">{</span>
-<span class="lineno"> 2 </span>		<span class="tok-c1">//eat rice first</span>
-<span class="lineno"> 3 </span>		<span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
-<span class="lineno"> 4 </span>			<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">seat</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
-<span class="lineno"> 5 </span>			<span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">==</span> <span class="tok-mi">0</span><span class="tok-o">)</span>
-<span class="lineno"> 6 </span>				<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">SEATS</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
-<span class="lineno"> 7 </span>			<span class="tok-k">else</span>
-<span class="lineno"> 8 </span>				<span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">seat</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
-<span class="lineno"> 9 </span>			<span class="tok-n">chopsticks</span><span class="tok-o">.</span><span class="tok-na">notifyAll</span><span class="tok-o">();</span>
-<span class="lineno">10 </span>		<span class="tok-o">}</span>
-<span class="lineno">11 </span>	<span class="tok-o">}</span>
+<pre class="pygments highlight"><code data-lang="java"><span></span><span class="lineno"> 1 </span>    <span class="tok-kd">private</span> <span class="tok-kt">void</span> <span class="tok-nf">eat</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+<span class="lineno"> 2 </span>        <span class="tok-c1">//eat rice first</span>
+<span class="lineno"> 3 </span>        <span class="tok-kd">synchronized</span><span class="tok-o">(</span> <span class="tok-n">chopsticks</span> <span class="tok-o">)</span> <span class="tok-o">{</span>
+<span class="lineno"> 4 </span>            <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">seat</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+<span class="lineno"> 5 </span>            <span class="tok-k">if</span><span class="tok-o">(</span> <span class="tok-n">seat</span> <span class="tok-o">==</span> <span class="tok-mi">0</span><span class="tok-o">)</span>
+<span class="lineno"> 6 </span>                <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">SEATS</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+<span class="lineno"> 7 </span>            <span class="tok-k">else</span>
+<span class="lineno"> 8 </span>                <span class="tok-n">chopsticks</span><span class="tok-o">[</span><span class="tok-n">seat</span> <span class="tok-o">-</span> <span class="tok-mi">1</span><span class="tok-o">]</span> <span class="tok-o">=</span> <span class="tok-kc">false</span><span class="tok-o">;</span>
+<span class="lineno"> 9 </span>            <span class="tok-n">chopsticks</span><span class="tok-o">.</span><span class="tok-na">notifyAll</span><span class="tok-o">();</span>
+<span class="lineno">10 </span>        <span class="tok-o">}</span>
+<span class="lineno">11 </span>    <span class="tok-o">}</span>
 <span class="lineno">12 </span><span class="tok-o">}</span></code></pre>
 </div>
 </div>
@@ -2271,7 +2271,7 @@ you set the priorities of these new threads to <code>MAX_PRIORITY</code> or
 </div></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-08-13 15:41:17 EDT
+Last updated 2018-08-16 13:36:09 EDT
 </div>
 </div>
 <script type="text/x-mathjax-config">
