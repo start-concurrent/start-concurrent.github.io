@@ -14,9 +14,9 @@ public class AlternateActionListener implements ActionListener {
     barkButton.addActionListener(this);
     exitButton.addActionListener(this);
     soundPanel.add(chirpButton);
-	soundPanel.add(barkButton);
+    soundPanel.add(barkButton);
     soundPanel.add(message);
-	soundPanel.add(exitButton);    
+    soundPanel.add(exitButton);    
     soundCheck.add(soundPanel);
     soundCheck.setSize(200,125);
     soundCheck.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -26,12 +26,12 @@ public class AlternateActionListener implements ActionListener {
   public void actionPerformed(ActionEvent e){ // <2>
     Object button = e.getSource(); // <3>
     if(button == chirpButton) // <4>
-		message.setText("Chirp requested."); 
+        message.setText("Chirp requested."); 
     else if(button == barkButton) 
-		message.setText("Bark requested.");
+        message.setText("Bark requested.");
     else {
-		System.out.println("Exit");
-		soundCheck.dispose();
+        System.out.println("Exit");
+        soundCheck.dispose();
     }
   }
   

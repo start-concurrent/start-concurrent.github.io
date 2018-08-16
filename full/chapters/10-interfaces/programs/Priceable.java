@@ -1,3 +1,3 @@
 interface Priceable {
-	double getPrice();
+    double getPrice();
 }

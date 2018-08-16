@@ -8,23 +8,23 @@ public class GenericLinkedList<T> {
     private int size = 0;
     
     public void add(T value) {
-    	Node<T> temp = new Node<T>();
-    	temp.value = value;
-    	temp.next = head;
-    	head = temp;
-    	size++;
+        Node<T> temp = new Node<T>();
+        temp.value = value;
+        temp.next = head;
+        head = temp;
+        size++;
     }
     
     public int size() {
-    	return size;
+        return size;
     }
     
-    public void fillArray(T[] array) {    	
-    	Node<T> temp = head;
-    	int position = 0;
-    	while( temp != null ) {
-    		array[position++] = temp.value;
-    		temp = temp.next;
-    	}   		
+    public void fillArray(T[] array) {      
+        Node<T> temp = head;
+        int position = 0;
+        while( temp != null ) {
+            array[position++] = temp.value;
+            temp = temp.next;
+        }           
     }
 }

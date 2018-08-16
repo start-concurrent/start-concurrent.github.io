@@ -2,7 +2,7 @@ import java.util.*; // <1>
 
 public class DragonAttributes {    
     public static void main(String[] args) {
-    	Random random = new Random(); // <2>
+        Random random = new Random(); // <2>
         int age = random.nextInt(100) + 1; // <3>
         double height = random.nextDouble()*30; // <4>
         boolean gender = random.nextBoolean(); // <5>

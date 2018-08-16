@@ -1,3 +1,3 @@
 public interface AreaGettable {
-	double getArea();
+    double getArea();
 }

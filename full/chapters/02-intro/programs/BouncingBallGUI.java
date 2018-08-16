@@ -1,9 +1,9 @@
 import javax.swing.*;
 
 public class BouncingBallGUI {
-	public static void main(String [] args) {
-		// Solution to sub-problem 1
-		String title = "Bouncing Ball";
+    public static void main(String [] args) {
+        // Solution to sub-problem 1
+        String title = "Bouncing Ball";
         double height, coefficient;
         int bounces; 
         
@@ -14,13 +14,13 @@ public class BouncingBallGUI {
         
         // Prompt the user, get data, and convert it
         String response = JOptionPane.showInputDialog(null,
-        	enterHeight, title, JOptionPane.QUESTION_MESSAGE);
+            enterHeight, title, JOptionPane.QUESTION_MESSAGE);
         height = Double.parseDouble(response);
         response = JOptionPane.showInputDialog(null,
-        	enterCoefficient, title, JOptionPane.QUESTION_MESSAGE);
+            enterCoefficient, title, JOptionPane.QUESTION_MESSAGE);
         coefficient = Double.parseDouble(response); 
         response = JOptionPane.showInputDialog(null,
-        	enterBounces, title, JOptionPane.QUESTION_MESSAGE);
+            enterBounces, title, JOptionPane.QUESTION_MESSAGE);
         bounces = Integer.parseInt(response);
 
         // Solution to sub-problem 2
@@ -28,9 +28,9 @@ public class BouncingBallGUI {
         
         // Solution to sub-problem 3     
         String message = "After " + bounces +
-			" bounces the height of the ball is: " +
-			bounceHeight + " feet";
-	    JOptionPane.showMessageDialog(null,
-			message, title, JOptionPane.INFORMATION_MESSAGE);       
+            " bounces the height of the ball is: " +
+            bounceHeight + " feet";
+        JOptionPane.showMessageDialog(null,
+            message, title, JOptionPane.INFORMATION_MESSAGE);       
     }  
 }

@@ -2,7 +2,7 @@ import javax.swing.*;
 
 public class FrameWithPanel {
     public static void main(String[] args){
-    	//Create frame
+        //Create frame
         JFrame soundCheck = new JFrame("Sound Check"); // <1>
         JPanel soundPanel = new JPanel(); // <2>
         //Create three buttons

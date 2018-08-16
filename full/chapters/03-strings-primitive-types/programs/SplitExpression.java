@@ -15,7 +15,7 @@ public class SplitExpression {
             System.out.println("Final answer: " + answer);        
         }
         catch(InterruptedException e){
-        	System.out.println("Computation interrupted!");
+            System.out.println("Computation interrupted!");
         }             
     }   
 }

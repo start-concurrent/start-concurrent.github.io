@@ -1,3 +1,3 @@
 public interface Ageable {
-	int getAge();
+    int getAge();
 }
