@@ -4,18 +4,17 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.6.1">
+<meta name="generator" content="Asciidoctor 1.5.7.1">
 <meta name="author" content="Barry Wittman, Tim Korb, Aditya Mathur">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
-/* Remove comment around @import statement below when using as a custom stylesheet */
+/* Uncomment @import statement below to use as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
 audio,canvas,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
-[hidden],template{display:none}
 script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:transparent}
@@ -45,12 +44,10 @@ button,select{text-transform:none}
 button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
 button[disabled],html input[disabled]{cursor:default}
 input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
-input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
-input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
 button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
 textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
-*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
 body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
@@ -68,8 +65,7 @@ img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
 .center{margin-left:auto;margin-right:auto}
-.spread{width:100%}
-p.lead,.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{font-size:1.21875em;line-height:1.6}
+.stretch{width:100%}
 .subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
 div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
 a{color:#2156a5;text-decoration:underline;line-height:inherit}
@@ -103,24 +99,24 @@ abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-
 abbr{text-transform:none}
 blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
 blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
-blockquote cite:before{content:"\2014 \0020"}
+blockquote cite::before{content:"\2014 \0020"}
 blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
 blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
-@media only screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
 h1{font-size:2.75em}
 h2{font-size:2.3125em}
 h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
 h4{font-size:1.4375em}}
 table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
-table thead,table tfoot{background:#f7f8f7;font-weight:bold}
+table thead,table tfoot{background:#f7f8f7}
 table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
 table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
-.clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
-.clearfix:after,.float-group:after{clear:both}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
 *:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
 *:not(pre)>code.nobreak{word-wrap:normal}
 *:not(pre)>code.nowrap{white-space:nowrap}
@@ -136,15 +132,15 @@ kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-bl
 .menuseq{word-spacing:-.02em}
 .menuseq b.caret{font-size:1.25em;line-height:.8}
 .menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
-b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
-b.button:before{content:"[";padding:0 3px 0 2px}
-b.button:after{content:"]";padding:0 2px 0 3px}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
 p a>code:hover{color:rgba(0,0,0,.9)}
 #header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
-#header:before,#header:after,#content:before,#content:after,#footnotes:before,#footnotes:after,#footer:before,#footer:after{content:" ";display:table}
-#header:after,#content:after,#footnotes:after,#footer:after{clear:both}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
 #content{margin-top:1.25em}
-#content:before{content:none}
+#content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #ddddd8}
 #header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #ddddd8;padding-bottom:8px}
@@ -152,11 +148,11 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
 #header .details br{display:none}
-#header .details br+span:before{content:"\00a0\2013\00a0"}
-#header .details br+span.author:before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
-#header .details br+span#revremark:before{content:"\00a0|\00a0"}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
 #header #revnumber{text-transform:capitalize}
-#header #revnumber:after{content:"\00a0"}
+#header #revnumber::after{content:"\00a0"}
 #content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #ddddd8;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
 #toc{border-bottom:1px solid #efefed;padding-bottom:.5em}
 #toc>ul{margin-left:.125em}
@@ -167,7 +163,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toc a{text-decoration:none}
 #toc a:active{text-decoration:underline}
 #toctitle{color:#7a2518;font-size:1.2em}
-@media only screen and (min-width:768px){#toctitle{font-size:1.375em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
 #toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
@@ -176,7 +172,7 @@ body.toc2{padding-left:15em;padding-right:0}
 #toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
 body.toc2.toc-right{padding-left:0;padding-right:15em}
 body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}
-@media only screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
 #toc.toc2{width:20em}
 #toc.toc2 #toctitle{font-size:1.375em}
 #toc.toc2>ul{font-size:.95em}
@@ -187,22 +183,25 @@ body.toc2.toc-right{padding-left:0;padding-right:20em}}
 #content #toc>:last-child{margin-bottom:0}
 #footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
 #footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
 .sect1{padding-bottom:.625em}
-@media only screen and (min-width:768px){.sect1{padding-bottom:1.25em}}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
 .sect1+.sect1{border-top:1px solid #efefed}
 #content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
-#content h1>a.anchor:before,h2>a.anchor:before,h3>a.anchor:before,#toctitle>a.anchor:before,.sidebarblock>.content>.title>a.anchor:before,h4>a.anchor:before,h5>a.anchor:before,h6>a.anchor:before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
 #content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
 #content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
 #content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
 .audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
 .admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
-table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
-.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{color:rgba(0,0,0,.85)}
-table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
 .admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
 .admonitionblock>table td.icon{text-align:center;width:80px}
-.admonitionblock>table td.icon img{max-width:initial}
+.admonitionblock>table td.icon img{max-width:none}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
@@ -218,17 +217,17 @@ table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inh
 .sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
 .literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;padding:1em;font-size:.8125em}
 .literalblock pre.nowrap,.literalblock pre[class].nowrap,.listingblock pre.nowrap,.listingblock pre[class].nowrap{overflow-x:auto;white-space:pre;word-wrap:normal}
-@media only screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
-@media only screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
+@media screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
 .literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
 .listingblock pre.highlightjs{padding:0}
 .listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
 .listingblock pre.prettyprint{border-width:0}
 .listingblock>.content{position:relative}
-.listingblock code[data-lang]:before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
-.listingblock:hover code[data-lang]:before{display:block}
-.listingblock.terminal pre .command:before{content:attr(data-prompt);padding-right:.5em;color:#999}
-.listingblock.terminal pre .command:not([data-prompt]):before{content:"$"}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:#999}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
 table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
 table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
 table.pyhltable td.code{padding-left:.75em;padding-right:0}
@@ -239,35 +238,39 @@ table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
 .quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
 .quoteblock blockquote,.quoteblock blockquote p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
 .quoteblock blockquote{margin:0;padding:0;border:0}
-.quoteblock blockquote:before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
 .quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
 .quoteblock .attribution{margin-top:.5em;margin-right:.5ex;text-align:right}
 .quoteblock .quoteblock{margin-left:0;margin-right:0;padding:.5em 0;border-left:3px solid rgba(0,0,0,.6)}
 .quoteblock .quoteblock blockquote{padding:0 0 0 .75em}
-.quoteblock .quoteblock blockquote:before{display:none}
-.verseblock{margin:0 1em 1.25em 1em}
+.quoteblock .quoteblock blockquote::before{display:none}
+.verseblock{margin:0 1em 1.25em}
 .verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
 .verseblock pre strong{font-weight:400}
 .verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
 .quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
 .quoteblock .attribution br,.verseblock .attribution br{display:none}
 .quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
-.quoteblock.abstract{margin:0 0 1.25em 0;display:block}
-.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{text-align:left;word-spacing:0}
-.quoteblock.abstract blockquote:before,.quoteblock.abstract blockquote p:first-of-type:before{display:none}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{word-spacing:0;line-height:1.6}
+.quoteblock.abstract blockquote::before,.quoteblock.abstract p::before{display:none}
 table.tableblock{max-width:100%;border-collapse:separate}
-table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:-1.25em}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
 table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
-table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px 0}
-table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
 table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
 table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
 table.frame-all{border-width:1px}
 table.frame-sides{border-width:0 1px}
-table.frame-topbot{border-width:1px 0}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd){background:#f8f8f7}
+table.stripes-none tr,table.stripes-odd tr:nth-of-type(even){background:none}
 th.halign-left,td.halign-left{text-align:left}
 th.halign-right,td.halign-right{text-align:right}
 th.halign-center,td.halign-center{text-align:center}
@@ -291,9 +294,8 @@ ul.unstyled,ol.unstyled{margin-left:0}
 ul.checklist{margin-left:.625em}
 ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
 ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
-ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
-ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
-ul.inline>li>*{display:block}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
 .unstyled dl dt{font-weight:400;font-style:normal}
 ol.arabic{list-style-type:decimal}
 ol.decimal{list-style-type:decimal-leading-zero}
@@ -307,9 +309,9 @@ ol.lowergreek{list-style-type:lower-greek}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
-.colist>table tr>td:first-of-type{padding:.4em .75em 0 .75em;line-height:1;vertical-align:top}
-.colist>table tr>td:first-of-type img{max-width:initial}
-.colist>table tr>td:last-of-type{padding:.25em 0}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
 .thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
 .imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
 .imageblock.right,.imageblock[style*="float: right"]{margin:.25em 0 1.25em .625em}
@@ -325,9 +327,9 @@ sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:sup
 sup.footnote a,sup.footnoteref a{text-decoration:none}
 sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
-#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em 0;border-width:1px 0 0 0}
-#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;text-indent:-1.05em;margin-bottom:.2em}
-#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
 #footnotes .footnote:last-of-type{margin-bottom:0}
 #content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
 .gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
@@ -373,15 +375,15 @@ div.unbreakable{page-break-inside:avoid}
 span.icon>.fa{cursor:default}
 a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
-.admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
-.admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
-.admonitionblock td.icon .icon-warning:before{content:"\f071";color:#bf6900}
-.admonitionblock td.icon .icon-caution:before{content:"\f06d";color:#bf3400}
-.admonitionblock td.icon .icon-important:before{content:"\f06a";color:#bf0000}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
 .conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
 .conum[data-value] *{color:#fff!important}
 .conum[data-value]+b{display:none}
-.conum[data-value]:after{content:attr(data-value)}
+.conum[data-value]::after{content:attr(data-value)}
 pre .conum[data-value]{position:relative;top:-.125em}
 b.conum *{color:inherit!important}
 .conum:not([data-value]):empty{display:none}
@@ -393,12 +395,13 @@ p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
 .exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
 .print-only{display:none!important}
-@media print{@page{margin:1.25cm .75cm}
-*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
 a{color:inherit!important;text-decoration:underline!important}
 a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
-a[href^="http:"]:not(.bare):after,a[href^="https:"]:not(.bare):after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
-abbr[title]:after{content:" (" attr(title) ")"}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
 pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
 thead{display:table-header-group}
 svg{max-width:100%}
@@ -406,26 +409,28 @@ p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
 h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
 #toc,.sidebarblock,.exampleblock>.content{background:none!important}
 #toc{border-bottom:1px solid #ddddd8!important;padding-bottom:0!important}
-.sect1{padding-bottom:0!important}
-.sect1+.sect1{border:0!important}
-#header>h1:first-child{margin-top:1.25rem}
 body.book #header{text-align:center}
-body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em 0}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
 body.book #header .details{border:0!important;display:block;padding:0!important}
 body.book #header .details span:first-child{margin-left:0!important}
 body.book #header .details br{display:block}
-body.book #header .details br+span:before{content:none!important}
+body.book #header .details br+span::before{content:none!important}
 body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
 body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
-.listingblock code[data-lang]:before{display:block}
-#footer{background:none!important;padding:0 .9375em}
-#footer-text{color:rgba(0,0,0,.6)!important;font-size:.9em}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
 .hide-on-print{display:none!important}
 .print-only{display:block!important}
 .hide-for-print{display:none!important}
 .show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 .listingblock .pygments .hll { background-color: #ffffcc }
 .listingblock .pygments, .listingblock .pygments code { background: #f8f8f8; }
@@ -585,7 +590,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_problem_codon_extractor">7.1. Problem: Codon extractor</a></li>
 <li><a href="#GUIBasicsIntroductionSection">7.2. Concepts: User interaction</a></li>
-<li><a href="#_syntax_dialogs_and_the_code_joptionpane_code_class">7.3. Syntax: Dialogs and the <code>JOptionPane</code> class</a></li>
+<li><a href="#_syntax_dialogs_and_the_joptionpane_class">7.3. Syntax: Dialogs and the <code>JOptionPane</code> class</a></li>
 <li><a href="#_solution_codon_extractor">7.4. Solution: Codon extractor</a></li>
 <li><a href="#_concurrency_simple_guis">7.5. Concurrency: Simple GUIs</a></li>
 <li><a href="#_summary_4">7.6. Summary</a></li>
@@ -731,21 +736,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_exercises_19">19.7. Exercises</a></li>
 </ul>
 </li>
-<li><a href="#_file_i_o">20. File I/O</a>
+<li><a href="#_file_io">20. File I/O</a>
 <ul class="sectlevel2">
-<li><a href="#_problem_a_picture_is_worth_1_000_bytes">20.1. Problem: A picture is worth 1,000 bytes</a></li>
-<li><a href="#_concepts_file_i_o">20.2. Concepts: File I/O</a></li>
+<li><a href="#_problem_a_picture_is_worth_1000_bytes">20.1. Problem: A picture is worth 1,000 bytes</a></li>
+<li><a href="#_concepts_file_io">20.2. Concepts: File I/O</a></li>
 <li><a href="#_syntax_file_operations_in_java">20.3. Syntax: File operations in Java</a></li>
 <li><a href="#_examples_file_examples">20.4. Examples: File examples</a></li>
-<li><a href="#_solution_a_picture_is_worth_1_000_bytes">20.5. Solution: A picture is worth 1,000 bytes</a></li>
-<li><a href="#_concurrency_file_i_o">20.6. Concurrency: File I/O</a></li>
+<li><a href="#_solution_a_picture_is_worth_1000_bytes">20.5. Solution: A picture is worth 1,000 bytes</a></li>
+<li><a href="#_concurrency_file_io">20.6. Concurrency: File I/O</a></li>
 <li><a href="#_exercises_20">20.7. Exercises</a></li>
 </ul>
 </li>
 <li><a href="#_network_communication">21. Network Communication</a>
 <ul class="sectlevel2">
 <li><a href="#_problem_web_server">21.1. Problem: Web server</a></li>
-<li><a href="#_concepts_tcp_ip_communication">21.2. Concepts: TCP/IP communication</a></li>
+<li><a href="#_concepts_tcpip_communication">21.2. Concepts: TCP/IP communication</a></li>
 <li><a href="#_syntax_networking_in_java">21.3. Syntax: Networking in Java</a></li>
 <li><a href="#_solution_web_server">21.4. Solution: Web server</a></li>
 <li><a href="#_concurrency_networking">21.5. Concurrency: Networking</a></li>
@@ -1041,7 +1046,7 @@ have advocated that the terms kibibyte (KiB), mebibyte (MiB), gibibyte
 of 2, while the traditional names be used to refer only to the units
 based on powers of 10, but the new terms have not yet become popular.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -1103,7 +1108,7 @@ largest. Effective speed is hard to measure (and is changing as
 technology progresses), but note that each layer in the pyramid tends to
 be 10-100 times slower than the previous layer.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 15%;">
 <col style="width: 25%;">
@@ -1168,7 +1173,7 @@ throughput. These services are part of what is called <em>cloud computing</em>.<
 </table>
 </div>
 <div class="sect4">
-<h5 id="_i_o_devices">I/O devices</h5>
+<h5 id="_io_devices">I/O devices</h5>
 <div class="paragraph">
 <p>I/O devices have much more variety than CPUs or memory. Some I/O
 devices, such as USB ports, are permanently connected by a printed
@@ -1780,7 +1785,7 @@ the value <code>056</code> is <strong>not</strong> the same as the value <code>5
 systems we have discussed with representations of the numbers 7 and
 29.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -1891,7 +1896,7 @@ column lists the step number. The second column contains the number to
 be divided by 2 at each step. The third column contains the quotient for
 each step, and the last column contains the current remainder.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -1971,7 +1976,7 @@ of 16. Similarly, when using the division method, instead of dividing by
 binary or back. The following table lists binary equivalents for the 16
 hexadecimal digits.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2087,7 +2092,7 @@ useful to understand how this process works and how it is similar and
 different from decimal arithmetic. The table below lists rules for
 binary addition.<br></p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2129,7 +2134,7 @@ techniques described above, we can find that 60 = 111100<sub>2</sub>
 and 6 = 110<sub>2</sub>. Inside the computer, these numbers would
 already be in binary and padded to fill 8 bits.<br></p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2170,7 +2175,7 @@ binary without conversion to decimal at any point.</p>
 <p>Subtraction in binary is also similar to subtraction in decimal. The
 rules are given in the following table.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2204,7 +2209,7 @@ position. The next example illustrates binary subtraction.</p>
 <div class="paragraph">
 <p>Again, we&#8217;ll use 60 and 6 and their binary equivalents given above.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2351,7 +2356,7 @@ action.</p>
 <p>We&#8217;ll add -126 and 126. If you perform the needed conversions, their
 8-bit, two&#8217;s complement representations are <code>1000 0010</code> and <code>0111 1110</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2389,7 +2394,7 @@ action.</p>
 <p>Now, let&#8217;s add the two negative integers -126 and -2, whose 8-bit, two&#8217;s
 complement representations are <code>1000 0010</code> and <code>1111 1110</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2456,7 +2461,7 @@ number.</p>
 <p>Let&#8217;s add the numbers 124 and 6. Their 8-bit, two&#8217;s complement
 representations are <code>0111 1100</code> and <code>0000 0110</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2508,7 +2513,7 @@ and division, there are also operations that work directly on the binary
 representations of the numbers. Some of these operators are equivalent
 to mathematical operations, and some are not.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2615,7 +2620,7 @@ proceeding.</p>
 <div class="paragraph">
 <p>Let&#8217;s consider the result of <code>21 &amp; 27</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2649,7 +2654,7 @@ proceeding.</p>
 <div class="paragraph">
 <p>Note how this result is different from <code>21 | 27</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2683,7 +2688,7 @@ proceeding.</p>
 <div class="paragraph">
 <p>And also from <code>21 ^ 27</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2820,7 +2825,7 @@ the next example.</p>
 <p>Let&#8217;s convert 0.8125 to binary. The table below shows the steps to do
 so.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -2894,7 +2899,7 @@ the given fraction as demonstrated in the next example.</p>
 which to represent the fraction. The following table shows the five
 steps in the conversion process.<br></p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -3127,7 +3132,7 @@ largest positive number for both integers and floating point values, but
 <strong>smallest</strong> means the most negative number for integers and the smallest
 positive non-zero value for floating point values.<br></p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -3238,7 +3243,7 @@ time and simply add the price of each item until all items have been
 scanned at the register. The table below shows the value of the total
 cost for different number of items purchased.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -3340,7 +3345,7 @@ more similar to each other over time, and most people could be
 productive using any of the three. The following table lists some pros
 and cons for each OS.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -3356,7 +3361,7 @@ and cons for each OS.</p>
 <tbody>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Microsoft Windows</p></th>
-<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
 <p>Compatible with the largest number of programs</p>
@@ -3369,7 +3374,7 @@ and cons for each OS.</p>
 </li>
 </ul>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
 <p>Expensive</p>
@@ -3382,7 +3387,7 @@ and cons for each OS.</p>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Mac OS</p></th>
-<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
 <p>Polished user interface</p>
@@ -3395,7 +3400,7 @@ and cons for each OS.</p>
 </li>
 </ul>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
 <p>Most expensive</p>
@@ -3411,7 +3416,7 @@ and cons for each OS.</p>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Linux</p></th>
-<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
 <p>Free</p>
@@ -3427,7 +3432,7 @@ and cons for each OS.</p>
 </li>
 </ul>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
 <p>Can be difficult to install or configure</p>
@@ -4660,7 +4665,7 @@ outside world (where we live). First, let&#8217;s look at printing data to the
 command line and reading data in from the command line.</p>
 </div>
 <div class="sect4">
-<h5 id="_the_code_system_out_print_code_method">The <code>System.out.print()</code> method</h5>
+<h5 id="_the_system_out_print_method">The <code>System.out.print()</code> method</h5>
 <div class="paragraph">
 <p>Methods allow us to perform actions in Java. They are blocks of code
 packaged up with a name so that we can run the same piece of code
@@ -4777,7 +4782,7 @@ because it does the addition before giving the result to
 </div>
 </div>
 <div class="sect4">
-<h5 id="_the_code_scanner_code_class">The <code>Scanner</code> class</h5>
+<h5 id="_the_scanner_class">The <code>Scanner</code> class</h5>
 <div class="paragraph">
 <p>We want to be able to read input from the user as well. For command line
 input, we need to create a <code>Scanner</code> object. This object is used to read
@@ -5342,7 +5347,7 @@ more complex output.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_string_code_concatenation"><code>String</code> concatenation</h5>
+<h5 id="_string_concatenation"><code>String</code> concatenation</h5>
 <div class="paragraph">
 <p>Just as we can add numbers together, we can also &#8220;add&#8221; pieces of text
 together. In Java, text has the type <code>String</code>. If you use the <code>+</code>
@@ -5457,7 +5462,7 @@ later.</p>
 <p>Imagine you are writing a program that sells fruit. Consider the
 following names for a variable that keeps track of the number of apples.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -6588,7 +6593,7 @@ object has and what operations it can perform.</p>
 <p>The following table lists some of the differences between primitive
 types and reference types.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -6764,7 +6769,7 @@ There are eight primitive types. Half of them are used to represent
 integer values, and we&#8217;ll start by looking at those.</p>
 </div>
 <div class="sect4">
-<h5 id="_integers_code_byte_code_code_short_code_code_int_code_and_code_long_code">Integers: <code>byte</code>, <code>short</code>, <code>int</code>, and <code>long</code></h5>
+<h5 id="_integers_byte_short_int_and_long">Integers: <code>byte</code>, <code>short</code>, <code>int</code>, and <code>long</code></h5>
 <div class="paragraph">
 <p>A variable intended to hold integer values can be declared with any of
 the four types <code>byte</code>, <code>short</code>, <code>int</code>, or <code>long</code>. All of them are signed
@@ -6773,7 +6778,7 @@ complement. They only differ by the range of values that each type can
 hold. These ranges and the number of bytes used to represent variables
 from each type are given below.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <caption class="title">Table 1. Ranges for primitive integer types in Java.</caption>
 <colgroup>
 <col>
@@ -6929,7 +6934,7 @@ of Java.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_floating_point_numbers_code_float_code_and_code_double_code">Floating point numbers: <code>float</code> and <code>double</code></h5>
+<h5 id="_floating_point_numbers_float_and_double">Floating point numbers: <code>float</code> and <code>double</code></h5>
 <div class="paragraph">
 <p>To represent numbers with fractional parts, Java provides two floating
 point types, <code>double</code> and <code>float</code>. Because of limits on floating point
@@ -7106,7 +7111,7 @@ format strings to manipulate output, read the Oracle
 All of these operators can be used on both the integer primitive types
 and the floating point primitive types.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -7326,7 +7331,7 @@ a <code>-=</code> operator that decreases a variable, a <code>*=</code> operator
 variable, and several others, including shortcuts for bitwise operations
 we cover in the next subsection.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -7448,7 +7453,7 @@ of <code>x</code> to grow and eventually reach some level.</p>
 decrementing a value by one are such common operations that they get
 their own special operators, <code>++</code> and <code>--</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -7587,7 +7592,7 @@ operators: <code>&lt;&lt;</code> for signed left shift, <code>&gt;&gt;</code> fo
 <code>&gt;&gt;&gt;</code> for unsigned right shift. There is no unsigned left shift operator
 in Java.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -7977,7 +7982,7 @@ these next.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_characters_code_char_code">Characters: <code>char</code></h5>
+<h5 id="_characters_char">Characters: <code>char</code></h5>
 <div class="paragraph">
 <p>Sentences are made up of words. Words are made up of letters. Although
 we have discussed many powerful tools for representing numbers in Java,
@@ -8039,7 +8044,7 @@ which is a combination of characters used to represent a specific
 difficult to type or represent character. Here is a table of common
 escape sequences.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -8118,7 +8123,7 @@ following statement adds the integer equivalents of the characters
 </div>
 </div>
 <div class="sect4">
-<h5 id="_booleans_code_boolean_code">Booleans: <code>boolean</code></h5>
+<h5 id="_booleans_boolean">Booleans: <code>boolean</code></h5>
 <div class="paragraph">
 <p>If you are new to programming, it may seem useless to have a type
 designed to hold only true and false values. These values are called
@@ -8146,7 +8151,7 @@ if two numbers are equal, and the answer is either <code>true</code> or <code>fa
 All Java relational operators are listed in the table below. Assume that
 all variables used in the <strong>Example</strong> column have a numeric type.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -8224,7 +8229,7 @@ operators that can be used to combine or negate <code>boolean</code> values. The
 are the logical AND (<code>&amp;&amp;</code>), logical OR (<code>||</code>), logical XOR (<code>^</code>), and
 logical NOT (<code>!</code>) operators.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -8377,7 +8382,7 @@ frequently, but it has a few unusual features that are not shared by any
 other reference types.</p>
 </div>
 <div class="sect4">
-<h5 id="_code_string_code_basics"><code>String</code> basics</h5>
+<h5 id="_string_basics"><code>String</code> basics</h5>
 <div class="paragraph">
 <p>The <code>String</code> type is used to represent text in Java. A <code>String</code> object
 contains a sequence of zero or more <code>char</code> values. Unlike every other
@@ -8445,7 +8450,7 @@ and the message <code>Bonjour!</code></p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_string_code_operations"><code>String</code> operations</h5>
+<h5 id="_string_operations"><code>String</code> operations</h5>
 <div class="paragraph">
 <p>In <a href="#_problem_solving_and_programming">Chapter 2</a>, you saw that we
 can <em>concatenate</em> two <code>String</code> objects into a third <code>String</code> object
@@ -8875,7 +8880,7 @@ part of libraries. Below, we&#8217;ll go deeper into the <code>Math</code> class
 few other useful libraries.</p>
 </div>
 <div class="sect3">
-<h4 id="_the_code_math_code_library">3.4.1. The <code>Math</code> library</h4>
+<h4 id="_the_math_library">3.4.1. The <code>Math</code> library</h4>
 <div class="paragraph">
 <p>Basic arithmetic operators are useful, but Java also provides a rich set
 of mathematical methods through the <code>Math</code> class.
@@ -8884,7 +8889,7 @@ complete list of methods provided by the <code>Math</code> class at the time of
 writing, see the Oracle
 <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Math.html" target="_blank" rel="noopener">Math documentation</a>.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <caption class="title">Table 2. A sample of methods available in the Java <code>Math</code> class. Arguments to trigonometric methods are given in radians.</caption>
 <colgroup>
 <col>
@@ -9207,7 +9212,7 @@ support: <code>Byte</code>, <code>Short</code>, <code>Integer</code>, <code>Long
 <code>Character</code>, and <code>Boolean</code>.</p>
 </div>
 <div class="sect4">
-<h5 id="_code_string_code_to_numerical_conversions"><code>String</code> to numerical conversions</h5>
+<h5 id="_string_to_numerical_conversions"><code>String</code> to numerical conversions</h5>
 <div class="paragraph">
 <p>A common task for a wrapper class is to convert a <code>String</code>
 representation of a number such as <code>"37"</code> or <code>"2.097"</code> to its
@@ -9279,7 +9284,7 @@ how to work with exceptions in <a href="#_exceptions">Chapter 12</a>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_character_code_methods"><code>Character</code> methods</h5>
+<h5 id="_character_methods"><code>Character</code> methods</h5>
 <div class="paragraph">
 <p>When working with <code>char</code> values, it can be useful to know whether a
 particular value is a digit, a letter, or has a particular case. It may
@@ -9287,7 +9292,7 @@ also be useful to convert a <code>char</code> to upper or lower case. Here is a
 partial list of the methods provided by the <code>Character</code> wrapper class to
 do these tasks.<br></p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -9394,7 +9399,7 @@ number. For floating point types, it is the smallest positive non-zero
 value that can be represented. Here is a table listing all these
 constants.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -10419,7 +10424,7 @@ abbreviate true to T and false to F.</p>
 <div class="paragraph">
 <p>Given a condition \(x\), a condition \(y\), and the condition made by \(x \land y\), this truth table shows all possible values. As stipulated, \(x \land y\) is true only when both \(x\) and \(y\) are true.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -10458,7 +10463,7 @@ abbreviate true to T and false to F.</p>
 <div class="paragraph">
 <p>This truth table gives all the values for \(x \lor y\). As you can see, \(x \lor y\) is true if \(x\) or \(y\) are true.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -10509,7 +10514,7 @@ below.</p>
 <div class="paragraph">
 <p>This truth table gives all the values for \(x \oplus y\).</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content text-center center">
 <colgroup>
 <col>
 <col>
@@ -10555,7 +10560,7 @@ then NOT applied to that condition will yield false, and vice versa.</p>
 <div class="paragraph">
 <p>Here is a truth table for NOT, using the symbol \(\lnot\) to represent the NOT operation.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content text-center center">
 <colgroup>
 <col>
 <col>
@@ -10636,7 +10641,7 @@ word &#8220;if,&#8221; because the main Java language feature for making choices
 is called an <code>if</code> statement.</p>
 </div>
 <div class="sect3">
-<h4 id="_code_if_code_statements">4.3.1. <code>if</code> statements</h4>
+<h4 id="_if_statements">4.3.1. <code>if</code> statements</h4>
 <div class="paragraph">
 <p>The designers of Java studied Boolean logic and created a type called
 <code>boolean</code>. Every condition used by an <code>if</code> statement must evaluate to a
@@ -10811,7 +10816,7 @@ this decision is below.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_code_boolean_code_type_and_its_operations">4.3.2. The <code>boolean</code> type and its operations</h4>
+<h4 id="_the_boolean_type_and_its_operations">4.3.2. The <code>boolean</code> type and its operations</h4>
 <div class="paragraph">
 <p>Recall that Java uses the type <code>boolean</code> for values that can only be
 true or false. Just like the numerical types <code>double</code> and <code>int</code>, the
@@ -10820,7 +10825,7 @@ together. By design, these operations correspond exactly to the logical
 operations we described before. Here is a table giving the Java
 operators that are equivalent to the logical Boolean operations.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -10997,7 +11002,7 @@ to compare two values in Java. We list all the relational operators in
 the table below shows them again in a
 mathematical context.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <caption class="title">Table 3. Relational operators</caption>
 <colgroup>
 <col>
@@ -11446,7 +11451,7 @@ possibilities, but long lists of possibilities can be cumbersome.</p>
 the appropriate gift for a wedding anniversary. Below is a table of
 traditional categories of gifts based on the anniversary year.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -11902,7 +11907,7 @@ and thus you would be a Ram. Note that this arrangement is based on
 years in the Gregorian calendar. Chinese astrologers do not list the
 Monkey as the first animal in the cycle.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -11998,7 +12003,7 @@ correctly output the animal corresponding to an input birth year.</p>
 <span class="lineno">26 </span><span class="tok-o">}</span></code></pre>
 </div>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -12524,7 +12529,7 @@ Note: You should use nested <code>if</code> statements.</p>
 cents. Use <code>if</code> statements to print out the name of the corresponding
 coin in U.S. currency according to the table below. If the value doesn&#8217;t
 match any coin, print <code>no coin</code>.</p>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -12940,7 +12945,7 @@ finally discuss several of the common pitfalls encountered by
 programmers who are coding loops.</p>
 </div>
 <div class="sect3">
-<h4 id="_code_while_code_loops">5.3.1. <code>while</code> loops</h4>
+<h4 id="_while_loops">5.3.1. <code>while</code> loops</h4>
 <div class="paragraph">
 <p>Superficially, the syntax of a <code>while</code> loop resembles an <code>if</code> statement.
 It starts with the keyword <code>while</code> followed by a <code>boolean</code> condition in
@@ -13124,7 +13129,7 @@ correct sequence.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_code_for_code_loops">5.3.2. <code>for</code> loops</h4>
+<h4 id="_for_loops">5.3.2. <code>for</code> loops</h4>
 <div class="paragraph">
 <p>Let&#8217;s return to our code that prints out
 <code>the loop the loop the loop is on fire!</code></p>
@@ -13452,7 +13457,7 @@ because there is the possibility that <code>number</code> is a perfect square.</
 specific base, called its complementary base. The following table shows
 the association between each base and its complementary base.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -13572,7 +13577,7 @@ a separate step.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_code_do_while_code_loops">5.3.3. <code>do-while</code> loops</h4>
+<h4 id="_do_while_loops">5.3.3. <code>do-while</code> loops</h4>
 <div class="paragraph">
 <p>Use this rule of thumb for deciding which kind of loop to use: If you
 know how many times you want the loop to execute, use a <code>for</code> loop. If
@@ -15128,7 +15133,7 @@ reversed in the future.</p>
 programs that process a lot of data can be tedious. Instead of typing
 data into the terminal, we can read data from a file. In Java, file I/O
 is a messy process that involves several objects and method calls. We&#8217;re
-going to talk about it in depth in <a href="#_file_i_o">Chapter 20</a>, but for
+going to talk about it in depth in <a href="#_file_io">Chapter 20</a>, but for
 now we can use a quick and easy workaround.</p>
 </div>
 <div class="paragraph">
@@ -15436,7 +15441,7 @@ word processors use some of the same techniques.</p>
 <p>To make this program work, however, we need to read in a (potentially
 long) list of words and then a lot of text. We are forced to use input
 redirection (or some other file input) because typing this text in
-multiple times would be tedious. When we get to <a href="#_file_i_o">Chapter 20</a>, we will talk about ways to read from multiple files at the same
+multiple times would be tedious. When we get to <a href="#_file_io">Chapter 20</a>, we will talk about ways to read from multiple files at the same
 time. Right now, we can only redirect input from a single file and so we
 are forced to put the list of words at the top of the file, followed by
 the text we want to search through.</p>
@@ -15579,7 +15584,7 @@ produce the statistics, to save time now and in the future.</p>
 <div class="paragraph">
 <p>The statistics you want to collect are listed in the following table.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -15792,7 +15797,7 @@ about these dimensions as rows and columns. Below is a table of
 information that gives the distances in miles between the five largest
 cities in the United States.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -15874,7 +15879,7 @@ reality and allows us to store the information inside of a computer. For
 chess, we will need an 8 × 8 two-dimensional array. We can represent
 each piece in the board with a <code>char</code>, using the encoding given below.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -15917,7 +15922,7 @@ each piece in the board with a <code>char</code>, using the encoding given below
 for white pieces, we could represent a game of chess after a classic
 king&#8217;s pawn open by white as shown.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -16173,7 +16178,7 @@ numbered increasing across each row.</p>
 <div class="paragraph">
 <p>This code would result in an array filled up like the following table.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -16338,7 +16343,7 @@ is the same as the distance from Los Angeles to Chicago, and so on. We
 can store the data in a triangular shape to keep only the unique
 distance information.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -17031,7 +17036,7 @@ structures in <a href="#_dynamic_data_structures">Chapter 18</a> and
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_code_arrays_code_class">6.9.2. The <code>Arrays</code> class</h4>
+<h4 id="_the_arrays_class">6.9.2. The <code>Arrays</code> class</h4>
 <div class="paragraph">
 <p>The designers of the Java API knew that arrays were important and added
 a special <code>Arrays</code> class to manipulate them.</p>
@@ -17045,7 +17050,7 @@ signatures of the methods below are given for <code>double</code> arrays, but mo
 methods are overloaded to work with all primitive types and reference
 types.</p>
 </div>
-<table class="tableblock frame-all grid-all spread center">
+<table class="tableblock frame-all grid-all stretch center">
 <colgroup>
 <col style="width: 45%;">
 <col style="width: 55%;">
@@ -17698,7 +17703,7 @@ event handling explicitly.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_syntax_dialogs_and_the_code_joptionpane_code_class">7.3. Syntax: Dialogs and the <code>JOptionPane</code> class</h3>
+<h3 id="_syntax_dialogs_and_the_joptionpane_class">7.3. Syntax: Dialogs and the <code>JOptionPane</code> class</h3>
 <div class="paragraph">
 <p><code>JOptionPane</code> is a utility class for creating GUIs consisting most often
 of a single dialog. It offers a variety of ways to create useful dialogs
@@ -18659,7 +18664,7 @@ player does not have a pair or better, he or she loses the money bet.
 Below is a table giving one possible set of payoffs for each possible
 hand.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -18759,7 +18764,7 @@ segment of code, we can break our solutions into units called <em>static
 methods</em>.</p>
 </div>
 <div class="sect3">
-<h4 id="_reasons_for_code_static_code_methods">8.2.1. Reasons for <code>static</code> methods</h4>
+<h4 id="_reasons_for_static_methods">8.2.1. Reasons for <code>static</code> methods</h4>
 <div class="paragraph">
 <p>A static method is a short, named segment of code that has been packaged
 up so that it can be <em>called</em> from other parts of the program. Whenever
@@ -18999,7 +19004,7 @@ code.</p>
 already been returned.</p>
 </div>
 <div class="sect4">
-<h5 id="_the_code_main_code_method">The <code>main()</code> method</h5>
+<h5 id="_the_main_method">The <code>main()</code> method</h5>
 <div class="paragraph">
 <p>If some of this syntax seems eerily familiar, remember that you have
 been coding static methods since your very first Java program. The
@@ -20017,7 +20022,7 @@ to the <code>Math</code> library.</p>
 <p>Here are some examples of the return values your method should give for
 various input values of \(n\).</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -20221,7 +20226,7 @@ brackets or curly braces (and vice versa), but they cannot intersect as
 they do at the end of the previous paragraph. The table below shows more examples of correctly and incorrectly nested
 expressions.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -20848,7 +20853,7 @@ can be accessed by code from the same class. The following table gives
 the contexts outside the class that can access a field or method marked
 with each modifier.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -22081,7 +22086,7 @@ interface itself, however, can never be instantiated.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_interfaces_and_code_static_code">10.3.1. Interfaces and <code>static</code></h4>
+<h4 id="_interfaces_and_static">10.3.1. Interfaces and <code>static</code></h4>
 <div class="paragraph">
 <p>When designing an interface, you cannot mark a method as <code>static</code>.
 Whether or not a method is <code>static</code> is considered by Java to be an
@@ -22663,7 +22668,7 @@ makes intuitive sense. A regular program has a single starting place,
 the <code>main()</code> method. If we want to run additional threads, some method
 needs to be marked as a starting place for each one. For more
 information about using the <code>Runnable</code> interface, refer to
-<a href="#_the_code_runnable_code_interface">Section 13.4.5</a>.</p>
+<a href="#_the_runnable_interface">Section 13.4.5</a>.</p>
 </div>
 <div class="paragraph">
 <p>The second connection between interfaces and concurrency is more
@@ -22721,7 +22726,7 @@ context of interfaces?</p>
 <p><a id="exercise10.6"></a> Create an interface called <code>ColorWavelengths</code> that only contains
 constants storing the wavelengths in nanometers for each of the seven
 colors of light, as given below.</p>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -23145,7 +23150,7 @@ and visibility, constructor issues, the <code>Object</code> class, and overridin
 methods.</p>
 </div>
 <div class="sect3">
-<h4 id="_the_code_extends_code_keyword">11.3.1. The <code>extends</code> keyword</h4>
+<h4 id="_the_extends_keyword">11.3.1. The <code>extends</code> keyword</h4>
 <div class="paragraph">
 <p>In order to make a child class in Java, we use the <code>extends</code> keyword.
 Let&#8217;s give an example using the <code>Fish</code> class defined below. This class
@@ -23271,7 +23276,7 @@ wildly different contexts.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_interfaces_using_code_extends_code">Interfaces using <code>extends</code></h5>
+<h5 id="_interfaces_using_extends">Interfaces using <code>extends</code></h5>
 <div class="paragraph">
 <p>The <code>extends</code> keyword is not limited to classes. It is possible for an
 interface to extend another interface. In fact, an interface can extend
@@ -23528,7 +23533,7 @@ being set and the other capable only of being retrieved.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_code_object_code_class">11.3.5. The <code>Object</code> class</h4>
+<h4 id="_the_object_class">11.3.5. The <code>Object</code> class</h4>
 <div class="paragraph">
 <p>You may not have realized it, but every class you created in Java used
 inheritance. To provide uniformity, the designers of Java made every
@@ -23540,7 +23545,7 @@ definition, you are making that class a direct child of <code>Object</code>.</p>
 <p>As a consequence, <strong>all</strong> classes in Java are guaranteed to have the
 following methods.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -24160,7 +24165,7 @@ information about extending <code>Thread</code> for concurrency is given in
 your own customized threads of execution is an alternative to
 implementing the <code>Runnable</code> interface mentioned in
 <a href="#_concurrency_interfaces">Section 10.6</a> and is discussed in greater detail in
-<a href="#_the_code_runnable_code_interface">Section 13.4.5</a>.</p>
+<a href="#_the_runnable_interface">Section 13.4.5</a>.</p>
 </div>
 <div class="paragraph">
 <p>The second interaction between inheritance and concurrency is again very
@@ -24401,7 +24406,7 @@ you create an object of type <code>Z</code>, it will contain, through inheritanc
 26 <code>int</code> fields named <code>a</code> through <code>z</code>. But, for a single <code>Z</code> object to
 be created, it must call 27 (<code>Z</code> back through <code>A</code> plus <code>Object</code>)
 constructors. You may wish to use the file I/O material in
-<a href="#_file_i_o">Chapter 20</a> to write a program to create all these
+<a href="#_file_io">Chapter 20</a> to write a program to create all these
 classes so that you do not have to do so by hand.</p>
 </div>
 <div class="paragraph">
@@ -24496,7 +24501,7 @@ three different classes, <code>Bank</code>, <code>Vault</code>, and <code>Loot</
 The <code>Loot</code> class has a <code>carryAway()</code> method. Below is a table of the
 exceptions which can be thrown by each of the methods.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -24895,7 +24900,7 @@ descendants of <code>RuntimeException</code> are checked.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_code_finally_code_keyword">12.3.4. The <code>finally</code> keyword</h4>
+<h4 id="_the_finally_keyword">12.3.4. The <code>finally</code> keyword</h4>
 <div class="paragraph">
 <p>To deal with the situation in which some important cleanup or finalizing
 task must be done no matter what, the designers of Java introduced the
@@ -24904,7 +24909,7 @@ following a <code>try</code> block. The code inside the <code>finally</code> blo
 executed <strong>whether or not</strong> any exception was thrown. A <code>finally</code> block is
 often used with file I/O to close the file, which should be closed
 whether or not something went wrong in the process of reading it as we
-demonstrate in <a href="#_file_i_o">Chapter 20</a></p>
+demonstrate in <a href="#_file_io">Chapter 20</a></p>
 </div>
 <div class="paragraph">
 <p>The <code>finally</code> keyword is unusually powerful. If an exception is not
@@ -25488,7 +25493,7 @@ which spawns one or more threads indirectly, if the GUI is not properly
 disposed.</p>
 </div>
 <div class="sect3">
-<h4 id="_code_interruptedexception_code">12.5.1. <code>InterruptedException</code></h4>
+<h4 id="_interruptedexception">12.5.1. <code>InterruptedException</code></h4>
 <div class="paragraph">
 <p>In conjunction with concurrency, one exception deserves special
 attention:<br>
@@ -25672,7 +25677,7 @@ list of words from a dictionary, and others.</p>
 an exception if the password does not meet the matching criteria listed
 below.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -26209,7 +26214,7 @@ Java.</p>
 <div class="sect2">
 <h3 id="_syntax_threads_in_java">13.4. Syntax: Threads in Java</h3>
 <div class="sect3">
-<h4 id="_the_code_thread_code_class">13.4.1. The <code>Thread</code> class</h4>
+<h4 id="_the_thread_class">13.4.1. The <code>Thread</code> class</h4>
 <div class="paragraph">
 <p>Java, like many programming languages, provides the necessary features
 to package tasks and subtasks into threads. The <code>Thread</code> class and its
@@ -26445,7 +26450,7 @@ accessed.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_code_runnable_code_interface">13.4.5. The <code>Runnable</code> interface</h4>
+<h4 id="_the_runnable_interface">13.4.5. The <code>Runnable</code> interface</h4>
 <div class="paragraph">
 <p>Although it is possible to create Java threads by inheriting from the
 <code>Thread</code> class directly, the Java API allows the programmer to use an
@@ -26984,7 +26989,7 @@ was executed for matrices of different sizes (\(n \times n\)).
 For each size, the sequential and concurrent execution times in seconds
 and the corresponding speedup are listed in the following table.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -27655,7 +27660,7 @@ the rest is completely serial, what is the speedup with 2 processors? 4?
 <li>
 <p><a id="exercise13.9"></a> Consider the following table of
 tasks:</p>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -28128,7 +28133,7 @@ language.</p>
 <div class="sect2">
 <h3 id="_syntax_thread_synchronization">14.4. Syntax: Thread synchronization</h3>
 <div class="sect3">
-<h4 id="_the_code_synchronized_code_keyword">14.4.1. The <code>synchronized</code> keyword</h4>
+<h4 id="_the_synchronized_keyword">14.4.1. The <code>synchronized</code> keyword</h4>
 <div class="paragraph">
 <p>In Java, the language feature which allows you to enforce mutual
 exclusion is the <code>synchronized</code> keyword. There are two ways to use this
@@ -28279,7 +28284,7 @@ static method inside of the <code>Eggplant</code> class will lock on the object
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_code_wait_code_and_code_notify_code_methods">14.4.2. The <code>wait()</code> and <code>notify()</code> methods</h4>
+<h4 id="_the_wait_and_notify_methods">14.4.2. The <code>wait()</code> and <code>notify()</code> methods</h4>
 <div class="paragraph">
 <p>Protecting critical sections with the <code>synchronized</code> keyword is a
 powerful technique, and many other synchronization tools can be built
@@ -29915,7 +29920,7 @@ in <a href="#_applets">Section 15.3.7</a>. Next we show you how to handle action
 events generated by a few different kinds of widgets.</p>
 </div>
 <div class="sect4">
-<h5 id="_the_code_actionlistener_code_interface">The <code>ActionListener</code> interface</h5>
+<h5 id="_the_actionlistener_interface">The <code>ActionListener</code> interface</h5>
 <div class="paragraph">
 <p>Java provides an <code>ActionListener</code> interface. This interface has a single
 method named <code>actionPerformed()</code>. This method takes an <code>ActionEvent</code> as
@@ -30182,7 +30187,7 @@ can become long and complex as well.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_the_code_mouselistener_code_interface">The <code>MouseListener</code> interface</h5>
+<h5 id="_the_mouselistener_interface">The <code>MouseListener</code> interface</h5>
 <div class="paragraph">
 <p>Clicking a button is great, but a mouse can be used to generate other
 events too. For example, in a screen full of pictures, you might want to
@@ -30908,7 +30913,7 @@ will introduce the three layout managers <code>FlowLayout</code>, <code>GridLayo
 designed for different layouts.</p>
 </div>
 <div class="sect4">
-<h5 id="_code_flowlayout_code"><code>FlowLayout</code></h5>
+<h5 id="_flowlayout"><code>FlowLayout</code></h5>
 <div class="paragraph">
 <p>The <code>FlowLayout</code> manager is one of simplest layout managers. When a
 container is using the <code>FlowLayout</code> manager, widgets will be added in
@@ -30997,7 +31002,7 @@ buttons.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_gridlayout_code"><code>GridLayout</code></h5>
+<h5 id="_gridlayout"><code>GridLayout</code></h5>
 <div class="paragraph">
 <p>The <code>GridLayout</code> manager lays out components in a grid with a set number
 of rows and columns. As with other layout managers, <code>GridLayout</code> can be
@@ -31183,7 +31188,7 @@ resize the window?</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_borderlayout_code"><code>BorderLayout</code></h5>
+<h5 id="_borderlayout"><code>BorderLayout</code></h5>
 <div class="paragraph">
 <p>The <code>BorderLayout</code> manager is the default one for a <code>JFrame</code>. It allows
 components to be laid out spatially in regions of a container. These
@@ -36399,7 +36404,7 @@ students, and international students using a class hierarchy. Normal
 employees pay a 6.2% social security tax and a 1.45% Medicare tax every
 year, but neither kind of student pays these taxes. All three groups pay
 normal income tax according to the following table.</p>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -36554,7 +36559,7 @@ after the operands it works on. The following table gives
 a few examples of expressions written in both infix and postfix
 notation.</p>
 </div>
-<table class="tableblock frame-all grid-all center">
+<table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
 <col>
 <col>
@@ -41319,7 +41324,7 @@ process. Was the iterative or recursive approach faster? By how much?</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_file_i_o">20. File I/O</h2>
+<h2 id="_file_io">20. File I/O</h2>
 <div class="sectionbody">
 <div class="quoteblock">
 <blockquote>
@@ -41335,7 +41340,7 @@ process. Was the iterative or recursive approach faster? By how much?</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_problem_a_picture_is_worth_1_000_bytes">20.1. Problem: A picture is worth 1,000 bytes</h3>
+<h3 id="_problem_a_picture_is_worth_1000_bytes">20.1. Problem: A picture is worth 1,000 bytes</h3>
 <div class="paragraph">
 <p>If you are familiar with bitmap (bmp) files, you know that they can get
 very large. People often use a technique called data compression to
@@ -41397,7 +41402,7 @@ file.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concepts_file_i_o">20.2. Concepts: File I/O</h3>
+<h3 id="_concepts_file_io">20.2. Concepts: File I/O</h3>
 <div class="paragraph">
 <p>Before you can begin to tackle the problem of compressing, or even
 reading from and writing to, files, some background on files might be
@@ -41502,7 +41507,7 @@ process will be similar in either case.</p>
 <div class="sect2">
 <h3 id="_syntax_file_operations_in_java">20.3. Syntax: File operations in Java</h3>
 <div class="sect3">
-<h4 id="_the_code_file_code_class">20.3.1. The <code>File</code> class</h4>
+<h4 id="_the_file_class">20.3.1. The <code>File</code> class</h4>
 <div class="paragraph">
 <p>The most basic object for interacting with a file in Java are objects of
 the <code>File</code> class. A <code>File</code> object allows you to interact with a file at
@@ -42090,7 +42095,7 @@ exception, because, in this case, it is just a signal to stop reading.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_solution_a_picture_is_worth_1_000_bytes">20.5. Solution: A picture is worth 1,000 bytes</h3>
+<h3 id="_solution_a_picture_is_worth_1000_bytes">20.5. Solution: A picture is worth 1,000 bytes</h3>
 <div class="paragraph">
 <p>Now we will give the solution to the problem posed at the beginning of
 the chapter. First, let&#8217;s look at the class definition and <code>main()</code>
@@ -42211,7 +42216,7 @@ the count specifies.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concurrency_file_i_o">20.6. Concurrency: File I/O</h3>
+<h3 id="_concurrency_file_io">20.6. Concurrency: File I/O</h3>
 <div class="paragraph">
 <p>By now, you have seen threads behave in unpredictable ways because of
 the way they are reading and writing to shared variables. Well, isn&#8217;t a
@@ -42587,7 +42592,7 @@ over a network.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concepts_tcp_ip_communication">21.2. Concepts: TCP/IP communication</h3>
+<h3 id="_concepts_tcpip_communication">21.2. Concepts: TCP/IP communication</h3>
 <div class="paragraph">
 <p>We begin where nearly every discussion of computer networking begins,
 with the Open Systems Interconnection Basic Reference Model (or OSI
@@ -43460,7 +43465,7 @@ multi-threaded versions?</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-08-13 23:09:54 Eastern Daylight Time
+Last updated 2018-08-16 13:36:09 EDT
 </div>
 </div>
 <script type="text/x-mathjax-config">
@@ -43478,6 +43483,6 @@ MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "none" } }
 });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.0/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 </body>
 </html>
