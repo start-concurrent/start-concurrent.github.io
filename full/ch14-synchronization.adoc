@@ -922,33 +922,33 @@ years, and research continues to find better solutions.
 === Exercises
 *Conceptual Problems*
 
-.  [[exercise14.1]] What is the purpose of the
+.  [[ex14-1]] What is the purpose of the
 `synchronized` keyword? How does it work?
-.  [[exercise14.2]] The language specification for Java
+.  [[ex14-2]] The language specification for Java
 makes it illegal to use the `synchronized` keyword on constructors.
 During the creation of an object, it is possible to _leak_ data to the
 outside world by adding a reference to the object under construction to
 some shared data structure. What's the danger of leaking data in this
 way?
-.  [[exercise14.3]] If you call
+.  [[ex14-3]] If you call
 `wait()` or `notify()` on an object, it must be inside of a block
 synchronized on the same object. If not, the code will compile, but an
 `IllegalMonitorStateException` may be thrown at run time. Why is it
 necessary to own the lock on an object before calling `wait()` or
 `notify()` on it?
-.  [[exercise14.4]] Why is it safer to call
+.  [[ex14-4]] Why is it safer to call
 `notifyAll()` than `notify()`? If it is generally safer to call
 `notifyAll()`, are there any scenarios in which there are good reasons
 to call `notify()`?
-.  [[exercise14.5]] Imagine a simulation of a
+.  [[ex14-5]] Imagine a simulation of a
 restaurant with many waiter and chef objects. The waiters must submit
 orders to the kitchen staff, and the chefs must divide the work among
 themselves. How would you design this system? How would information and
 food be passed from waiter to chef and chef to waiter? How would you
 synchronize the process?
-.  [[exercise14.6]] What is a race condition? Give a real
+.  [[ex14-6]] What is a race condition? Give a real
 life example of one.
-.  [[exercise14.7]] Let's reexamine the code that
+.  [[ex14-7]] Let's reexamine the code that
 increments a variable with several threads from
 <<Concepts: Thread interaction>>. We can rewrite the `run()`
 method as follows.
@@ -962,16 +962,16 @@ public synchronized void run() {
 ----
 +
 Will this change fix the race condition? Why or why not?
-.  [[exercise14.8]] Examine our deadlock example from
+.  [[ex14-8]] Examine our deadlock example from
 <<deadlockSumExample>>. Explain why this example fulfills all
 four conditions for deadlock. Be specific about which threads and which
 resources are needed to show each condition.
-.  [[exercise14.9]] What is priority inversion? Why can
+.  [[ex14-9]] What is priority inversion? Why can
 a low priority thread holding a lock be particularly problematic?
 
 *Programming Practice*
 [start=10]
-. [[exercise14.10]] In
+. [[ex14-10]] In
 <<producerConsumerExample>> the `Buffer` class used to
 implement a solution to the producer/consumer problem only has a single
 lock. When the buffer is empty and a producer puts an item in it, both
@@ -980,7 +980,7 @@ whenever the buffer is full and a consumer removes an item. Re-implement
 this solution with two locks so that a producer putting an item into an
 empty buffer only wakes up consumers and a consumer removing an item
 from a full buffer only wakes up producers.
-. [[exercise14.11]] In <<bankAccountExample>>
+. [[ex14-11]] In <<bankAccountExample>>
 we used the class `SynchronizedAccount` to solve a bank account problem.
 As we mention in <<Starvation and livelock>>, depositing
 and withdrawing threads can be starved out by a steady supply of balance
@@ -989,7 +989,7 @@ checking threads. Add additional synchronization tools to
 with depositing and withdrawing threads. If there are no depositing or
 withdrawing threads, make your implementation continue to allow an
 unlimited number of balance checking threads to read concurrently.
-. [[exercise14.12]]The solution to the dining
+. [[ex14-12]]The solution to the dining
 philosophers problem given in <<Solution: Dining philosophers>>
 suffers from the problem that a philosopher could be starved by the two
 philosophers on either side of her, if she happened to get unlucky. Add
@@ -1004,14 +1004,14 @@ gone hungry the longest, breaking circular wait.
 
 *Experiments*
 [start=13]
-. [[exercise14.13]] Critical sections can slow down
+. [[ex14-13]] Critical sections can slow down
 your program by preventing parallel computation. However, the locks used
 to enforce critical sections can add extra delays on top of that. Design
 a simple experiment which repeatedly acquires a lock and does some
 simple operation. Test the running time with and without the lock. See
 if you can estimate the time needed to acquire a lock in Java on your
 system.
-. [[exercise14.14]] Design a program which
+. [[ex14-14]] Design a program which
 experimentally determines how much time a thread is scheduled to spend
 running on a CPU before switching to the next thread. To do this, first
 create a tight loop which runs a large number of iterations, perhaps
@@ -1028,7 +1028,7 @@ is allotted. Bear in mind that this is only an estimation. Some JVMs
 will change the amount of CPU time allotted to threads for various
 reasons. If you are on a multicore machine, it will be more difficult to
 interpret your data since some threads will be running concurrently.
-. [[exercise14.15]] Create an experiment to
+. [[ex14-15]] Create an experiment to
 investigate priority inversion in the following way.
 ..  Create two threads, setting the priority of the first to
 `MIN_PRIORITY` and the priority of the second to `MAX_PRIORITY`. Start
