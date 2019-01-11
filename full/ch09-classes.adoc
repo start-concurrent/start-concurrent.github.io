@@ -1,4 +1,6 @@
+[#ch09-classes]
 :imagesdir: chapters/09-classes/images
+:programsdir: chapters/09-classes/programs
 == Classes
 
 [quote, Yoda]
@@ -220,7 +222,7 @@ actually want to use an object, we'll have to create one.
 [source, java, linenums]
 [[HumanProgram]]
 ----
-include::programs/Human.java[]
+include::{programsdir}/Human.java[]
 ----
 
 The above code compiles because we have used the `new` keyword to create
@@ -524,7 +526,7 @@ code unless the code is contained in the same class, a subclass, or is
 in the same package. This level of access is more restrictive than
 `public` but less restrictive than `private` or default access. We
 discuss it further in the context of subclasses and inheritance in
-<<Inheritance>>.
+<<ch11-inheritance#ch11-inheritance>>.
 Package-private (no explicit modifier)::
 If you do not type an access modifier when you declare a field or
 method, that field or method is not `public`. Instead, it has the
@@ -573,7 +575,7 @@ sort them by GPA, and then print them out.
 
 [source, java, linenums]
 ----
-include::programs/Student.java[lines=1..6]
+include::{programsdir}/Student.java[lines=1..6]
 ----
 
 
@@ -584,7 +586,7 @@ the student.
 
 [source, java, linenums]
 ----
-include::programs/Student.java[lines=8..12]
+include::{programsdir}/Student.java[lines=8..12]
 ----
 
 
@@ -596,7 +598,7 @@ of the error checking in the GPA mutator.
 
 [source, java, linenums]
 ----
-include::programs/Student.java[lines=14..22]
+include::{programsdir}/Student.java[lines=14..22]
 ----
 
 
@@ -606,7 +608,7 @@ mutator checks to make sure that the GPA value is in the proper range.
 
 [source, java, linenums]
 ----
-include::programs/Student.java[lines=24..32]
+include::{programsdir}/Student.java[lines=24..32]
 ----
 
 
@@ -621,7 +623,7 @@ create client code to use it.
 
 [source, java, linenums]
 ----
-include::programs/StudentRoster.java[lines=1..15]
+include::{programsdir}/StudentRoster.java[lines=1..15]
 ----
 
 
@@ -639,7 +641,7 @@ program malfunctions.
 
 [source, java, linenums]
 ----
-include::programs/StudentRoster.java[lines=17..28]
+include::{programsdir}/StudentRoster.java[lines=17..28]
 ----
 
 
@@ -889,7 +891,7 @@ public class SafeArray {
 We could add an inner class called `Iterator` to `SafeArray` that allows
 us to process all the array values without knowing how many there are.
 This kind of behavior is useful for many dynamic data structures, as
-discussed in <<Dynamic Data Structures>>.
+discussed in <<ch18-dynamic-data-structures#ch18-dynamic-data-structures>>.
 
 [source,java]
 ----
@@ -951,7 +953,7 @@ values.
 [source, java, linenums]
 [[SymbolStackProgram]]
 ----
-include::programs/SymbolStack.java[]
+include::{programsdir}/SymbolStack.java[]
 ----
 
 The `SymbolStack` class allows us to perform the push, pop, and top
@@ -973,7 +975,7 @@ stack.
 
 [source, java, linenums]
 ----
-include::programs/NestedExpressions.java[lines=1..9]
+include::{programsdir}/NestedExpressions.java[lines=1..9]
 ----
 
 
@@ -985,7 +987,7 @@ the input is correctly nested. We start by assuming that it is.
 
 [source, java, linenums]
 ----
-include::programs/NestedExpressions.java[lines=10..37]
+include::{programsdir}/NestedExpressions.java[lines=10..37]
 ----
 
 
@@ -1001,7 +1003,7 @@ efficiency, the loop stops early if `correct` is no longer `true`.
 
 [source, java, linenums]
 ----
-include::programs/NestedExpressions.java[lines=39..47]
+include::{programsdir}/NestedExpressions.java[lines=39..47]
 ----
 
 
@@ -1012,19 +1014,19 @@ Finally, we print out whether the input is correctly or incorrectly
 nested based on the value of `correct`.
 
 ****
-<<exercise9.9, Exercise 9.9>> +
-<<exercise9.14, Exercise 9.14>>
+<<ex9-9, Exercise 9.9>> +
+<<ex9-14, Exercise 9.14>>
 ****
 
 === Concurrency: Objects
 
 Nearly everything in Java is an object: arrays, lists, `String` values,
 colors, and even exceptions, which form Java's error-handling system and
-is discussed in <<Exceptions>>. Some critics of Java
+is discussed in <<ch12-exceptions#ch12-exceptions>>. Some critics of Java
 point out that `int`, `double`, and the other primitive types are not
 objects, forcing the programmer to adopt two different programming
 models. Regardless, threads are stored as objects as well. In
-<<Concurrent Programming>>, we discuss how to create
+<<ch13-concurrency#ch13-concurrency>>, we discuss how to create
 threads and the various methods that can be used to interact with them.
 
 However, objects of type `Thread` are not the only ones you deal with
@@ -1048,17 +1050,17 @@ situation, this object would work perfectly. No cat would be able to
 lose more than 9 lives.
 
 In a multi-threaded situation, there is no telling when a thread might
-pause in executing the `useCuriosity()` method. 
+pause in executing the `useCuriosity()` method.
 
 .Records the number of lives a cat has left. Each `Cat` object starts with 9, but loses one each time it uses its curiosity. If no more lives remain, an error message is output.
 [source, java, linenums]
 [[CatProgram]]
 ----
-include::programs/Cat.java[]
+include::{programsdir}/Cat.java[]
 ----
 <1> If 100 threads all called `useCuriosity()`, each one might successfully pass the `if` on this line before any had decremented `lives`. Once past the check, nothing would prevent them from continuing on and decrementing `lives`, resulting in a cat who lost 100 lives, resulting in a total of -91 lives. Such a scenario makes no sense.
 
-In <<Synchronization>>, we discuss how to prevent this
+In <<ch14-synchronization#ch14-synchronization>>, we discuss how to prevent this
 problem, using the `synchronized` keyword to allow only a single thread
 at a time to execute the body of a method. The goal is to make
 `useCuriosity()` _thread-safe_, meaning that its behavior is consistent
@@ -1071,7 +1073,7 @@ programs, we discuss ways to make them thread-safe. However, you are
 also a consumer of code written by other people. In multi-threaded
 environments, you may need to use library classes that are thread-safe.
 For example, `AtomicInteger` is a thread-safe class designed to store
-and manipulate `int` values. In <<Dynamic Data Structures>>, we talk about the `ArrayList` and `Vector` classes, which
+and manipulate `int` values. In <<ch18-dynamic-data-structures#ch18-dynamic-data-structures>>, we talk about the `ArrayList` and `Vector` classes, which
 are both used to hold variable length lists of objects. One of the few
 differences between them is that `ArrayList` is not thread-safe while
 `Vector` is. There is even the `Collections.synchronizedCollection()`
@@ -1096,21 +1098,21 @@ Learn the libraries well, and use the right tools for the right job.
 === Exercises
 *Conceptual Problems*
 
-. [[exercise9.1]] Explain the relationship between a class and an object.
-. [[exercise9.2]] What is the difference between a static method and an instance
+. [[ex9-1]] Explain the relationship between a class and an object.
+. [[ex9-2]] What is the difference between a static method and an instance
 method?
-. [[exercise9.3]] What is the purpose of a constructor? Why is it impossible for a
+. [[ex9-3]] What is the purpose of a constructor? Why is it impossible for a
 constructor to return a value? Why is it impossible for a constructor to
 be called multiple times on the same object?
-. [[exercise9.4]] A static method can be called directly from a instance method, but
+. [[ex9-4]] A static method can be called directly from a instance method, but
 an instance method cannot be called directly from a static method. Why?
-. [[exercise9.5]] Describe the uses of accessor and mutator methods. Is it possible to
+. [[ex9-5]] Describe the uses of accessor and mutator methods. Is it possible to
 create a method that is both an accessor and a mutator? Why or why not?
-. [[exercise9.6]] Why do we usually mark fields with the `private` keyword when it
+. [[ex9-6]] Why do we usually mark fields with the `private` keyword when it
 would be easier to make all fields `public`?
-.  [[exercise9.7]] What is the meaning of the `this` keyword? When is it necessary to
+.  [[ex9-7]] What is the meaning of the `this` keyword? When is it necessary to
 use it? When can it be ignored?
-. [[exercise9.8]] Consider the following class definitions.
+. [[ex9-8]] Consider the following class definitions.
 +
 [source,java]
 ----
@@ -1142,7 +1144,7 @@ public class B {
 +
 The field `a` is used three times in the previous code. Which of these
 uses cause a compiler error and why?
-. [[exercise9.9]] In <<Solution: Nested expressions>>, we gave a definition of
+. [[ex9-9]] In <<Solution: Nested expressions>>, we gave a definition of
 `SymbolStack` that implements a simple stack using two fields, defined
 as followed:
 +
@@ -1156,7 +1158,7 @@ By calling the `top()` or `pop()` methods on an empty stack, it is
 possible to cause a program to crash. What additional problems could
 happen if `symbols` and `size` were declared `public` and malicious or
 poorly written code had access to the object?
-. [[exercise9.10]] Consider the following class definition.
+. [[ex9-10]] Consider the following class definition.
 +
 [source,java]
 ----
@@ -1179,7 +1181,7 @@ not?
 
 *Programming Practice*
 [start=11]
-. [[exercise9.11]] OOP is often used when the data inside the object must maintain
+. [[ex9-11]] OOP is often used when the data inside the object must maintain
 special relationships. Consider a clock with hours, minutes, and
 seconds. When the number of seconds reaches 60, the number of minutes is
 increased by 1, and the number of seconds is reset to 0. When the number
@@ -1196,7 +1198,7 @@ Write an accessor called `toString()` that returns a nicely formatted
 version of the time as a `String`. For example, the initial time would
 be returned as `"12:00:00 AM"`. Make sure you pad the output for
 `seconds` and `minutes` with an extra `"0"` if they are less than `10`.
-. [[exercise9.12]] Draw on any of your hobbies to come up with a collection of items,
+. [[ex9-12]] Draw on any of your hobbies to come up with a collection of items,
 whether those items are books you like to read, athletes you follow,
 music you collect, or anything else that is easy to classify. First
 create a class that can describe one of these items with three to five
@@ -1211,7 +1213,7 @@ Using the book example, your database program should let the user input
 that he or she is looking for all books whose author is
 `Alexandre Dumas`. You may wish to use input redirection so that you do
 not have to enter data about your objects repetitively.
-. [[exercise9.13]] The `java.awt` package defines a class called `Point` that can be
+. [[ex9-13]] The `java.awt` package defines a class called `Point` that can be
 used to manipulate an latexmath:[(x,y)] pair in programs involving the
 Cartesian coordinate system. Create your own `Point` class with `int`
 values `x` and `y` as fields.
@@ -1228,12 +1230,12 @@ as an argument.
 +
 Write client code that allows you to create two `Point` objects and test
 if the `distance()` method gives the right answer.
-. [[exercise9.14]] Re-implement the solution from <<Solution: Nested expressions>> so that it performs its input and output with GUIs created
+. [[ex9-14]] Re-implement the solution from <<Solution: Nested expressions>> so that it performs its input and output with GUIs created
 using `JOptionPane`.
 
 *Experiments*
 [start=15]
-. [[exercise9.15]] Objects are great tools for solving problems, but there is some
+. [[ex9-15]] Objects are great tools for solving problems, but there is some
 additional overhead associated with creating objects and calling
 methods.
 +

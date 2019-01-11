@@ -1,4 +1,6 @@
+[#ch18-dynamic-data-structures]
 :imagesdir: chapters/18-dynamic-data-structures/images
+:programsdir: chapters/18-dynamic-data-structures/programs
 == Dynamic Data Structures
 
 [quote, Niklaus Wirth]
@@ -41,7 +43,7 @@ notation has the benefit of exactly specifying the order of operations
 without using any precedence rules and without needing parentheses to
 clarify. To understand how to compute an expression in postfix notation,
 we rely on the idea of a stack, which we first introduces in
-<<Classes>> and examine in much greater depth here.
+<<ch09-classes#ch09-classes>> and examine in much greater depth here.
 
 Recall that a stack has three operations: _push_, _pop_, and _top_. It
 works like a stack of physical objects. The push operation places an
@@ -118,7 +120,7 @@ integers into it.
 In this chapter, we examine _dynamic_ data structures: As more data is
 read or processed, these data structures grow and shrink in memory to
 store what is needed. The stack used to solve the nesting expressions
-problem from <<Classes>> is not actually a dynamic data
+problem from <<ch09-classes#ch09-classes>> is not actually a dynamic data
 structure since it is defined with a fixed maximum size. In this
 chapter, we implement a true stack as well as many other kinds of
 dynamic data structures.
@@ -247,7 +249,7 @@ message before exiting.
 [source, java, linenums]
 [[ReadIntoFixedArrayProgram]]
 ----
-include::programs/ReadIntoFixedArray.java[]
+include::{programsdir}/ReadIntoFixedArray.java[]
 ----
 
 Our second change is to take a recovery action that allows the program
@@ -260,17 +262,17 @@ Instead, we fix the problem on the fly by allocating a larger array,
 copying the old array into the new array, and continuing.
 
 ****
-<<exercise18.3, Exercise 18.3>>
+<<ex18-3, Exercise 18.3>>
 ****
 
 <<ReadAndGrowArrayProgram>> begins like the previous program by
-allocating a fixed array. 
+allocating a fixed array.
 
 .Reads names into an array, enlarging the array as necessary.
 [source, java, linenums]
 [[ReadAndGrowArrayProgram]]
 ----
-include::programs/ReadAndGrowArray.java[]
+include::{programsdir}/ReadAndGrowArray.java[]
 ----
 <1> At this point, it now catches the `ArrayOutOfBoundsException` if there isn't enough space for another name in the array.
 <2> The `catch` clause allocates a new array, twice the size of the original (current) array, copies the existing array into it, and replaces the reference to the current array with a reference to the new array.
@@ -285,7 +287,7 @@ large* input, in the case when the Java virtual machine runs out of
 memory when doubling the size of the array.
 
 ****
-<<exercise18.4, Exercise 18.4>>
+<<ex18-4, Exercise 18.4>>
 ****
 
 A potentially more serious problem is the way we set `names` to point at
@@ -327,17 +329,17 @@ internal array of `String` objects, which it extends whenever a call to
 [source, java, linenums]
 [[DynamicArrayProgram]]
 ----
-include::programs/DynamicArray.java[]
+include::{programsdir}/DynamicArray.java[]
 ----
 
 Note that the `set()` and `sort()` methods are both `synchronized` in
 case this class is used by multiple threads simultaneously.
-<<exercise18.12, Exercise 18.12>> explores the need to
+<<ex18-12, Exercise 18.12>> explores the need to
 synchronize these methods in the presence of multiple threads.
 
 ****
-<<exercise18.9, Exercise 18.9>> +
-<<exercise18.12, Exercise 18.12>>
+<<ex18-9, Exercise 18.9>> +
+<<ex18-12, Exercise 18.12>>
 ****
 
 <<UseDynamicArrayProgram>> illustrates how to modify and extend
@@ -352,7 +354,7 @@ exception.
 [source, java, linenums]
 [[UseDynamicArrayProgram]]
 ----
-include::programs/UseDynamicArray.java[]
+include::{programsdir}/UseDynamicArray.java[]
 ----
 
 Since `names` is no longer an array, but rather an object of class
@@ -369,7 +371,7 @@ a resize, the array is only half full, resulting in wasted space. Even
 on average, the array will only be three-quarters full.
 
 ****
-<<exercise18.5, Exercise 18.5>>
+<<ex18-5, Exercise 18.5>>
 ****
 
 ==== Linked lists
@@ -439,7 +441,7 @@ fills an array with the values in the list.
 [source, java, linenums]
 [[LinkedListProgram]]
 ----
-include::programs/LinkedList.java[]
+include::{programsdir}/LinkedList.java[]
 ----
 
 <<UseLinkedListProgram>> is a re-implementation of the
@@ -451,7 +453,7 @@ linked list called `list`.
 [source, java, linenums]
 [[UseLinkedListProgram]]
 ----
-include::programs/UseLinkedList.java[]
+include::{programsdir}/UseLinkedList.java[]
 ----
 
 Each time we read a new line from the file, the `LinkedList` class
@@ -509,7 +511,7 @@ and changes the `tail` field so that it also points at it.
 [source, java, linenums]
 [[LinkedListWithTailProgram]]
 ----
-include::programs/LinkedListWithTail.java[]
+include::{programsdir}/LinkedListWithTail.java[]
 ----
 
 ===== Inserting into a linked list
@@ -553,7 +555,7 @@ Insert at end:::
 [source, java, linenums]
 [[SortedLinkedListProgram]]
 ----
-include::programs/SortedLinkedList.java[]
+include::{programsdir}/SortedLinkedList.java[]
 ----
 
 === Syntax: Abstract data types (ADT)
@@ -593,7 +595,7 @@ _stacks_ and _queues_, and sample classes that implement them.
 ==== Stacks
 
 We have already used stacks to solve problems in
-<<Classes>>. Recall that a stack data structure behaves
+<<ch09-classes#ch09-classes>>. Recall that a stack data structure behaves
 like a stack of books on your desk. When you place a book on the stack
 it covers the books that are already there. When you take a book off the
 stack, you remove the book most recently placed there, exposing the one
@@ -634,7 +636,7 @@ these four methods.
 [source, java, linenums]
 [[StackProgram]]
 ----
-include::programs/Stack.java[]
+include::{programsdir}/Stack.java[]
 ----
 
 ===== Linked list implementation
@@ -647,7 +649,7 @@ implemented as methods in the class `LinkedListStack`, shown in
 [source, java, linenums]
 [[LinkedListStackProgram]]
 ----
-include::programs/LinkedListStack.java[]
+include::{programsdir}/LinkedListStack.java[]
 ----
 
 The `head` field is used to maintain a reference to the linked list that
@@ -682,7 +684,7 @@ values using a dynamic array data structure.
 [source, java, linenums]
 [[DynamicArrayStackProgram]]
 ----
-include::programs/DynamicArrayStack.java[]
+include::{programsdir}/DynamicArrayStack.java[]
 ----
 
 This stack implementation using a dynamic array omits the `top()` and
@@ -691,7 +693,7 @@ This stack implementation using a dynamic array omits the `top()` and
 properly implemented).
 
 ****
-<<exercise18.7, Exercise 18.7>>
+<<ex18-7, Exercise 18.7>>
 ****
 
 [[postfixComputationExample]]
@@ -734,7 +736,7 @@ the same definition for `TermStack` given next.
 [source, java, linenums]
 [[TermStackProgram]]
 ----
-include::programs/TermStack.java[]
+include::{programsdir}/TermStack.java[]
 ----
 
 This class gives a linked list implementation of a stack. In fact, it is
@@ -745,7 +747,7 @@ substitution of `Term` for `String`.
 [source, java, linenums]
 [[PostfixCalculatorProgram]]
 ----
-include::programs/PostfixCalculator.java[]
+include::{programsdir}/PostfixCalculator.java[]
 ----
 
 With our utility classes in place, the code for the postfix evaluator is
@@ -797,7 +799,7 @@ these four methods.
 [source, java, linenums]
 [[QueueProgram]]
 ----
-include::programs/Queue.java[]
+include::{programsdir}/Queue.java[]
 ----
 
 ===== Linked list implementation
@@ -813,7 +815,7 @@ onto it and removed from it.
 [source, java, linenums]
 [[LinkedListQueueProgram]]
 ----
-include::programs/LinkedListQueue.java[]
+include::{programsdir}/LinkedListQueue.java[]
 ----
 
 Note that the implemention of the `LinkedListQueue` class is very
@@ -849,7 +851,7 @@ an underlying data type of `Object`.
 [source, java, linenums]
 [[ObjectStackProgram]]
 ----
-include::programs/ObjectStack.java[]
+include::{programsdir}/ObjectStack.java[]
 ----
 
 Note that a stack of `Object` references is an example of a
@@ -977,7 +979,7 @@ the type parameter `T` on the outer class as well as the nested class
 [source, java, linenums]
 [[GenericLinkedListProgram]]
 ----
-include::programs/GenericLinkedList.java[]
+include::{programsdir}/GenericLinkedList.java[]
 ----
 
 Using generics can be very easy, but there are some oddities. In
@@ -1004,7 +1006,7 @@ class. For example, if you want to create an instance of the
 [source, java, linenums]
 [[UseGenericLinkedListProgram]]
 ----
-include::programs/UseGenericLinkedList.java[]
+include::{programsdir}/UseGenericLinkedList.java[]
 ----
 
 ==== Using Java Libraries
@@ -1047,7 +1049,7 @@ sum (including how many were generated).
 [source, java, linenums]
 [[VectorExampleProgram]]
 ----
-include::programs/VectorExample.java[]
+include::{programsdir}/VectorExample.java[]
 ----
 
 Output from a typical run of <<VectorExampleProgram>> is shown
@@ -1096,7 +1098,7 @@ ages of each person in the input file.
 [source, java, linenums]
 [[HashMapExampleProgram]]
 ----
-include::programs/HashMapExample.java[]
+include::{programsdir}/HashMapExample.java[]
 ----
 
 Shown below is the output for a simple input file.
@@ -1153,7 +1155,7 @@ postfix conversion and postfix calculation.
 
 [source, java, linenums]
 ----
-include::programs/Term.java[lines=1..4]
+include::{programsdir}/Term.java[lines=1..4]
 ----
 
 
@@ -1164,7 +1166,7 @@ holds an operator or an operand.
 
 [source, java, linenums]
 ----
-include::programs/Term.java[lines=6..14]
+include::{programsdir}/Term.java[lines=6..14]
 ----
 
 
@@ -1177,7 +1179,7 @@ the `Term` object must be an operand. The second constructor takes a
 
 [source, java, linenums]
 ----
-include::programs/Term.java[lines=16..18]
+include::{programsdir}/Term.java[lines=16..18]
 ----
 
 
@@ -1192,7 +1194,7 @@ default value.
 
 [source, java, linenums]
 ----
-include::programs/Term.java[lines=20..34]
+include::{programsdir}/Term.java[lines=20..34]
 ----
 
 
@@ -1216,7 +1218,7 @@ is the client code that parses the input.
 
 [source, java, linenums]
 ----
-include::programs/InfixToPostfix.java[lines=1..9]
+include::{programsdir}/InfixToPostfix.java[lines=1..9]
 ----
 
 
@@ -1227,7 +1229,7 @@ the output.
 
 [source, java, linenums]
 ----
-include::programs/InfixToPostfix.java[lines=10..33]
+include::{programsdir}/InfixToPostfix.java[lines=10..33]
 ----
 
 
@@ -1244,7 +1246,7 @@ tucked away inside of the `Term` class.
 
 [source, java, linenums]
 ----
-include::programs/InfixToPostfix.java[lines=35..41]
+include::{programsdir}/InfixToPostfix.java[lines=35..41]
 ----
 
 
@@ -1281,7 +1283,7 @@ output.
 [source, java, linenums]
 [[UseLinkedListQueueProgram]]
 ----
-include::programs/UseLinkedListQueue.java[]
+include::{programsdir}/UseLinkedListQueue.java[]
 ----
 
 Without appropriate synchronization, the program may not correctly link
@@ -1328,7 +1330,7 @@ is now lost.
 This problem can be fixed by ensuring that once one thread starts
 examining and modifying queue variables, no other thread can access the
 same variables until the first one is finished. As shown in
-<<Synchronization>>, this mutual exclusion can be
+<<ch14-synchronization#ch14-synchronization>>, this mutual exclusion can be
 achieved by using the `synchronized` keyword on methods that need to
 have exclusive access to object variables. In this queue implementation,
 we need to synchronize access by threads that are using either the
@@ -1347,7 +1349,7 @@ method is called anyway.
 [source, java, linenums]
 [[LinkedListQueueTSProgram]]
 ----
-include::programs/LinkedListQueueTS.java[]
+include::{programsdir}/LinkedListQueueTS.java[]
 ----
 
 With both `enqueue()` and `dequeue()` methods synchronized as in
@@ -1392,7 +1394,7 @@ queue of items. The `Map` interface gives the basic operations for a
 dictionary, a collection of key-value pairs, one implementation of which
 is the `HashMap` from <<mapsExample>>.
 
-As we mentioned in <<Interfaces>>, an interface cannot
+As we mentioned in <<ch10-interfaces#ch10-interfaces>>, an interface cannot
 mark a method with the `synchronized` keyword. Consequently, the JCF can
 make no guarantee about the thread safety of a container based on which
 interface it implements. The programmer must read the documentation
@@ -1409,13 +1411,13 @@ remove an element from the same `ArrayList` at the same time, the
 incorrect.
 
 <<ArrayListExampleProgram>> is an example of synchronizing
-updates to the `ArrayList` class with multiple threads. 
+updates to the `ArrayList` class with multiple threads.
 
 .Example of thread-safe use of an `ArrayList`.
 [source, java, linenums]
 [[ArrayListExampleProgram]]
 ----
-include::programs/ArrayListExample.java[]
+include::{programsdir}/ArrayListExample.java[]
 ----
 <1> The program creates an `ArrayList` and places a reference to it in the static class variable `list`.
 <2> It then creates and starts two threads.
@@ -1482,20 +1484,20 @@ Thread-0: 9
 === Exercises
 *Conceptual Problems*
 
-. [[exercise18.1]] Explain the difference between static data structures and dynamic
+. [[ex18-1]] Explain the difference between static data structures and dynamic
 data structures.
-.  [[exercise18.2]] In which situations is it better to use a dynamic array? In which
+.  [[ex18-2]] In which situations is it better to use a dynamic array? In which
 situations is it better to use a linked list? Explain why in each case.
-.  [[exercise18.3]] On which line in
+.  [[ex18-3]] On which line in
 <<ReadIntoFixedArrayProgram>> is an exception generated?
-.  [[exercise18.4]] In
+.  [[ex18-4]] In
 <<ReadAndGrowArrayProgram>>, is it possible to post-increment
 `n` inside the `try` clause rather than at the bottom of the `while`
 loop?
-.  [[exercise18.5]] Explain why the `names` array in
+.  [[ex18-5]] Explain why the `names` array in
 <<UseDynamicArrayProgram>> is, on average, only three-quarters
 full.
-. [[exercise18.6]] Based on the stack implementation in
+. [[ex18-6]] Based on the stack implementation in
 <<LinkedListStackProgram>>, draw a picture of the linked list
 structure after each of the following statements.
 +
@@ -1510,10 +1512,10 @@ structure after each of the following statements.
     stack.pop();
     stack.push("world");
 ----
-.  [[exercise18.7]] Implement the methods `top()` and
+.  [[ex18-7]] Implement the methods `top()` and
 `isEmpty()` for the dynamic array implementation of the stack in
 <<DynamicArrayStackProgram>>.
-. [[exercise18.8]] Based on queue implementation in
+. [[ex18-8]] Based on queue implementation in
 <<LinkedListQueueProgram>>, draw a picture of the linked list
 structure after each of the following statements.
 +
@@ -1531,12 +1533,12 @@ structure after each of the following statements.
 
 *Programming Practice*
 [start=9]
-.  [[exercise18.9]] Implement a version of
+.  [[ex18-9]] Implement a version of
 `DynamicArray` that shrinks the size of its internal storage array to
 half its size when only one quarter of its capacity is being used. This
 design can save significant amounts of space if a large number of items
 are added to the dynamic array at once and then removed.
-. [[exercise18.10]] Consider <<LinkedListWithTailProgram>> which defines the
+. [[ex18-10]] Consider <<LinkedListWithTailProgram>> which defines the
 `LinkedListWithTail` class for storing a linked list of `String` values.
 Add a `public reverse()` method to the class which reverses the order of
 the nodes in the linked list. The key idea is make a new linked list
@@ -1545,7 +1547,7 @@ linked list. Put the next node *in front* of the head in the new linked
 list and remove it from the old. Continue the process until there is
 nothing left in the original list. Be sure to reset the `head` and
 `tail` references correctly after the reversal.
-. [[exercise18.11]] In <<Linked lists>>, we use two kinds of linked
+. [[ex18-11]] In <<Linked lists>>, we use two kinds of linked
 lists to store data, but copy all of that data back into an array before
 sorting it. We use third linked list class (`SortedLinkedList`) to
 insert data and maintain a sorted order. However, it is possible to add
@@ -1561,8 +1563,8 @@ method, you will need to use the `compareTo()` method to compare the
 have special cases that update the `head` and `tail` pointers if those
 nodes are swapped with other nodes. Note that bubble sort is not the
 fastest way to sort a linked list. We introduce a faster approach in
-<<Recursion>>.
-. [[exercise18.12]] Create JUnit test cases to
+<<ch19-recursion#ch19-recursion>>.
+. [[ex18-12]] Create JUnit test cases to
 verify that the `synchronized` keywords are needed on the `set()` and
 `sort()` methods of the `DynamicArray` example from <<DynamicArrayProgram>>. To test the `set()` method, you can
 create one thread that repeatedly sets, gets, and tests a changing value
@@ -1573,7 +1575,7 @@ occasionally overwriting the value at the fixed location). To test the
 array at the same time. Check to see if the array is, in fact, actually
 sorted after the threads have exited. For both tests, you may need to
 repeat the operations a number of times to trigger the race condition.
-. [[exercise18.13]] To make an infix calculator that can handle floating point values or
+. [[ex18-13]] To make an infix calculator that can handle floating point values or
 even just integers with more than one digit, you need to make a pass
 over the input, parsing the sequence of characters into terms. When an
 expression is in infix notation, the order of terms is an operand
@@ -1589,10 +1591,10 @@ Using this first pass over input to separate terms as well as the
 compute the equivalent `double` values of operands, rewrite the solution
 from <<Solution: Infix conversion>> to convert your terms into
 postfix ordering and then calculate the answer.
-. [[exercise18.14]] Re-implement the solution to the infix conversion problem given in
+. [[ex18-14]] Re-implement the solution to the infix conversion problem given in
 <<Solution: Infix conversion>> so that it uses `GenericStack`
 with a type parameter of `Term` instead of `TermStack`.
-. [[exercise18.15]] Interfaces can also be generic. Consider the following generic
+. [[ex18-15]] Interfaces can also be generic. Consider the following generic
 version of `Queue`.
 +
 [source,java]

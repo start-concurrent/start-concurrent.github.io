@@ -1,0 +1,1503 @@
+[#ch04-selection]
+:imagesdir: chapters/04-selection/images
+:programsdir: chapters/04-selection/programs
+== Selection
+
+[quote, Albert Camus]
+____
+Life is a sum of all your choices.
+____
+
+=== Problem: Monty Hall simulation
+
+There is a famous mathematical puzzle called the Monty Hall problem,
+based on the television show _Let's Make a Deal_ hosted by the eponymous
+Monty Hall. In this problem, you are presented with three doors. Two of
+the three doors have junk behind them. One randomly selected door
+conceals something like a pile of gold. If you can choose that door, you
+win the gold. After you make an initial choice, Monty, who knows which
+door the pile of gold is behind, will open one of the two other doors,
+always picking a door with junk behind it. If you chose the gold door,
+Monty will pick between the two junk doors randomly. After opening a
+door, Monty gives you a chance to switch to the other unopened door. You
+decide to switch or not, the appropriate door is opened, and you win
+either junk or a pile of gold, depending on your luck.
+
+As it turns out, it is always a better strategy to switch doors. If you
+keep your initial choice, you will win the gold with probability
+latexmath:[\frac{1}{3}]. However, if you switch doors, you will win
+with probability latexmath:[\frac{2}{3}]. The problem is
+counterintuitive and leads many people, including mathematicians and
+people holding advanced degrees, to the incorrect answer.
+
+Think about it this way: Suppose you could pick two doors to open, and
+if the gold was behind either one of them, you would win. Clearly, your
+probability of winning would be latexmath:[\frac{2}{3}]. Monty allows
+you this option. Just pick the two doors you want and tell Monty the
+third. He reveals one of your two initial doors as junk, and you switch
+to the other one.
+
+If you still aren't convinced, that's fine. Your goal is to write a
+program that simulates the Monty Hall dilemma, allowing a user to guess
+a door and then, potentially, switch. Once you have written the
+simulation, you can choose to play repeatedly and see how well you do if
+you switch.
+
+A Monty Hall scenario has two significant features that distinguish it
+from problems in previous chapters. First, randomness play a role.
+Generating random numbers has become an important part of computer
+science, and most languages provide programmers with tools for
+generating random or nearly random numbers. Recall the `Random` class
+from <<ch03-strings-primitive-types#ch03-strings-primitive-types>>. With an object of
+type `Random` called `random`, you can generate a random `int` between
+`0` and `n - 1` by calling `random.nextInt(n)`.
+
+The second and much more important feature of Java in the solution to
+this problem is the element of choice. A random door is chosen to hide
+gold, and the program must react appropriately. The user chooses a door,
+and the program must carefully choose another door to open in response.
+Finally, the user must decide whether or not he or she wants to switch
+his or her choice. Inherent in this problem is the idea of _conditional
+execution_. Every program from the previous chapter runs sequentially,
+line by line. With conditional execution, only some of the code may be
+executed, depending on input from the user or the values that random
+numbers take. Previously, every program was deterministic, a series of
+inevitable consequences. Now, that linear, one-thing-follows-another
+paradigm has split into complex trees and webs of possible program
+executions.
+
+=== Concepts: Choosing between options
+
+Before we get to random numbers and the complex choices involved in the
+Monty Hall problem, let's talk about the simplified approach that most
+programming languages take to conditional execution. When we come to a
+point in a program where there is a choice to be made, we can think of
+it as the question, "`Do I want to perform this series of tasks?`" Like
+the classic game of 20 Questions, these questions in Java generally only
+have two answers: "`yes`" or "`no.`" If the answer is "`yes,`" the
+program completes Task A, otherwise it completes Task B. It is easier to
+design programming languages that can handle yes-or-no questions than
+any general question. If you have studied logic in the past, you have
+probably run across _Boolean logic_. Boolean logic gives a set of rules,
+similar to the rules of traditional algebra, that can be applied to a
+system with only two values: true and false.
+
+==== Simple choices
+
+Because we want to build a system using only yes-or-no questions,
+Boolean logic is a perfect fit for computer science. To conform with
+other computer scientists, we try to think of conditions in terms of
+true and false, instead of yes and no. Thus, we can begin to formulate
+the kinds of choices we want to make:
+
+_If it is raining outside, then I will take my umbrella._
+
+This statement is a very simple program, even though it is not one
+executed by a computer. The person following this program asks herself,
+"`Is it raining today?`" If the answer is "`yes,`" then she will take
+her umbrella. We can abstract this idea a bit further by saying that
+_raining outside_ is a condition latexmath:[p] and that _taking my
+umbrella_ is an action latexmath:[a]. In other words, if
+latexmath:[p] is true, then do latexmath:[a]. We have not specified
+what is to be done if latexmath:[p] is not true, although it is
+assumed that the actor in this drama will not take an umbrella.
+
+If we want to view latexmath:[p] as a decision to make, we can specify
+what happens if it is not true. For example, we could formulate another
+choice:
+
+_If I have at least $50 in my pocket, then I will eat a lobster dinner,
+otherwise I will eat fast food._
+
+In this case, we let _having at least $50_ be condition latexmath:[q],
+_eating a lobster dinner_ be action latexmath:[b], and _eating fast
+food_ be action latexmath:[c]. Now we have created a decision. If
+latexmath:[q] is true, the person will do action latexmath:[b], but,
+if it is false, she will do action latexmath:[c].
+
+==== Boolean operations
+
+Even by itself, the ability to pick between two options is powerful, but
+we can augment this ability in a couple of ways. First, we don't have to
+rely on simple conditions. Using Boolean logic, we can make arbitrarily
+complex conditions.
+
+_If I am bored, or it is late and I can't sleep, then I will watch
+television._
+
+Someone following this program will watch television if he is bored or
+if it is late and he also cannot sleep. We can break the condition into
+three sub-conditions: _I am bored_ is condition latexmath:[x], _it is
+late_ is condition latexmath:[y], and _I can't sleep_ is condition
+latexmath:[z]. We have connected these three conditions together using
+the words "`and`" and "`or.`" These two simple words represent powerful
+concepts in Boolean logic, AND and OR. When two conditions are combined
+with AND, the result is true only if both conditions are true. When two
+conditions are combined with OR, the result is true if either of the
+conditions is true.
+
+We can create a table called a _truth table_ to show all the possible
+values certain conditions can take. We are going to use the symbol
+latexmath:[\land] to represent the concept of AND and the symbol
+latexmath:[\lor] to represent the concept of OR. We will also
+abbreviate true to T and false to F.
+
+Given a condition latexmath:[x], a condition latexmath:[y], and the condition made by latexmath:[x \land y], this truth table shows all possible values. As stipulated, latexmath:[x \land y] is true only when both latexmath:[x] and latexmath:[y] are true.
+
+[.center%autowidth,cols="^,^,^",options="header",]
+|=========================================================
+|latexmath:[x] |latexmath:[y] |latexmath:[x \land y]
+|T |T |T
+|T |F |F
+|F |T |F
+|F |F |F
+|=========================================================
+
+This truth table gives all the values for latexmath:[x \lor y]. As you can see, latexmath:[x \lor y] is true if latexmath:[x] or latexmath:[y] are true.
+
+[.center%autowidth,cols="^,^,^",options="header",]
+|========================================================
+|latexmath:[x] |latexmath:[y] |latexmath:[x \lor y]
+|T |T |T
+|T |F |T
+|F |T |T
+|F |F |F
+|========================================================
+
+Note that there is confusion with the use of the word "`or`" in English.
+Sometimes "`or`" is used in an exclusive sense to mean one or the other
+but not both, as in, "`Would you like lemonade or iced tea with your
+meal?`" In logic, this exclusive or exists as well and is called XOR.
+This difference gives another reason for a formally structured language
+like mathematics or Java to express ourselves precisely. When two
+conditions are connected with XOR, the result is true if one or the
+other but not both conditions are true. We use the symbol
+latexmath:[\oplus] to represent the XOR operation in the truth table
+below.
+
+This truth table gives all the values for latexmath:[x \oplus y].
+
+[.text-center]
+[.center%autowidth,cols="^,^,^",options="header",]
+|==========================================================
+|latexmath:[x] |latexmath:[y] |latexmath:[x \oplus y]
+|T |T |F
+|T |F |T
+|F |T |T
+|F |F |F
+|==========================================================
+
+The operations AND, OR, and XOR are all binary operations like addition
+and multiplication. They connect two conditions together to get a
+result. There is a single unary operation in Boolean logic, the NOT
+operator. A NOT simply reverses a condition. If a condition is true,
+then NOT applied to that condition will yield false, and vice versa.
+
+Here is a truth table for NOT, using the symbol latexmath:[\lnot] to represent the NOT operation.
+
+[.text-center]
+[.center%autowidth,cols="^,^",options="header",]
+|======================================
+|latexmath:[x] |latexmath:[\lnot x]
+|T |F
+|F |T
+|======================================
+
+Now that we have nailed down some notation for Boolean logic, we can
+express the complicated expression that sent us down this path in the
+first place. Recall that latexmath:[x] is _I am bored_,
+latexmath:[y] is _it is late_, and latexmath:[z] is _I can't sleep_.
+Let latexmath:[d] be the action _I will watch television_. We can
+express the choice in this way: If latexmath:[x \lor (y \land z)],
+then do latexmath:[d]. Using this notation, we have expressed
+precisely the conditions for watching television, using parentheses to
+clear up the ambiguity present in the original statement. If we can map
+individual conditions to Boolean variables, we can build conditions of
+arbitrary complexity.
+
+==== Nested choices
+
+Making one choice is all well and good, but in life and computer
+programs, we may have to make many interrelated choices. For example, if
+you choose to eat at a seafood restaurant, then you might choose between
+eating shrimp and lobster, but, if you choose instead to eat at a
+steakhouse, the options of shrimp and lobster might not be available.
+
+A _nested_ choice is one that sits inside of another choice you have
+already made. We could describe choices of restaurant and meal as
+follows.
+
+_If I want seafood, then I will eat at Sharky's, otherwise I will eat at
+the Golden Calf. When dining at Sharky's, if I have at least $50, I will
+order the lobster, otherwise I will order the shrimp. When dining at the
+Golden Calf, if I have at least $30, I will order the filet mignon,
+otherwise I will order the pork chops._
+
+The previous description is long, but it precisely expresses the
+decisions our imaginary diner might make. This description in English
+has drawbacks: It is long and repetitive, and the grouping of specific
+meal choices with specific restaurants is not clear.
+
+In the next section, we discuss the Java syntax that allows us to
+express the same sorts of decision patterns. Unlike English, Java has
+been designed to make these sequences of decisions clear and easy to
+read.
+
+=== Syntax: Selection in Java
+
+With some theoretical background on the kinds of choices we are
+interested in making, we are going to discuss the Java syntax used to
+describe these choices. It was no accident that we kept repeating the
+word "`if,`" because the main Java language feature for making choices
+is called an `if` statement.
+
+==== `if` statements
+
+The designers of Java studied Boolean logic and created a type called
+`boolean`. Every condition used by an `if` statement must evaluate to a
+`boolean` value, which can only be one of two things: `true` or `false`.
+
+For example, we could have a `boolean` variable called `raining`. Stored
+in this variable is the value `true` if it is raining and `false` if it
+isn't. Using Java syntax, we could encode our first example in which our
+actor takes her umbrella if it is raining.
+
+[source,java]
+----
+if( raining ) {
+    umbrella.take();
+}
+----
+
+The action taken if it is raining is done by calling a _method_ on an
+_object_. We'll discuss objects and methods further in
+<<ch08-methods#ch08-methods>> and <<ch09-classes#ch09-classes>>. What we're
+focusing on now is that the line `umbrella.take();` is executed only if
+`raining` has the value `true`. Nothing is done if it is `false`.
+<<figure-if>> shows this pattern of conditional execution
+followed by all `if` statements.
+
+[[figure-if]]
+[.text-center]
+.Execution goes inside the `if` statement when its condition is `true` and skips past it otherwise.
+image::if.svg[scaledwidth=50%,pdfwidth=50%,width=50%]
+
+
+Our descriptions of logical scenarios from the previous section used the
+word "`then`" to mark the actions that would be done if a condition was
+true. Some languages use `then` as a keyword, but Java does not.
+Instead, note the left brace (`{`) and the right brace (`}`) that
+enclose the executable line `umbrella.take();`. These braces serve the
+same role as the word "`then,`" clearly marking the action to be
+performed if a condition is true. Braces are unambiguous because they
+mark a start and an end. If there are many actions to be done, they can
+all be put inside the braces, and there will be no question as to which
+actions are associated with a given `if` statement.
+
+For example, we may also need to close the window and put on a raincoat
+if it is raining. We might accomplish these tasks in Java as follows.
+
+[source,java]
+----
+if( raining ) {
+    umbrella.take();
+    window.close();
+    raincoat.putOn();
+}
+----
+
+Within a matching pair of braces (`{ }`), called a _block_ of code,
+execution proceeds normally, line by line. First, the JVM will cause the
+umbrella to be taken, then the window to be closed, and finally the
+raincoat to be put on.
+
+If only a single line of code is contained within a block of code, the
+braces can be left out. For example, many experienced Java programmers
+would have written our first example as follows.
+
+[source,java]
+----
+if( raining )
+    umbrella.take();
+----
+
+For beginning Java programmers, however, it is a good idea to use braces
+even when you don't need to. Without braces, code can appear to be doing
+one thing when it really is doing another.
+
+Since programmers must often choose between two alternatives, Java
+provides an `else` statement to specify code that should be run if the
+condition of the `if` statement is false.
+
+Let `fiftyDollars` be a `boolean` variable that is `true` if we have at
+least $50 and is `false` otherwise. Now, we can choose between two
+dining options based on how much money we have.
+
+[source,java]
+----
+if( fiftyDollars ) {
+    lobsterDinner.eat();
+}
+else {
+    fastFood.eat();
+}
+----
+
+This Java code matches the logical statements we wrote before. If we
+have enough money, we'll eat a lobster dinner, otherwise, we'll eat fast
+food. As with an `if` statement, we use braces to mark a block of code
+for an `else` statement, too. Since a single line of code will be
+executed in each case, the braces are optional here. We could have
+written code with the same functionality as follows.
+
+[source,java]
+----
+if( fiftyDollars )
+    lobsterDinner.eat();
+else
+    fastFood.eat();
+----
+
+<<figure-else>> shows the pattern of conditional execution
+followed by all `if` statements that have a matching `else` statement.
+
+[[figure-else]]
+[.text-center]
+.Execution goes inside the `if` statement when its condition is `true` and jumps into the `else` statement otherwise.
+image::else.svg[scaledwidth=50%,pdfwidth=50%,width=50%]
+
+
+.Pitfall: Misleading indentation
+[WARNING]
+====
+
+Indentation is used to make the code more readable, but Java ignores
+whitespace, meaning that the indentation has no effect on the execution
+of the code. To demonstrate, let's assume that our imaginary diner knows
+he will get a stomachache after eating fast food. Thus, he will take
+some Pepto-Bismol after eating it. If you modified the code above, which
+does not contain braces, you might get the following.
+
+[source,java]
+----
+if( fiftyDollars )
+    lobsterDinner.eat();
+else
+    fastFood.eat();
+    peptoBismol.take();
+----
+
+Although it looks like both `fastFood.eat();` and `peptoBismol.take();`
+are within the block of the `else` statement, only `fastFood.eat();` is.
+The line `peptoBismol.take();` is not part of the `if`-`else` structure
+at all and will be executed no matter what. The correct way to program
+this decision is below.
+
+[source,java]
+----
+if( fiftyDollars )
+    lobsterDinner.eat();
+else {
+    fastFood.eat();
+    peptoBismol.take();
+}
+----
+
+====
+
+==== The `boolean` type and its operations
+
+Recall that Java uses the type `boolean` for values that can only be
+true or false. Just like the numerical types `double` and `int`, the
+`boolean` type has specific operations that can be used to combine them
+together. By design, these operations correspond exactly to the logical
+operations we described before. Here is a table giving the Java
+operators that are equivalent to the logical Boolean operations.
+
+[.center%autowidth,cols="^.^,^.^,^.^,<.^",options="header",]
+|=======================================================================
+^.>|Name
+^.>|Math +
+Symbol
+^.>|Java +
+Operator
+<.>|Description
+|AND |latexmath:[\land] |`&&` |Returns `true` if both values are `true`
+|OR |latexmath:[\lor] |`\|\|` |Returns `true` if either value is `true`
+|XOR |latexmath:[\oplus] |`^` |Returns `true` if values are different
+|NOT |latexmath:[\lnot] |`!` |Returns the opposite of the value
+|=======================================================================
+
+Using these operators, we can create `boolean` values and combine them
+together.
+
+[source,java]
+----
+boolean x = true;
+boolean y = false;
+boolean z = !((x || y) ^ (x && y));
+----
+
+When this code is executed, the value of `z` will be `false`. Although
+it is perfectly legal to perform `boolean` operations this way, it is
+much more common to combine them "`on the fly`" inside of the condition
+of an `if` statement. Recall the statement from the previous section:
+
+_If I am bored, or it is late and I can't sleep, then I will watch
+television._
+
+If we let `bored`, `late`, and `canSleep` be `boolean` variables whose
+values indicate if we are bored, if it is late, and if we can sleep,
+respectively, we can encode this statement in Java like so.
+
+[source,java]
+----
+if( bored || (late && !canSleep) )
+    television.watch();
+----
+
+Combining the `||` operator with other `||` operators is both
+commutative and associative: order and grouping doesn't matter.
+Likewise, combining the `&&` operator with other `&&` operators is
+also commutative and associative. However, once you start mixing `||`
+with `&&`, it is a good idea to use parentheses for grouping. If, in
+the above example, `bored` is `true`, `late` is `false`, and `canSleep`
+is `true`, then the expression `bored || (late && !canSleep)` will be
+`true`. However, with the same values, the expression
+`bored || late && !canSleep` will be `false`.
+
+Now that we are discussing ordering, it is important to note that `||`
+and `&&` are _short circuit_ operators. Short circuit means that, if
+the value of the expression can be determined without evaluating the
+rest of it, the JVM will not bother to compute any more of the
+expression. With `||` this situation arises because `true` OR anything
+else is still `true`. With `&&` this situations arises because `false`
+AND anything else is still `false`.
+
+[source,java]
+----
+if( true || ((late && !canSleep && isTired && isHungry) ||
+    (wantsToFindOutWhatHappensNextInHisFavoriteShow ||
+    likesTV )) )
+----
+
+The condition of this `if` statement will always evaluate to `true` and
+its body will always be executed. Because Java knows this, it will not
+even bother to execute any of the code after the first `||` operator.
+This short circuit evaluation is done at run time and will work if the
+value of a variable at the beginning of an OR clause is `true`. It need
+not be the literal `true`.
+
+[source,java]
+----
+if( false && ((late || !canSleep || isTired || isHungry) &&
+    (wantsToFindOutWhatHappensNextInHisFavoriteShow ||
+    likesTV )) )
+----
+
+The condition of this `if` statement will always evaluate to `false` and
+its body will not be executed. As before, nothing after the first `&&`
+will even be executed. If you are combining literals and `boolean`
+values with the `||` and `&&` operators, it makes no difference that
+short circuit evaluation occurs. However, if a method call is part of
+the clauses, your code might miss valuable side-effects. For example,
+let the `boolean` variable `working` be `false` in the following.
+
+[source,java]
+----
+if( working && doSomethingImportant() )
+----
+
+In this case, the `doSomethingImportant()` method must return a
+`boolean` value to be a valid statement. Still, if `working` is `false`,
+the `doSomethingImportant()` method will not be called. As soon as the
+JVM realizes that it is applying the `&&` operation to a `false`
+value, it will give up. In many cases, doing so is fine. In fact,
+programmers will sometimes exploit this feature to allow code in a
+method like `doSomethingImportant()` to run only if it is safe to do so.
+In this case, if we assume that we always want to run the
+`doSomethingImportant()` method (because it does something important)
+every time the condition of the `if` statement is evaluated, we need to
+restructure the code. For example, we can reverse the order of the two
+terms in the AND clause to achieve this effect. Alternatively, Java
+provides non-short circuit versions of the `||` and `&&` operators,
+namely `|` and `\&`, if you need to force full evaluation.
+
+You may have been wondering where the majority of `boolean` values come
+from. Most computer programs do not ask the user a long series of true
+or false questions before spitting out an answer. Most `boolean` values
+in Java programs are the result of comparisons, often of numerical data
+types.
+
+It is useful to compare two numbers to see if one is larger, smaller, or
+equal to the other. For example, you might have a `double` variable
+called `pressure` that gives the water pressure in a hydraulic system.
+Perhaps you also have a constant called `CRITICAL_PRESSURE` that gives
+the maximum safe pressure for your system. You can compare these values
+using the `>` operator.
+
+[source,java]
+----
+if( pressure > CRITICAL_PRESSURE )
+    emergencyShutdown();
+----
+
+This code allows you to call the appropriate emergency method when
+`pressure` is too high. Of course, the `>` operator is not the only way
+to compare two values in Java. We list all the relational operators in
+<<ch03-strings-primitive-types#ch03-strings-primitive-types>>, but
+the table below shows them again in a
+mathematical context.
+
+[.center%autowidth,cols="<.^,^.^,^.^,<.^",options="header",]
+.Relational operators
+|=======================================================================
+<.>|Name
+^.>|Math +
+Symbol
+^.>|Java +
+Operator
+<.>|Description
+|Equals |latexmath:[=] |`==` |`true` if the two values are equal
+|Not Equals |latexmath:[\neq] |`!=` |`true` if the two values are not
+equal
+|Less Than |latexmath:[<] |`<` |`true` if the first value is strictly
+less than the second
+|Less Than or Equals |latexmath:[\leq] |`\<=` |`true` if the first
+value is less than or equal to the second
+|Greater Than |latexmath:[>] |`>` |`true` if the first value is
+strictly greater than the second
+|Greater Than or Equals |latexmath:[\geq] |`>=` |`true` if the first
+value is greater than or equal to the second
+|=======================================================================
+
+The concepts and mathematical symbols for these operators should be
+familiar from mathematics. There are a few differences from the
+mathematical versions of these ideas that are worth pointing out. First,
+only easy-to-type symbols are used for Java operators. Thus, we need two
+characters to represent most operators in the language. These operators
+can be used to compare any numerical type with any other numerical type,
+including `char`. In the case of mismatched types, such as an `int` and
+a `double`, the lower precision type is automatically cast to the higher
+precision type. Care should be taken when using the `==` operator with
+floating point types because of rounding errors. For example, the
+expression `(1.0/3.0 == 0.3333333333)` always evaluates to `false`.
+
+The `==` operator is not the same as the `=` operator from previous
+chapters. In Java, the double equal sign `==` is used to compare two
+things while the single equal sign `=` is used to assign one thing to
+another.
+
+Confusion can also arise because, in the mathematical world, relational
+symbols are used to make a statement: latexmath:[x < y] is an
+announcement or a discovery that the value contained in latexmath:[x]
+is, in fact, smaller than the value contained in latexmath:[y]. In the
+Java world, the statement `x < y` is a *test* whose answer is `true` if
+the value contained in `x` is smaller than the value contained in `y`
+and `false` otherwise. Using these operators means performing a test at
+a specific point in the code, asking a question about the values that
+certain variables or literals (or the results of method calls) have at
+that moment in time. In another sense, using these comparisons is a way
+to take numerical data and convert it into the language of `boolean`
+values. Note that the following statement does not compile in Java.
+
+[source,java]
+----
+if( 4 )
+    x = y + z;
+----
+
+To be used in an `if` statement, the value `4` must be first compared
+with some other numerical type to yield a `true` or `false`. +
+
+.Pitfall: Assignment instead of equality
+[WARNING]
+====
+
+Along these lines, a common pitfall is to forget one of the equal signs
+in the comparison operator.
+
+[source,java]
+----
+if( x = 4 )
+    x = y + z;
+----
+
+Again, this code will not compile. If it did, the variable `x` would be
+assigned the value `4`, which would in turn be given to the `if`
+statement, but an `if` statement does not know what to do with anything
+other than a `boolean` value. Extreme care should be taken when
+comparing two `boolean` values. For example, we might have two `boolean`
+values `genderA` and `genderB`, corresponding to the genders of two
+different people. Let's say that the value of each one is `true` if the
+person is female and `false` otherwise. We could create an `if`
+statement that would work only if their genders are the same.
+
+[source,java]
+----
+if( genderA == genderB )
+    makeRoommates();
+----
+
+This code correctly calls the `makeRoommates()` method only if the two
+individuals have the same gender. However, a tiny mistake in the code
+could yield the following.
+
+[source,java]
+----
+if( genderA = genderB )
+    makeRoommates();
+----
+
+In this case, `genderA` would be assigned to whatever `genderB` is.
+Then, that value would be given to the `if` statement. In this
+situation, the `makeRoommates()` method will be called only if `genderB`
+is `true`, meaning female. Thus, the two people will become roommates if
+the second one is female, and the gender of the first person won't be
+considered. Unlike the `x = 4` example, this code will compile with no
+warning.
+
+====
+
+The next few examples illustrate the use of the `if` statement. They
+also use some methods from class `Math`.
+
+
+[[leapYearExample]]
+.Leap year
+====
+
+In the standard Gregorian calendar, leap years occur roughly once every
+four years. During leap years, the month of February has 29 days instead
+of 28. This extra day makes up for the fact that it takes almost 365.24
+days for the earth to orbit the sun. Unfortunately, the orbit of the
+earth around the sun does not match up in any exact way with the
+rotation of the earth. So, there are exceptions to the rule of every
+four years.
+
+In fact, the official definition for a leap year is a year that is
+evenly divisible by 4, except for those years that are evenly divisible
+by 100, with the exception to the exception of years that are evenly
+divisible by 400. For example, 1988 was a leap year because it was
+divisible by 4. The year 1900 was not a leap year because it was
+divisible by 100 but not by 400, and the year 2000 was a leap year
+because it was divisible by 400.
+
+Recall that the mod operator (`%`) allows us to find the remainder
+after integer division. Thus, if `n % 100` gives zero, `n` has no
+remainder after being divided by `100` and must be evenly divisible by
+100.
+
+.Prompts the user for a year and then determines whether or not it is a leap year.
+[source, java, linenums]
+[[LeapYearProgram]]
+----
+include::{programsdir}/LeapYear.java[]
+----
+
+As with all of the programs in this section, we begin by importing
+`java.util.*`, which is needed for the `Scanner` class for input. The
+program prompts the user for a year and reads it in. If the year is
+evenly divisible by 400, the program outputs that it is a leap year.
+Otherwise, if the year is evenly divisible by 100, the program outputs
+that it is not a leap year. Otherwise, if the year is evenly divisible
+by 4, the program outputs that it is a leap year. Finally, if all the
+other conditions have failed, the program outputs that the year is not a
+leap year.
+
+====
+
+.Quadratic formula
+====
+
+The quadratic formula is a useful tool from mathematics. Using this
+formula, you can solve equations of the form latexmath:[ax^2 + bx
++ c = 0]. As you might recall, the quadratic equation that gives the
+solutions is: latexmath:[\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}]
+
+The latexmath:[b^2 - 4ac] part of the formula is called the
+_discriminant_. If the discriminant is positive, there will be two real
+answers to the equation. If the discriminant is negative, there will be
+two complex answers to the equation. Finally, if the discriminant is
+zero, there will be a single real answer to the problem. If you want to
+write a program to solve quadratic equations for you, it should take
+these three possibilities into account.
+
+.Solves a quadratic equation.
+[source, java, linenums]
+[[QuadraticProgram]]
+----
+include::{programsdir}/Quadratic.java[]
+----
+
+This program begins by prompting the user and reading in values for `a`,
+`b`, and `c`. Then, it computes the discriminant. In the first case, we
+want to test to see if the discriminant is zero. If the discriminant was
+not zero but is negative, we account for this situation in the next
+case. We compute the real and complex parts separately and output the
+two answers. Finally, if the discriminant is positive, we find the two
+answers and output them. Note that braces were not needed for the `if`,
+`else`-`if`, and `else` blocks because each is composed of only a single
+line of code. Although these `System.out.println()` method calls may
+take up more than one line visually, Java interprets them as single
+lines because they each only have a single semicolon (`;`).
+
+The line `if( discriminant == 0.0 )` is dangerous since we are using
+`double` values. Because of rounding errors, the discriminant might not
+be exactly zero even if it should be, mathematically. Industrial
+strength code would probably check to see if the absolute value of the
+discriminant is less than a very small number (such as 0.00000001).
+Values that small would then be treated as if they were zero.
+
+====
+
+.20 Questions
+====
+
+In the time-honored game of 20 Questions, one person mentally chooses
+something, and the other participants must guess what the thing is by
+asking questions whose answer is either "`yes`" or "`no.`" In one
+popular version, the person who chooses the thing starts by declaring
+whether it is animal, vegetable, or mineral.
+
+Using counting principles from math, 20 yes-or-no questions makes it
+possible to differentiate latexmath:[2^{20} = 1,048,576] items. If you
+are told ahead of time whether the thing is animal, vegetable, or
+mineral, it should be possible to guess over 3 million items! We are not
+yet ready to deal with such a large range of possibilities. To keep the
+size of the code reasonable, let's narrow the field to 10 different
+items: a lizard, an eagle, a dolphin, a human, some lead, a diamond, a
+tomato, a peach, a maple tree, and a potato.
+
+[[figure-flowchart]]
+.Decision tree to distinguish 10 items.
+image::flowchart.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
+
+
+Using these items, we can construct a tree of decisions to make,
+starting with the decision between animal, vegetable, and mineral. If
+the thing is an animal, we could then ask if it is a mammal. If it is a
+mammal, we could ask if it lives on land, deciding between human and
+dolphin. If it is not a mammal, we could ask if it flies, deciding
+between an eagle and a lizard. We can construct similar questions for
+the things in the vegetable and mineral categories, matching
+<<figure-flowchart>>.
+
+.Navigates the possible choices in the decision tree.
+[source, java, linenums]
+[[TwentyQuestionsProgram]]
+----
+include::{programsdir}/TwentyQuestions.java[]
+----
+
+The code in this example is straightforward, although even 10 items
+makes for a lot of `if` and `else` blocks. Other than the `if`-`else`
+statements, only simple input and output are needed to make the program
+function. For proper `String` comparison, it is necessary to use the
+`equals()` method to test if two `String` values are the same.
+
+Note that we have added comments specifying what we assume is the case
+for each `else` block. If we were being more careful, we should test for
+the `"y"` and `"n"` cases and then give an error message when the user
+inputs something unexpected, like `"x"` or `"149"` or even `"no"`.
+Again, note that no braces are needed for the final `if`-`else` blocks
+in which the guess is made, since each of these guesses requires only a
+single line of code.
+
+You might be curious how to make a real 20 Questions game that could
+learn over time. To do so, many more programming tools are necessary:
+repetition, data structures (so that you can organize the questions),
+and file input and output (so that you can store new information
+permanently). These concepts are covered in later chapters.
+
+====
+
+[[subsection:switch_statements]]
+==== `switch` statements
+
+The `if` statement is the workhorse of Java conditional execution. With
+enough care, you can craft code that can make any fixed sequence of
+decisions with arbitrary complexity. Even so, the `if` statement can be
+a little clumsy because it only allows you to choose between two
+alternatives. After all, a conditional can only be `true` or `false`.
+Certainly, decisions can be nested, allowing for more than two
+possibilities, but long lists of possibilities can be cumbersome.
+
+For example, imagine that we want to create a program that determines
+the appropriate gift for a wedding anniversary. Below is a table of
+traditional categories of gifts based on the anniversary year.
+
+[.center%autowidth,cols="^.^,<.^,^.^,<.^",options="header",]
+|=================================
+|Year |Gift |Year |Gift
+|1 |Paper |13 |Lace
+|2 |Cotton |14 |Ivory
+|3 |Leather |15 |Crystal
+|4 |Fruit |20 |China
+|5 |Wood |25 |Silver
+|6 |Candy / Iron |30 |Pearl
+|7 |Wool / Copper |35 |Coral
+|8 |Bronze / Pottery |40 |Ruby
+|9 |Pottery / Willow |45 |Sapphire
+|10 |Tin / Aluminum |50 |Gold
+|11 |Steel |55 |Emerald
+|12 |Silk / Linen |60 |Diamond
+|=================================
+
+Let `year` be a variable of type `int` containing the year in question.
+A structure of `if`-`else` statements that can determine the appropriate
+gift based on the year is below.
+
+[source,java]
+----
+String gift;
+if( year == 1 )
+    gift = "Paper";
+else if( year == 2 )
+    gift = "Cotton";
+else if( year == 3 )
+    gift = "Leather";
+else if( year == 4 )
+    gift = "Fruit";
+else if( year == 5 )
+    gift = "Wood";
+else if( year == 6 )
+    gift = "Candy / Iron";
+else if( year == 7 )
+    gift = "Wool / Copper";
+else if( year == 8 )
+    gift = "Bronze / Pottery";
+else if( year == 9 )
+    gift = "Pottery / Willow";
+else if( year == 10 )
+    gift = "Tin / Aluminum";
+else if( year == 11 )
+    gift = "Steel";
+else if( year == 12 )
+    gift = "Silk / Linen";
+else if( year == 13 )
+    gift = "Lace";
+else if( year == 14 )
+    gift = "Ivory";
+else if( year == 15 )
+    gift = "Crystal";
+else if( year == 20 )
+    gift = "China";
+else if( year == 25 )
+    gift = "Silver";
+else if( year == 30 )
+    gift = "Pearl";
+else if( year == 35 )
+    gift = "Coral";
+else if( year == 40 )
+    gift = "Ruby";
+else if( year == 45 )
+    gift = "Sapphire";
+else if( year == 50 )
+    gift = "Gold";
+else if( year == 55 )
+    gift = "Emerald";
+else if( year == 60 )
+    gift = "Diamond";
+else
+    gift = "No traditional gift";
+----
+
+This code stores the correct value in `gift`. Note that we are using the
+feature of `if` statements that treats an entire `if` statement as one
+statement. If we used braces to group things properly, the code would
+become unreadable and unmanageably large.
+
+[source,java]
+----
+String gift;
+if( year == 1 ) {
+    gift = "Paper";
+}
+else {
+    if( year == 2 ) {
+        gift = "Cotton";
+    }
+    else {
+        if( year == 3 ) {
+            gift = "Leather";
+        }
+        else {
+            if( year == 4 ) {
+                gift = "Fruit";
+            }
+            .
+            .
+            .
+----
+
+It appears that there is some kind of `else if` construct in Java, but
+there is not. Still, careful use of the rules for braces allows us to
+write code that nicely expresses a list of alternatives, even if the
+true compiler interpretation looks a little different.
+
+Another way of expressing a long sequence of choices is by using a
+`switch` statement. A `switch` statement takes a single integer type
+value (`int`, `long`, `short`, `byte`, `char`) or a `String` and jumps
+to a case corresponding to the input. We can recode the anniversary gift
+example using a `switch` statement as follows.
+
+[source,java]
+----
+String gift;
+switch( year ) {
+    case 1:  gift = "Paper"; break;
+    case 2:  gift = "Cotton"; break;
+    case 3:  gift = "Leather"; break;
+    case 4:  gift = "Fruit"; break;
+    case 5:  gift = "Wood"; break;
+    case 6:  gift = "Candy / Iron"; break;
+    case 7:  gift = "Wool / Copper"; break;
+    case 8:  gift = "Bronze / Pottery"; break;
+    case 9:  gift = "Pottery / Willow"; break;
+    case 10: gift = "Tin / Aluminum"; break;
+    case 11: gift = "Steel"; break;
+    case 12: gift = "Silk / Linen"; break;
+    case 13: gift = "Lace"; break;
+    case 14: gift = "Ivory"; break;
+    case 15: gift = "Crystal"; break;
+    case 20: gift = "China"; break;
+    case 25: gift = "Silver"; break;
+    case 30: gift = "Pearl"; break;
+    case 35: gift = "Coral"; break;
+    case 40: gift = "Ruby"; break;
+    case 45: gift = "Sapphire"; break;
+    case 50: gift = "Gold"; break;
+    case 55: gift = "Emerald"; break;
+    case 60: gift = "Diamond"; break;
+    default: gift = "No traditional gift"; break;
+}
+----
+
+Just like an `if` statement, a `switch` statement always has parentheses
+enclosing some argument. Unlike an `if`, the argument of a `switch` must
+be some kind of data that can be expressed as an integer or a `String`,
+not a `boolean`. For each of the possible values you want the `switch`
+to handle, you write a `case` statement. A `case` statement consists of
+the keyword `case` followed by a constant value, either a literal or a
+named constant, then a colon. When executed, the JVM jumps to the
+matching `case` label and starts executing code there. If there is no
+matching `case` label, the JVM goes to the `default` label. If there is
+no `default` label, the entire `switch` statement is skipped.
+
+One unusual feature of `switch` statements is that execution _falls
+through_ `case` statements. This means that you can use many different
+`case` statements for a single segment of executable code. The execution
+of code in a `switch` statement jumps out when it hits a `break`
+statement. However, `break` statements are not required, as shown in
+this `switch` statement that gives location information for all of the
+telephone area codes in New York state.
+
+[source,java]
+----
+String location = "";
+switch( code ) {
+    case 917: location = "Cellular: ";
+    case 212:
+    case 347:
+    case 646:
+    case 718: location += "New York City"; break;
+
+    case 315: location = "Syracuse"; break;
+
+    case 516: location = "Nassau County"; break;
+
+    case 518: location = "Albany"; break;
+
+    case 585: location = "Rochester"; break;
+
+    case 607: location = "South Central New York"; break;
+
+    case 631: location = "Suffolk County"; break;
+
+    case 716: location = "Buffalo"; break;
+
+    case 845: location = "Lower Hudson Valley"; break;
+
+    case 914: location = "Westchester County"; break;
+
+    default:  location = "Unknown Area Code"; break;
+}
+----
+
+As you can see, five different area codes are used by New York City. By
+leaving out the `break` statements, values of `212`, `347`, `646`, and
+`718` all have `"New York City"` stored into `location`. Area code 917
+was originally designated for cellular phones and pagers although now it
+has some landlines. By cleverly putting the statement for `917` ahead of
+the other New York City entries, a value of `917` first stores
+`"Cellular: "` into `location` and then falls through and appends
+`"New York City"`. For each of these five area codes, execution in the
+`switch` statement ends only when the `break` statement is reached.
+
+The remaining nine area codes are by themselves. Each of them does a
+single assignment and then breaks out of the `switch` block. Finally,
+the `default` label is used if the area code is not one of the ones
+specified. Note that we have ordered the (non-NYC) area codes in
+ascending order for the sake of readability. As you can see with the
+`917` example, there is no rule about the ordering of the labels. Even
+the `default` label can occur anywhere in the `switch` block you want,
+although it is common to put it at the end. Also, the `break` after the
+`default` label is unnecessary because execution exits the `switch`
+block anyway. Nevertheless, it is always wise to end on a `break`, in
+the event that you add more cases in later.
+
+Carelessness is always something to watch out for in `switch`
+statements. Leaving out a `break` statement can cause disastrous and
+difficult to discover bugs. The compiler does not warn you about missing
+`break` statements, either. It is entirely your job to use them
+appropriately. Because of the dangers involved, it is often better to
+use `if`-`else` statements. Any `switch` statement can be rewritten as
+some combination of `if`-`else` statements, but the reverse is not true.
+The main benefit of `switch` statements is the ability to list many
+alternatives clearly. Their drawbacks include the ease of making a
+mistake, an inability to express ranges of data or most types (`double`,
+`float`, or any reference type other than `String`), and limited
+expressive power. They should be used only when their benefit of clearly
+displaying a list of data outweighs the drawbacks. Note that Java 7
+added `String` values as legal input to a `switch`. If you are coding in
+Java 7 or later, you can use `String` literals for your cases, but then
+your code is not be compatible with earlier versions.
+
+Next we give a number of examples to help you get more familiar with
+`switch` statements.
+
+.Days in the month
+====
+
+The use of `switch` statements is usually a little more special purpose
+than `if` statements. Nevertheless, there are many problems where their
+fall-through behavior can be useful. Imagine that you need to write a
+program that gives the length of each month (assume that February always
+has 28 days). Given the month as a number, we can easily write a program
+that maps the number of the month to the number of days it contains.
+
+.Computes the number of days in a given month.
+[source, java, linenums]
+[[DaysInMonthProgram]]
+----
+include::{programsdir}/DaysInMonth.java[]
+----
+
+This program has a single label for February setting `days` to 28. Then,
+there are labels for April, June, September, and November, months that
+each have 30 days. Finally, the large block of January, March, May,
+July, August, October, and December all set `days` to 31. It would be
+easy to extend this code to prompt the user for a year so that you could
+integrate the leap year code from above for the February case. Note also
+that we do not have a `default` label. You might want to set `days` to
+some special value (like `-1`) for invalid months.
+
+====
+
+
+[[ordinalNumbersExample]]
+.Ordinal numbers
+====
+
+The term _ordinal numbers_ refers to numbers that are used for ordering
+within a set of items: first, second, third, and so on. When writing
+these numbers with numerals in English, it is common to append two
+letters to the end of the numeral to give the reader a clue that these
+numerals should be read with their ordinal names: 1st, 2nd, 3rd, and so
+on.
+
+Unlike most things in English, the rules for deciding which two letters
+are relatively simple. If the number ends in a 1, the letters "`st`"
+should generally be used. If the number ends in a 2, the letters "`nd`"
+should generally be used. If the number ends in a 3, the letters "`rd`"
+should generally be used. For most other numbers, the letters "`th`"
+should be used. We can use a `switch` statement to write a program to
+give the correct ordinal endings for most numbers as follows.
+
+.Appends the appropriate suffix to a numeral to make it an ordinal.
+[source, java, linenums]
+[[OrdinalsProgram]]
+----
+include::{programsdir}/Ordinals.java[]
+----
+
+This program prompts and then reads in an `int` from the user. We then
+find the remainder of `number` when it is divided by 10, yielding its
+last digit. Based on this digit, we can pick from the four possibilities
+and output the correct ordinal number in most cases. Unfortunately, the
+names for English numbers do not follow the normal pattern of tens place
+name followed by ones place name between 11 and 19, inclusive, and the
+ordinals for any number ending in 11, 12, or 13 will be given the wrong
+suffix by our code. We leave a more complete solution as an exercise.
+====
+
+****
+<<ex4-12, Exercise 4.12>>
+****
+
+.Astrology
+====
+
+Many cultures practice astrology, a tradition that the time of a
+person's birth impacts his or her personality or future. One important
+element of Chinese astrology is their zodiac, consisting of 12 animals.
+Each consecutive year in a 12-year cycle corresponds to an animal.
+Because this system repeats, the year one is born in modulo 12
+identifies the animal. Below is a table giving these values. For
+example, if you were born in 1979, latexmath:[1979 \mod 12 \equiv 11],
+and thus you would be a Ram. Note that this arrangement is based on
+years in the Gregorian calendar. Chinese astrologers do not list the
+Monkey as the first animal in the cycle.
+
+
+[.center%autowidth,cols="<.>,^.>,<.>,^.>",options="header",]
+|=====================
+|Animal | Year +
+modulo 12
+|Animal | Year +
+modulo 12
+|Monkey |0 |Tiger |6
+|Rooster |1 |Rabbit |7
+|Dog |2 |Dragon |8
+|Boar |3 |Snake |9
+|Rat |4 |Horse |10
+|Ox |5 |Ram |11
+|=====================
+
+Unfortunately, this table is not very accurate because it is based on
+numbering from the Gregorian calendar. The years in question actually
+start and end based on Chinese New Year, which occurs between January 21
+and February 20. As a consequence, you may miscalculate your animal if
+your birthday is early in the year. Let's ignore this problem for the
+moment and write a program using a `switch` statement designed to
+correctly output the animal corresponding to an input birth year.
+
+.Determines a Chinese zodiac animal based on birth year.
+[source, java, linenums]
+[[ChineseZodiacProgram]]
+----
+include::{programsdir}/ChineseZodiac.java[]
+----
+
+[.center%autowidth,cols="<,<,<",options="header",]
+|=====================================================
+|Sign |Symbol |Date Range
+|Aries |The Ram |March 21 to April 19
+|Taurus |The Bull |April 20 to May 20
+|Gemini |The Twins |May 21 to June 20
+|Cancer |The Crab |June 21 to July 22
+|Leo |The Lion |July 23 to August 22
+|Virgo |The Virgin |August 23 to September 22
+|Libra |The Scales |September 23 to October 22
+|Scorpio |The Scorpion |October 23 to November 21
+|Sagittarius |The Archer |November 22 to December 21
+|Capricorn |The Sea-Goat |December 22 to January 19
+|Aquarius |The Water Bearer |January 20 to February 19
+|Pisces |The Fishes |February 20 to March 20
+|=====================================================
+
+In Western astrology, an important element associated with a person's
+birth is also called a zodiac sign. The dates for determining this kind
+of zodiac sign are given by the preceding table.
+
+If you want to implement the rules for this zodiac in code, a `switch`
+statement is a good place to start, but you also have to put `if`
+statements for each month to test the exact range of dates.
+
+.Determines Western zodiac signs based on birth month and day.
+[source, java, linenums]
+[[WesternZodiacProgram]]
+----
+include::{programsdir}/WesternZodiac.java[]
+----
+
+This program is just slightly more complex than the program for the
+Chinese zodiac. You still need to jump to 12 different cases (numbered
+1-12 instead of 0-11), but additional day information is needed to pin
+down the sign.
+
+====
+
+=== Solution: Monty Hall
+
+We now return to the Monty Hall simulation described at the beginning of
+the chapter. Recall that the `Random` class allows us to generate all
+kinds of random values. To implement this simulation successfully, our
+program must make all the decisions needed to set up the game for the
+user as well as respond to the user's input. We begin with the `import`
+statement that is necessary to use both the `Scanner` and `Random` class
+and then define the `MontyHall` class.
+
+[source, java, linenums]
+----
+include::{programsdir}/MontyHall.java[lines=1..11]
+----
+
+
+In the `main()` method we first decide which of the three doors is the
+winner. To do so, we instantiate a `Random` object and use it to
+generate a random number that is either 0, 1, or 2 by calling the
+`nextInt()` method with an argument of `3`. We could have added 1 to
+this value to get a random choice of 1, 2, or 3, but many counting
+systems in computer science start with 0 instead of 1. You might as well
+get used to it. Next, we prompt the user to pick from the three doors
+and read the choice. Finally, we declare two more `int` values to keep
+track of which door to open and which door is the alternative that the
+user can choose to change over to.
+
+[source, java, linenums]
+----
+include::{programsdir}/MontyHall.java[lines=13..38]
+----
+
+
+Now we have to navigate a complicated series of decisions. In this
+segment of code, we are tackling the possibility that the user happened
+to choose the winning door. To obey the rules of the game, we must
+randomly pick which of the two other doors to open. First, we determine
+which are the other two doors and save them in `low` and `high`,
+respectively. Then, we generated a random number. If the random number
+is less than 0.5, we keep the lower numbered door as an alternative
+choice for the user and open the higher numbered door. If the random
+number is greater than or equal to 0.5, we do the opposite.
+
+[source, java, linenums]
+----
+include::{programsdir}/MontyHall.java[lines=39..59]
+----
+
+
+This `else` block covers the case that the player did not pick the
+winning door the first time. Unlike the previous code segment, we no
+longer have a choice of which door to open. This time, we must always
+make the winner the alternative for the user to pick. Then, we simply
+determine which door is leftover so that we can open it. Note that the
+braces surrounding the blocks for each of the braces surrounding the
+blocks for each of the three possible values of `choice` are not
+necessary but are included for readability.
+
+[source, java, linenums]
+----
+include::{programsdir}/MontyHall.java[lines=60..74]
+----
+
+
+This final segment of code informs the user which door has been opened
+and prompts the user to change his or her decision. Depending on the
+final choice, the program says whether or not the user wins gold or
+junk.
+
+=== Concurrency: Selection
+
+The selection primitives (`if` and `switch` statements) seem to have
+little to do with concurrency or parallelism. Selection allows you to
+choose between alternatives while concurrency is about the interaction
+between different threads of execution. As it turns out, there are two
+reasons why selection and concurrency are deeply related to each other.
+
+The first reason is that selection is one of the most basic tools in
+Java. It is impossible to go more than a few lines of a code without
+encountering a selection primitive, usually an `if` statement.
+Concurrent programs are not exempt from this dependence on `if`
+statements. Making decisions is at the heart of all programming
+languages running on all computers.
+
+The second reason is more troubling and is related to a problem with
+some concurrent programs called a _race condition_, which is discussed
+in great detail in <<ch14-synchronization#ch14-synchronization>>. Remember, one of
+the biggest challenges of programming a computer is thinking in a
+completely sequential and logical way. Each line of code is executed one
+after the other. Adding in `if` statements means that some code is
+executed only if a condition is true and skipped otherwise. Consider the
+following fragment of code:
+
+[source,java]
+----
+if( !matches.areLit() && !flyingSparks ) {
+    storageRoom.enter();
+    dynamite.unpack();
+}
+----
+
+In this `if` statement, the imaginary agent only enters the storage room
+and unpacks the dynamite if the matches are not lit and there are no
+flying sparks. When execution reaches the first line inside the `if`
+block, we are certain that `matches.areLit()` returned `false` and
+`flyingSparks` is `false`. This is a one-time check. If the first thing
+that happens inside the `if` block is code that lights the matches, Java
+will *not* jump out of the `if` statement.
+
+As always, the programmer is responsible for making an `if` statement
+that makes sense. It is possible that entering the storage room or
+unpacking the dynamite causes sparks to fly or matches to burst into
+flames spontaneously, but it seems unlikely. If the `storageRoom` and
+`dynamite` objects were written by other people, we would expect their
+documentation to explain unusual side-effects of this kind. In a
+sequential program, the programmer can be reasonably sure that it is
+safe to unpack the dynamite.
+
+Consider another fragment of code:
+
+[source,java]
+----
+matches.light();
+flyingSparks = sparklers.light( matches );
+----
+
+This code appears to light the matches and uses the lit matches to set
+some sparklers on fire. Presumably, if the process was successful,
+`flyingSparks` will have the value `true`. This code is reasonable and
+potentially helpful. If you were celebrating the 4^th^ of July or needed
+to signal a passing helicopter to rescue you from a desert island,
+lighting sparklers could be a great idea. This sparkler-lighting code
+could occur before the dynamite-unpacking code or after it, but the
+protection of the `if` statement keeps our hero from being blown up if
+he tries to unpack the dynamite with lit sparklers, in a sequential
+program.
+
+In a concurrent program, all bets are off. Another thread of execution
+can be operating at the very same time. It's as if our hero is trying to
+unpack the dynamite while the villain is lighting sparklers and tossing
+them into the storage room. If the thread of execution gets to the `if`
+statement and makes sure that the matches aren't lit and that there are
+no flying sparks, it continues onward. If sparks start flying after that
+check, it still continues onward, oblivious of the fact. Even though
+this risk of explosion exists, it depends on the timing of the two (or
+more) concurrent threads of execution. It might be possible to run a
+program 1,000 times with no problem. But if the timing is wrong on the
+1,001^st^ time, *BOOM!*
+
+At this point, you do not need to worry about values inside your `if`
+statements being changed by other segments of code, but that problem is
+at the heart of why concurrent programming can be so difficult. Whether
+or not you are programming concurrently, it is always important to keep
+in mind the assumptions your code makes and the way different parts of
+your program interact with each other.
+
+=== Exercises
+*Conceptual Problems*
+
+. [[ex4-1]] Given that latexmath:[x], latexmath:[y], and latexmath:[z] are
+propositions in Boolean logic, make a truth table for the expression
+latexmath:[(\lnot(x \land \lnot y)
+\oplus \lnot z)].
+. [[ex4-2]] What is the value of the Boolean expression latexmath:[\lnot((T
+\oplus F) \land \lnot(F \lor T))]?
+. [[ex4-3]] The calculation to determine the leap year given in
+<<leapYearExample>> uses three `if` statements and three
+`else` statements. Write the leap year calculation using a single `if`
+and a single `else`. Feel free to use `boolean` connectors such as `||`
+and `&&`.
+.  [[ex4-4]] The XOR operator (`^`) is useful for combining `boolean` values, but
+it can be replaced with a more commonly used *relational* operator in
+Java. Which one?
+. [[ex4-5]] De Morgan's laws are the following, which show that the process of
+negating a clause changes an AND to an OR and vice versa.
++
+latexmath:[\lnot(x \land y) = \lnot x \lor \lnot y]
+latexmath:[\lnot(x \lor y) = \lnot x \land \lnot y]
++
+Create truth tables to verify both of these statements.
+. [[ex4-6]] Use De Morgan's laws given above to rewrite the following statement
+in Java to an equivalent statement that contains no negations.
++
+[source,java]
+----
+boolean value = !((x != 4) && (y < 2));
+----
+. [[ex4-7]] Consider the following fragment of code.
++
+[source,java]
+----
+int x = 5;
+int y = 3;
+if( y > 10 && (x = 10) > 5 )
+    y++;
+System.out.println("x: " + x);
+System.out.println("y: " + y);
+----
++
+What is the output? Is the output changed if the condition of the `if`
+statement is changed to +
+`y > 10 & (x = 10) > 5`? Why?
+. [[ex4-8]] Consider the following fragment of code.
++
+[source,java]
+----
+int a = 7;
+if( a++ == 7 )
+    System.out.println("Seven");
+else
+    System.out.println("Not seven");
+----
++
+What is the output? Is the output changed if the condition of the `if`
+statement is changed to `++a == 7`? Why? Note: It is generally wise to
+avoid increment, decrement, and assignment statements in the condition
+of an `if` statement because of the confusion that can arise.
+
+
+*Programming Practice*
+
+[start=9]
+. [[ex4-9]] This problem has two parts.
+..  Write a program that reads in two `double` values and prints the
+larger of the two of them.
+..  Expand the ideas from the previous program into a program that reads
+in *three* `double` values and prints the largest of the three out.
+Note: You should use nested `if` statements.
+. [[ex4-10]] Write programs that:
+..  Read an `int` value from the user specifying a certain number of
+cents. Use `if` statements to print out the name of the corresponding
+coin in U.S. currency according to the table below. If the value doesn't
+match any coin, print `no coin`.
++
+[.center%autowidth,cols="^,^",options="header",]
+|===============
+|Cents |Coin
+|1 |penny
+|5 |nickel
+|10 |dime
+|25 |quarter
+|50 |half-dollar
+|100 |dollar
+|===============
+..  Read a `String` value from the user that gives one of the 6 coin
+names given in the table above. Use `if` statements to print out the
+corresponding number of cents for the input. If the name doesn't many
+any coin, print `unknown coin`.
+. [[ex4-11]] Re-implement both parts from <<ex4-10, Exercise 4.10>> using `switch` statements instead of `if` statements.
+. [[ex4-12]] Expand the program given in
+<<ordinalNumbersExample>> to give the correct suffixes (always
+"`th`") for numbers that end in 11, 12, and 13. Use the modulus operator
+to find the last two digits of the number. Using either an `if`
+statement, a `switch` statement, or a combination, check for those three
+cases before going into the normal cases.
+. [[ex4-14]] At the bottom of <<`switch` statements>>, we use a
+`switch` statement to determine the location of various area codes in
+New York state. Write an equivalent fragment of code using `if`-`else`
+statements instead.
+. [[ex4-14]] Every member of your secret club has an ID number. These ID numbers
+are between 1 and 1,000,000 and have two special characteristics: They
+are multiples of 7 and all end with a 3 in the one's place. For example,
+63 is the smallest such value, and 999,943 is the largest such value.
+Write a program that prompts the user for an `int` value, read it in,
+and then say whether or not it could be used as an ID number. Note: You
+need to use the `%` operator in two different ways to test the value
+correctly.
+. [[ex4-15]] According to the North American Numbering Plan (NANP) used by the
+United States, Canada, and a number of smaller countries, a legal
+telephone number takes the form `XYY-XYY-YYYY`, where `X` is any digit
+2-9 and `Y` is any digit 0-9. Write a program that reads in a `String`
+from the user and verifies that it is a legal NANP phone number. The
+length of the entire `String` must be 12. The fourth and eight
+characters in the `String` (with indexes `3` and `7`) must be hyphens
+(`-`), and all the remaining digits must be in the correct range. Use
+the `charAt()` method of the `String` class to get the `char` value at
+each index. Note: There are several ways to structure the `if`
+statements you need to use, but the number of conditions may become
+large. (23 or more!)
+. [[ex4-16]] Re-implement the solution to the Monty Hall program given in
+<<Solution: Monty Hall>> using `JOptionPane` to generate GUIs for
+input and output.
