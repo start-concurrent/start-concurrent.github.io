@@ -77,6 +77,8 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
     }
 
     seen = false	
+	
+	
 
     # Scan for chapters.
     document.find_by(context: :section).each do |chapter|
@@ -119,10 +121,8 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
         end
       end
     end
-	
 
-	# Scan for xrefs to update
-	
+	# Scan for xrefs to update	
 	document.find_by(context: :paragraph).each do |paragraph|
 		paragraph.lines.each do |line|		
 			update_reference_text(line, document)
@@ -130,8 +130,11 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
 	end
 	
 	document.find_by(context: :list_item).each do |item|
-		puts item.text
-		update_reference_text(item.text, document)	
+		#hack needed because item.text returns text with substitutions already applied
+		text = item.instance_variable_get :@text
+
+		update_reference_text(text, document)
+		item.text = text
 	end
 	
     nil
