@@ -75,11 +75,9 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
       :table => 1,
 	  :example => 1
     }
-
+	
     seen = false	
 	
-	
-
     # Scan for chapters.
     document.find_by(context: :section).each do |chapter|
       next unless not seen or chapter.level == chapter_section_level
@@ -100,7 +98,8 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
           :table => 1,
 		  :example => 1
         }
-      )
+      )	  
+	   
 
       # Scan for sections, titled images/listings/tables in the chapter.
       [:section, :image, :listing, :table, :example].each do |type|
@@ -120,40 +119,73 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
           end
         end
       end
-    end
+    
+		# Scan for exercises
+		chapter.find_by(context: :section).each do |section|
+			# Generate RNBCs for exercises and update reference table in the document.
+			if section.title == "Exercises" and section.level == 2 then
+				exercise = 1
+				section.find_by(context: :olist).each do |list|
+					# Only do lists containing exercises, not sub-parts of exercises.
+					unless list.parent.class == Asciidoctor::ListItem
+						unless exercise == 1
+							list.attributes["start"] = exercise.to_s
+						end
+						list.find_by(context: :list_item).each do |item|
+							# Only do exercises, not sub-parts of exercises.						
+							unless item.parent.parent.class == Asciidoctor::ListItem
+								# Hack needed because item.text returns text with substitutions already applied.
+								text = item.instance_variable_get :@text
+								number = "%d.%d" % [chap, exercise]
+								update_exercise_anchor_text(text, number, document)												
+								exercise = exercise + 1						
+							end
+						end						
+					end
+				end
+			end
+		end		
+	end
 
-	# Scan for xrefs to update	
+	# Update xrefs inside paragraphs.
 	document.find_by(context: :paragraph).each do |paragraph|
 		paragraph.lines.each do |line|		
 			update_reference_text(line, document)
 		end
 	end
 	
+	# Update xrefs inside list_items.
 	document.find_by(context: :list_item).each do |item|
-		#hack needed because item.text returns text with substitutions already applied
+		# Hack needed because item.text returns text with substitutions already applied.
 		text = item.instance_variable_get :@text
-
 		update_reference_text(text, document)
-		item.text = text
 	end
 	
     nil
   end
+  
+   # Generate RNBCs for exercises and update reference table in the document.
+   def update_exercise_anchor_text text, number, document
+    pattern = /\[\[.+?\]\]/
+    text.scan(pattern).each do |match|		
+		unless match.include? ","						
+			id = match[2, match.length - 4]				
+			document.references[:ids][id] = "Exercise " + number
+		end		
+	end
+  end
 
-  # Gets and increments the value for the given type in the given
-  # counter.
+  # Given text, find any xrefs inside.
+  # If the xref doesn't already have a custom name, set its name to the updated version.
   def update_reference_text text, document
-    pattern = /<<.*>>/
-    matches = pattern.match(text)
-	unless matches.nil?
-		for i in 0..(matches.length - 1)					
-			unless matches[i].include? ","						
-				id = matches[i][2, matches[i].length - 4]
-				#puts "'" + matches[i] + "'"
-				#puts "'" + id + "'"
-				unless document.references[:ids][id].nil?							
-					text.sub! matches[i], "<<" + id + "," + document.references[:ids][id] + ">>"
-				end
+    pattern = /<<.+?>>/
+	# Find all the xrefs needing replacement in the text.	
+	text.scan(pattern).each do |match|
+		unless match.include? ","							
+			id = match[2, match.length - 4]			
+			# Add the custom name to the xref.
+			unless document.references[:ids][id].nil?						
+				text.sub! match, "<<" + id + "," + document.references[:ids][id] + ">>"
 			end
 		end
 	end
