@@ -65,7 +65,7 @@ chopstick.
 
 This dining philosopher problem highlights some difficulties which were
 emerging toward the end of the last chapter. In
-<<ex13-10, Exercise 13.10>> two snippets of code could run
+<<sharedThreadVariableExercise>> two snippets of code could run
 concurrently and modify the same shared variable, potentially producing
 incorrect output. Because of the nondeterministic nature of scheduling,
 we have to assume that the code executing in two or more threads can be
@@ -90,8 +90,8 @@ vary a lot. On all systems, if you change the value of `THREADS` to `1`,
 the answer should always be correct.
 
 ****
-<<ex14-6, Exercise 14.6>> +
-<<ex14-14, Exercise 14.14>>
+<<raceConditionExercise>> +
+<<threadTimeSliceExercise>>
 ****
 
 Looking at the code, the problem might not be obvious. Everything
@@ -147,7 +147,7 @@ language, you may need to brush up on the features provided by that
 language.
 
 ****
-<<ex14-5, Exercise 14.5>>
+<<restaurantSynchronizationExercise>>
 ****
 
 === Syntax: Thread synchronization
@@ -179,7 +179,7 @@ would never have more than five copies of `"Danger, "` appended to the
 beginning of `message`, but you might have fewer.
 
 ****
-<<ex14-1, Exercise 14.1>>
+<<synchronizedKeywordExercise>>
 ****
 
 Any time a thread enters a piece of code protected by the `synchronized`
@@ -191,7 +191,7 @@ succeeds. This situation frequently occurs with synchronized methods
 which call other synchronized methods.
 
 ****
-<<ex14-13, Exercise 14.13>>
+<<lockTimingExercise>>
 ****
 
 Consider method `safety()` which does the "`opposite`" of `danger()`, by
@@ -216,8 +216,8 @@ synchronized methods in an object, only one of them can execute at a
 time in a given object.
 
 ****
-<<ex14-2, Exercise 14.2>> +
-<<ex14-7, Exercise 14.7>>
+<<constructorLeakExercise>> +
+<<synchronizedThreadIncrementExercise>>
 ****
 
 Perhaps this level of control is too restrictive. You may have six
@@ -369,8 +369,8 @@ designed, some thread may end up waiting forever and never be notified
 if you only rely on `notify()`.
 
 ****
-<<ex14-3, Exercise 14.3>> +
-<<ex14-4, Exercise 14.4>>
+<<waitNotifyExercise>> +
+<<notifyAllExercise>>
 ****
 
 [[producerConsumerExample]]
@@ -416,7 +416,7 @@ threads back to concurrent execution as quickly as possible.
 ====
 
 ****
-<<ex14-10, Exercise 14.10>>
+<<twoLockProducerConsumerExercise>>
 ****
 
 [[bankAccountExample]]
@@ -642,7 +642,7 @@ elegantly avoids this problem.
 ====
 
 ****
-<<ex14-8, Exercise 14.8>>
+<<deadlockExercise>>
 ****
 
 
@@ -671,7 +671,7 @@ could be coming and going constantly, incrementing and decrementing the
 waiting to make deposits and withdrawals will wait forever.
 
 ****
-<<ex14-11, Exercise 14.11>>
+<<concurrentReadExercise>>
 ****
 
 Another kind of starvation is _livelock_. In deadlock, two or more
@@ -813,8 +813,8 @@ even longer because those medium priority threads reduce the amount of
 CPU time the low priority thread has to finish its task.
 
 ****
-<<ex14-9, Exercise 14.9>> +
-<<ex14-15, Exercise 14.15>>
+<<priorityInversionExercise>> +
+<<priorityiInversionExperimentExercise>>
 ****
 
 === Solution: Dining philosophers
@@ -916,39 +916,39 @@ synchronization problems. Such problems have been studied for many
 years, and research continues to find better solutions.
 
 ****
-<<ex14-12, Exercise 14.12>>
+<<fairDiningPhilosophersExercise>>
 ****
 
 === Exercises
 *Conceptual Problems*
 
-.  [[ex14-1]] What is the purpose of the
+.  [[synchronizedKeywordExercise]] What is the purpose of the
 `synchronized` keyword? How does it work?
-.  [[ex14-2]] The language specification for Java
+.  [[constructorLeakExercise]] The language specification for Java
 makes it illegal to use the `synchronized` keyword on constructors.
 During the creation of an object, it is possible to _leak_ data to the
 outside world by adding a reference to the object under construction to
 some shared data structure. What's the danger of leaking data in this
 way?
-.  [[ex14-3]] If you call
+.  [[waitNotifyExercise]] If you call
 `wait()` or `notify()` on an object, it must be inside of a block
 synchronized on the same object. If not, the code will compile, but an
 `IllegalMonitorStateException` may be thrown at run time. Why is it
 necessary to own the lock on an object before calling `wait()` or
 `notify()` on it?
-.  [[ex14-4]] Why is it safer to call
+.  [[notifyAllExercise]] Why is it safer to call
 `notifyAll()` than `notify()`? If it is generally safer to call
 `notifyAll()`, are there any scenarios in which there are good reasons
 to call `notify()`?
-.  [[ex14-5]] Imagine a simulation of a
+.  [[restaurantSynchronizationExercise]] Imagine a simulation of a
 restaurant with many waiter and chef objects. The waiters must submit
 orders to the kitchen staff, and the chefs must divide the work among
 themselves. How would you design this system? How would information and
 food be passed from waiter to chef and chef to waiter? How would you
 synchronize the process?
-.  [[ex14-6]] What is a race condition? Give a real
+.  [[raceConditionExercise]] What is a race condition? Give a real
 life example of one.
-.  [[ex14-7]] Let's reexamine the code that
+.  [[synchronizedThreadIncrementExercise]] Let's reexamine the code that
 increments a variable with several threads from
 <<Concepts: Thread interaction>>. We can rewrite the `run()`
 method as follows.
@@ -962,16 +962,16 @@ public synchronized void run() {
 ----
 +
 Will this change fix the race condition? Why or why not?
-.  [[ex14-8]] Examine our deadlock example from
+.  [[deadlockExercise]] Examine our deadlock example from
 <<deadlockSumExample>>. Explain why this example fulfills all
 four conditions for deadlock. Be specific about which threads and which
 resources are needed to show each condition.
-.  [[ex14-9]] What is priority inversion? Why can
+.  [[priorityInversionExercise]] What is priority inversion? Why can
 a low priority thread holding a lock be particularly problematic?
 
 *Programming Practice*
-[start=10]
-. [[ex14-10]] In
+
+. [[twoLockProducerConsumerExercise]] In
 <<producerConsumerExample>> the `Buffer` class used to
 implement a solution to the producer/consumer problem only has a single
 lock. When the buffer is empty and a producer puts an item in it, both
@@ -980,7 +980,7 @@ whenever the buffer is full and a consumer removes an item. Re-implement
 this solution with two locks so that a producer putting an item into an
 empty buffer only wakes up consumers and a consumer removing an item
 from a full buffer only wakes up producers.
-. [[ex14-11]] In <<bankAccountExample>>
+. [[concurrentReadExercise]] In <<bankAccountExample>>
 we used the class `SynchronizedAccount` to solve a bank account problem.
 As we mention in <<Starvation and livelock>>, depositing
 and withdrawing threads can be starved out by a steady supply of balance
@@ -989,7 +989,7 @@ checking threads. Add additional synchronization tools to
 with depositing and withdrawing threads. If there are no depositing or
 withdrawing threads, make your implementation continue to allow an
 unlimited number of balance checking threads to read concurrently.
-. [[ex14-12]]The solution to the dining
+. [[fairDiningPhilosophersExercise]]The solution to the dining
 philosophers problem given in <<Solution: Dining philosophers>>
 suffers from the problem that a philosopher could be starved by the two
 philosophers on either side of her, if she happened to get unlucky. Add
@@ -1003,15 +1003,15 @@ waiting on another and so on, *some* philosopher in the circle must have
 gone hungry the longest, breaking circular wait.
 
 *Experiments*
-[start=13]
-. [[ex14-13]] Critical sections can slow down
+
+. [[lockTimingExercise]] Critical sections can slow down
 your program by preventing parallel computation. However, the locks used
 to enforce critical sections can add extra delays on top of that. Design
 a simple experiment which repeatedly acquires a lock and does some
 simple operation. Test the running time with and without the lock. See
 if you can estimate the time needed to acquire a lock in Java on your
 system.
-. [[ex14-14]] Design a program which
+. [[threadTimeSliceExercise]] Design a program which
 experimentally determines how much time a thread is scheduled to spend
 running on a CPU before switching to the next thread. To do this, first
 create a tight loop which runs a large number of iterations, perhaps
@@ -1028,7 +1028,7 @@ is allotted. Bear in mind that this is only an estimation. Some JVMs
 will change the amount of CPU time allotted to threads for various
 reasons. If you are on a multicore machine, it will be more difficult to
 interpret your data since some threads will be running concurrently.
-. [[ex14-15]] Create an experiment to
+. [[priorityiInversionExperimentExercise]] Create an experiment to
 investigate priority inversion in the following way.
 ..  Create two threads, setting the priority of the first to
 `MIN_PRIORITY` and the priority of the second to `MAX_PRIORITY`. Start

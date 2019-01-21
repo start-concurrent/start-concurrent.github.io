@@ -98,7 +98,7 @@ can be difficult to deal with. A user may have to look it up to find out
 what kind of error it is.
 
 ****
-<<ex12-1, Exercise 12.1>>
+<<advantageOfExceptionsExercise>>
 ****
 
 ==== Exceptions
@@ -270,7 +270,7 @@ Particularly useful is the `getMessage()` method which can give
 additional information about the exception.
 
 ****
-<<ex12-10, Exercise 12.10>>
+<<unreachableExceptionExercise>>
 ****
 
 ==== Catch or specify
@@ -308,8 +308,8 @@ recover rather than crashing. Perhaps the program should prompt the user
 for a new name or explain that the required permission is not set.
 
 ****
-<<ex12-5, Exercise 12.5>> +
-<<ex12-8, Exercise 12.8>>
+<<checkedExceptionsExercise>> +
+<<needThrowsExercise>>
 ****
 
 In <<ch06-arrays#ch06-arrays>>, there were no executable statements in
@@ -318,7 +318,7 @@ the `catch` block used with the +
 block. Doing so allows errors to fail silently.
 
 ****
-<<ex12-6, Exercise 12.6>>
+<<genericExceptionExercise>>
 ****
 
 We are allowed to put code that can throw a checked exception into a
@@ -330,8 +330,8 @@ exceptions, we use the `throws` keyword. Note that this is *not* the
 same as the `throw` keyword.
 
 ****
-<<ex12-3, Exercise 12.3>> +
-<<ex12-4, Exercise 12.4>>
+<<throwThrowsExercise>> +
+<<catchOrSpecifyExercise>>
 ****
 
 [source,java]
@@ -398,9 +398,9 @@ Code in a `finally` block will execute *no matter what* unless the JVM
 exits or the thread in question terminates.
 
 ****
-<<ex12-2, Exercise 12.2>> +
-<<ex12-9, Exercise 12.9>> +
-<<ex12-11, Exercise 12.11>>
+<<finalFinallyFinalizeExercise>> +
+<<finallyReturnExercise>> +
+<<competingExceptionsExercise>>
 ****
 
 
@@ -443,9 +443,9 @@ needs, go ahead. However, the main value of an exception is simply in
 its existence as a named error, not in any tricks it can perform.
 
 ****
-<<ex12-12, Exercise 12.12>> +
-<<ex12-13, Exercise 12.13>> +
-<<ex12-14, Exercise 12.14>>
+<<NumberFormatExceptionExercise>> +
+<<customExceptionsExercise>> +
+<<passwordExceptionExercise>>
 ****
 
 Here we will give a few examples of exception handling, although
@@ -540,7 +540,7 @@ of exceptions can negatively impact performance.
 ====
 
 ****
-<<ex12-15, Exercise 12.15>>
+<<exceptionTimingExercise>>
 ****
 
 .Color ranges
@@ -838,30 +838,30 @@ for production code should always handle interruptions gracefully.
 === Exercises
 *Conceptual Problems*
 
-.  [[ex12-1]] What are the advantages of
+.  [[advantageOfExceptionsExercise]] What are the advantages of
 using exceptions instead of returning error codes?
-.  [[ex12-2]] The keywords `final` and `finally`,
+.  [[finalFinallyFinalizeExercise]] The keywords `final` and `finally`,
 as well as the `Object` method `finalize()`, are sometimes confused.
 What is the purpose of each one?
-.  [[ex12-3]] What is the difference between the
+.  [[throwThrowsExercise]] What is the difference between the
 `throw` keyword and the `throws` keyword?
-.  [[ex12-4]] Explain the catch or specify
+.  [[catchOrSpecifyExercise]] Explain the catch or specify
 requirement of Java.
-.  [[ex12-5]] What must be done differently
+.  [[checkedExceptionsExercise]] What must be done differently
 when using methods that throw checked exceptions as compared to
 unchecked exceptions? How do the classes `Exception`, +
 `RuntimeException`, and `Error` play a role?
-.  [[ex12-6]] For every program you write, you
+.  [[genericExceptionExercise]] For every program you write, you
 could choose to put the entire body of your `main()` method in a large
 `try` block with a `catch` block at the end that catches `Exception`. In
 this way, no exception would cause your program to crash. Why is this
 approach a bad programming decision?
-.  [[ex12-7]] Why did the designers of Java choose to make `NullPointerException`
+.  Why did the designers of Java choose to make `NullPointerException`
 and +
 `ArithmeticException` unchecked exceptions even though this choice means
 that a program that unintentionally dereferences a `null` pointer or
 divides by zero will often crash.
-.  [[ex12-8]] Consider the following two classes.
+.  [[needThrowsExercise]] Consider the following two classes.
 +
 [source,java]
 ----
@@ -880,7 +880,7 @@ public class Hazard {
 +
 Class `Trouble` will compile, but class `Hazard` will not. Explain why
 and what could be done to make `Hazard` compile.
-.  [[ex12-9]] What value will the following method
+.  [[finallyReturnExercise]] What value will the following method
 always return and why?
 +
 [source,java]
@@ -899,7 +899,7 @@ public static int magic( String value ) {
     }
 }
 ----
-. [[ex12-10]] Why will the following
+. [[unreachableExceptionExercise]] Why will the following
 segment of code fail to compile?
 +
 [source,java]
@@ -914,7 +914,7 @@ catch( InterruptedException e ) {
     System.out.println("Woke up early!");
 }
 ----
-. [[ex12-11]] Consider the following fragment of
+. [[competingExceptionsExercise]] Consider the following fragment of
 Java.
 +
 [source,java]
@@ -933,15 +933,15 @@ single exception can be active at once. Which exception will propagate
 up from this code and why?
 
 *Programming Practice*
-[start=12]
-. [[ex12-12]] The `NumberFormatException`
+
+. [[NumberFormatExceptionExercise]] The `NumberFormatException`
 exception is thrown whenever the `Integer.parseInt()` method receives a poorly formatted `String` representation of an integer. Re-implement `QuickCalculator` to catch any `NumberFormatException` and give an appropriate message to the user.
-. [[ex12-13]] Refer to
-<<ex11-14, Exercise 11.14>> and add to the basic mechanics of the simulation by designing two custom
+. [[customExceptionsExercise]] Refer to
+<<celestialSimulatorExercise>> and add to the basic mechanics of the simulation by designing two custom
 exceptions, `CollisionException` and `LightSpeedException`. These
 exceptions should be thrown, respectively, if two bodies collide or if
 the total magnitude of a body's velocity exceeds the speed of light.
-. [[ex12-14]] Users often log onto systems by
+. [[passwordExceptionExercise]] Users often log onto systems by
 entering their user name and a password. Unfortunately, human beings are
 notoriously bad at picking passwords. In computer security, a tool
 called a _proactive password checker_ allows a user to pick a password
@@ -974,8 +974,8 @@ you will need to define each of the four exceptions as well.
 
 
 *Experiments*
-[start=15]
-. [[ex12-15]] Throwing and catching exceptions
+
+. [[exceptionTimingExercise]] Throwing and catching exceptions
 is a useful tool for making robust programs in Java. However, the JVM
 machinery needed to implement such a powerful tool is complex. Create an
 array containing 100,000 random `int` values. First, sum all these
