@@ -9,11 +9,16 @@ end
 
 
 def convert()
+    old_verbose, $VERBOSE = $VERBOSE, true
+
     html = Asciidoctor.convert_file 'index.adoc', to_file: false, header_footer: true, safe: 'safe'
     file = File.open("index.html", "w")
     file.print html
     file.close
+
+    $VERBOSE = old_verbose
 end
+
 
 convert()
 Dir.chdir('full') do
