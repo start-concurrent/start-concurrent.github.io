@@ -1,4 +1,6 @@
 require 'asciidoctor'
+require 'asciidoctor-rouge' #uncomment to use rouge instead of pygments
+require_relative './default.rb'
 require_relative './GoogleAnalyticsDocinfoProcessor.rb'
 require_relative './autoxref-treeprocessor.rb'
 
