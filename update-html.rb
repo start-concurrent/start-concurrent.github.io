@@ -1,4 +1,6 @@
 require 'asciidoctor'
+require 'asciidoctor-rouge'
+require_relative './default.rb'
 require_relative './GoogleAnalyticsDocinfoProcessor.rb'
 require_relative './autoxref-treeprocessor.rb'
 
@@ -9,7 +11,7 @@ end
 
 
 def convert()
-    old_verbose, $VERBOSE = $VERBOSE, true
+    old_verbose, $VERBOSE = $VERBOSE, false
 
     html = Asciidoctor.convert_file 'index.adoc', to_file: false, header_footer: true, safe: 'safe'
     file = File.open("index.html", "w")
