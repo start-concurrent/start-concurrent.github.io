@@ -17,7 +17,7 @@ public class FrameWithPanelAndActions {
         // Add action listeners to various buttons
         chirp.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e){
-                message.setText("Chirp requested."); /*@\label{chirpRequestedLine}@*/   
+                message.setText("Chirp requested.");
             }
         });
         bark.addActionListener(new ActionListener(){
@@ -33,8 +33,7 @@ public class FrameWithPanelAndActions {
         });
         soundCheck.add(soundPanel);
         soundCheck.setSize(350,150);
-        soundCheck.setDefaultCloseOperation(
-            JFrame.DISPOSE_ON_CLOSE);
+        soundCheck.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         soundCheck.setVisible(true);       
     }  
 }

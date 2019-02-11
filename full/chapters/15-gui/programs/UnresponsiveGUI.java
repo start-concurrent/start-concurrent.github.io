@@ -32,8 +32,8 @@ public class UnresponsiveGUI extends JFrame
         if( e.getSource() == compute ) {            
             label.setText("Computing...");
             try {
-                Thread.sleep(5000);/*@\label{unresponsive sleep}@*/
-            } catch( Exception ignore ) { }
+                Thread.sleep(5000);
+            } catch( InterruptedException ignore ) { }
             label.setText("Answer: " + Math.sqrt(2.0));
         }
         else {
