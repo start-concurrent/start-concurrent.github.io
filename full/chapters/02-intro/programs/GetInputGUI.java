@@ -8,20 +8,16 @@ public class GetInputGUI {
         double height, coefficient;
         int bounces; 
         
-        // Declare user prompt strings
-        String enterHeight = "Enter the height: ";
-        String enterCoefficient = "Enter restitution coefficient: ";
-        String enterBounces = "Enter the number of bounces: ";      
-        
-        // Prompt the user, get data, and convert it <1>
-        String response = JOptionPane.showInputDialog(null, 
-            enterHeight, title, JOptionPane.QUESTION_MESSAGE);
-        height = Double.parseDouble(response);
-        response = JOptionPane.showInputDialog(null,
-            enterCoefficient, title, JOptionPane.QUESTION_MESSAGE);
+        // Prompt the user, get data, and convert it
+        String response = JOptionPane.showInputDialog(null, // <1>
+            "Enter the height: ", title, JOptionPane.QUESTION_MESSAGE);
+        height = Double.parseDouble(response); // <2>
+        response = JOptionPane.showInputDialog(null, // <3>
+            "Enter restitution coefficient: ", title, JOptionPane.QUESTION_MESSAGE);
         coefficient = Double.parseDouble(response);
         response = JOptionPane.showInputDialog(null,
-            enterBounces, title, JOptionPane.QUESTION_MESSAGE);
+            "Enter the number of bounces: ", title,
+			JOptionPane.QUESTION_MESSAGE);
         bounces = Integer.parseInt(response);
     } 
 }
