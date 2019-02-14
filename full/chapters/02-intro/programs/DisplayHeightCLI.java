@@ -4,8 +4,7 @@ public class DisplayHeightCLI {
         int bounces = 10;
         double bounceHeight = 2.0;
         String message = "After " + bounces +
-            " bounces the height of the ball is: " +
-            bounceHeight + " feet";
+            " bounces the height of the ball is: " + bounceHeight + " feet";
         System.out.println(message);
     }   
 }

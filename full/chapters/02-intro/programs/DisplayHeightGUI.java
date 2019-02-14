@@ -7,8 +7,7 @@ public class DisplayHeightGUI {
         int bounces = 10;
         double bounceHeight = 2.0;   
         String message = "After " + bounces +
-            " bounces the height of the ball is: " +
-            bounceHeight + " feet";
+            " bounces the height of the ball is: " + bounceHeight + " feet";
         JOptionPane.showMessageDialog(null, message, title,
             JOptionPane.INFORMATION_MESSAGE);
     }

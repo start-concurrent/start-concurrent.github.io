@@ -286,7 +286,7 @@ Now that we have a sense of the software development lifecycle, let's
 look at an example using the sample ball bouncing problem to walk
 some of its steps.
 
-[[example-Ball_bouncing_problem]]
+[[ballBouncingProblemExample]]
 .Ball bouncing problem and plan
 ====
 Recall the statement of the problem from the *Problem* section:
@@ -769,42 +769,32 @@ shows a Java program to solve this subproblem.
 ----
 include::{programsdir}/GetInputCLI.java[]
 ----
-
-Unlike our earlier example, the first line of `GetInputCLI.java` is
-`import java.util.\*;`. Instead of just importing the `Scanner` class,
+<1> Unlike our earlier example, the first line of `GetInputCLI.java` is
+`import java.util.\*;`. Instead of importing only the `Scanner` class,
 this line imports all the classes in the `java.util` package. The
 asterisk (`*`) is known as a _wildcard_. The wildcard notation is
 convenient if you need to import several classes from a package or if
 you don't know in advance the names of all the classes you'll need.
+<2> The class declaration names the class `GetInputCLI`. We put a `CLI` at the end of the name to mark that
+it uses the command line interface, contrasting with the GUI version that we're going to show next.
+<3> Inside the class declaration is the
+definition of the `main()` method, showing where the program starts. The text that comes after double slashes (`//`) is called a _comment_. Comments allow us to make our code more readable to humans, but the
+compiler ignores them.
+<4> After the comments, we declare and instantiate a `Scanner` variable called `in` for reading from the keyboard.
+<5> Next, we declare two `double`
+variables (for holding double precision floating-point numbers) and an
+`int` variable (for holding an integer value).
+<6> We print out the name of the problem and then print out `"Enter the height: "`.
+<7> The line `height = in.nextDouble();` tries to read in the height from the user. It waits until the user hits enter before reading the value and moving on to the next line. 
+<8> The last four lines of the program prompt and read
+in the coefficient of restitution and then the number of bounces. If you
+compile and run this program, the execution should match the steps
+described. Note that it only reads in the values needed to solve the
+problem. We haven't added the code to compute the answer or display it.
 
 ****
 <<importExercise>>
 ****
-
-After the import comes the class declaration, creating a class called
-`GetInputCLI`. We put a `CLI` at the end of this class name to mark that
-it uses the command line interface, contrasting with the GUI version
-that we're going to show next. Inside the class declaration is the
-definition of the `main()` method, showing where the program starts. The
-text that comes after double slashes (`//`) are called _comments_.
-Comments allow us to make our code more readable to humans, but the
-compiler ignores them.
-
-If you follow the comments, you'll see that we declare two `double`
-variables (for holding double precision floating-point numbers) and an
-`int` variable (for holding an integer value). Next we declare three
-`String` variables and assign them three strings (segments of text).
-
-The last section of code first prints out the name of the problem. Then,
-it prints out the value stored into `enterHeight`, which is
-`"Enter the height: "`. After this prompt, the line
-`height = in.nextDouble();` tries to read in the height from the user.
-It waits until the user hits enter before reading the value and moving
-on to the next line. The last four lines of the program prompt and read
-in the coefficient of restitution and then the number of bounces. If you
-compile and run this program, the execution should match the steps
-described. Note that it only reads in the values needed to solve the
-problem. We have not added the code to compute the answer or display it.
 
 ====
 
@@ -813,7 +803,7 @@ problem. We have not added the code to compute the answer or display it.
 ====
 
 Let's write a program that takes as input the speed of a moving object
-and the time it has been moving. The goal is to compute and display the
+and the time it's been moving. The goal is to compute and display the
 total distance it travels. We can divide this problem into the following
 three subproblems.
 
@@ -827,11 +817,6 @@ Subproblem 3:::
 <<DistanceProgram>> solves each of these subproblems in order,
 using the command-line input and output tools we have just discussed.
 
-The program starts with import statements, the class definition, and the
-definition of the `main()` method. At the beginning of the `main()`
-method, we have code to declare and initialize a variable of type
-`Scanner` named `in`. We also declare variables of type `double` to hold
-the input speed and time and the resulting distance.
 
 .Computes the distance a moving object travels.
 [source, java]
@@ -839,21 +824,23 @@ the input speed and time and the resulting distance.
 ----
 include::{programsdir}/Distance.java[]
 ----
-<1> Starts solving subproblem 1, prompting the user for the speed and the time and using our `Scanner` object to read them in. Because they are both floating-point values with type `double`, we use the `nextDouble()` method for input.
-<2> Computes the distance traveled by multiplying `speed` by `time` and storing the result in
+<1> The program starts with import statements, the class definition, and the
+definition of the `main()` method.
+<2> At the beginning of the `main()`
+method, we have code to declare and initialize a variable of type
+`Scanner` named `in`. We also declare variables of type `double` to hold
+the input speed and time and the resulting distance.
+<3> We start solving subproblem 1, prompting the user for the speed and the time and using our `Scanner` object to read them in. Because they are both floating-point values with type `double`, we use the `nextDouble()` method for input.
+<4> We compute the distance traveled by multiplying `speed` by `time` and storing the result in
 `distance`.
-
-The last three lines of the `main()` method solve subproblem
-3 by outputting `"Distance traveled: "`, the computed distance, and
-`" miles."`. If you run the program, all three items are printed on the
-same line on the terminal.
+<5> The last three lines of the `main()` method solve subproblem 3 by outputting `"Distance traveled: "`, the computed distance, and `" miles."`. If you run the program, all three items are printed on the same line on the terminal.
 ====
 
 ==== GUI input and output
 
-If you are used to GUI-based programs, you might wonder how to do input
+If you're used to GUI-based programs, you might wonder how to do input
 and output with a GUI instead of on the command line. GUIs can become
-very complex, but in this chapter we introduce a relatively simple way
+complex, but in this chapter we introduce a  simple way
 to do GUI input and output and expand on it further in
 <<ch07-gui-basics#ch07-gui-basics>>. Then, we go into
 GUIs in much more depth in <<ch15-gui#ch15-gui>>.
@@ -867,17 +854,18 @@ follows.
 
 [source, java]
 ----
-import javax.swing.JOptionPane;
+import javax.swing.JOptionPane; // <1>
 
 public class Example {
     public static void main(String[] args) {
-        JOptionPane.showMessageDialog(null, "42", "Output Example",
-            JOptionPane.INFORMATION_MESSAGE); }
+        JOptionPane.showMessageDialog(null, "42", "Output Example", // <2>
+            JOptionPane.INFORMATION_MESSAGE);
+	}
 }
 ----
-
-Like `Scanner`, we need to import `JOptionPane` as shown above in order
-to use it. The `showMessageDialog()` method takes several arguments to
+<1> Like `Scanner`, we need to import `JOptionPane` as shown above in order
+to use it.
+<2> The `showMessageDialog()` method takes several arguments to
 tell it what to do. For our purposes, the first one is always the
 special Java literal `null`, which represents an empty value. The next
 is the message you want to display, but it has to be text. That's why
@@ -889,25 +877,8 @@ the dialog is giving information (instead of a warning or a question),
 causing an appropriate, system-specific icon to be displayed on the
 dialog.
 
-If we wanted to make the call to `showMessageDialog()` a little easier
-to read, we could store the arguments into variables with short, easy to
-understand names. The following program does so and should behave
-exactly like the previous program. <<showMessageDialogFigure>>
-shows what the resulting GUI might look like.
+<<showMessageDialogFigure>> shows what the resulting GUI might look like.
 
-[source, java]
-----
-import javax.swing.JOptionPane;
-
-public class Example {
-    public static void main(String[] args) {
-        String message = "42";
-        String title = "Output Example";
-        JOptionPane.showMessageDialog(null, message, title,
-            JOptionPane.INFORMATION_MESSAGE);
-    }
-}
-----
 
 [[showMessageDialogFigure]]
 [.text-center]
@@ -916,9 +887,9 @@ image::showMessageDialog.png[align=text-center,width=45%]
 
 One way to do input with a GUI uses the `showInputDialog()` method,
 which is also inside the `JOptionPane` class. The `showInputDialog()`
-method _returns_ a value. This means that it gives back an answer, which
+method _returns_ a value. This means it gives back an answer which
 you can store into a variable by putting the method call on the right
-hand side of an assignment statement. Otherwise, it is nearly the same
+hand side of an assignment statement. Otherwise, it's nearly the same
 as `showMessageDialog()`. The following program prompts the user for his
 or her favorite word with a `showInputDialog()` method and then displays
 it again using a `showMessageDialog()` method.
@@ -941,43 +912,42 @@ public class Example {
 ----
 
 Note that whatever the user typed in will be stored in `word`. Finally,
-the last line of the program displays whatever word was entered with
+the last line of the program displays this information with
 `showMessageDialog()`. <<showInputDialogFigure>> shows the
-resulting GUI as the user is entering input.
+GUI as the user is entering input.
 
 [[showInputDialogFigure]]
 [.text-center]
 .Example of `showInputDialog()` used for input.
 image::showInputDialog.png[align=text-center,width=45%]
 
-
 Remember that the value returned from the `showInputDialog()` method is
-always text, that is, it always has type `String`. Although there are
-lots of great things you can do with a `String` value, you cannot do
+always text; that is, it always has type `String`. Although there are
+lots of great things you can do with a `String` value, you can't do
 normal arithmetic like you can with an integer or a floating-point
 number. However, there are ways to convert a `String` representation of
 a number to the number itself. If you have a `String` that represents an
 integer, you use the `Integer.parseInt()` method to convert it. If you
 have a `String` that represents a floating-point number, you use the
 `Double.parseDouble()` method to convert it. The following segment of
-code shows a few illustrations of the issues involved.
+code illustrates these issues.
 
 [source, java]
 ----
-int x = "41" * 3;
 // Text cannot be multiplied by an integer
+int x = "41" * 3;
 
-int y = Integer.parseInt("23");
 // Correctly converts the text "23" to the integer 23
+int y = Integer.parseInt("23");
 
-double z = Double.parseDouble("3.14159");
 // Correctly converts the text "3.14159" to 3.14159
+double z = Double.parseDouble("3.14159");
 
+// Causes the program to crash
 int a = Integer.parseInt("Twenty three");
-// Causes the program to crash
 
-double b = Double.parseDouble("pi");
 // Causes the program to crash
+double b = Double.parseDouble("pi");
 ----
 
 You might wonder why the computer isn't smart enough to know that `"23"`
@@ -995,7 +965,7 @@ bouncing ball problem.
 
 We can change the solution given in <<GetInputCLIProgram>> to
 use the GUI-based input tools in `JOptionPane`.
-<<GetInputCLIProgram>> this equivalent GUI-based Java program.
+<<GetInputGUIProgram>> is the equivalent GUI-based Java program.
 
 .Gets the height, coefficient of restitution, and number of bounces using a GUI.
 [source, java]
@@ -1003,9 +973,11 @@ use the GUI-based input tools in `JOptionPane`.
 ----
 include::{programsdir}/GetInputGUI.java[]
 ----
-<1> At this point the code in this program diverges from <<GetInputCLIProgram>>. We use the `showInputDialog()` method to read a `String` version of the height from the user. On the next line, we have to
+<1> At this point the code uses the `showInputDialog()` method to read a `String` version of the height from the user.
+<2> On the next line, we have to
 convert this `String` version into the `double` version that we store in
-the `height` variable. The next four lines read in the coefficient of
+the `height` variable.
+<3> The next four lines read in the coefficient of
 restitution and the number of bounces and convert them to their
 appropriate numerical types.
 ====
@@ -1019,7 +991,7 @@ variables. For example, we used the expression `35 + 7` as an argument
 to the `System.out.print()` method to print `42` to the screen. We can
 use the add (`+`), subtract (`-`), multiply (`*`), and divide(`/`)
 operators on numbers to solve arithmetic problems. These operators work
-the way you expect them to (except that division has a few surprises).
+the way you'd expect them to (except that division has a few surprises).
 We'll go into these operators and others more deeply in
 <<ch03-strings-primitive-types#ch03-strings-primitive-types>>. Here are examples of
 these four operators used with integer and floating-point numbers.
@@ -1039,21 +1011,22 @@ double w = 1.6 / 3.2;  // w will hold 0.5
 
 ===== Other operations
 
-These basic operations can mix values and variables together. As we will
+These basic operations can mix values and variables together. As we'll
 discuss later, they can be arbitrarily complicated with order of
 operations determining the final answer. Nevertheless, we also need ways
 to accomplish other mathematical operations such as raising a number to
 a power or finding its square root. The `Math` class has methods that
 perform these and other functions. To raise a number to a power, we call
 `Math.pow()` with two arguments: first the base and then the exponent.
-To find the square root, we pass the number to the `Math.sqrt()` method.
+To find a square root, we pass a number to the `Math.sqrt()` method.
 
 [source, java]
 ----
+// Raises 3.0 to the power 2.5, approximately 15.588457
 double p = Math.pow(3.0, 2.5);
-// Raises 3 to the power 2.5, approximately 15.588457
-double q = Math.sqrt(2.0);
+
 // Finds the square root of 2.0, approximately 1.4142136
+double q = Math.sqrt(2.0);
 ----
 
 .Compute height
@@ -1088,9 +1061,9 @@ operator between two values or variables of type `String`, the result is
 a new `String` that is the _concatenation_ of the two previous `String`
 values, meaning that the result is the two pieces of text pasted
 together, one after the other. Concatenation doesn't change the `String`
-values you are concatenating.
+values you're concatenating.
 
-At this point, it becomes confusing if you mix types (`String`, `int`,
+The results may be illegal or at least unexpected if you mix types (`String`, `int`,
 `double`) together when doing mathematical operations. However, feel
 free to concatenate `String` values with any other type using the `+`
 operator. When you do so, the other type is automatically converted into
@@ -1101,14 +1074,10 @@ output. Here are a few examples of `String` concatenation.
 ----
 String word1 = "tomato";
 String word2 = "sauce";
-String text1 = word1 + word2;
-// text1 will contain "tomatosauce"
-String text2 = word1 + " " + word2;
-// text2 will contain "tomato sauce"
-String text3 = "potato " + word1;
-// text3 will contain "potato tomato"
-String text4 = 5 + " " + word1 + "es";
-// text4 will contain "5 tomatoes"
+String text1 = word1 + word2; 			// text1 contains "tomatosauce"
+String text2 = word1 + " " + word2; 	// text2 contains "tomato sauce"
+String text3 = "potato " + word1;		// text3 contains "potato tomato"
+String text4 = 5 + " " + word1 + "es"; 	// text4 contains "5 tomatoes"
 ----
 
 .Display height
@@ -1116,8 +1085,7 @@ String text4 = 5 + " " + word1 + "es";
 
 With `String` concatenation, subproblem 3 becomes a bit easier. We
 concatenate the results together with an appropriate message and then
-use the `System.out.println()` method for output. The following program
-does so.
+use the `System.out.println()` method for output.
 
 .Displays height of a ball using the command line.
 [source, java]
@@ -1127,7 +1095,7 @@ include::{programsdir}/DisplayHeightCLI.java[]
 ----
 
 <<DisplayHeightCLIProgram>> is only focusing on subproblem 3,
-but, if we want to test it, we need to supply dummy values for `bounces`
+but if we want to test it, we need to supply dummy values for `bounces`
 and `bounceHeight`, since these are generated by the solution to earlier
 subproblems.
 
@@ -1148,7 +1116,7 @@ include::{programsdir}/DisplayHeightGUI.java[]
 
 Writing good Java code has some similarities to writing effectively in
 English. There are rules you have to follow in order to make sense, but
-there are also guidelines that you should follow in order to make your
+there are also guidelines you should follow to make your
 code easier to read for yourself and everyone else.
 
 ===== Variable and class naming
@@ -1161,7 +1129,7 @@ but abbreviations can be worse. You want the meaning of your code to be
 obvious to others and to yourself when you come back days or weeks
 later.
 
-Imagine you are writing a program that sells fruit. Consider the
+Imagine you're writing a program that sells fruit. Consider the
 following names for a variable that keeps track of the number of apples.
 
 [.center%autowidth,cols="<,<",options="header",]
@@ -1183,24 +1151,24 @@ following names for a variable that keeps track of the number of apples.
 such as `applesSold` and `applesBought`
 |=======================================================================
 
-Mathematics is filled with one letter variables, partly because there is
+Mathematics is filled with one letter variables, partly because there's
 a history of writing mathematics on chalkboards and paper. Clarity is
 more important than brevity with variables in computer programs. Some
 variables need more than one word to be descriptive. In that case,
 programmers of Java are encouraged to follow _camel case_. In camel
 case, multi-word variables and methods start with a lowercase letter and
-then use an uppercase letter to mark the beginning of each new word. It
-is called camel case because the uppercase letters are reminiscent of
+then use an uppercase letter to mark the beginning of each new word. It's
+called camel case because the uppercase letters are reminiscent of
 the humps of a camel. Examples include `lastValue`, `symbolTable`, and
 `makeHamSandwich()`.
 
 By convention, class names should always begin with a capital letter,
-but they also use camel case with a capital letter for the beginning of
-each new word. Examples include `LinkedList`, `JazzPiano`, and
+but they also use camel case, marking the beginning of
+each new word with an uppercase letter. Examples include `LinkedList`, `JazzPiano`, and
 `GlobalNuclearWarfare`.
 
-Another convention is that constants, variables whose value never
-changes, have names in all uppercase, separated by underscores. Examples
+Another convention is that constants, variables whose values never
+change, have names in all uppercase, separated by underscores. Examples
 include `PI`, `TRIANGLE_SIDES`, and
 `UNIVERSAL_GRAVITATIONAL_CONSTANT`.
 
@@ -1208,13 +1176,20 @@ Spaces are not allowed in variable, method, or class names. Recall that
 a name in Java is called an identifier. The rules for identifiers
 specify that they must start with an uppercase or lowercase letter (or
 an underscore) and that the remaining characters must be letters,
-underscores, or numerical digits. Thus, `mötleyCrüe`, `Tupac`, and even
+underscores, or numerical digits. Thus, `Tupac` and 
 the absurd `_____5` are legal identifiers, but `Motley Crue` and
-`2Pac` are not. Java has support for many of the world's languages,
-allowing identifiers to contain characters from Chinese, Thai,
-Devanagari, Cyrillic, and other scripts.
+`2Pac` are not.
 
-Remember that keywords cannot be used as identifiers. For example,
+In Java, _letters_ can mean more than just the Latin letters A through Z. 
+Java has support for many of the world's languages,
+allowing identifiers to contain characters from Chinese, Thai,
+Devanagari, Cyrillic, and other scripts.  For example, `m\u00F6tleyCr\u00FCe`
+is a legal variable name because `\u00F6` is way of encoding `ö` and
+`\u00FC` is a way of encoding `ü`.  In some systems, this variable name might
+be rendered `mötleyCrüe`, but the compiler could complain if you type those characters in directly.  In short, Java supports a huge range of
+characters, but making that support work for you is sometimes more challenging.
+
+Remember that keywords also cannot be used as identifiers. For example,
 `public`, `static`, and `class` are all keywords in Java and can never
 be the names of classes, variables, or methods.
 
@@ -1278,7 +1253,7 @@ the first one is easier for a human to read. You should use whitespace
 to increase readability. Don't add too much whitespace with lots of
 blank lines between sections of code. On the other hand, don't use too
 little and cramp the code together. Whenever code is nested inside of a
-set of braces, indent the contents so that it is easy to see the
+set of braces, indent the contents so that it's easy to see the
 hierarchical relationship.
 
 The style we present in this book puts the left brace (`{`) on the line
@@ -1297,9 +1272,9 @@ public class Example
 ----
 
 There are people (including some authors of this book) who prefer this
-style because it is easier to see where blocks of code begin and end.
-However, the other style uses less space, and so we use it throughout
-the book. You can make your own choices about style, but be consistent.
+style because it's easier to see where blocks of code begin and end.
+However, the other style uses less space, so we use it throughout
+the book. You can make your own choices about style, but be consistent!
 If you work for a software development company, they may have strict
 standards for code formatting.
 
@@ -1315,23 +1290,25 @@ a block comment, which starts with a `/\*` and continues until it reaches
 a `*/`.
 
 Beyond leaving messages for other programmers, you can also "`comment
-out`" existing code. By making Java code a comment, it no longer affects
-the program execution. This practice is very common when programmers
+out`" existing code. By putting Java code inside a comment, it no longer affects
+program execution. This practice is common when programmers
 want to remove or change some code but are reluctant to delete it until
-the new version of the code has been tested.
+the new version of the code has been tested.  Don't overuse the practice
+of commenting out code!  Large programs become hard to navigate when
+they're cluttered with many chunks of commented-out code.
 
 The third kind of comment is called a documentation comment and
 superficially looks a lot like a block comment. A documentation comment
 starts with a `/\**` and ends with a `*/`. These comments are supposed to
-come at the beginning of classes and methods and explain what they are
+come at the beginning of classes and methods and explain what they're
 used for and how to use them. A tool called `javadoc` is used to run
 through documentation comments and generate an HTML file that users can
-read to understand how to use the code. This tool is one of the features
-that has contributed greatly to the popularity of Java, since its
-libraries are well-documented and easy to use. However, we do not
+read to understand how to use the code. This tool is a feature
+that has contributed greatly to the popularity of Java, keeping its
+libraries well-documented and easy to use. However, we do not
 discuss documentation comments deeply in this book.
 
-Here is our example output program heavily commented.
+Here is our example output program, heavily commented.
 
 [source, java]
 ----
@@ -1364,7 +1341,7 @@ development lifecycle.
 
 ==== Bouncing ball solution (command line version)
 
-In <<example-Ball_bouncing_problem>>, we made sure that
+In <<ballBouncingProblemExample>>, we made sure
 we understood the problem and then formed a three-part plan to read in
 the input, compute the height of the bounce, and then output it.
 
@@ -1378,26 +1355,24 @@ program, the portion of the code that corresponds to solving subproblem
 
 [source, java]
 ----
-include::{programsdir}/BouncingBallCLI.java[lines=1..28]
+include::{programsdir}/BouncingBallCLI.java[lines=1..22]
 ----
-
 
 With the imports, class declaration, and `main()` method set up by the
 solution to subproblem 1, the solution to subproblem 2 is very short.
 
 [source, java]
 ----
-include::{programsdir}/BouncingBallCLI.java[lines=30..31]
+include::{programsdir}/BouncingBallCLI.java[lines=24..25]
 ----
-
 
 The solution to subproblem 3 and the braces that mark the end of the
 `main()` method and then the end of the class only take up a few
-additional lines.
+more lines.
 
 [source, java]
 ----
-include::{programsdir}/BouncingBallCLI.java[lines=33..39]
+include::{programsdir}/BouncingBallCLI.java[lines=27..32]
 ----
 
 
@@ -1439,10 +1414,10 @@ of bounces. An industrial-grade program should. We'll discuss testing
 further in <<ch16-testing-and-debugging#ch16-testing-and-debugging>>.
 
 As with most of the problems we discuss in this book, issues of
-maintenance will not apply. We don't have a customer base to keep happy.
-However, it is a good thought exercise to imagine a large-scale version
+maintenance will not apply: we don't have a customer base to keep happy.
+Even so, it's a good thought exercise to imagine a large-scale version
 of this program that can solve many different kinds of physics problems.
-Who are likely to be your clients? What are the kinds of bugs that are
+Who are likely to be your clients? What kinds of bugs are
 likely to creep into such a program? How would you provide bug-fixes and
 develop new features?
 
@@ -1459,9 +1434,9 @@ concurrent and vice versa.
 
 An example of parallelism without concurrency is two separate programs
 running on a multicore system. They are both performing computations at
-the same time, but, for the most part, they are not interacting with
-each other. (Concurrency issues can arise if these programs try to
-access a shared resource, such as a file, at the same time.)
+the same time, but for the most part, they aren't interacting with
+each other. Concurrency issues might arise if these programs try to
+access a shared resource, such as a file, at the same time.
 
 An example of concurrency without parallelism is a program with multiple
 threads of execution running on a single-core system. These threads will
@@ -1481,9 +1456,9 @@ managing the interactions between threads.
 Imagine that the evil Lellarap aliens are attacking Earth. They have
 sent an extensive list of demands to the world's leaders, but only a few
 people, including you, have mastered their language, Lellarapian. To
-save the people of Earth, it is imperative that you translate their
-demands as quickly as possible so that world leaders can decide what
-course of action to take. If you do it alone, as illustrated in
+save the people of Earth, it's imperative that you translate their
+demands as quickly as possible so world leaders can choose
+a course of action. If you do it alone, as illustrated in
 <<documentTranslationFigure>>(a), the Lellaraps might attack
 before you finish.
 
@@ -1491,7 +1466,7 @@ In order to finish the work faster, you hire a second translator whose
 skills in Lellarap are as good as yours. As shown in
 <<documentTranslationFigure>>(b), you divide the document into
 two nearly equal parts, Document A and Document B. You translate
-Document A and your colleague translates Document B. When both
+Document A, and your colleague translates Document B. When both
 translations are complete, you merge the two, check the translation, and
 send the result to the world's leaders.
 
@@ -1499,32 +1474,29 @@ send the result to the world's leaders.
 .(a) Translation by one translator. Time latexmath:[t_s] gives the sequential time taken. (b) Translation by translators A and B. Times latexmath:[t_1], latexmath:[t_2], latexmath:[t_3], and latexmath:[t_4] give the times needed to do each component of the concurrent approach.
 image::documentTranslationFigure.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
-
 Translating the demands alone is a _sequential_ approach. In this
 context, sequential mean non-parallel. Translating the demands with two
-people is a parallel approach. It is concurrent as well because you have
-to decide on how to split up the document and how to merge it back
+people is a parallel approach. It's concurrent as well because you have
+to decide how to split up the document and how to merge it back
 together.
 
-If you were to write a computer program to translate the demands using
-the sequential approach, you would produce a _sequential program_. If
-you write a computer program that uses the approach shown in
+If you wrote a computer program to translate the demands using
+the sequential approach, you'd produce a _sequential program_. If
+you wrote a computer program that uses the approach shown in
 <<documentTranslationFigure>>(b), it would be a _concurrent
 program_. A concurrent program is also referred to as a _multi-threaded_
 program. _Threads_ are sequences of code that can execute independently
-and access each other's memory. Imagine you are one thread of execution
+and access each other's memory. Imagine you're one thread of execution
 and your colleague is another. Thus, the concurrent approach will have
 at least two threads. It may have more if separate threads are used to
-divide up the document and merge it back together.
+divide up the document or merge it back together.
 
-Because we're interested in the time the process takes, we have labeled
+Because we're interested in the time the process takes, we've labeled
 different tasks in <<documentTranslationFigure>> with their
 running times. We let latexmath:[t_s] be the time for one person to
 complete the translation. The times latexmath:[t_1] through
 latexmath:[t_4] mark the times needed to complete tasks 1 through 4,
 indicated in <<documentTranslationFigure>>(b).
-<<parallelTimeExercise>> asks you to calculate
-these times for the sequential and concurrent approaches.
 
 ****
 <<parallelTimeExercise>>
@@ -1573,18 +1545,18 @@ home on the first floor and give it the following instructions:
 
 By following these steps, the R^3^ will systematically go through each
 room, measure its area, and add the value to the total area found so
-far. It will then climb up the stairs and repeat the process for the
-second floor. It would then add the areas from the two floors and give
+far. It'll then climb up the stairs and repeat the process for the
+second floor. It would add up the areas from the two floors and give
 us the total living area of the house. This is a sequential approach for
 measuring the area.
 
-Now suppose we have two R^3^ robots, named R^3^A and R^3^B. We can put
+Now, suppose we have two R^3^ robots, named R^3^A and R^3^B. We can put
 R^3^A on the first floor and R^3^B on the second. Both robots are then
 instructed to find the area of the floor they're on using steps very
 similar to the ones listed above for a sequential solution. When done,
 we add together the answers from R^3^A and R^3^B to get the total. This
 is a concurrent (and also parallel) approach for measuring the living
-area of a home with two floors. Using two robots in this way can speed
+area of a home with two floors. Using two robots this way could` speed
 up the time it takes to measure the area.
 
 ====
@@ -1595,10 +1567,9 @@ up the time it takes to measure the area.
 ****
 
 
-In the example above, the tasks are the same, i.e., measuring the area,
-but are performed on two different input domains, i.e., the floors.
-Thus, both robots are performing essentially the same operations but on
-different floors. This type of task division is also known as domain
+In the example above, the tasks are the same (measuring the area)
+but are performed on two different input domains (the floors).
+This type of task division is also known as domain
 decomposition. Here, to achieve concurrency, we take the domain of the
 problem (the house) and divide it into smaller subdomains (its floors).
 Then, each processor (or robot in this example) performs the same task
@@ -1627,14 +1598,14 @@ should give us the area of the house as well as a list of electrical
 outlets that are not working.
 
 This problem can be solved in a sequential manner with just one robot.
-One way to do so would be for a robot to make a first pass through all
-floors and rooms and compute the living area. It can then make a second
-pass and make a list of electrical outlets that are not working.
+One way to do so would have a robot make a first pass through all
+floors and rooms and compute the living area. It could then make a second
+pass and compile a list of electrical outlets that are not working.
 
-One way to solve this problem concurrently is to assign R^3^A to measure
+A way to solve this problem concurrently is to assign R^3^A to measure
 the area and R^3^B to identify broken electrical outlets. Once the
 respective tasks are assigned, we place the robots at the entrance to
-the house and activate them. It is possible that the two robots will
+the house and activate them. It's possible that the two robots will
 bump into each other while working, and that's one of the difficulties
 of concurrency. The burden is on the programmer to give instructions so
 that the robots can avoid or recover from collisions. After the robots
@@ -1646,11 +1617,11 @@ list of broken outlets.
 === Summary
 
 In this chapter, we introduced an approach for developing software to
-solve a problem with a computer. A number of examples illustrated how to
+solve problems with a computer. A number of examples illustrated how to
 move from a problem statement to a complete Java program. Although we
-have given rough explanations of all the Java programs in this chapter,
+have given rough explanations of the Java programs in this chapter,
 we encourage you to play with each program to expand its functionality.
-Several exercises prompt you to do just that. It is impossible to learn
+Several exercises prompt you to do just that. It's impossible to learn
 to program without actively practicing programming. Never be afraid of
 "`breaking`" the program. Only by breaking it, changing it, and fixing
 it will your understanding grow.
@@ -1688,7 +1659,7 @@ combination of the two?
 [source, java]
 ----
 String response = JOptionPane.showInputDialog(null,
-	enterHeight, title, JOptionPane.QUESTION_MESSAGE);
+	message, title, JOptionPane.QUESTION_MESSAGE);
 ----
 .  When would you
 prefer using the `JOptionPane` class for output over
@@ -1736,8 +1707,8 @@ increasing as you add more translators? Explain your answer.
 system do the robots represent?
 . [[domainDecompositionConcurrentExercise]] In
 <<domainDecompositionExample>>, suppose that you have two R^3^
-robots available. You would like to use these to measure the living area
-of a single floor home. Suggest how two robots could be programmed to
+robots available. You'd like to use them to measure the living area
+of a singlef-loor home. Suggest how two robots could be programmed to
 work concurrently to measure the living area faster than one.
 
 *Programming Practice*
@@ -1777,7 +1748,7 @@ favorite food. Then display the name of the food using `JOptionPane`.
 reads in the lengths of two legs of a right triangle and computes the
 length of its hypotenuse.
 ..  Make sure you understand the problem. How can you apply the
-Pythagorean formula (latexmath:[a^2 + b^2 = c^2]) to solve it?
+Pythagorean formula latexmath:[a^2 + b^2 = c^2] to solve it?
 ..  Design a solution by listing the steps you will need to take to read
 in the appropriate values, find the answer, and then output it.
 ..  Implement the steps as a Java program.
