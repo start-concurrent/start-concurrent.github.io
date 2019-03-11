@@ -2531,7 +2531,7 @@ representation in which every bit is flipped from 0 to 1 and 1 to 0</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><code>&lt;&lt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Signed left shift</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Moves all the bits the specified number of
-positions to the left</p></td>
+positions to the left, shifting 0s into the rightmost bits</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><code>&gt;&gt;</code></p></td>
@@ -5516,7 +5516,8 @@ Devanagari, Cyrillic, and other scripts.  For example, <code>m\u00F6tleyCr\u00FC
 is a legal variable name because <code>\u00F6</code> is way of encoding <code>ö</code> and
 <code>\u00FC</code> is a way of encoding <code>ü</code>.  In some systems, this variable name might
 be rendered <code>mötleyCrüe</code>, but the compiler could complain if you type those characters in directly.  In short, Java supports a huge range of
-characters, but making that support work for you is sometimes more challenging.</p>
+characters, but making that support work for you is sometimes more challenging.
+<a href="#_characters_char">Section 3.3.2.10</a> discusses character encoding further.</p>
 </div>
 <div class="paragraph">
 <p>Remember that keywords also cannot be used as identifiers. For example,
@@ -6328,7 +6329,7 @@ primary numbers divisible only by ourselves.</p>
 <p>Perhaps you&#8217;re a student. Perhaps you aren&#8217;t. In either case, you must
 be aware of the rapidly rising cost of a college education. The
 motivating problem for this chapter is to create a Java program that can
-estimate the cost of a college education, including room and board. It
+estimate this cost, including room and board. It
 starts by reading a first name, a last name, the per-semester cost of
 tuition, the monthly cost of rent, and the monthly cost of food as input
 from a user. Many students take out loans for college. In fact, student
@@ -6363,16 +6364,16 @@ Total loan cost:             $270736.5</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Samples from a command line interface can be confusing because it is
-difficult to see what is ouput and what is input. In this case, we have
-marked the input in <strong>bold</strong> so that it&#8217;s clear what the user enters. In this program, the names, the tuition, the
+<p>Samples from a command line interface can be confusing because it&#8217;s
+difficult to see what&#8217;s output and what&#8217;s input. In this case, we have
+marked the input in <strong>bold</strong> so that it&#8217;s clear what the user enters.
+In this program, the names, the tuition, the
 rent, the food, the interest rate, and the years to pay back the loan
 are taken as input. Note that the dollar signs are <strong>not</strong> part of the
-input and are outputted as a cue to the user and to give visual polish.</p>
+input and are printed as a cue to the user and to give visual polish.</p>
 </div>
 <div class="paragraph">
-<p>If you are following the software development lifecycle, we hope you
-have a good understanding of this problem, but there are a few
+<p>We hope you already have a good understanding of this problem, but there are a few
 mathematical details worth addressing. First, the yearly cost is twice
 the semester tuition plus 12 times the rent and food costs. The four
 year cost is simply four times the yearly cost. The monthly loan payment
@@ -6400,7 +6401,7 @@ avoid potential bugs.</p>
 <div class="paragraph">
 <p>Every operation inside of a Java program manipulates data. Often, this
 data is stored in <em>variables</em>, which look similar to variables from
-mathematics. Consider the following mathematical equation.</p>
+mathematics. Consider the following mathematical equation:</p>
 </div>
 <div class="paragraph">
 <p>\(x + 3 = 7\)</p>
@@ -6423,7 +6424,7 @@ single characters in Java as well, and there are literals like
 <div class="paragraph">
 <p>In Java, both variables and literals have <em>types</em>. If you think of a
 variable as a box where you can hold something, its type is the shape of
-the box. The kinds of literals that can be stored in that box must have
+that box. The kinds of literals that can be stored in that box must have
 a matching shape. In the last chapter, we introduced the type <code>int</code> to
 store integer values and the type <code>double</code> to store floating-point
 values. Java is a <em>strongly typed</em> language, meaning that, if we declare
@@ -6434,8 +6435,8 @@ few exceptions).</p>
 <p>This idea of a type takes some getting used to. From a mathematical
 perspective 3 and 3.0 are identical.
 However, if you have an <code>int</code> variable in Java, you can store <code>3</code> into
-it, but you can&#8217;t store <code>3.0</code>. Types never change, but you can convert a
-value from one type to an equivalent value in another type.</p>
+it, but you can&#8217;t store <code>3.0</code>. The type of a value will never change,
+but you can convert a value from one type to an equivalent value in another type.</p>
 </div>
 <div class="sect3">
 <h4 id="_types_as_sets_and_operations">3.2.1. Types as sets and operations</h4>
@@ -6443,7 +6444,7 @@ value from one type to an equivalent value in another type.</p>
 <p>Before we go any further, let&#8217;s look deeper at what a type really is. We
 can think of a type as a set of elements. For example, <code>int</code> represents
 a set of integer values (specifically, the integers between
--2,147,483,648 and 2,147,483,647). Consider
+-2,147,483,648 and 2,147,483,647, inclusive). Consider
 the following declarations:</p>
 </div>
 <div class="listingblock">
@@ -6454,25 +6455,25 @@ the following declarations:</p>
 </div>
 <div class="paragraph">
 <p>These declarations indicate that the variables named <code>x</code> and <code>y</code> can
-only contain integer values in this range. Furthermore, a type only
+only contain integer values in the <code>int</code> range. Furthermore, a type only
 allows specific operations. In Java, the <code>int</code> type allows addition,
-subtraction, multiplication, division, and several other operations we
-will talk about in <a href="#_syntax_types_in_java">Section 3.3</a>, but you cannot
-directly raise an <code>int</code> value to a power in Java. Let&#8217;s assume that <code>x</code>
-is of type <code>int</code>. As we discussed in the previous chapter, the
+subtraction, multiplication, division, and several other operations we&#8217;ll
+talk about in <a href="#_syntax_types_in_java">Section 3.3</a>, but there&#8217;s no built-in operation
+to raise an <code>int</code> value to a power in Java. Let&#8217;s assume that <code>x</code>
+has type <code>int</code>. As we discussed in the previous chapter, the
 expression <code>x + 2</code> performs addition between the variable represented by
 <code>x</code> and the literal <code>2</code>. Some languages use the operator <code>^</code> to mean
 raising a number to a power. Following this notation, some beginning
 Java programmers are tempted to write <code>x ^ 2</code> to compute <code>x</code> squared.
-The <code>^</code> operator does have a meaning in Java, but it does not raise
+The <code>^</code> operator <strong>does</strong> have a meaning in Java, but it <strong>doesn&#8217;t</strong> raise
 values to a power. Other combinations of operators are simply illegal,
 such as <code>x # 2</code>.</p>
 </div>
 <div class="paragraph">
 <p>The idea of using types this way gives structure to a program. All
 operations are well-defined. For example, you know that adding two <code>int</code>
-values together will give you another <code>int</code> value. Java is a <em>statically
-typed</em> language. This means that it can analyze all the types you&#8217;re
+values together will give you another <code>int</code> value. Java is a
+<em>statically typed</em> language. This means that it can analyze all the types you&#8217;re
 using in your program at compile-time and warn you if you&#8217;re doing
 something illegal. Consequently, you&#8217;ll get a lot of compiler warnings
 and errors, but you can be more confident that your program is correct
@@ -6486,7 +6487,7 @@ if all the types make sense.</p>
 types in Java: <em>primitive types</em> and <em>reference types</em>. Primitive types
 are like boxes that hold single, concrete values. The primitive types in
 Java are <code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>boolean</code>,
-and <code>char</code>. These are types provided by the designers of Java, and it is
+and <code>char</code>. These are types provided by the designers of Java, and it&#8217;s
 not possible to create new ones. Each primitive type has a set of
 <em>operators</em> that are legal for it. For example, all the numerical types
 can be used with <code>+</code> and <code>-</code>. We&#8217;ll talk about these types and their
@@ -6501,10 +6502,10 @@ operators in great detail in <a href="#_syntax_types_in_java">Section 3.3</a>.</
 <div class="paragraph">
 <p>Reference types work differently from primitive types. For one thing, a
 reference variable <strong>points at</strong> an object. This means that when you
-assign one reference variable to another, you are not getting a whole
+assign one reference variable to another, you aren&#8217;t getting a whole
 new copy of the object. Instead, you&#8217;re getting another arrow that
 points at the same object. The result is that performing an operation on
-one reference can effectively change another reference, if they are both
+one reference can effectively change another reference, if they&#8217;re both
 pointing at the same object.</p>
 </div>
 <div class="paragraph">
@@ -6513,12 +6514,12 @@ do not have a large set of operators that work on them. Every variable
 can be used with the assignment (<code>=</code>) and the comparison (<code>==</code>)
 operators. Every variable can also be concatenated with a <code>String</code> by
 using the <code>+</code> operator, but even if two objects represent numerical
-values, they cannot be added together with the <code>+</code> operator.</p>
+values, they can&#8217;t be added together with the <code>+</code> operator.</p>
 </div>
 <div class="paragraph">
 <p>References should still be thought of as types defining a set of objects
 and operations that can be done with them. Instead of using operators,
-however, references use <em>methods</em>. You have seen methods such as
+however, references use <em>methods</em>. You&#8217;ve seen methods such as
 <code>System.out.print()</code> and <code>JOptionPane.showInputDialog()</code> in the previous
 chapter. A method generally has a dot (<code>.</code>) before it and always has
 parentheses afterwards. These parentheses contain the input <em>parameters</em>
@@ -6528,8 +6529,8 @@ number, kind, or complexity of methods that can be used on references.</p>
 </div>
 <div class="paragraph">
 <p>Another important feature of reference types is that anyone can define
-them. So far, you have seen the reference types <code>String</code> and
-<code>JOptionPane</code>. As we will discuss later, <code>String</code> is an unusual
+them. So far, you&#8217;ve seen the reference types <code>String</code> and
+<code>JOptionPane</code>. As we&#8217;ll discuss later, <code>String</code> is an unusual
 reference type in that it is built deeply into the language. There are a
 few other types like this (such as <code>Object</code>), but most reference types
 could have been written by anyone, even you.</p>
@@ -6542,16 +6543,16 @@ might create the <code>Airplane</code> class and give it methods such as
 airplane should be able to do.</p>
 </div>
 <div class="paragraph">
-<p>Once a class has been defined, it is possible to <em>instantiate</em> an
+<p>Once a class has been defined, it&#8217;s possible to <em>instantiate</em> an
 <em>object</em>. An object is a specific instance of the type. For example, the
 type might be <code>Airplane</code>, but the object might be referenced by a
 variable called <code>sr71Blackbird</code>. Presumably, this object has a weight, a
 maximum speed, and other characteristics that mark it as a Lockheed
-SR-71 &#8220;Blackbird,&#8221; the famous spy plane. To summarize: The object is a
-concrete instance of the data. The reference is the variable that gives
-a name to (points to) the object. The type is the class that both the
-variable and the object have, which defines what kinds of data the
-object has and what operations it can perform.</p>
+SR-71 &#8220;Blackbird,&#8221; the famous spy plane. To summarize: An object is a
+concrete instance of data. A reference is a variable that gives
+a name to (points to) an object. A type is a class that both the
+variable and the object have that defines what kinds of data the
+object contains and what operations it can perform.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -6621,21 +6622,21 @@ primitive or reference, must be declared prior to its use. This
 constraint allows the Java compiler to perform many safety and sanity
 checks during compilation, and the JVM performs a few more during
 execution. These checks avoid errors during program execution that might
-otherwise be hard to find. These errors could lead to catastrophic
+otherwise be hard to find, errors that could lead to catastrophic
 failures of the program.</p>
 </div>
 <div class="paragraph">
 <p>The Ariane 5 rocket is an example of a catastrophic failure due to a
 type error. On its first flight, the rocket left its flight path and
-eventually exploded. The failure was caused because of errors that
-resulted after converting a 64-bit floating-point to 16-bit signed
+eventually exploded. The failure was caused because of errors from
+converting a 64-bit floating-point to 16-bit signed
 integer value. The converted value was larger than the integer could
 hold, resulting in a meaningless value.</p>
 </div>
 <div class="paragraph">
 <p>Converting from one type to another is called <em>casting</em>. The Ariane 5
 failure was due to a problem with casting that was not caught. Even in
-Java, it is possible for a human being to circumvent type safety with
+Java, it&#8217;s possible for a human being to circumvent type safety with
 irresponsible casting.</p>
 </div>
 </div>
@@ -6643,7 +6644,7 @@ irresponsible casting.</p>
 <div class="sect2">
 <h3 id="_syntax_types_in_java">3.3. Syntax: Types in Java</h3>
 <div class="paragraph">
-<p>In this section we will dig deeper into the type system in Java,
+<p>In this section we dig deeper into the type system in Java,
 starting with variables and moving on to the properties of the eight
 primitive types and the properties of <code>String</code> and other reference
 types.</p>
@@ -6672,8 +6673,8 @@ a variable named <code>value</code> of type <code>int</code>.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>You are always free to declare a variable and then end the line with a
-semicolon (<code>;</code>), but it is common to <em>initialize</em> a variable at the same
+<p>You&#8217;re free to declare a variable and then end the line with a
+semicolon (<code>;</code>), but it&#8217;s common to <em>initialize</em> a variable at the same
 time. The following line simultaneously declares <code>value</code> and initializes
 it to <code>5</code>.</p>
 </div>
@@ -6691,7 +6692,7 @@ it to <code>5</code>.</p>
 <td class="content">
 <div class="title">Pitfall: Multiple declarations</div>
 <div class="paragraph">
-<p>Don&#8217;t forget that you are declaring and initializing in a line like the
+<p>Don&#8217;t forget that you&#8217;re both declaring <strong>and</strong> initializing in a line like the
 above. Beginning Java programmers sometimes try to declare a variable
 more than once, as in the following:</p>
 </div>
@@ -6702,7 +6703,7 @@ more than once, as in the following:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Java will not allow two variables with the same name to exist in the
+<p>Java won&#8217;t allow two variables with the same name to exist in the
 same block of code. The programmer probably intended the following,
 which reuses variable <code>value</code> and replaces its contents with <code>10</code>.</p>
 </div>
@@ -6713,7 +6714,7 @@ which reuses variable <code>value</code> and replaces its contents with <code>10
 </div>
 </div>
 <div class="paragraph">
-<p>This error is more common when several other lines of code are between
+<p>This error is more common when several other lines of code lie between
 the two assignments.</p>
 </div>
 </td>
@@ -6721,10 +6722,10 @@ the two assignments.</p>
 </table>
 </div>
 <div class="paragraph">
-<p>In some of the examples above, we have stored the value <code>5</code> into our
+<p>In some of the examples above, we&#8217;ve stored the value <code>5</code> into our
 variable <code>value</code>. The symbol <code>5</code> is an example of a <em>literal</em>. A literal
 is a value represented directly in code. It cannot be changed, but it
-can be stored into variables that have the same type. The values stored
+can be stored into variables that have a matching type. The values stored
 into variables come from literals, input, or more complicated
 expressions. Just like variables, literals have types. The type of <code>5</code>
 is <code>int</code> while the type of <code>5.0</code> is <code>double</code>. Other types have literals
@@ -6734,7 +6735,7 @@ written in ways we&#8217;ll discuss below.</p>
 <div class="sect3">
 <h4 id="_primitive_types">3.3.2. Primitive types</h4>
 <div class="paragraph">
-<p>The building blocks of all Java programs are primitive types. Even
+<p>The building blocks of all Java programs are primitive types. All
 objects must fundamentally contain primitive types deep down inside.
 There are eight primitive types. Half of them are used to represent
 integer values, and we&#8217;ll start by looking at those.</p>
@@ -6799,7 +6800,7 @@ from each type are given below.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Note that the range of <code>byte</code> is included in that of <code>short</code>, of <code>short</code>
+<p>Note that the entire range of <code>byte</code> is included in that of <code>short</code>, of <code>short</code>
 in that of <code>int</code>, and so on. We say that <code>short</code> is <em>broader</em> than
 <code>byte</code>, <code>int</code> is broader than <code>short</code>, and <code>long</code> is broader than <code>int</code>.</p>
 </div>
@@ -6819,7 +6820,7 @@ which we will discuss in <a href="#ch06-arrays">Chapter 6</a>. However, too narr
 of a range will result in underflow and overflow. Java programmers are
 advised to stick with <code>int</code> for general use. If you need to represents
 values larger than 2 billion or smaller than -2 billion, use <code>long</code>.
-Once you are an experienced programmer, you may occasionally use <code>byte</code>
+Once you&#8217;re an experienced programmer, you may occasionally use <code>byte</code>
 and <code>short</code> to save space, but they should be used sparingly and for a
 clear purpose.</p>
 </div>
@@ -6865,7 +6866,7 @@ variable is used without first having its value set.</p>
 <div class="paragraph">
 <p>Doing so assigns the value <code>32</code> to variable <code>age</code>. Note that the Java
 compiler would not complain if you were to assign <code>-10</code> to the variable
-<code>age</code>, even though it is impossible for a human to have a negative age
+<code>age</code>, even though it&#8217;s impossible for a human to have a negative age
 (at least, without a time machine). Java attaches no meaning to the name
 you give to a variable.</p>
 </div>
@@ -6888,20 +6889,19 @@ an error.</p>
 <div class="paragraph">
 <p>If you want to specify a literal to have type <code>long</code>, you can append <code>l</code>
 or <code>L</code> to it. Thus, <code>42</code> is an <code>int</code> literal, but <code>42L</code> is a <code>long</code>
-literal. You should always use <code>L</code> since <code>l</code> can be difficult to
+literal. You should always use the capital <code>L</code> since <code>l</code> can be difficult to
 distinguish from <code>1</code>.</p>
 </div>
 <div class="paragraph">
-<p>At the time of this writing, Java 7 is the newest version of Java, but
-it has not yet become popular or widespread. In Java 7, you are allowed
+<p>At the time of this writing, Java 11 is the newest version of Java, but
+Java 8 is most commonly used. In Java 7 and higher, you&#8217;re allowed
 to put any number of underscores (<code>_</code>) inside of numerical literals to
 break them up for the sake of readability. Thus, <code>123_45_6789</code> might
 represent a social security number, or you could use underscores instead
-of commas to write three million as <code>3_000_000</code>. To use this syntax,
-you must have a Java 7 compiler and be sure that your code will never
-need to be compiled in an earlier version of Java. Note that you should
-<strong>never</strong> use a comma in a numerical Java literal, no matter which version
-of Java.</p>
+of commas to write three million as <code>3_000_000</code>. Since most compilers support
+Java 7 or higher now, it&#8217;s reasonable to use this underscore notation in your
+literals. Note that you should <strong>never</strong> use a comma in a numerical Java literal,
+no matter which version of Java you&#8217;re using.</p>
 </div>
 </div>
 <div class="sect4">
@@ -6910,10 +6910,10 @@ of Java.</p>
 <p>To represent numbers with fractional parts, Java provides two floating-point
 types, <code>double</code> and <code>float</code>. Because of limits on floating-point
 precision discussed in <a href="#ch01-computer-basics">Chapter 1</a>, Java cannot
-represent all rational or real numbers, but these types provide good
+represent all real or rational numbers, but these types provide good
 approximations. If you have a variable that takes on floating-point
 values such as 3.14, 1.707 × 10<sup>25</sup>,
-9.8, and so on, it ought to be declared as a <code>double</code> or a
+9.8, or similar, it ought to be declared as a <code>double</code> or a
 <code>float</code>.</p>
 </div>
 <div class="exampleblock">
@@ -6940,7 +6940,7 @@ initializes it to the well-known Avogadro constant
 &#8220;ten to the power of.&#8221; In Java, you could write
 0.33 × 10<sup>-12</sup> as <code>0.33E-12</code>, or the number
 -4.325 × 10<sup>18</sup> as <code>-4.325E18</code> (or even <code>-4.325E+18</code>
-if you would like to write the sign of the exponent explicitly).</p>
+if you&#8217;d like to write the sign of the exponent explicitly).</p>
 </div>
 </div>
 </div>
@@ -6949,7 +6949,7 @@ if you would like to write the sign of the exponent explicitly).</p>
 <h5 id="_accuracy_in_number_representation">Accuracy in number representation</h5>
 <div class="paragraph">
 <p>As discussed in <a href="#ch01-computer-basics">Chapter 1</a>, integer types
-within their specified ranges have their exact representations. For
+within their specified ranges have exact representations. For
 example, if you assign <code>19</code> to a variable of type <code>int</code> and then print
 this value, you always get exactly <code>19</code>. Floating-point numbers do not
 have this guarantee of exact representation.</p>
@@ -6958,7 +6958,7 @@ have this guarantee of exact representation.</p>
 <div class="title">Example 3.3 Floating-point accuracy</div>
 <div class="content">
 <div class="paragraph">
-<p>Try executing the following statements from within a Java program.</p>
+<p>Try executing the following statements within a Java program.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6972,7 +6972,7 @@ have this guarantee of exact representation.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Since we are adding 0.1 each time, one would expect to see outputs of
+<p>Since we&#8217;re adding 0.1 each time, one would expect to see outputs of
 <code>0.1</code>, <code>0.2</code>, and <code>0.3</code>. The first two numbers print as expected, but
 the third number prints out as <code>0.30000000000000004</code>. It may seem
 counterintuitive, but 0.1 is a repeating decimal in binary, meaning that
@@ -7016,8 +7016,8 @@ but <code>3.14f</code> is a <code>float</code> literal.</p>
 <h5 id="_floating_point_output">Floating-point output</h5>
 <div class="paragraph">
 <p>Formatting output for floating-point numbers has an extra complication
-compared to integers: How many digits after the decimal point should be
-displayed? If you are representing money, it is common to show exactly
+compared with integer output: How many digits after the decimal point should be
+displayed? If you&#8217;re representing money, it&#8217;s common to show exactly
 two digits after the decimal point. By default, all of the non-zero
 digits are shown.</p>
 </div>
@@ -7035,8 +7035,7 @@ following example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%s! I broke %d records in %f seconds.\n"</span><span class="o">,</span></span>
-<span id="L2" class="line">    <span class="s">"Bob"</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mf">2.4985</span><span class="o">);</span></span></code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%s! I broke %d records in %f seconds.\n"</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mf">2.4985</span><span class="o">);</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7062,7 +7061,7 @@ the <code>%</code> and the <code>f</code>.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The output of this code is</p>
+<p>The output of this code is:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -7070,9 +7069,10 @@ the <code>%</code> and the <code>f</code>.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>rounding the last digit appropriately. To learn about other ways to use
+<p>Note that the last visible digit is rounded instead of truncated. Note that <code>%n</code> is a special
+format specifier that indicates a newline. To learn about other ways to use
 format strings to manipulate output, read the Oracle
-<a href="http://download.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax" target="_blank" rel="noopener">Formatter documentation</a>.</p>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax" target="_blank" rel="noopener">Formatter documentation</a>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -7117,7 +7117,7 @@ and the floating-point primitive types.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The first four of these should be familiar to you. Addition,
+<p>The first four of these should be familiar. Addition,
 subtraction, and multiplication work as you would expect, provided that
 the result is within the range defined for the types you&#8217;re using, but
 division is a little confusing. If you divide two integer values in
@@ -7176,7 +7176,7 @@ following scenario.</p>
 </div>
 <div class="paragraph">
 <p>The code looks fine at first, but <code>1/2</code> yields <code>0</code>. If the result is to
-be stored in a <code>double</code> variable, it is better to multiply by <code>0.5</code>
+be stored in a <code>double</code> variable, it&#8217;s better to multiply by <code>0.5</code>
 instead of dividing by <code>2</code>.<br></p>
 </div>
 </td>
@@ -7185,16 +7185,17 @@ instead of dividing by <code>2</code>.<br></p>
 </div>
 <div class="paragraph">
 <p>You may not have thought about this idea since elementary school, but
-the division operator (<code>/</code>) finds the quotient of two numbers. The
-modulus operator (<code>%</code>) finds the remainder. For example, <code>15 / 6</code> is
-<code>2</code>, but <code>15 % 6</code> is <code>3</code> because <code>6</code> goes into <code>15</code> twice with <code>3</code> left
-over. The modulus operator is usually used with integer values, but it
-is also defined to work with floating-point values in Java. It&#8217;s easy to
+the division operator (<code>/</code>) finds the <em>quotient</em> of two numbers. The
+modulus operator (<code>%</code>) finds the <em>remainder</em>. For example, <code>15 / 6</code> is
+<code>2</code> while <code>15 % 6</code> is <code>3</code> because <code>6</code> goes into <code>15</code> twice with <code>3</code> left
+over. The modulus operator is usually used with integer values, but it&#8217;s
+also defined to work with floating-point values in Java. It&#8217;s easy to
 dismiss the modulus operator because we don&#8217;t often use it in daily
-life, but it is incredibly useful in programming. On its face, it allows
+life, but it&#8217;s incredibly useful in programming. On its face, it allows
 us to see the remainder after division. This idea can be applied to see
 if a number is even or odd. It can also be used to compress a large
-range of random integers to a smaller range. Keep an eye out for it.
+range of random integers to a smaller range or perform a kind of circular
+arithmetic useful for cryptography. Keep an eye out for it.
 We&#8217;ll use it many times in this book.</p>
 </div>
 </div>
@@ -7234,30 +7235,30 @@ Thus, the order of evaluation of <code>a + b / c</code> is the same as
 </div>
 </div>
 <div class="paragraph">
-<p>What is the result? The first operation to be evaluated is <code>c * d</code>,
+<p>What&#8217;s the result? The first operation to be evaluated is <code>c * d</code>,
 yielding <code>2</code>. The next is <code>a / b</code>, yielding <code>1</code>, which is then divided
-by <code>d</code>, yielding <code>0</code>. Next <code>b + 2</code> gives <code>18</code>, and <code>18 - 0</code> is still
+by <code>d</code>, yielding <code>0</code>. Next, <code>b + 2</code> gives <code>18</code>, and <code>18 - 0</code> is still
 <code>18</code>. Thus, the value stored in <code>a</code> is <code>18</code>.</p>
 </div>
 <div class="paragraph">
 <p>Your inner mathematician might be nervous that <code>a</code> is used in the
 expression on the right side of the assignment and is also the variable
-where the result is stored. This situation is very common in
+where the result is stored, but this situation is very common in
 programming. The value of <code>a</code> doesn&#8217;t change until after all the math
 has been done. The assignment always happens last.</p>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>All of the operators we have discussed so far are <em>binary</em> operators.
+<p>All of the operators we&#8217;ve discussed so far are <em>binary</em> operators.
 This use of the word &#8220;binary&#8221; has nothing to do with base 2. A binary
 operator takes two things and does something, like adding them together.
 A <em>unary</em> operator takes a single operand and does something. The <code>-</code>
 operator can be used as a unary operator to negate a literal, variable,
 or expression. A unary negation has a higher precedence than the other
 operators, just like in mathematics. In other words, the variable or
-expression will be negated before it is multiplied or divided. The <code>+</code>
-operator can be used anywhere you would use a unary negation, although
+expression will be negated before it&#8217;s multiplied or divided. The <code>+</code>
+operator can be used anywhere you&#8217;d use a unary negation, although
 it doesn&#8217;t actually do anything. Consider the following statements.</p>
 </div>
 <div class="listingblock">
@@ -7273,7 +7274,7 @@ it doesn&#8217;t actually do anything. Consider the following statements.</p>
 <div class="paragraph">
 <p>Some operations happen frequently in Java. For example, increasing a
 variable by some amount is a common task. If you want to increase the
-value of variable <code>value</code> by 10, you can write the following.</p>
+contents of variable <code>value</code> by 10, you can write the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7291,13 +7292,13 @@ same effect, you can use the <code>+=</code> operator.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>+=</code> operator gets the value of the variable, in this case <code>value</code>,
+<p>The <code>+=</code> operator gets the contents of the variable, in this case <code>value</code>,
 adds whatever is on its right side, in this case <code>10</code>, and stores the
 result back into the variable. Essentially, it saves you from writing
-the name of the variable twice. And <code>+=</code> is not the only shortcut. It is
+the name of the variable twice. And <code>+=</code> is not the only shortcut. It&#8217;s
 only one member of a family of shortcut operators that perform a binary
 operation between the variable on the left side and the expression on
-the right side and then store the value back into the variable. There is
+the right side and then store the value back into the variable. There&#8217;s
 a <code>-=</code> operator that decreases a variable, a <code>*=</code> operator that scales a
 variable, and several others, including shortcuts for bitwise operations
 we cover in the next subsection.</p>
@@ -7386,7 +7387,7 @@ easier to read.</p>
 <td class="content">
 <div class="title">Pitfall: Weak type checking with assignment shortcuts</div>
 <div class="paragraph">
-<p>Because you can lose precision, it is not allowed to store a <code>double</code>
+<p>Because you can lose precision, it&#8217;s not allowed to store a <code>double</code>
 value into an <code>int</code> variable. Thus, the following lines of code are
 illegal and will not compile.</p>
 </div>
@@ -7397,7 +7398,7 @@ illegal and will not compile.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In this case, the check makes a lot of sense. If you were able to add
+<p>In this case, the check makes a lot of sense. If you could add
 <code>0.1</code> to <code>0</code> and then store that value into an <code>int</code> variable, the
 fractional part would be truncated, keeping <code>0</code> in the variable.
 However, this safeguard against lost precision is not done with
@@ -7460,7 +7461,7 @@ symbol is present.</p>
 <div class="paragraph">
 <p>Both the increment and decrement operators come in prefix and postfix
 flavors. You can write the <code>++</code> (or the <code>--</code>) in front of the variable
-you are changing or behind it.</p>
+you&#8217;re changing or behind it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7471,7 +7472,7 @@ you are changing or behind it.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>When used in a line by itself, each flavor works exactly the same.
+<p>When used in a line by itself, either flavor works exactly the same.
 However, the incremented (or decremented) variable can also be used as
 part of a larger expression. In a larger expression, the prefix form
 increments (or decrements) the variable <strong>before</strong> the value is used in
@@ -7505,8 +7506,8 @@ and then the increment operation happens afterwards.</p>
 <div class="title">Pitfall: Increment confusion</div>
 <div class="paragraph">
 <p>Incrementing a variable in Java is a very common operation. Expressions
-like <code>i++</code> and <code>++i</code> pop up so often that it is easy to forget exactly
-what they mean. Programmers occasionally forget that they are shorthand
+like <code>i++</code> and <code>++i</code> pop up so often that it&#8217;s easy to forget exactly
+what they mean. Programmers occasionally forget that they&#8217;re shorthand
 for <code>i = i + 1</code> and begin to think of them as a fancy way to write
 <code>i + 1</code>.</p>
 </div>
@@ -7521,9 +7522,9 @@ for <code>i = i + 1</code> and begin to think of them as a fancy way to write
 </div>
 <div class="paragraph">
 <p>At first glance, it may appear that the second line of code really means
-<code>i = i = i + 1</code>. Assigning <code>i</code> an extra time is pointless, but it does
-no harm. However, remember that the postfix version gives back a copy of
-the original value, before it has been incremented. In this case, <code>i</code>
+<code>i = i = i + 1</code>. Assigning <code>i</code> an extra time is pointless, but it seems like
+it shouldn&#8217;t do any harm. Remember that the postfix version gives back a copy of
+the original value <strong>before</strong> it&#8217;s been incremented. In this case, <code>i</code>
 will be incremented, but then its original value will be stored back
 into itself. In the code given above, the final value of <code>i</code> is still
 <code>14</code>.</p>
@@ -7533,7 +7534,7 @@ into itself. In the code given above, the final value of <code>i</code> is still
 </table>
 </div>
 <div class="paragraph">
-<p>In general it is unwise to perform increment or decrement operations in
+<p>In general it&#8217;s unwise to perform increment or decrement operations in
 the middle of larger expressions, and we advise against doing so. In
 some cases, code can be shortened by cleverly hiding an increment in the
 middle of some other expression. However, when reading back over the
@@ -7542,7 +7543,7 @@ doing exactly what it should. The additional confusion caused by this
 cleverness is not worth the line of code saved. Furthermore, the
 compiler will translate the operations into exactly the same bytecode,
 meaning that the shorter version is no more efficient than the longer
-version.</p>
+version when executed.</p>
 </div>
 <div class="paragraph">
 <p>Nevertheless, many programmers enjoy squeezing their code down to the
@@ -7580,29 +7581,22 @@ in Java.</p>
 <tr>
 <td class="tableblock halign-center valign-middle"><div class="literal"><pre>&amp;</pre></div></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock">Bitwise AND</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Combines two binary representations into a new
-representation that has 1s in every position that both the original
-representations have a 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Combines two binary representations into a new representation which has a 1 in every position where both the original representations have a 1</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-middle"><div class="literal"><pre>|</pre></div></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock">Bitwise OR</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Combines two binary representations into a new
-representation that has 1s in every position that either of the original
-representations have a 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Combines two binary representations into a new representation which has a 1 in every position where either of the original representations has a 1</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-middle"><div class="literal"><pre>^</pre></div></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock">Bitwise XOR</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Combines two binary representations into a new
-representation that has 1s in every position that the original
-representations have different values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Combines two binary representations into a new representation which has a 1 in every position that the original representations have different values</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-middle"><div class="literal"><pre>~</pre></div></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock">Bitwise NOT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Takes a representation and creates a new
-representation in which every bit is flipped from 0 to 1 and 1 to 0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Takes a representation and creates a new representation in which every bit is flipped from 0 to 1 and 1 to 0</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-middle"><div class="literal"><pre>&lt;&lt;</pre></div></td>
@@ -7626,7 +7620,7 @@ positions to the right, padding with 0s</p></td>
 </table>
 <div class="paragraph">
 <p>When used with <code>byte</code> and <code>short</code>, all bitwise operators will
-automatically convert their operands to 32-bit <code>int</code> values. It is
+automatically convert their operands to 32-bit <code>int</code> values. It&#8217;s
 crucial to remember this conversion since the number of bits used for
 representation is a fundamental part of bitwise operators.</p>
 </div>
@@ -7674,14 +7668,14 @@ the values <code>3</code> and <code>-7</code>. To understand the results, rememb
 <div class="paragraph">
 <p>The output of this fragment of code is:</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">x</span> <span class="o">&amp;</span> <span class="n">y</span>   <span class="o">=</span> <span class="mi">1</span></span>
-<span id="L2" class="line"><span class="n">x</span> <span class="o">|</span> <span class="n">y</span>   <span class="o">=</span> <span class="o">-</span><span class="mi">5</span></span>
-<span id="L3" class="line"><span class="n">x</span> <span class="o">^</span> <span class="n">y</span>   <span class="o">=</span> <span class="o">-</span><span class="mi">6</span></span>
-<span id="L4" class="line"><span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>  <span class="o">=</span> <span class="mi">12</span></span>
-<span id="L5" class="line"><span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span>  <span class="o">=</span> <span class="o">-</span><span class="mi">2</span></span>
-<span id="L6" class="line"><span class="n">y</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">1073741822</span></span></code></pre>
+<pre>x &amp; y   = 1
+x | y   = -5
+x ^ y   = -6
+x &lt;&lt; 2  = 12
+y &gt;&gt; 2  = -2
+y &gt;&gt;&gt; 2 = 1073741822</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7695,17 +7689,17 @@ output, making the results line up.</p>
 individual <code>byte</code> values, and you might need to combine four of these
 values into a single <code>int</code> value. Although the signed left shift (<code>&lt;&lt;</code>)
 and signed right shift (<code>&gt;&gt;</code>) are, respectively, equivalent to repeated
-multiplications by 2 or repeated divisions by 2, they are faster than
+multiplications by 2 or repeated divisions by 2, they&#8217;re faster than
 doing these operations over and over. Finally, some of these operations
 are used for cryptographic or random number generation purposes.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="castSection">Casting</h5>
+<h5 id="_casting">Casting</h5>
 <div class="paragraph">
 <p>Sometimes you need to use different types (like integers and floating-point
-values) together. Other times, you have a value in one type, but
-you need to store it in another (like when you are rounding a <code>double</code>
+values) together. Other times, you have a value in one type but
+need to store it in another (like when you&#8217;re rounding a <code>double</code>
 to the nearest <code>int</code>). Some combinations of operators and types are
 allowed, but others cause compiler errors.</p>
 </div>
@@ -7730,13 +7724,13 @@ types.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Because the type of <code>y</code> is <code>int</code>, which is broader than <code>short</code>, the
-type of <code>x</code>, it is legal to assign the value in <code>x</code> to variable <code>y</code>. In
+<p>Because the type of <code>y</code> is <code>int</code>, which is broader than <code>short</code>, it i&#8217;s legal
+to assign the value in <code>x</code> to variable <code>y</code>. In
 the assignment, a value with the narrower type <code>short</code> is converted to
 an equivalent value with the broader type <code>int</code>. Converting from a
 narrower type to a broader type is called an <em>upcast</em> or a <em>promotion</em>,
 and Java allows it with no complaint. Most languages allow upcasts
-without any special syntax because it is always safer to move from a
+without any special syntax because it&#8217;s always safe to move from a
 narrower, more restrictive type to a broader, less restrictive one.</p>
 </div>
 </div>
@@ -7770,8 +7764,8 @@ required: byte</pre>
 <div class="paragraph">
 <p>The compiler generates the error above because the sum of two <code>int</code>
 values is another <code>int</code> value, which could be greater than the maximum
-value you can store in <code>c</code>, of type <code>byte</code>. In this example, <strong>you</strong> know
-that the value of <code>12</code> does not exceed the maximum of <code>127</code>, but the
+value you can store in the <code>byte</code> variable <code>c</code>. In this example, <strong>you</strong> know
+that the value <code>12</code> doesn&#8217;t exceed the maximum of <code>127</code>, but the
 Java compiler is inherently cautious. It complains whenever the type of
 the expression to be evaluated is broader than the type of the
 destination variable.</p>
@@ -7798,7 +7792,7 @@ Consider the following statement.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The literal <code>3</code> has type <code>int</code>, but it is automatically converted to the
+<p>The literal <code>3</code> has type <code>int</code>, but it&#8217;s automatically converted to the
 floating-point value <code>3.0</code> with type <code>double</code>. Again, <code>double</code> (and also
 <code>float</code>) are considered broader types than any integer types.
 Consequently, this type conversion is an upcast and is completely legal.</p>
@@ -7827,7 +7821,7 @@ converted. The next example illustrates how to cast a <code>double</code> value 
 type <code>int</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.9 Downcast from double to int</div>
+<div class="title">Example 3.9 Downcast from <code>double</code> to <code>int</code></div>
 <div class="content">
 <div class="paragraph">
 <p>The following statements cause a compiler error because an expression
@@ -7841,10 +7835,10 @@ with type <code>double</code> cannot be stored into a variable with type <code>i
 </div>
 <div class="paragraph">
 <p>A downcast can lose precision, and that&#8217;s why Java doesn&#8217;t allow it.
-Sometimes a downcast is necessary, and you can override Java&#8217;s type
+Since a downcast is sometimes necessary, you can override Java&#8217;s type
 system with an explicit cast. To do so, we put the expected (or desired)
-result type in parentheses before the expression. In this case (and many
-others), it is also necessary to surround the expression with
+result type in parentheses before the expression. In this case and many
+others, it&#8217;s also necessary to surround the expression with
 parentheses so that the entire expression (and not just <code>roomArea</code>) is
 converted to type <code>int</code>.</p>
 </div>
@@ -7880,7 +7874,7 @@ Java provides a method for rounding in the <code>Math</code> class. The rounding
 </div>
 <div class="paragraph">
 <p>The value given back by <code>Math.round()</code> has type <code>long</code>. The designers of
-the <code>Math</code> class did this so that the same method could be used to round
+the <code>Math</code> class chose <code>long</code> so that the same method could be used to round
 large <code>double</code> values into a <code>long</code> value, since the result might not
 fit in an <code>int</code> value. Since <code>long</code> is a broader type than <code>int</code>, we
 have to downcast the result to an <code>int</code> so that we can store it in
@@ -7896,7 +7890,7 @@ have to downcast the result to an <code>int</code> so that we can store it in
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.10 Conversion from double to float</div>
+<div class="title">Example 3.10 Conversion from <code>double</code> to <code>float</code></div>
 <div class="content">
 <div class="paragraph">
 <p>Consider the following declaration and assignment of variable
@@ -7921,7 +7915,7 @@ required: float</pre>
 </div>
 <div class="paragraph">
 <p>As we mentioned earlier, the literal <code>2.0</code> has type <code>double</code>. When you
-try to assign a <code>double</code> value to a <code>float</code> variable, there is always a
+try to assign a <code>double</code> value to a <code>float</code> variable, there&#8217;s always a
 risk that precision will be lost. The best way to avoid the error above
 is to declare <code>roomArea</code> with type <code>double</code>. Alternatively, we could
 store the <code>float</code> literal <code>2.0f</code> into <code>roomArea</code>. We could also assign
@@ -7932,7 +7926,7 @@ automatically.</p>
 <p>Remember, you should almost always use the <code>double</code> type to represent
 floating-point numbers. Only in rare cases when you need to save memory
 should you use <code>float</code> values. By making it illegal to store <code>2.0</code> into
-a <code>float</code> variable, Java is encouraging you to use high precision
+a <code>float</code> variable, Java&#8217;s encouraging you to use high precision
 storage.</p>
 </div>
 </div>
@@ -7956,10 +7950,10 @@ these next.</p>
 <h5 id="_characters_char">Characters: <code>char</code></h5>
 <div class="paragraph">
 <p>Sentences are made up of words. Words are made up of letters. Although
-we have discussed many powerful tools for representing numbers in Java,
-we need a way to represent letters and other characters that we might
+we have discussed powerful tools for representing numbers in Java,
+we need a way to represent the letters and other characters we might
 find in printed text. Values with the <code>char</code> type are used to represent
-individual letters.</p>
+individual characters.</p>
 </div>
 <div class="paragraph">
 <p>In the older languages of C and C++, the <code>char</code> type used 8 bits for
@@ -7974,7 +7968,7 @@ the Chinese character system alone, some Chinese dictionaries list over
 100,000 characters!</p>
 </div>
 <div class="paragraph">
-<p>Java uses a standard called the UTF-16 encoding to represent characters.
+<p>Java uses a standard called UTF-16 encoding to represent characters.
 UTF-16 is part of a larger international standard called Unicode, which
 is an attempt to represent most of the world&#8217;s writing systems as
 numbers that can be stored digitally. Most of the inner workings of
@@ -7996,8 +7990,8 @@ assignments of variables of type <code>char</code>.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We are storing <code>char</code> literals into each of the variables above. Most of
-the <code>char</code> literals you will use commonly are made by typing the single
+<p>We&#8217;re storing <code>char</code> literals into each of the variables above. Most of
+the <code>char</code> literals you&#8217;ll use commonly are made by typing the single
 character you want in <strong>single</strong> quotes (<code>'</code>), such a <code>'z'</code>. These
 characters can be upper- or lowercase letters, single numerical digits,
 or other symbols.</p>
@@ -8010,7 +8004,7 @@ single quote, hit <code>&lt;enter&gt;</code>, and then type the second quote. In
 the character to represent a new line is <code>'\n'</code>, which we will refer to
 simply as a <em>newline</em>. Every <code>char</code> variable can only hold a single
 character. It appears that <code>'\n'</code> has multiple characters in it, but it
-does not. The use of the backslash (<code>\</code>) marks an <em>escape sequence</em>,
+doesn&#8217;t. The use of the backslash (<code>\</code>) marks an <em>escape sequence</em>,
 which is a combination of characters used to represent a specific
 difficult to type or represent character. Here is a table of common
 escape sequences.</p>
@@ -8052,7 +8046,7 @@ arbitrary but systematic. For example, the character <code>'a'</code> has a
 numerical value of <code>97</code>, and <code>'b'</code> has a numerical value of <code>98</code>. The
 codes for all of the lowercase Latin letters are sequential in
 alphabetical order. (The codes for uppercase letters are sequential too,
-but there is a gap between them and the lowercase codes.)</p>
+but there&#8217;s a gap between them and the lowercase codes.)</p>
 </div>
 <div class="paragraph">
 <p>Some Unicode characters are difficult to type because your keyboard or
@@ -8083,7 +8077,7 @@ arithmetic on them, Java will treat them like numbers. For example, the
 following statement adds the integer equivalents of the characters
 (65 + 66 = 131), concatenates the sum with the <code>String</code>
 <code>"C"</code>, and concatenates the result with a <code>String</code> representation of the
-<code>int</code> literal <code>999</code>. The final output is <code>131C999</code>.</p>
+<code>int</code> literal <code>999</code>. The surprising final output is <code>131C999</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8096,7 +8090,7 @@ following statement adds the integer equivalents of the characters
 <div class="sect4">
 <h5 id="_booleans_boolean">Booleans: <code>boolean</code></h5>
 <div class="paragraph">
-<p>If you are new to programming, it may seem useless to have a type
+<p>If you&#8217;re new to programming, it may seem useless to have a type
 designed to hold only true and false values. These values are called
 <em>Boolean values</em>, and the logic used to manipulate them turns out to be
 crucial to almost every program. We use them to represent conditions in
@@ -8190,7 +8184,8 @@ all variables used in the <strong>Example</strong> column have a numeric type.</
 the value of <code>x</code> is <code>3</code>. In the second comparison, the value of <code>same</code>
 is <code>false</code> because the values of <code>x</code> and <code>y</code> are different. The value of
 <code>xIsGreater</code> is also <code>false</code> since the value of <code>x</code> is not greater than
-the value of <code>y</code>.</p>
+the value of <code>y</code>.  All of the parentheses in this example are unnecessary
+and are used only for clarity.</p>
 </div>
 </div>
 </div>
@@ -8253,7 +8248,7 @@ operators are described in greater detail in
 <div class="sect3">
 <h4 id="_reference_types">3.3.3. Reference types</h4>
 <div class="paragraph">
-<p>Now we will move on to reference types, which vastly outnumber the
+<p>Now we&#8217;ll move on to reference types, which vastly outnumber the
 primitive types, with new types created all the time. Nevertheless, the
 primitive types in Java are important, partly because they are the
 building blocks for reference types.</p>
@@ -8262,10 +8257,10 @@ building blocks for reference types.</p>
 <p>Recall that a variable with a reference type does not contain a concrete
 value like a primitive variable. Instead, the value it holds is a
 reference or arrow pointing to the &#8220;real&#8221; object. It&#8217;s like a name for
-an object. When you declare a reference variable in Java, it starts off
-pointing at nothing, represented by the special literal <code>null</code>. For
-example, the following code creates a <code>Wombat</code> variable called <code>w</code>,
-which doesn&#8217;t point at anything.</p>
+an object. When you declare a reference variable in Java, it doesn&#8217;t initially
+point at anything, and you&#8217;ll get a compiler error if you try to use its value. For
+example, the following code creates a <code>Wombat</code> variable called <code>w</code>, but it doesn&#8217;t
+yet point at anything.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8278,7 +8273,7 @@ name of the type and parentheses, which can either be empty or contain
 data you want to use to initialize the object. This process is called
 invoking the <em>constructor</em>, which creates space for the object and then
 initializes it with the values you specify or with default values if you
-leave the parentheses empty. Below we invoke the default <code>Wombat</code>
+leave the parentheses empty. Below, we invoke the default <code>Wombat</code>
 constructor and point the variable <code>w</code> at the resulting object.</p>
 </div>
 <div class="listingblock">
@@ -8287,7 +8282,7 @@ constructor and point the variable <code>w</code> at the resulting object.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Alternatively, the <code>Wombat</code> type might allow you to specify its mass in
+<p>Alternatively, a <code>Wombat</code> constructor might allow you to specify its mass in
 kilograms when creating one, as follows.</p>
 </div>
 <div class="listingblock">
@@ -8336,20 +8331,20 @@ works very differently with them. Consider the following.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In this code, <code>a</code> is initialized to have a value of <code>10</code> and <code>b</code> is
+<p>In this code, <code>a</code> is initialized to have a value of <code>10</code>, and <code>b</code> is
 initialized to have whatever value <code>a</code> has, namely <code>10</code>. The third line
-increases the value of <code>a</code> to <code>15</code>, but <code>b</code> is still <code>10</code>.</p>
+increases the value of <code>a</code> to <code>15</code>, but <code>b</code> remains at <code>10</code>.</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
 <img src="chapters/03-strings-primitive-types/images/primitive.svg" alt="primitive" width="25%">
 </div>
-<div class="title">Figure 3.3 Because they are primitive, <code>int</code> variables store values, not references.</div>
+<div class="title">Figure 3.3 Because they&#8217;re primitive, <code>int</code> variables store values, not references.</div>
 </div>
 <div class="paragraph">
 <p>Now that we&#8217;ve highlighted some of the differences between primitive and
 reference types, we explain the <code>String</code> type more deeply. You use it
-frequently, but it has a few unusual features that are not shared by any
+frequently, but it has a few unusual features that are not shared by
 other reference types.</p>
 </div>
 <div class="sect4">
@@ -8372,10 +8367,10 @@ could leave it uninitialized.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>There is a difference between an uninitialized <code>String</code> (a reference
+<p>There&#8217;s a difference between an uninitialized <code>String</code> (a reference
 that points to <code>null</code>) and a <code>String</code> of length 0. A <code>String</code> of length
 0 is also known as an <em>empty string</em> and is written <code>""</code>. The space
-character (<code>' '</code>) and escape sequences such as <code>'\n'</code> can be a part of
+character (<code>' '</code>) and escape sequences such as <code>'\n'</code> can also be parts of
 a <code>String</code> and add to its length. For example, <code>"ABC"</code> contains three
 characters, but the <code>String</code> <code>"A B C"</code> has five, because the spaces on
 each side of <code>'B'</code> count. The next example illustrates some ways of
@@ -8389,7 +8384,7 @@ defining and using the <code>String</code> type.</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.13 String assignment</div>
+<div class="title">Example 3.13 <code>String</code> assignment</div>
 <div class="content">
 <div class="paragraph">
 <p>The following declarations define two <code>String</code> references named
@@ -8402,7 +8397,7 @@ defining and using the <code>String</code> type.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>As you have seen in <a href="#ch02-intro">Chapter 2</a>,
+<p>As you&#8217;ve seen in <a href="#ch02-intro">Chapter 2</a>,
 <code>String</code> values can be output using <code>System.out.print()</code> and
 <code>JOptionPane</code> methods.</p>
 </div>
@@ -8433,10 +8428,10 @@ a few <code>String</code> methods in this section and subsequent sections, but t
 <code>String</code> class defines many more.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.14 String concatenation</div>
+<div class="title">Example 3.14 <code>String</code> concatenation</div>
 <div class="content">
 <div class="paragraph">
-<p>Here is another example of combining <code>String</code> objects using the <code>+</code>
+<p>Here&#8217;s another example of combining <code>String</code> objects using the <code>+</code>
 operator.</p>
 </div>
 <div class="listingblock">
@@ -8450,7 +8445,7 @@ operator.</p>
 compute the value of <code>phrase</code> by adding, or concatenating, three
 <code>String</code> values: <code>"No argument but "</code>, the value of <code>argument</code>, and
 <code>"!"</code>. The result is <code>"No argument but the cannon!"</code>. If <code>argument</code> had
-been initialized to <code>"a pie in the face"</code>, then <code>phrase</code> would point to
+been initialized to <code>"a pie in the face"</code>, then <code>phrase</code> would instead point to
 <code>"No argument but a pie in the face!"</code>.</p>
 </div>
 <div class="paragraph">
@@ -8467,15 +8462,15 @@ been initialized to <code>"a pie in the face"</code>, then <code>phrase</code> w
 </div>
 </div>
 <div class="paragraph">
-<p>This sequence of statements gives the same result as the one above it
+<p>This sequence of statements gives the same result as the one above
 using the <code>+</code> operator. In practice, the <code>concat()</code> method is rarely
 used because the <code>+</code> operator is so convenient. Note that <code>String</code>
 objects in Java are <em>immutable</em>, meaning that calling a method on a
-<code>String</code> object will never change it. In the code above, calling
+<code>String</code> object will <strong>never</strong> change it. In the code above, calling
 <code>concat()</code> creates new <code>String</code> objects. The <code>phrase</code> reference points
-first at one <code>String</code> then it points at a new <code>String</code> on the next line.
+first at one <code>String</code> and then at a new <code>String</code> on the next line.
 In this case the <strong>reference</strong> can be changed, but a <code>String</code> <strong>object</strong>
-never changes once it has been created. This distinction is a subtle but
+never changes once it&#8217;s been created. This distinction is a subtle but
 important one.</p>
 </div>
 </div>
@@ -8502,20 +8497,20 @@ on them. The following code stores <code>11</code> into <code>letters</code>.</p
 </div>
 <div class="paragraph">
 <p>Remember that a <code>String</code> is a sequence of <code>char</code> values. If you want to
-find out what <code>char</code> is at a particular location within a <code>String</code>, you
+find out what <code>char</code> value sits at a particular location within a <code>String</code>, you
 can use the <code>charAt()</code> method.</p>
 </div>
 <div class="paragraph">
 <p>This method is called with an <code>int</code> value giving the index you want to
 know about. Indexes inside of a <code>String</code> start at 0, not at 1.
 Zero-based numbering is used extensively in programming, and we discuss
-it further in <a href="#ch06-arrays">Chapter 6</a>. (It may help if you think of
+it further in <a href="#ch06-arrays">Chapter 6</a>. It may help if you think of
 the index as the number of characters that appear before the character
-at the specified index.) The next example shows how <code>charAt()</code> can be
+at the specified index. The next example shows how <code>charAt()</code> can be
 used.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.15 Examining the char value at an index</div>
+<div class="title">Example 3.15 Examining the <code>char</code> value at an index</div>
 <div class="content">
 <div class="paragraph">
 <p>To see what <code>char</code> is at a given location, we call <code>charAt()</code> with the
@@ -8554,15 +8549,44 @@ digit, a space, punctuation, or some other symbol.</p>
 <p>A contiguous sequence of characters inside of a <code>String</code> is called a
 <em>substring</em>. For example, a few substrings of
 <code>"Throw your hands in the air!"</code> are <code>"T"</code>, <code>"Throw"</code>, <code>"hands"</code>, and
-<code>"ur ha"</code>. Note that <code>"Ty"</code> is not a substring because these characters
-do not appear next to each other.</p>
+<code>"ur ha"</code>. Note that <code>"Ty"</code> is <strong>not</strong> a substring because these characters
+don&#8217;t appear next to each other.</p>
 </div>
 <div class="paragraph">
-<p>The <code>String</code> class provides the <code>indexOf()</code> method to find the position
+<p>The next example shows how to use the <code>substring()</code> method to retrieve a
+substring from an existing <code>String</code>.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3.16 Retrieving a substring</div>
+<div class="content">
+<div class="paragraph">
+<p>You can generate a substring of a <code>String</code> (which is, itself, a <code>String</code>) using the
+<code>substring()</code> method.  The <code>substring()</code> method takes two arguments: the index where
+the substring starts and the index <strong>just after</strong> it ends, as shown in the following code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">description</span> <span class="o">=</span> <span class="s">"slovenly"</span><span class="o">;</span></span>
+<span id="L2" class="line"><span class="n">String</span> <span class="n">emotion</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">5</span><span class="o">);</span></span>
+<span id="L3" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">emotion</span><span class="o">);</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This snippet of code prints <code>love</code>, since those are the characters at indexes
+1 through 4 of <code>"slovenly"</code>.  Remember that <code>String</code> indexes are always zero-based.  Also,
+the second argument of <code>substring()</code> is the index after the last one you want in your substring.
+Although this behavior is confusing, it&#8217;s a common design in many different string libraries in many
+different languages.  One way to think about it is that the length of the substring is the
+second parameter minus the first.  In this case, 5 - 1 = 4, the length of <code>"love"</code>.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>String</code> class also provides the <code>indexOf()</code> method to find the position
 of a substring, as shown in the next example.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.16 String search</div>
+<div class="title">Example 3.17 <code>String</code> search</div>
 <div class="content">
 <div class="paragraph">
 <p>Suppose we wish to find a <code>String</code> inside of another <code>String</code>. To do so,
@@ -8580,8 +8604,8 @@ of, with the <code>String</code> we&#8217;re searching for as the argument.</p>
 <p>The <code>indexOf()</code> method returns an <code>int</code> value that gives the position of
 the <code>String</code> we&#8217;re searching for. In the code above, the output is <code>11</code>
 because <code>"China"</code> appears starting at index 11 inside the <code>countries</code>
-<code>String</code>. (Alternatively, there are 11 characters before <code>"China"</code> in
-the <code>String</code>.) If the given substring cannot be found, the <code>indexOf()</code>
+<code>String</code>. Another way to think about it is that there are 11 characters
+before <code>"China"</code> in <code>countries</code>. If the given substring cannot be found, the <code>indexOf()</code>
 method returns <code>-1</code>. For example, <code>-1</code> will be printed to the terminal
 if we replace the print statement above with the following.</p>
 </div>
@@ -8596,7 +8620,7 @@ if we replace the print statement above with the following.</p>
 <p>There are several other methods provided by <code>String</code> that we introduce
 as the need arises. If you are curious, you should look into the Java
 documentation for <code>String</code> in the Oracle
-<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html" target="_blank" rel="noopener">String documentation</a> for a
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" target="_blank" rel="noopener">String documentation</a> for a
 complete list of available methods.</p>
 </div>
 </div>
@@ -8605,7 +8629,7 @@ complete list of available methods.</p>
 <h4 id="_assignment_and_comparison">3.3.4. Assignment and comparison</h4>
 <div class="paragraph">
 <p>Both assigning one variable to another and testing two variables to see
-if they are equal to each other are important operations in Java. These
+if they&#8217;re equal to each other are important operations in Java. These
 operations are used on both primitive and reference types, but there are
 subtle differences between the two that we discuss below.</p>
 </div>
@@ -8619,12 +8643,12 @@ copied. All types in Java perform assignment with the assignment
 operator (<code>=</code>).</p>
 </div>
 <div class="paragraph">
-<p>As we have discussed, values can be computed and then assigned to
+<p>As we&#8217;ve discussed, values can be computed and then assigned to
 variables as in the following statement.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">response</span><span class="o">);</span></span></code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">response</span><span class="o">);</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8639,11 +8663,11 @@ as follows.</p>
 </div>
 <div class="paragraph">
 <p>Here, <code>identifier</code> gives the name of some variable. For example, in the
-statement above, <code>value</code> is the name of the variable.</p>
+statement above, <code>data</code> is the name of the variable.</p>
 </div>
 <div class="paragraph">
 <p>The right-hand side of an assignment statement is an expression that
-returns a value that is assigned to the variable on the left-hand side.
+returns a value that&#8217;s assigned to the variable on the left-hand side.
 Even an assignment statement can be considered an expression, allowing
 us to stack multiple assignments into one line, as in the following
 code.</p>
@@ -8670,16 +8694,16 @@ compiler gives an error, as in the following cases.</p>
 <div class="sect4">
 <h5 id="_comparison">Comparison</h5>
 <div class="paragraph">
-<p>Comparing two values to see if they are the same uses the comparison
+<p>Comparing two values to see if they&#8217;re the same uses the comparison
 operator (<code>==</code>) in Java. With primitive types, this kind of check is
-intuitive: The comparison is <code>true</code>, if the two values are the same.
+intuitive: The result is <code>true</code> if the two values are the same.
 With reference types, the value held by the variable is the arrow
 pointing to the object. Two reference variables could point to different
 objects with identical contents and return <code>false</code> when compared to each
 other. The following gives examples of these comparisons.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.17 Comparison</div>
+<div class="title">Example 3.18 Comparison</div>
 <div class="content">
 <div class="paragraph">
 <p>Consider the following lines of code.</p>
@@ -8712,10 +8736,10 @@ values. If <code>x</code> were assigned <code>6</code> instead, <code>z</code> w
 <div class="title">Figure 3.4 Objects <code>thing1</code>, <code>thing2</code>, and <code>thing3</code> (a) in their initial states and (b) after the assignment <code>thing1 = thing2;</code>.</div>
 </div>
 <div class="paragraph">
-<p>This code declares and initializes three <code>String</code> values. Although it is
+<p>This code declares and initializes three <code>String</code> values. Although it&#8217;s
 possible to store <code>String</code> literals directly without invoking a <code>String</code>
-constructor, we are using this style of <code>String</code> creation to make our
-point because Java can do some confusing optimizations otherwise.
+constructor, we use this style of <code>String</code> creation to make our
+point since Java can do some confusing optimizations otherwise.
 Variables <code>thing1</code> and <code>thing2</code> point to <code>String</code> values that contain
 identical sequences of characters. Variable <code>thing3</code> points to a
 different <code>String</code>. Consider the following statement.</p>
@@ -8764,7 +8788,7 @@ reference <code>thing1</code> to the same location as reference <code>thing2</co
 <p>The <code>==</code> operator is generally not very useful with references, and the
 <code>equals()</code> method should be used instead. This method compares the
 contents of objects in whatever way the designer of the type specifies.
-For example,</p>
+For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8772,8 +8796,8 @@ For example,</p>
 </div>
 </div>
 <div class="paragraph">
-<p>is <code>true</code> when <code>thing1</code> and <code>thing2</code> are pointing at distinct but
-identical <code>String</code> objects.</p>
+<p>This statement is <code>true</code> when <code>thing1</code> and <code>thing2</code> are pointing at identical
+<code>String</code> objects even if they&#8217;re different objects.</p>
 </div>
 </div>
 </div>
@@ -8813,7 +8837,7 @@ declarations.</p>
 </div>
 <div class="paragraph">
 <p>In this code, the value of <code>POPULATION</code> is <code>25000</code> and cannot be
-changed. For example, if you now write <code>population = 30000;</code> on a later
+changed. For example, if you now write <code>POPULATION = 30000;</code> on a later
 line, your compiler will give an error. <code>PLANCK_CONSTANT</code>, <code>FLAG</code>,
 <code>FIRST_INITIAL</code>, and <code>MESSAGE</code> are also defined as named constants.
 Because of the syntax Java uses, these constants are sometimes referred
@@ -8823,8 +8847,8 @@ to as <em>final variables</em>.</p>
 <p>In the case of <code>MESSAGE</code> and all other reference variables, being
 <code>final</code> means that the reference can never point at a different object.
 Even with a <code>final</code> reference, the objects themselves can change if
-their methods allow it. (Since they are immutable, <code>String</code> objects can
-never change.)</p>
+their methods allow it. However, <code>String</code> objects can
+never change since they&#8217;re immutable.</p>
 </div>
 <div class="paragraph">
 <p>Named constants are useful in two ways. First, a well-named constant can
@@ -8833,7 +8857,7 @@ need to change the value to a different constant, you only have to
 change it in one place. For example, if you have used <code>25000</code> in five
 different places in your program, changing it to <code>30000</code> requires five
 changes. If you have used <code>POPULATION</code> throughout your program instead
-of a literal, you only have to change it in one place.</p>
+of a literal, you only have to change its value once.</p>
 </div>
 </div>
 </div>
@@ -8845,7 +8869,7 @@ come up over and over. If we had to solve these problems every time we
 wrote a program, we&#8217;d never get anywhere. Java allows us to use code
 other people have written called <em>libraries</em>. One selling point of Java
 is its large standard library that can be used by any Java programmer
-without special downloads. You have already used the <code>Scanner</code> class,
+without special downloads. You&#8217;ve already used the <code>Scanner</code> class,
 the <code>Math</code> class, and perhaps the <code>JOptionPane</code> class, which are all
 part of libraries. Below, we&#8217;ll go deeper into the <code>Math</code> class and a
 few other useful libraries.</p>
@@ -8858,7 +8882,7 @@ of mathematical methods through the <code>Math</code> class.
 The following table lists a few of the methods available. For a
 complete list of methods provided by the <code>Math</code> class at the time of
 writing, see the Oracle
-<a href="http://download.oracle.com/javase/7/docs/api/java/lang/Math.html" target="_blank" rel="noopener">Math documentation</a>.</p>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html" target="_blank" rel="noopener">Math documentation</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content center">
 <caption class="title">Table 3.2 A sample of methods available in the Java <code>Math</code> class. Arguments to trigonometric methods are given in radians.</caption>
@@ -8936,10 +8960,10 @@ rounding a <code>float</code>).</p></td>
 </tbody>
 </table>
 <div class="exampleblock">
-<div class="title">Example 3.18 Math library usage</div>
+<div class="title">Example 3.19 <code>Math</code> library usage</div>
 <div class="content">
 <div class="paragraph">
-<p>Here is a program that uses the <code>Math.pow()</code> method to compute compound
+<p>Here&#8217;s a program that uses the <code>Math.pow()</code> method to compute compound
 interest. Unlike <code>Scanner</code> and <code>JOptionPane</code>, the <code>Math</code> class is
 imported by default in Java programs and requires no explicit import
 statement.</p>
@@ -9009,7 +9033,7 @@ you need to create a <code>Random</code> object as follows.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Here we have created an object named <code>random</code> of type <code>Random</code>.
+<p>Here we&#8217;ve created an object named <code>random</code> of type <code>Random</code>.
 Depending on the kind of random value you need, you can use the
 <code>nextInt()</code>, <code>nextBoolean()</code>, or <code>nextDouble()</code> to generate a random
 value of the corresponding type.</p>
@@ -9025,15 +9049,14 @@ value of the corresponding type.</p>
 <span id="L7" class="line"><span class="c1">// Random boolean value</span></span>
 <span id="L8" class="line"> <span class="kt">boolean</span> <span class="n">gender</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">();</span></span>
 <span id="L9" class="line"></span>
-<span id="L10" class="line"><span class="c1">// Random floating-point value between 0.0 (inclusive)</span></span>
-<span id="L11" class="line"><span class="c1">// and 1.0 (exclusive)</span></span>
-<span id="L12" class="line"><span class="kt">double</span> <span class="n">percent</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span></code></pre>
+<span id="L10" class="line"><span class="c1">// Random floating-point value between 0.0 (inclusive) and 1.0 (exclusive)</span></span>
+<span id="L11" class="line"><span class="kt">double</span> <span class="n">percent</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>In these examples, <em>inclusive</em> means that the number could be generated,
 while <em>exclusive</em> means that the number cannot be. Thus, the call
-<code>random.nextInt(130)</code> generates the integers 0 through 129, but never
+<code>random.nextInt(130)</code> generates the integers 0 through 129 but never
 130. Exclusive upper bounds on ranges of random values are very common
 in programming.</p>
 </div>
@@ -9068,10 +9091,10 @@ as shown below.</p>
 video game.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.19 Dragon attribute generation</div>
+<div class="title">Example 3.20 Dragon attribute generation</div>
 <div class="content">
 <div class="paragraph">
-<p>Suppose you are designing a video in which the hero must fight a dragon
+<p>Suppose you&#8217;re designing a video in which the hero must fight a dragon
 with random attributes. <a href="#DragonAttributesProgram">Program 3.2</a> generates
 random values for the age, height, gender, and hit points of the dragon.</p>
 </div>
@@ -9154,14 +9177,14 @@ random numbers without importing <code>java.util.Random</code> or creating a
 </div>
 <div class="paragraph">
 <p>The random numbers generated by the <code>Random</code> class and by
-<code>Math.random()</code> are <em>pseudorandom</em> numbers, meaning that they are
+<code>Math.random()</code> are <em>pseudorandom</em> numbers, meaning that they&#8217;re
 generated by a mathematical formula instead of truly random events. Each
 number is computed using the previous one, and the starting number is
 determined using time information from the OS. For most purposes, these
 pseudorandom numbers are good enough. Since each number can be predicted
 from the previous one, pseudorandom numbers are insufficient for some
 security applications. For those cases, Java provides the <code>SecureRandom</code>
-class, which is slower than <code>Random</code> but produces random numbers that
+class which is slower than <code>Random</code> but produces random numbers that
 are much harder to predict.</p>
 </div>
 </div>
@@ -9172,7 +9195,7 @@ are much harder to predict.</p>
 many useful ways. The primitive types (<code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>,
 <code>float</code>, <code>double</code>, <code>char</code>, and <code>boolean</code>) do not have methods, but we
 sometimes need to manipulate them with methods or store them in a place
-that can only take a reference type.</p>
+that requires a reference type.</p>
 </div>
 <div class="paragraph">
 <p>To deal with such situations, Java uses <em>wrapper classes</em>, reference
@@ -9192,13 +9215,14 @@ corresponding numeric value. We had such a situation in
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">response</span> <span class="o">=</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">showInputDialog</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">enterHeight</span><span class="o">,</span> <span class="n">title</span><span class="o">,</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">QUESTION_MESSAGE</span><span class="o">);</span></span>
-<span id="L2" class="line"><span class="n">height</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">response</span><span class="o">);</span></span></code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">response</span> <span class="o">=</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">showInputDialog</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span></span>
+<span id="L2" class="line">	<span class="s">"Enter the height: "</span><span class="o">,</span> <span class="n">title</span><span class="o">,</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">QUESTION_MESSAGE</span><span class="o">);</span></span>
+<span id="L3" class="line"><span class="n">height</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">response</span><span class="o">);</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This code uses the <code>JOptionPane.showInputDialog()</code> method to get from
-the user the height from which a ball is dropped. This method always
+<p>This code uses the <code>JOptionPane.showInputDialog()</code> method to read from
+the user the height at which a ball is dropped. This method always
 returns data as a <code>String</code>. In order for us to do computation with the
 value, we need to convert it to a numeric type, such as an <code>int</code> or a
 <code>double</code>. To do so, we use the appropriate <code>Byte.parseByte()</code>,
@@ -9210,7 +9234,7 @@ value, we need to convert it to a numeric type, such as an <code>int</code> or a
 using three of these methods.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.20 String to numeric conversion</div>
+<div class="title">Example 3.21 <code>String</code> to numeric conversion</div>
 <div class="content">
 <div class="paragraph">
 <p>Consider the following statements that show how a string can be
@@ -9250,8 +9274,8 @@ method gives us 15 stored as the appropriate type.</p>
 input to the <code>Integer.parseInt()</code> method? If the <code>String</code> is not
 formatted as the appropriate kind of number, Java throws a
 <code>NumberFormatException</code>, probably crashing the program. An <em>exception</em>
-is an error that happens in the middle of running a program. We discuss
-how to work with exceptions in <a href="#ch12-exceptions">Chapter 12</a>.</p>
+is an error or other unexpected situation that happens in the middle of
+running a program. We discuss how to work with exceptions in <a href="#ch12-exceptions">Chapter 12</a>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -9344,9 +9368,9 @@ executed.</p>
 <div class="paragraph">
 <p>As you recall from <a href="#ch01-computer-basics">Chapter 1</a>, integer
 arithmetic in Java has limitations. If you increase a large positive
-number past its maximum value, it becomes a large magnitude negative
+number past its maximum value, it becomes a large-magnitude negative
 number, a phenomenon called overflow. Conversely, if you decrease a
-large magnitude negative number past its minimum value, it becomes a
+large-magnitude negative number past its minimum value, it becomes a
 large positive number, a phenomenon called underflow.</p>
 </div>
 <div class="paragraph">
@@ -9365,10 +9389,9 @@ Instead of trying to remember that the largest positive <code>int</code> value i
 <div class="paragraph">
 <p>The <code>MAX_VALUE</code> constants are always the largest positive number that
 can be represented with the corresponding type. The <code>MIN_VALUE</code> is more
-confusing. For integer types, it is the largest magnitude negative
-number. For floating-point types, it is the smallest positive non-zero
-value that can be represented. Here is a table listing all these
-constants.</p>
+confusing. For integer types, it&#8217;s the largest magnitude negative
+number. For floating-point types, it&#8217;s the smallest positive non-zero
+value that can be represented. Here is a table listing these constants.</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
@@ -9433,7 +9456,7 @@ constants.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The wrap-around nature of integer arithmetic means that adding 1 to<br>
+<p>The wrap-around nature of integer arithmetic means that adding 1 to
 <code>Integer.MAX_VALUE</code> results in <code>Integer.MIN_VALUE</code>. Note that all
 integer arithmetic in Java is done assuming type <code>int</code>, unless
 explicitly specified otherwise. Thus, <code>Short.MAX_VALUE + 1</code> does not
@@ -9451,9 +9474,9 @@ The same rules apply to underflow.</p>
 <p>Overflow and underflow do not work in the same way with the floating-point
 numbers represented by <code>float</code> and <code>double</code>. The expression
 <code>Double.MAX_VALUE + 1</code> results in <code>Double.MAX_VALUE</code> because <code>1</code> is so
-small in comparison that it is lost in rounding error. However,
+small in comparison that it&#8217;s lost in rounding error. However,
 <code>1.5*Double.MAX_VALUE</code> results in <code>Double.POSITIVE_INFINITY</code>, a
-constant used to represent any value larger than <code>Double.MAX_VALUE</code>
+constant used to represent any value larger than <code>Double.MAX_VALUE</code>.
 Since <code>Double.MIN_VALUE</code> is the smallest non-zero number,
 <code>Double.MIN_VALUE - 1</code> evaluates to <code>-1.0</code>.</p>
 </div>
@@ -9471,7 +9494,7 @@ Since <code>Double.MIN_VALUE</code> is the smallest non-zero number,
 <div class="paragraph">
 <p>Wrapper classes in Java have a split personality. On the one hand, the
 classes themselves can be used for the utility methods and constants we
-have described above. However, <em>objects</em> of these same wrapper classes
+described above. However, <em>objects</em> of these same wrapper classes
 can be used in an entirely separate way to store primitive values. Each
 primitive type can be stored in its wrapper type as shown below.</p>
 </div>
@@ -9485,7 +9508,7 @@ primitive type can be stored in its wrapper type as shown below.</p>
 <div class="paragraph">
 <p>Why would we want to do this? There are many situations in which a
 library method or data structure requires a reference type, not a
-primitive type. These wrappers were specially designed to handle these
+primitive type. These wrappers were  designed for these
 cases when you have to treat a primitive type as an object.</p>
 </div>
 <div class="listingblock">
@@ -9507,18 +9530,17 @@ appropriate. Thus, the earlier code could be written as follows.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Programmers who do not understand wrapper classes will sometimes use
+<p>Programmers who don&#8217;t understand wrapper classes will sometimes use
 primitive types and wrapper classes interchangeably, mixing <code>double</code> and
-<code>Double</code>, for example. You should avoid using wrapper classes whenever
-possible, since it requires more memory and more computation to perform
-operations with wrapper classes.</p>
+<code>Double</code>, for example. Avoid using wrapper classes unnecessarily, since
+they require more memory and more computation to perform operations.</p>
 </div>
 <div class="paragraph">
-<p>Fortunately, automatic boxing and unboxing reduces the need to think
+<p>Fortunately, automatic boxing and unboxing reduce the need to think
 about wrapper classes, and most programmers will rarely need to declare
-an explicit wrapper reference. We will discuss wrapper classes further
+an explicit wrapper reference. We&#8217;ll discuss wrapper classes further
 in <a href="#ch18-dynamic-data-structures">Chapter 18</a>, where they are used to
-allow generic classes<em>generic class</em> to store primitive types as well
+allow generic classes to store primitive types as well
 as reference types.</p>
 </div>
 </div>
@@ -9527,11 +9549,11 @@ as reference types.</p>
 <div class="sect2">
 <h3 id="_solution_college_cost_calculator">3.5. Solution: College cost calculator</h3>
 <div class="paragraph">
-<p>In this chapter, we have introduced and more fully explained many
+<p>In this chapter, we introduced and more fully explained many
 aspects of manipulating data in Java, including declaring variables,
 assigning values, performing simple arithmetic and more advanced math,
-inputting and outputting data, and using the type system, which has
-small differences for primitive and reference types. Our solution to the
+inputting and outputting data, and using the type system, which includes
+subtle differences between primitive and reference types. Our solution to the
 college cost calculator problem posed at the beginning of the chapter
 uses all of these features at some level.</p>
 </div>
@@ -9602,23 +9624,19 @@ monthly payment times 12 times the number of years.</p>
 <p>All that remains is to print out the output. First, we output a header
 describing the following output as college costs for the user. Using
 <code>System.out.format()</code> as described in <a href="#_primitive_types">Section 3.3.2</a>, we print out the yearly cost, four year cost, monthly loan
-payment, and total cost, all formatted with dollar signs, 2 places after
+payment, and total cost, all formatted with dollar signs, two places after
 the decimal point, and tabs so that the output lines up.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"\nCollege costs for "</span> <span class="o">+</span> <span class="n">firstName</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">lastName</span> <span class="o">);</span></span>
 <span id="L2" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"***************************************"</span><span class="o">);</span></span>
-<span id="L3" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"Yearly cost:\t\t\t$"</span><span class="o">);</span></span>
-<span id="L4" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%.2f\n"</span><span class="o">,</span> <span class="n">yearlyCost</span><span class="o">);</span></span>
-<span id="L5" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"Four year cost:\t\t\t$"</span><span class="o">);</span></span>
-<span id="L6" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%.2f\n"</span><span class="o">,</span> <span class="n">fourYearCost</span><span class="o">);</span></span>
-<span id="L7" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"Monthly loan payment:\t\t$"</span><span class="o">);</span></span>
-<span id="L8" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%.2f\n"</span><span class="o">,</span> <span class="n">monthlyPayment</span><span class="o">);</span></span>
-<span id="L9" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"Total loan cost:\t\t$"</span><span class="o">);</span></span>
-<span id="L10" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%.2f\n"</span><span class="o">,</span> <span class="n">totalLoanCost</span> <span class="o">);</span></span>
-<span id="L11" class="line">    <span class="o">}</span></span>
-<span id="L12" class="line"><span class="o">}</span></span></code></pre>
+<span id="L3" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"Yearly cost:\t\t\t$%.2f%n"</span><span class="o">,</span> <span class="n">yearlyCost</span><span class="o">);</span></span>
+<span id="L4" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"Four year cost:\t\t\t$%.2f%n"</span><span class="o">,</span> <span class="n">fourYearCost</span><span class="o">);</span></span>
+<span id="L5" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"Monthly loan payment:\t\t$%.2f%n"</span><span class="o">,</span> <span class="n">monthlyPayment</span><span class="o">);</span></span>
+<span id="L6" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"Total loan cost:\t\t$%.2f%n"</span><span class="o">,</span> <span class="n">totalLoanCost</span> <span class="o">);</span></span>
+<span id="L7" class="line">    <span class="o">}</span></span>
+<span id="L8" class="line"><span class="o">}</span></span></code></pre>
 </div>
 </div>
 </div>
@@ -9629,13 +9647,13 @@ the decimal point, and tabs so that the output lines up.</p>
 the ideas of task and domain decomposition that could be used to solve a
 problem in parallel. By splitting up the jobs to be done (as in task
 decomposition) or dividing a large amount of data into pieces (as in
-domain decomposition), we can attack a problem with several workers and
+domain decomposition), we can attack a problem with several workers to
 finish the work more quickly.</p>
 </div>
 <div class="sect3">
 <h4 id="_splitting_expressions">3.6.1. Splitting expressions</h4>
 <div class="paragraph">
-<p>Performing arithmetic is some of the only Java syntax we have introduced
+<p>Performing arithmetic is some of the only Java syntax we&#8217;ve introduced
 that can be used to solve problems directly, but evaluating a single
 mathematical expression usually does not warrant concurrency. If the
 terms in the expression are themselves complex functions (such as
@@ -9643,7 +9661,7 @@ numerical integrations or simulations that produce answers), it might be
 reasonable to evaluate these functions concurrently.</p>
 </div>
 <div class="paragraph">
-<p>In this section, we will give an example of splitting an expression into
+<p>In this section, we give an example of splitting an expression into
 smaller sub-expressions that could be evaluated concurrently. The basic
 steps underlying the concurrent evaluation of expressions are the
 following.</p>
@@ -9654,7 +9672,7 @@ following.</p>
 <p>Identify sub-expressions that are independent of each other.</p>
 </li>
 <li>
-<p>Create a separate thread that evaluates each sub-expression.</p>
+<p>Create a separate thread to evaluate each sub-expression.</p>
 </li>
 <li>
 <p>Combine the results from each thread to obtain a final answer.</p>
@@ -9662,13 +9680,13 @@ following.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>While this sequence of steps looks simple, each step can be complex.
+<p>While this sequence of steps looks simple, each step could be complex.
 Worse, being careless at any step could result in a concurrent solution
 that runs slower than the sequential solution or even gives the wrong
 answer. The following example illustrates these steps.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 3.21 Split expression</div>
+<div class="title">Example 3.22 Split expression</div>
 <div class="content">
 <div class="paragraph">
 <p>Consider the following statement:</p>
@@ -9748,8 +9766,8 @@ illustrates this concurrent approach.</p>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>We wait for the first thread to finish. How do we know when a thread is done executing? Every <code>Thread</code> object has a <code>join()</code> method. If some code calls a thread&#8217;s <code>join()</code> method, the method will not return until the thread is finished. When code is waiting for a thread to finish, it is possible for it to be interrupted if some other thread has gotten tired of the code waiting around doing nothing. If that happens, an <code>InterruptedException</code> is thrown. Exceptions are the way that Java deals with errors and other unusual situations. We will discuss them further in
-<a href="#ch12-exceptions">Chapter 12</a>, but, for now, you only need to know that
+<td>We wait for the first thread to finish. How do we know when a thread is done executing? Every <code>Thread</code> object has a <code>join()</code> method. If some code calls a thread&#8217;s <code>join()</code> method, the method will not return until the thread is finished. When code is waiting for a thread to finish, it&#8217;s possible for it to be interrupted if some other thread has gotten tired of the code waiting around doing nothing. If that happens, an <code>InterruptedException</code> is thrown. Exceptions are the way that Java deals with errors and other unusual situations. We&#8217;ll discuss them further in
+<a href="#ch12-exceptions">Chapter 12</a>, but for now, you only need to know that
 code (like the <code>join()</code> method) that can cause certain kinds of
 exceptions (like the <code>InterruptedException</code>) needs to be enclosed in a
 <code>try</code> block. After the <code>try</code> block comes a <code>catch</code> block that says what
@@ -9784,13 +9802,13 @@ program).</td>
 </div>
 <div class="paragraph">
 <p>We would like to show how classes <code>ComputeF</code> and <code>ComputeG</code> are written,
-but we will hold off since they use concepts relating to methods, class
-design, and inheritance that we will cover in <a href="#ch08-methods">Chapter 8</a>, <a href="#ch09-classes">Chapter 9</a>, and <a href="#ch11-inheritance">Chapter 11</a>.</p>
+but we&#8217;ll hold off since they use concepts relating to methods, class
+design, and inheritance that we&#8217;ll cover in <a href="#ch08-methods">Chapter 8</a>, <a href="#ch09-classes">Chapter 9</a>, and <a href="#ch11-inheritance">Chapter 11</a>.</p>
 </div>
 <div class="paragraph">
 <p>If you don&#8217;t understand all the elements of
-<a href="#SplitExpressionProgram">Program 3.3</a>, don&#8217;t despair. We&#8217;re trying to give
-you an example of what concurrency looks like in Java, but you cannot be
+<a href="#SplitExpressionProgram">Program 3.3</a>, don&#8217;t despair! We&#8217;re trying to give
+you an example of what concurrency looks like in Java, but you can&#8217;t be
 expected to master all the details at this stage. However, concurrency
 in Java will often follow the steps shown:</p>
 </div>
@@ -9823,15 +9841,15 @@ concurrently only if the work done is complex enough that its
 computation takes significantly longer than the time to create the
 necessary threads. In the example above, the methods <code>f()</code> and <code>g()</code>
 must be complex enough that it takes a significant amount of time to
-evaluate them. Otherwise, concurrency will not reduce the running time.
+evaluate them. Otherwise, concurrency won&#8217;t reduce the running time.
 This aspect of speedup is explained in detail in
 <a href="#ch13-concurrency">Chapter 13</a>.</p>
 </div>
 <div class="paragraph">
 <p>Second, splitting an expression (or any complex sequence of
 computations) is easy when its individual components are independent. If
-they are interdependent, splitting requires care or subtle programming
-errors can occur. Consider the expression <code>f(a)+g(b)</code> and suppose that
+they are interdependent, splitting requires care to avoid subtle programming
+errors. Consider the expression <code>f(a) + g(b)</code> and suppose that
 <code>f()</code> modifies the value of <code>b</code> during execution. Such a modification is
 called a <em>side effect</em>. This side effect creates a dependency between
 <code>f()</code> and <code>g()</code>. Concurrent execution of these two methods must be done
@@ -9850,8 +9868,8 @@ that can be done with them. Types are used to catch programming errors
 at compile time.</p>
 </div>
 <div class="paragraph">
-<p>Java has a small set of primitive types such as <code>int</code> and <code>double</code>,
-which hold single values and use operators to manipulate them. Java also
+<p>Java has a small set of primitive types such as <code>int</code> and <code>double</code>
+that hold single values and use operators to manipulate them. Java also
 has reference types, which use primitive types as building blocks, can
 be created by any Java programmer, can contain arbitrarily complex data,
 and are manipulated with methods. One of the most commonly used
@@ -9868,7 +9886,7 @@ provided by wrapper classes.</p>
 <div class="paragraph">
 <p>We also gave a taste of the syntax for creating, running, and waiting
 for the completion of threads. Such threads could be used to speed up
-the evaluation of mathematical computations on multicore processors, but
+the evaluation of computations on multicore processors, but
 only if the computations are long, complex, and not too interdependent.</p>
 </div>
 </div>
@@ -10164,7 +10182,7 @@ two characters as 16-bit unsigned binary integers.</p>
 </li>
 <li>
 <p>Assuming that each character occupies 16
-bits (two bytes) in memory and is coded using Unicode, use hexadecimal
+bits (two bytes) in memory and is encoded using Unicode, use hexadecimal
 numbers to show how the word <code>"Java"</code> will be represented in computer
 memory. Unicode values for the Latin alphabet are the same as the values
 for the older ASCII standard. You can find a listing of these values on
@@ -35767,7 +35785,7 @@ some performance optimizations that would otherwise be impossible.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_casting">17.3.3. Casting</h4>
+<h4 id="_casting_2">17.3.3. Casting</h4>
 <div class="paragraph">
 <p>If we shift the focus back to polymorphism, we have to admit that we
 have avoided one of the messier issues. It&#8217;s true that polymorphism
@@ -43629,7 +43647,7 @@ multi-threaded versions?</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-01-24 16:10:26 -0500
+Last updated 2019-01-22 15:30:25 -0500
 </div>
 </div>
 <script type="text/x-mathjax-config">
