@@ -29,13 +29,9 @@ public class CollegeCosts {
                 
         System.out.println("\nCollege costs for " + firstName + " " + lastName );
         System.out.println("***************************************");
-        System.out.print("Yearly cost:\t\t\t$");
-        System.out.format("%.2f\n", yearlyCost);
-        System.out.print("Four year cost:\t\t\t$");
-        System.out.format("%.2f\n", fourYearCost);
-        System.out.print("Monthly loan payment:\t\t$");
-        System.out.format("%.2f\n", monthlyPayment);
-        System.out.print("Total loan cost:\t\t$");
-        System.out.format("%.2f\n", totalLoanCost );
+        System.out.format("Yearly cost:\t\t\t$%.2f%n", yearlyCost);
+        System.out.format("Four year cost:\t\t\t$%.2f%n", fourYearCost);
+        System.out.format("Monthly loan payment:\t\t$%.2f%n", monthlyPayment);
+        System.out.format("Total loan cost:\t\t$%.2f%n", totalLoanCost );
     }
 }

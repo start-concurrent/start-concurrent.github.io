@@ -609,7 +609,8 @@ The output of this code is:
 $123.46
 ....
 
-Note that the last visible digit is rounded instead of truncated. To learn about other ways to use
+Note that the last visible digit is rounded instead of truncated. Note that `%n` is a special 
+format specifier that indicates a newline. To learn about other ways to use
 format strings to manipulate output, read the Oracle
 https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax[Formatter documentation^].
 
@@ -2391,7 +2392,7 @@ Since `Double.MIN_VALUE` is the smallest non-zero number,
 
 Wrapper classes in Java have a split personality. On the one hand, the
 classes themselves can be used for the utility methods and constants we
-have described above. However, _objects_ of these same wrapper classes
+described above. However, _objects_ of these same wrapper classes
 can be used in an entirely separate way to store primitive values. Each
 primitive type can be stored in its wrapper type as shown below.
 
@@ -2404,7 +2405,7 @@ Character question = new Character('?');
 
 Why would we want to do this? There are many situations in which a
 library method or data structure requires a reference type, not a
-primitive type. These wrappers were specially designed to handle these
+primitive type. These wrappers were  designed for these
 cases when you have to treat a primitive type as an object.
 
 [source, java]
@@ -2424,26 +2425,25 @@ Double pi = 3.141592;
 Character question = '?';
 ----
 
-Programmers who do not understand wrapper classes will sometimes use
+Programmers who don't understand wrapper classes will sometimes use
 primitive types and wrapper classes interchangeably, mixing `double` and
-`Double`, for example. You should avoid using wrapper classes whenever
-possible, since it requires more memory and more computation to perform
-operations with wrapper classes.
+`Double`, for example. Avoid using wrapper classes unnecessarily, since 
+they require more memory and more computation to perform operations.
 
-Fortunately, automatic boxing and unboxing reduces the need to think
+Fortunately, automatic boxing and unboxing reduce the need to think
 about wrapper classes, and most programmers will rarely need to declare
-an explicit wrapper reference. We will discuss wrapper classes further
+an explicit wrapper reference. We'll discuss wrapper classes further
 in <<ch18-dynamic-data-structures#ch18-dynamic-data-structures>>, where they are used to
-allow generic classes__generic class__ to store primitive types as well
+allow generic classes to store primitive types as well
 as reference types.
 
 === Solution: College cost calculator
 
-In this chapter, we have introduced and more fully explained many
+In this chapter, we introduced and more fully explained many
 aspects of manipulating data in Java, including declaring variables,
 assigning values, performing simple arithmetic and more advanced math,
-inputting and outputting data, and using the type system, which has
-small differences for primitive and reference types. Our solution to the
+inputting and outputting data, and using the type system, which includes
+subtle differences between primitive and reference types. Our solution to the
 college cost calculator problem posed at the beginning of the chapter
 uses all of these features at some level.
 
@@ -2457,7 +2457,6 @@ print a welcome message for the user, and create a `Scanner` object.
 include::{programsdir}/CollegeCosts.java[lines=1..7]
 ----
 
-
 Next is a sequence of prompts to the user interspersed with input done
 with the `Scanner` object. The program reads the user's first name as a
 `String`, the user's last name as a `String`, the per-semester tuition
@@ -2470,7 +2469,6 @@ cost of food as a `double`, the interest rate for the loan as a
 ----
 include::{programsdir}/CollegeCosts.java[lines=8..22]
 ----
-
 
 The next segment of code completes the computations needed. First, it
 finds the total yearly cost by doubling the semester cost, multiplying
@@ -2486,16 +2484,15 @@ monthly payment times 12 times the number of years.
 include::{programsdir}/CollegeCosts.java[lines=23..29]
 ----
 
-
 All that remains is to print out the output. First, we output a header
 describing the following output as college costs for the user. Using
 `System.out.format()` as described in <<Primitive types>>, we print out the yearly cost, four year cost, monthly loan
-payment, and total cost, all formatted with dollar signs, 2 places after
+payment, and total cost, all formatted with dollar signs, two places after
 the decimal point, and tabs so that the output lines up.
 
 [source, java]
 ----
-include::{programsdir}/CollegeCosts.java[lines=30..42]
+include::{programsdir}/CollegeCosts.java[lines=30..37]
 ----
 
 
@@ -2505,28 +2502,28 @@ In <<Concurrency: Solving problems in parallel>>, we introduced
 the ideas of task and domain decomposition that could be used to solve a
 problem in parallel. By splitting up the jobs to be done (as in task
 decomposition) or dividing a large amount of data into pieces (as in
-domain decomposition), we can attack a problem with several workers and
+domain decomposition), we can attack a problem with several workers to
 finish the work more quickly.
 
 ==== Splitting expressions
 
-Performing arithmetic is some of the only Java syntax we have introduced
+Performing arithmetic is some of the only Java syntax we've introduced
 that can be used to solve problems directly, but evaluating a single
 mathematical expression usually does not warrant concurrency. If the
 terms in the expression are themselves complex functions (such as
 numerical integrations or simulations that produce answers), it might be
 reasonable to evaluate these functions concurrently.
 
-In this section, we will give an example of splitting an expression into
+In this section, we give an example of splitting an expression into
 smaller sub-expressions that could be evaluated concurrently. The basic
 steps underlying the concurrent evaluation of expressions are the
 following.
 
 * Identify sub-expressions that are independent of each other.
-* Create a separate thread that evaluates each sub-expression.
+* Create a separate thread to evaluate each sub-expression.
 * Combine the results from each thread to obtain a final answer.
 
-While this sequence of steps looks simple, each step can be complex.
+While this sequence of steps looks simple, each step could be complex.
 Worse, being careless at any step could result in a concurrent solution
 that runs slower than the sequential solution or even gives the wrong
 answer. The following example illustrates these steps.
@@ -2573,8 +2570,8 @@ include::{programsdir}/SplitExpression.java[]
 <2> We create another object named `gThread` that takes one, `5.55`. Both of these objects have types that extend the `Thread` class, which means that they can be made to run independently.
 <3> We start the first thread running.
 <4> We start the second thread running. Every object whose type is `Thread` (or a child of `Thread`, which we will discuss in <<ch11-inheritance#ch11-inheritance>>) has a `start()` method which begins its execution as a separate thread.
-<5> We wait for the first thread to finish. How do we know when a thread is done executing? Every `Thread` object has a `join()` method. If some code calls a thread's `join()` method, the method will not return until the thread is finished. When code is waiting for a thread to finish, it is possible for it to be interrupted if some other thread has gotten tired of the code waiting around doing nothing. If that happens, an `InterruptedException` is thrown. Exceptions are the way that Java deals with errors and other unusual situations. We will discuss them further in
-<<ch12-exceptions#ch12-exceptions>>, but, for now, you only need to know that
+<5> We wait for the first thread to finish. How do we know when a thread is done executing? Every `Thread` object has a `join()` method. If some code calls a thread's `join()` method, the method will not return until the thread is finished. When code is waiting for a thread to finish, it's possible for it to be interrupted if some other thread has gotten tired of the code waiting around doing nothing. If that happens, an `InterruptedException` is thrown. Exceptions are the way that Java deals with errors and other unusual situations. We'll discuss them further in
+<<ch12-exceptions#ch12-exceptions>>, but for now, you only need to know that
 code (like the `join()` method) that can cause certain kinds of
 exceptions (like the `InterruptedException`) needs to be enclosed in a
 `try` block. After the `try` block comes a `catch` block that says what
@@ -2593,12 +2590,12 @@ program).
 ====
 
 We would like to show how classes `ComputeF` and `ComputeG` are written,
-but we will hold off since they use concepts relating to methods, class
-design, and inheritance that we will cover in <<ch08-methods#ch08-methods>>, <<ch09-classes#ch09-classes>>, and <<ch11-inheritance#ch11-inheritance>>.
+but we'll hold off since they use concepts relating to methods, class
+design, and inheritance that we'll cover in <<ch08-methods#ch08-methods>>, <<ch09-classes#ch09-classes>>, and <<ch11-inheritance#ch11-inheritance>>.
 
 If you don't understand all the elements of
-<<SplitExpressionProgram>>, don't despair. We're trying to give
-you an example of what concurrency looks like in Java, but you cannot be
+<<SplitExpressionProgram>>, don't despair! We're trying to give
+you an example of what concurrency looks like in Java, but you can't be
 expected to master all the details at this stage. However, concurrency
 in Java will often follow the steps shown:
 
@@ -2618,14 +2615,14 @@ concurrently only if the work done is complex enough that its
 computation takes significantly longer than the time to create the
 necessary threads. In the example above, the methods `f()` and `g()`
 must be complex enough that it takes a significant amount of time to
-evaluate them. Otherwise, concurrency will not reduce the running time.
+evaluate them. Otherwise, concurrency won't reduce the running time.
 This aspect of speedup is explained in detail in
 <<ch13-concurrency#ch13-concurrency>>.
 
 Second, splitting an expression (or any complex sequence of
 computations) is easy when its individual components are independent. If
-they are interdependent, splitting requires care or subtle programming
-errors can occur. Consider the expression `f(a)+g(b)` and suppose that
+they are interdependent, splitting requires care to avoid subtle programming
+errors. Consider the expression `f(a) + g(b)` and suppose that
 `f()` modifies the value of `b` during execution. Such a modification is
 called a _side effect_. This side effect creates a dependency between
 `f()` and `g()`. Concurrent execution of these two methods must be done
@@ -2640,8 +2637,8 @@ the possible values items with that type could have and the operations
 that can be done with them. Types are used to catch programming errors
 at compile time.
 
-Java has a small set of primitive types such as `int` and `double`,
-which hold single values and use operators to manipulate them. Java also
+Java has a small set of primitive types such as `int` and `double`
+that hold single values and use operators to manipulate them. Java also
 has reference types, which use primitive types as building blocks, can
 be created by any Java programmer, can contain arbitrarily complex data,
 and are manipulated with methods. One of the most commonly used
@@ -2656,7 +2653,7 @@ provided by wrapper classes.
 
 We also gave a taste of the syntax for creating, running, and waiting
 for the completion of threads. Such threads could be used to speed up
-the evaluation of mathematical computations on multicore processors, but
+the evaluation of computations on multicore processors, but
 only if the computations are long, complex, and not too interdependent.
 
 === Exercises
@@ -2800,7 +2797,7 @@ by the constructors for the two objects are the same.
 `\u0061` and `\u0041`, respectively. Give the representation of these
 two characters as 16-bit unsigned binary integers.
 . Assuming that each character occupies 16
-bits (two bytes) in memory and is coded using Unicode, use hexadecimal
+bits (two bytes) in memory and is encoded using Unicode, use hexadecimal
 numbers to show how the word `"Java"` will be represented in computer
 memory. Unicode values for the Latin alphabet are the same as the values
 for the older ASCII standard. You can find a listing of these values on
