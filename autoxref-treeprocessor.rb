@@ -157,8 +157,9 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
 	# Update xrefs inside list_items.
 	document.find_by(context: :list_item).each do |item|
 		# Hack needed because item.text returns text with substitutions already applied.
-		text = item.instance_variable_get :@text
+		text = +(item.instance_variable_get :@text)
 		update_reference_text(text, document)
+		item.instance_variable_set(:@text, text)
 	end
 	
     nil
