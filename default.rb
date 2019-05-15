@@ -7,7 +7,7 @@ module Rouge
     class Default < CSSTheme
       name 'default'
 
-      style Text,                        :fg => "#bbbbbb", :bg => "#f8f8f8"
+      style Text,                        :fg => "#000000", :bg => "#f8f8f8"
   
       style Comment,                     :fg => "#408080", :italic => true
       style Comment::Preproc,            :fg => "#BC7A00"

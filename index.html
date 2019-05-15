@@ -4,18 +4,17 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.5">
+<meta name="generator" content="Asciidoctor 2.0.9">
 <meta name="author" content="Barry Wittman, Tim Korb, Aditya Mathur">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
-/* Uncomment @import statement when using as custom stylesheet */
+/* Uncomment @import statement to use as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
-audio,canvas,video{display:inline-block}
+audio,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
-script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:none}
 a:focus{outline:thin dotted}
@@ -220,8 +219,8 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
-.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .listingblock>.content{position:relative}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
@@ -264,7 +263,8 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
@@ -436,141 +436,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-.highlight table td { padding: 5px; }
-.highlight table pre { margin: 0; }
-.highlight, .highlight .w {
-  color: #bbbbbb;
-  background-color: #f8f8f8;
-}
-.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
-  color: #408080;
-  font-style: italic;
-}
-.highlight .cp {
-  color: #BC7A00;
-}
-.highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kr, .highlight .kv {
-  color: #008000;
-  font-weight: bold;
-}
-.highlight .kp {
-}
-.highlight .kt {
-  color: #B00040;
-}
-.highlight .o {
-  color: #666666;
-}
-.highlight .ow {
-  color: #AA22FF;
-  font-weight: bold;
-}
-.highlight .nb, .highlight .bp {
-  color: #008000;
-}
-.highlight .nf {
-  color: #0000FF;
-}
-.highlight .nc {
-  color: #0000FF;
-  font-weight: bold;
-}
-.highlight .nn {
-  color: #0000FF;
-  font-weight: bold;
-}
-.highlight .ne {
-  color: #D2413A;
-  font-weight: bold;
-}
-.highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi {
-  color: #19177C;
-}
-.highlight .no {
-  color: #880000;
-}
-.highlight .nl {
-  color: #A0A000;
-}
-.highlight .ni {
-  color: #999999;
-  font-weight: bold;
-}
-.highlight .na {
-  color: #7D9029;
-}
-.highlight .nt {
-  color: #008000;
-  font-weight: bold;
-}
-.highlight .nd {
-  color: #AA22FF;
-}
-.highlight .s, .highlight .sb, .highlight .sc, .highlight .s2, .highlight .sh, .highlight .s1 {
-  color: #BA2121;
-}
-.highlight .sd {
-  font-style: italic;
-}
-.highlight .si {
-  color: #BB6688;
-  font-weight: bold;
-}
-.highlight .se {
-  color: #BB6622;
-  font-weight: bold;
-}
-.highlight .sr {
-  color: #BB6688;
-}
-.highlight .ss {
-  color: #19177C;
-}
-.highlight .sx {
-  color: ##008000;
-}
-.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
-  color: #666666;
-}
-.highlight .gh {
-  color: #000080;
-  font-weight: bold;
-}
-.highlight .gu {
-  color: #800080;
-  font-weight: bold;
-}
-.highlight .gd {
-  color: #A00000;
-}
-.highlight .gi {
-  color: #00A000;
-}
-.highlight .gr {
-  color: ##FF0000;
-}
-.highlight .ge {
-  font-style: italic;
-}
-.highlight .gs {
-  font-weight: bold;
-}
-.highlight .gp {
-  color: #000080;
-  font-weight: bold;
-}
-.highlight .go {
-  color: #888;
-}
-.highlight .gt {
-  color: #04D;
-}
-.highlight .err {
-  color: #F00;
-  background-color: #FAA;
-}
-</style>
 </head>
 <body class="book">
 <div id="header">
@@ -901,7 +766,7 @@ eventually move onto Chapter 15 for more depth in GUIs and Swing. Instructors wh
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-01-24 16:10:26 -0500
+Last updated 2019-01-23 14:57:50 -0500
 </div>
 </div>
 <script type="text/x-mathjax-config">
