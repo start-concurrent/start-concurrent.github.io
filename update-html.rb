@@ -1,5 +1,6 @@
 require 'asciidoctor'
 require 'asciidoctor-rouge'
+# require 'asciidoctor-mathematical'
 require_relative './default.rb'
 require_relative './GoogleAnalyticsDocinfoProcessor.rb'
 require_relative './autoxref-treeprocessor.rb'
