@@ -2,22 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.8">
+<meta name="generator" content="Asciidoctor 2.0.5">
 <meta name="author" content="Barry Wittman, Tim Korb, Aditya Mathur">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
-/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
-/* Uncomment @import statement below to use as custom stylesheet */
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment @import statement when using as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
-article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
 audio,canvas,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
 script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-a{background:transparent}
+a{background:none}
 a:focus{outline:thin dotted}
 a:active,a:hover{outline:0}
 h1{font-size:2em;margin:.67em 0}
@@ -70,7 +70,7 @@ select{width:100%}
 div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
 a{color:#2156a5;text-decoration:underline;line-height:inherit}
 a:hover,a:focus{color:#1d4b8f}
-a img{border:none}
+a img{border:0}
 p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
 p aside{font-size:.875em;line-height:1.35;font-style:italic}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
@@ -111,20 +111,23 @@ table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
 table thead,table tfoot{background:#f7f8f7}
 table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
-table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
+table tr.even,table tr.alt{background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
 .clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
 .clearfix::after,.float-group::after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
-*:not(pre)>code.nobreak{word-wrap:normal}
-*:not(pre)>code.nowrap{white-space:nowrap}
-pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+:not(pre)>code.nobreak{word-wrap:normal}
+:not(pre)>code.nowrap{white-space:nowrap}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
 em em{font-style:normal}
 strong strong{font-weight:400}
 .keyseq{color:rgba(51,51,51,.8)}
-kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
 .keyseq kbd:last-child{margin-right:0}
 .menuseq,.menuref{color:#000}
@@ -165,7 +168,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
-#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
 #toc.toc2 ul ul{margin-left:0;padding-left:1em}
@@ -181,7 +184,7 @@ body.toc2.toc-right{padding-left:0;padding-right:20em}}
 #content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
 #content #toc>:first-child{margin-top:0}
 #content #toc>:last-child{margin-bottom:0}
-#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
+#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
 #footer-text{color:rgba(255,255,255,.8);line-height:1.44}
 #content{margin-bottom:.625em}
 .sect1{padding-bottom:.625em}
@@ -194,7 +197,8 @@ body.toc2.toc-right{padding-left:0;padding-right:20em}}
 #content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
 #content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
 #content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
-.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details>summary:first-of-type{cursor:pointer;display:list-item;outline:none;margin-bottom:.75em}
 .admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
 table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
 .paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
@@ -208,32 +212,35 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
 .exampleblock>.content>:first-child{margin-top:0}
 .exampleblock>.content>:last-child{margin-bottom:0}
-.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;-webkit-border-radius:4px;border-radius:4px}
 .sidebarblock>:first-child{margin-top:0}
 .sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
 .exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
-.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
-.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
-.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
-@media screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
-@media screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
-.literalblock pre.nowrap,.literalblock pre.nowrap pre,.listingblock pre.nowrap,.listingblock pre.nowrap pre{white-space:pre;word-wrap:normal}
-.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
 .listingblock pre.highlightjs{padding:0}
 .listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
 .listingblock pre.prettyprint{border-width:0}
-.listingblock>.content{position:relative}
-.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
-.listingblock:hover code[data-lang]::before{display:block}
-.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:#999}
-.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
-table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
-table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
-table.pyhltable td.code{padding-left:.75em;padding-right:0}
-pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #dddddf}
-pre.pygments .lineno{display:inline-block;margin-right:.25em}
-table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;padding-right:.5em}
+pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
+pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock{margin:0 1em 1.25em 1.5em;display:table}
 .quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
 .quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
@@ -269,8 +276,7 @@ table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>t
 table.frame-all{border-width:1px}
 table.frame-sides{border-width:0 1px}
 table.frame-topbot,table.frame-ends{border-width:1px 0}
-table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd){background:#f8f8f7}
-table.stripes-none tr,table.stripes-odd tr:nth-of-type(even){background:none}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
 th.halign-left,td.halign-left{text-align:left}
 th.halign-right,td.halign-right{text-align:right}
 th.halign-center,td.halign-center{text-align:center}
@@ -282,7 +288,6 @@ tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
 tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
 p.tableblock>code:only-child{background:none;padding:0}
 p.tableblock{font-size:1em}
-td>div.verse{white-space:pre}
 ol{margin-left:1.75em}
 ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
@@ -341,37 +346,37 @@ div.unbreakable{page-break-inside:avoid}
 .overline{text-decoration:overline}
 .line-through{text-decoration:line-through}
 .aqua{color:#00bfbf}
-.aqua-background{background-color:#00fafa}
+.aqua-background{background:#00fafa}
 .black{color:#000}
-.black-background{background-color:#000}
+.black-background{background:#000}
 .blue{color:#0000bf}
-.blue-background{background-color:#0000fa}
+.blue-background{background:#0000fa}
 .fuchsia{color:#bf00bf}
-.fuchsia-background{background-color:#fa00fa}
+.fuchsia-background{background:#fa00fa}
 .gray{color:#606060}
-.gray-background{background-color:#7d7d7d}
+.gray-background{background:#7d7d7d}
 .green{color:#006000}
-.green-background{background-color:#007d00}
+.green-background{background:#007d00}
 .lime{color:#00bf00}
-.lime-background{background-color:#00fa00}
+.lime-background{background:#00fa00}
 .maroon{color:#600000}
-.maroon-background{background-color:#7d0000}
+.maroon-background{background:#7d0000}
 .navy{color:#000060}
-.navy-background{background-color:#00007d}
+.navy-background{background:#00007d}
 .olive{color:#606000}
-.olive-background{background-color:#7d7d00}
+.olive-background{background:#7d7d00}
 .purple{color:#600060}
-.purple-background{background-color:#7d007d}
+.purple-background{background:#7d007d}
 .red{color:#bf0000}
-.red-background{background-color:#fa0000}
+.red-background{background:#fa0000}
 .silver{color:#909090}
-.silver-background{background-color:#bcbcbc}
+.silver-background{background:#bcbcbc}
 .teal{color:#006060}
-.teal-background{background-color:#007d7d}
+.teal-background{background:#007d7d}
 .white{color:#bfbfbf}
-.white-background{background-color:#fafafa}
+.white-background{background:#fafafa}
 .yellow{color:#bfbf00}
-.yellow-background{background-color:#fafa00}
+.yellow-background{background:#fafa00}
 span.icon>.fa{cursor:default}
 a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
@@ -380,7 +385,7 @@ a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
 .admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
 .admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
-.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
 .conum[data-value] *{color:#fff!important}
 .conum[data-value]+b{display:none}
 .conum[data-value]::after{content:attr(data-value)}
@@ -393,7 +398,7 @@ p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
 p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
 p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
-.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
 .print-only{display:none!important}
 @page{margin:1.25cm .75cm}
 @media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
@@ -431,141 +436,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-.highlight table td { padding: 5px; }
-.highlight table pre { margin: 0; }
-.highlight, .highlight .w {
-  color: #bbbbbb;
-  background-color: #f8f8f8;
-}
-.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
-  color: #408080;
-  font-style: italic;
-}
-.highlight .cp {
-  color: #BC7A00;
-}
-.highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kr, .highlight .kv {
-  color: #008000;
-  font-weight: bold;
-}
-.highlight .kp {
-}
-.highlight .kt {
-  color: #B00040;
-}
-.highlight .o {
-  color: #666666;
-}
-.highlight .ow {
-  color: #AA22FF;
-  font-weight: bold;
-}
-.highlight .nb, .highlight .bp {
-  color: #008000;
-}
-.highlight .nf {
-  color: #0000FF;
-}
-.highlight .nc {
-  color: #0000FF;
-  font-weight: bold;
-}
-.highlight .nn {
-  color: #0000FF;
-  font-weight: bold;
-}
-.highlight .ne {
-  color: #D2413A;
-  font-weight: bold;
-}
-.highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi {
-  color: #19177C;
-}
-.highlight .no {
-  color: #880000;
-}
-.highlight .nl {
-  color: #A0A000;
-}
-.highlight .ni {
-  color: #999999;
-  font-weight: bold;
-}
-.highlight .na {
-  color: #7D9029;
-}
-.highlight .nt {
-  color: #008000;
-  font-weight: bold;
-}
-.highlight .nd {
-  color: #AA22FF;
-}
-.highlight .s, .highlight .sb, .highlight .sc, .highlight .s2, .highlight .sh, .highlight .s1 {
-  color: #BA2121;
-}
-.highlight .sd {
-  font-style: italic;
-}
-.highlight .si {
-  color: #BB6688;
-  font-weight: bold;
-}
-.highlight .se {
-  color: #BB6622;
-  font-weight: bold;
-}
-.highlight .sr {
-  color: #BB6688;
-}
-.highlight .ss {
-  color: #19177C;
-}
-.highlight .sx {
-  color: ##008000;
-}
-.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
-  color: #666666;
-}
-.highlight .gh {
-  color: #000080;
-  font-weight: bold;
-}
-.highlight .gu {
-  color: #800080;
-  font-weight: bold;
-}
-.highlight .gd {
-  color: #A00000;
-}
-.highlight .gi {
-  color: #00A000;
-}
-.highlight .gr {
-  color: ##FF0000;
-}
-.highlight .ge {
-  font-style: italic;
-}
-.highlight .gs {
-  font-weight: bold;
-}
-.highlight .gp {
-  color: #000080;
-  font-weight: bold;
-}
-.highlight .go {
-  color: #888;
-}
-.highlight .gt {
-  color: #04D;
-}
-.highlight .err {
-  color: #F00;
-  background-color: #FAA;
-}
-</style>
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
@@ -964,8 +834,8 @@ the following declarations:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">x</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">y</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">y</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1175,7 +1045,7 @@ a variable named <code>value</code> of type <code>int</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">value</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">value</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1184,7 +1054,7 @@ a variable named <code>value</code> of type <code>int</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">Wombat</span> <span class="n">creature</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Wombat</span> <span class="n">creature</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1195,7 +1065,7 @@ it to <code>5</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -1213,8 +1083,8 @@ more than once, as in the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1224,8 +1094,8 @@ which reuses variable <code>value</code> and replaces its contents with <code>10
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">value</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+<span class="n">value</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1347,9 +1217,9 @@ clear purpose.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">byte</span> <span class="n">age</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">numberOfRooms</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">long</span> <span class="n">foreverCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">byte</span> <span class="n">age</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">numberOfRooms</span><span class="o">;</span>
+<span class="kt">long</span> <span class="n">foreverCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1375,7 +1245,7 @@ variable is used without first having its value set.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">age</span> <span class="o">=</span> <span class="mi">32</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">age</span> <span class="o">=</span> <span class="mi">32</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1398,7 +1268,7 @@ an error.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">byte</span> <span class="n">fingers</span> <span class="o">=</span> <span class="mi">128</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">byte</span> <span class="n">fingers</span> <span class="o">=</span> <span class="mi">128</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1439,8 +1309,8 @@ values such as 3.14, 1.707 × 10<sup>25</sup>,
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">float</span> <span class="n">roomArea</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">double</span> <span class="n">avogadro</span> <span class="o">=</span> <span class="mf">6.02214179E23</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">float</span> <span class="n">roomArea</span><span class="o">;</span>
+<span class="kt">double</span> <span class="n">avogadro</span> <span class="o">=</span> <span class="mf">6.02214179E23</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1477,13 +1347,13 @@ have this guarantee of exact representation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">test</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">test</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">);</span></span>
-<span id="L4" class="line"><span class="n">test</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">;</span></span>
-<span id="L5" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">);</span></span>
-<span id="L6" class="line"><span class="n">test</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">;</span></span>
-<span id="L7" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">test</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
+<span class="n">test</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+<span class="n">test</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+<span class="n">test</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1550,7 +1420,7 @@ following example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s! I broke %d records in %f seconds.\n&quot;</span><span class="o">,</span> <span class="s">&quot;Bob&quot;</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mf">2.4985</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s! I broke %d records in %f seconds.\n&quot;</span><span class="o">,</span> <span class="s">&quot;Bob&quot;</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mf">2.4985</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1572,7 +1442,7 @@ the <code>%</code> and the <code>f</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;$%.2f\n&quot;</span><span class="o">,</span> <span class="mf">123.456789</span> <span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;$%.2f\n&quot;</span><span class="o">,</span> <span class="mf">123.456789</span> <span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1642,7 +1512,7 @@ following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1999</span><span class="o">/</span><span class="mi">1000</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1999</span><span class="o">/</span><span class="mi">1000</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1652,7 +1522,7 @@ floating-point numbers, Java works much more like normal mathematics.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1999.0</span><span class="o">/</span><span class="mf">1000.0</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1999.0</span><span class="o">/</span><span class="mf">1000.0</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1674,7 +1544,7 @@ in the operation. Consider the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">1999</span><span class="o">/</span><span class="mi">1000</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">1999</span><span class="o">/</span><span class="mi">1000</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1686,7 +1556,7 @@ following scenario.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">half</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">half</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1723,7 +1593,7 @@ like the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="o">((</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">)</span> <span class="o">*</span> <span class="o">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">d</span><span class="o">))</span> <span class="o">%</span> <span class="n">e</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="o">((</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">)</span> <span class="o">*</span> <span class="o">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">d</span><span class="o">))</span> <span class="o">%</span> <span class="n">e</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1742,11 +1612,11 @@ Thus, the order of evaluation of <code>a + b / c</code> is the same as
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">31</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">16</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span></span>
-<span id="L4" class="line"><span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span></span>
-<span id="L5" class="line"><span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">d</span> <span class="o">-</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span> <span class="o">/</span> <span class="n">d</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">31</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">16</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">d</span> <span class="o">-</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span> <span class="o">/</span> <span class="n">d</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1778,9 +1648,9 @@ it doesn’t actually do anything. Consider the following statements.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">4</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span> <span class="o">+</span> <span class="n">d</span> <span class="o">/</span> <span class="o">-(</span><span class="n">e</span> <span class="o">*</span> <span class="n">f</span><span class="o">);</span></span>
-<span id="L3" class="line"><span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="o">+</span><span class="n">t</span> <span class="o">+</span> <span class="o">(-</span><span class="n">r</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">4</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span> <span class="o">+</span> <span class="n">d</span> <span class="o">/</span> <span class="o">-(</span><span class="n">e</span> <span class="o">*</span> <span class="n">f</span><span class="o">);</span>
+<span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="o">+</span><span class="n">t</span> <span class="o">+</span> <span class="o">(-</span><span class="n">r</span><span class="o">);</span></code></pre>
 </div>
 </div>
 </div>
@@ -1793,7 +1663,7 @@ contents of variable <code>value</code> by 10, you can write the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">+</span> <span class="mi">10</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">+</span> <span class="mi">10</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1803,7 +1673,7 @@ same effect, you can use the <code>+=</code> operator.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">value</span> <span class="o">+=</span> <span class="mi">10</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">value</span> <span class="o">+=</span> <span class="mi">10</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1908,8 +1778,8 @@ illegal and will not compile.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1923,8 +1793,8 @@ still do nothing).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">x</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="n">x</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1980,10 +1850,10 @@ you’re changing or behind it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">value</span><span class="o">++;</span> <span class="c1">//now value is 6</span></span>
-<span id="L3" class="line"><span class="o">++</span><span class="n">value</span><span class="o">;</span> <span class="c1">//now value is 7</span></span>
-<span id="L4" class="line"><span class="n">value</span><span class="o">--;</span> <span class="c1">//value is 6 again</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+<span class="n">value</span><span class="o">++;</span> <span class="c1">//now value is 6</span>
+<span class="o">++</span><span class="n">value</span><span class="o">;</span> <span class="c1">//now value is 7</span>
+<span class="n">value</span><span class="o">--;</span> <span class="c1">//value is 6 again</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1998,11 +1868,11 @@ example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">prefix</span> <span class="o">=</span> <span class="mi">7</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">prefixResult</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="o">++</span><span class="n">prefix</span><span class="o">;</span></span>
-<span id="L3" class="line"></span>
-<span id="L4" class="line"><span class="kt">int</span> <span class="n">postfix</span> <span class="o">=</span> <span class="mi">7</span><span class="o">;</span></span>
-<span id="L5" class="line"><span class="kt">int</span> <span class="n">postfixResult</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">postfix</span><span class="o">++;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">prefix</span> <span class="o">=</span> <span class="mi">7</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">prefixResult</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="o">++</span><span class="n">prefix</span><span class="o">;</span>
+
+<span class="kt">int</span> <span class="n">postfix</span> <span class="o">=</span> <span class="mi">7</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">postfixResult</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">postfix</span><span class="o">++;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2031,8 +1901,8 @@ for <code>i = i + 1</code> and begin to think of them as a fancy way to write
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">14</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">++;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">14</span><span class="o">;</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">++;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2164,20 +2034,20 @@ the values <code>3</code> and <code>-7</code>. To understand the results, rememb
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="mi">7</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="n">y</span><span class="o">;</span></span>
-<span id="L4" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;x &amp; y\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span></span>
-<span id="L5" class="line"><span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="n">y</span><span class="o">;</span></span>
-<span id="L6" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;x | y\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span></span>
-<span id="L7" class="line"><span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">^</span> <span class="n">y</span><span class="o">;</span></span>
-<span id="L8" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;x ^ y\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span></span>
-<span id="L9" class="line"><span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="o">;</span></span>
-<span id="L10" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;x &lt;&lt; 2\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span></span>
-<span id="L11" class="line"><span class="n">z</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="o">;</span></span>
-<span id="L12" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;y &gt;&gt; 2\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span></span>
-<span id="L13" class="line"><span class="n">z</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">2</span><span class="o">;</span></span>
-<span id="L14" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;y &gt;&gt;&gt; 2\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="mi">7</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="n">y</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;x &amp; y\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="n">y</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;x | y\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">^</span> <span class="n">y</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;x ^ y\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;x &lt;&lt; 2\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;y &gt;&gt; 2\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">2</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;y &gt;&gt;&gt; 2\t= &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2234,8 +2104,8 @@ types.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">short</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">341</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">short</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">341</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2259,10 +2129,10 @@ compute a value for <code>c</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">byte</span> <span class="n">c</span><span class="o">;</span></span>
-<span id="L4" class="line"><span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+<span class="kt">byte</span> <span class="n">c</span><span class="o">;</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2303,7 +2173,7 @@ Consider the following statement.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">tolerance</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">tolerance</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2319,7 +2189,7 @@ automatically upcast to the broader one.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">+</span> <span class="mf">7.2</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">+</span> <span class="mf">7.2</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2344,8 +2214,8 @@ with type <code>double</code> cannot be stored into a variable with type <code>i
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">roomArea</span> <span class="o">=</span> <span class="mf">3.5</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">houseArea</span> <span class="o">=</span> <span class="n">roomArea</span> <span class="o">*</span> <span class="mf">4.0</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">roomArea</span> <span class="o">=</span> <span class="mf">3.5</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">houseArea</span> <span class="o">=</span> <span class="n">roomArea</span> <span class="o">*</span> <span class="mf">4.0</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2359,8 +2229,8 @@ converted to type <code>int</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">roomArea</span> <span class="o">=</span> <span class="mf">3.5</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">houseArea</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">roomArea</span> <span class="o">*</span> <span class="mf">4.0</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">roomArea</span> <span class="o">=</span> <span class="mf">3.5</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">houseArea</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">roomArea</span> <span class="o">*</span> <span class="mf">4.0</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2372,7 +2242,7 @@ statement:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="mf">15.99999</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="mf">15.99999</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2384,7 +2254,7 @@ Java provides a method for rounding in the <code>Math</code> class. The rounding
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="mf">15.99999</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="mf">15.99999</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2413,8 +2283,8 @@ have to downcast the result to an <code>int</code> so that we can store it in
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">float</span> <span class="n">roomArea</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">roomArea</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">float</span> <span class="n">roomArea</span><span class="o">;</span>
+<span class="n">roomArea</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2499,9 +2369,9 @@ assignments of variables of type <code>char</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">char</span> <span class="n">letter</span> <span class="o">=</span> <span class="sc">'A'</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">char</span> <span class="n">punctuation</span> <span class="o">=</span> <span class="sc">'?'</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">char</span> <span class="n">digit</span> <span class="o">=</span> <span class="sc">'7'</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">char</span> <span class="n">letter</span> <span class="o">=</span> <span class="sc">'A'</span><span class="o">;</span>
+<span class="kt">char</span> <span class="n">punctuation</span> <span class="o">=</span> <span class="sc">'?'</span><span class="o">;</span>
+<span class="kt">char</span> <span class="n">digit</span> <span class="o">=</span> <span class="sc">'7'</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2583,7 +2453,7 @@ statement prints <code>A</code> not <code>65</code>, the Unicode value of <code>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="sc">'A'</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="sc">'A'</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2596,7 +2466,7 @@ following statement adds the integer equivalents of the characters
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="sc">'A'</span> <span class="o">+</span> <span class="sc">'B'</span> <span class="o">+</span> <span class="s">&quot;C&quot;</span> <span class="o">+</span> <span class="mi">999</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="sc">'A'</span> <span class="o">+</span> <span class="sc">'B'</span> <span class="o">+</span> <span class="s">&quot;C&quot;</span> <span class="o">+</span> <span class="mi">999</span><span class="o">);</span></code></pre>
 </div>
 </div>
 </div>
@@ -2618,8 +2488,8 @@ two declarations and assignments of <code>boolean</code> variables.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">boolean</span> <span class="n">awesome</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">boolean</span> <span class="n">testFailed</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">boolean</span> <span class="n">awesome</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<span class="kt">boolean</span> <span class="n">testFailed</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2687,11 +2557,11 @@ all variables used in the <strong>Example</strong> column have a numeric type.</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">4</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">boolean</span> <span class="n">same</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">3</span><span class="o">);</span></span>
-<span id="L4" class="line"><span class="n">same</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="o">);</span></span>
-<span id="L5" class="line"><span class="kt">boolean</span> <span class="n">xIsGreater</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">4</span><span class="o">;</span>
+<span class="kt">boolean</span> <span class="n">same</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">3</span><span class="o">);</span>
+<span class="n">same</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="o">);</span>
+<span class="kt">boolean</span> <span class="n">xIsGreater</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2779,7 +2649,7 @@ yet point at anything.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">Wombat</span> <span class="n">w</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Wombat</span> <span class="n">w</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2793,7 +2663,7 @@ constructor and point the variable <code>w</code> at the resulting object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">w</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Wombat</span><span class="o">();</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">w</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Wombat</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2802,7 +2672,7 @@ kilograms when creating one, as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">w</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Wombat</span><span class="o">(</span><span class="mf">26.3</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">w</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Wombat</span><span class="o">(</span><span class="mf">26.3</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2812,8 +2682,8 @@ the same object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">Wombat</span> <span class="n">w1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Wombat</span><span class="o">(</span><span class="mf">26.3</span><span class="o">);</span></span>
-<span id="L2" class="line"><span class="n">Wombat</span> <span class="n">w2</span> <span class="o">=</span> <span class="n">w1</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Wombat</span> <span class="n">w1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Wombat</span><span class="o">(</span><span class="mf">26.3</span><span class="o">);</span>
+<span class="n">Wombat</span> <span class="n">w2</span> <span class="o">=</span> <span class="n">w1</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="imageblock text-center">
@@ -2828,7 +2698,7 @@ example, we can tell <code>w1</code> to eat leaves using the <code>eatLeaves()</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">w1</span><span class="o">.</span><span class="na">eatLeaves</span><span class="o">();</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">w1</span><span class="o">.</span><span class="na">eatLeaves</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2840,9 +2710,9 @@ works very differently with them. Consider the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">5</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">;</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">5</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2907,8 +2777,8 @@ defining and using the <code>String</code> type.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">greeting</span> <span class="o">=</span> <span class="s">&quot;Bonjour!&quot;</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;French Greeting&quot;</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">greeting</span> <span class="o">=</span> <span class="s">&quot;Bonjour!&quot;</span>
+<span class="n">String</span> <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;French Greeting&quot;</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2918,8 +2788,8 @@ defining and using the <code>String</code> type.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">greeting</span><span class="o">);</span></span>
-<span id="L2" class="line"><span class="n">JOptionPane</span><span class="o">.</span><span class="na">showMessageDialog</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">greeting</span><span class="o">,</span> <span class="n">title</span><span class="o">,</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">INFORMATION_MESSAGE</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">greeting</span><span class="o">);</span>
+<span class="n">JOptionPane</span><span class="o">.</span><span class="na">showMessageDialog</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">greeting</span><span class="o">,</span> <span class="n">title</span><span class="o">,</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">INFORMATION_MESSAGE</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2951,8 +2821,8 @@ operator.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">argument</span> <span class="o">=</span> <span class="s">&quot;the cannon&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">phrase</span> <span class="o">=</span> <span class="s">&quot;No argument but &quot;</span> <span class="o">+</span> <span class="n">argument</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">argument</span> <span class="o">=</span> <span class="s">&quot;the cannon&quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">phrase</span> <span class="o">=</span> <span class="s">&quot;No argument but &quot;</span> <span class="o">+</span> <span class="n">argument</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2969,11 +2839,11 @@ been initialized to <code>&quot;a pie in the face&quot;</code>, then <code>phras
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">argument</span> <span class="o">=</span> <span class="s">&quot;the cannon&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">exclamation</span> <span class="o">=</span> <span class="s">&quot;!&quot;</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="n">String</span> <span class="n">phraseStart</span> <span class="o">=</span> <span class="s">&quot;No argument but &quot;</span><span class="o">;</span></span>
-<span id="L4" class="line"><span class="n">String</span> <span class="n">phrase</span> <span class="o">=</span> <span class="n">phraseStart</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="n">argument</span><span class="o">);</span></span>
-<span id="L5" class="line"><span class="n">phrase</span> <span class="o">=</span> <span class="n">phrase</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="n">exclamation</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">argument</span> <span class="o">=</span> <span class="s">&quot;the cannon&quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">exclamation</span> <span class="o">=</span> <span class="s">&quot;!&quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">phraseStart</span> <span class="o">=</span> <span class="s">&quot;No argument but &quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">phrase</span> <span class="o">=</span> <span class="n">phraseStart</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="n">argument</span><span class="o">);</span>
+<span class="n">phrase</span> <span class="o">=</span> <span class="n">phrase</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="n">exclamation</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2997,8 +2867,8 @@ method. The following statements prints <code>30</code> to the terminal.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">motto</span> <span class="o">=</span> <span class="s">&quot;Fight for your right to party!&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">motto</span><span class="o">.</span><span class="na">length</span><span class="o">()):</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">motto</span> <span class="o">=</span> <span class="s">&quot;Fight for your right to party!&quot;</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">motto</span><span class="o">.</span><span class="na">length</span><span class="o">()):</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3007,7 +2877,7 @@ on them. The following code stores <code>11</code> into <code>letters</code>.</p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">letters</span> <span class="o">=</span> <span class="s">&quot;cellar door&quot;</span><span class="o">.</span><span class="na">length</span><span class="o">();</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">letters</span> <span class="o">=</span> <span class="s">&quot;cellar door&quot;</span><span class="o">.</span><span class="na">length</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3033,8 +2903,8 @@ index in question, as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">word</span> <span class="o">=</span> <span class="s">&quot;antidisestablishmentarianism&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">char</span> <span class="n">letter</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">11</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">word</span> <span class="o">=</span> <span class="s">&quot;antidisestablishmentarianism&quot;</span><span class="o">;</span>
+<span class="kt">char</span> <span class="n">letter</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">11</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3050,8 +2920,8 @@ digit, a space, punctuation, or some other symbol.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="s">&quot;^_^ l337 #haxor# skillz!&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">text</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">10</span><span class="o">));</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="s">&quot;^_^ l337 #haxor# skillz!&quot;</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">text</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">10</span><span class="o">));</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3081,9 +2951,9 @@ the substring starts and the index <strong>just after</strong> it ends, as shown
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;slovenly&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">emotion</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">5</span><span class="o">);</span></span>
-<span id="L3" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">emotion</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;slovenly&quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">emotion</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">5</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">emotion</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3110,9 +2980,9 @@ of, with the <code>String</code> we’re searching for as the argument.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">countries</span> <span class="o">=</span> <span class="s">&quot;USA Mexico China Canada&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">search</span> <span class="o">=</span> <span class="s">&quot;China&quot;</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">countries</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="n">search</span><span class="o">));</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">countries</span> <span class="o">=</span> <span class="s">&quot;USA Mexico China Canada&quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">search</span> <span class="o">=</span> <span class="s">&quot;China&quot;</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">countries</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="n">search</span><span class="o">));</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3126,7 +2996,7 @@ if we replace the print statement above with the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">countries</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&quot;Honduras&quot;</span><span class="o">));</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">countries</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&quot;Honduras&quot;</span><span class="o">));</span></code></pre>
 </div>
 </div>
 </div>
@@ -3163,7 +3033,7 @@ variables as in the following statement.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">response</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">response</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3173,7 +3043,7 @@ as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">identifier</span> <span class="o">=</span> <span class="n">expression</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">identifier</span> <span class="o">=</span> <span class="n">expression</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3189,8 +3059,8 @@ code.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">15</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">;</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">15</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3201,8 +3071,8 @@ compiler gives an error, as in the following cases.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">number</span> <span class="o">=</span> <span class="mf">4.9</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="mi">9</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">number</span> <span class="o">=</span> <span class="mf">4.9</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="mi">9</span><span class="o">;</span></code></pre>
 </div>
 </div>
 </div>
@@ -3225,9 +3095,9 @@ other. The following gives examples of these comparisons.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">boolean</span> <span class="n">z</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="o">;</span>
+<span class="kt">boolean</span> <span class="n">z</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3239,9 +3109,9 @@ values. If <code>x</code> were assigned <code>6</code> instead, <code>z</code> w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">thing1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;Magical mystery&quot;</span><span class="o">);</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">thing2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;Magical mystery&quot;</span><span class="o">);</span></span>
-<span id="L3" class="line"><span class="n">String</span> <span class="n">thing3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;Tragical tapestry&quot;</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">thing1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;Magical mystery&quot;</span><span class="o">);</span>
+<span class="n">String</span> <span class="n">thing2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;Magical mystery&quot;</span><span class="o">);</span>
+<span class="n">String</span> <span class="n">thing3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;Tragical tapestry&quot;</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div id="differentObjectsFigure" class="imageblock">
@@ -3261,7 +3131,7 @@ different <code>String</code>. Consider the following statement.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">boolean</span> <span class="n">same</span> <span class="o">=</span> <span class="o">(</span><span class="n">thing1</span> <span class="o">==</span> <span class="n">thing3</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">boolean</span> <span class="n">same</span> <span class="o">=</span> <span class="o">(</span><span class="n">thing1</span> <span class="o">==</span> <span class="n">thing3</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3270,7 +3140,7 @@ different <code>String</code>. Consider the following statement.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">boolean</span> <span class="n">same</span> <span class="o">=</span> <span class="o">(</span><span class="n">thing1</span> <span class="o">==</span> <span class="n">thing2</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">boolean</span> <span class="n">same</span> <span class="o">=</span> <span class="o">(</span><span class="n">thing1</span> <span class="o">==</span> <span class="n">thing2</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3291,7 +3161,7 @@ though two objects have the same contents.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">thing1</span> <span class="o">=</span> <span class="n">thing2</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">thing1</span> <span class="o">=</span> <span class="n">thing2</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3307,7 +3177,7 @@ For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">thing1</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">thing2</span><span class="o">)</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">thing1</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">thing2</span><span class="o">)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3343,11 +3213,11 @@ declarations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kd">final</span> <span class="kt">int</span> <span class="n">POPULATION</span> <span class="o">=</span> <span class="mi">25000</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kd">final</span> <span class="kt">double</span> <span class="n">PLANCK_CONSTANT</span> <span class="o">=</span> <span class="mf">6.626</span><span class="n">E</span><span class="o">-</span><span class="mi">34</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kd">final</span> <span class="kt">boolean</span> <span class="n">FLAG</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span></span>
-<span id="L4" class="line"><span class="kd">final</span> <span class="kt">char</span> <span class="n">FIRST_INITIAL</span> <span class="o">=</span> <span class="sc">'A'</span><span class="o">;</span></span>
-<span id="L5" class="line"><span class="kd">final</span> <span class="n">String</span> <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s">&quot;All your base are belong to us.&quot;</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">final</span> <span class="kt">int</span> <span class="n">POPULATION</span> <span class="o">=</span> <span class="mi">25000</span><span class="o">;</span>
+<span class="kd">final</span> <span class="kt">double</span> <span class="n">PLANCK_CONSTANT</span> <span class="o">=</span> <span class="mf">6.626</span><span class="n">E</span><span class="o">-</span><span class="mi">34</span><span class="o">;</span>
+<span class="kd">final</span> <span class="kt">boolean</span> <span class="n">FLAG</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+<span class="kd">final</span> <span class="kt">char</span> <span class="n">FIRST_INITIAL</span> <span class="o">=</span> <span class="sc">'A'</span><span class="o">;</span>
+<span class="kd">final</span> <span class="n">String</span> <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s">&quot;All your base are belong to us.&quot;</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3486,28 +3356,28 @@ statement.</p>
 <div id="CompoundInterestCalculatorProgram" class="listingblock">
 <div class="title">Program 3.1 Computes interest earned and new balance.</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span></span>
-<span id="L2" class="line"></span>
-<span id="L3" class="line"><span class="kd">class</span> <span class="nc">CompoundInterestCalculator</span> <span class="o">{</span></span>
-<span id="L4" class="line">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span></span>
-<span id="L5" class="line">        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span></span>
-<span id="L6" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Compound Interest Calculator&quot;</span><span class="o">);</span></span>
-<span id="L7" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span></span>
-<span id="L8" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter starting balance: &quot;</span><span class="o">);</span></span>
-<span id="L9" class="line">        <span class="kt">double</span> <span class="n">startingBalance</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span>
-<span id="L10" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter interest rate: &quot;</span><span class="o">);</span></span>
-<span id="L11" class="line">        <span class="kt">double</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span>
-<span id="L12" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter time in years: &quot;</span><span class="o">);</span></span>
-<span id="L13" class="line">        <span class="kt">double</span> <span class="n">years</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span>
-<span id="L14" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter compounding frequency: &quot;</span><span class="o">);</span></span>
-<span id="L15" class="line">        <span class="kt">double</span> <span class="n">frequency</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span>
-<span id="L16" class="line">        <span class="kt">double</span> <span class="n">newBalance</span> <span class="o">=</span> <span class="n">startingBalance</span> <span class="o">*</span></span>
-<span id="L17" class="line">            <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">rate</span><span class="o">/</span><span class="n">frequency</span><span class="o">,</span> <span class="n">frequency</span><span class="o">*</span><span class="n">years</span><span class="o">);</span></span>
-<span id="L18" class="line">        <span class="kt">double</span> <span class="n">interest</span> <span class="o">=</span> <span class="n">newBalance</span> <span class="o">-</span> <span class="n">startingBalance</span><span class="o">;</span></span>
-<span id="L19" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Interest earned: $&quot;</span> <span class="o">+</span> <span class="n">interest</span><span class="o">);</span></span>
-<span id="L20" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;New balance: $&quot;</span> <span class="o">+</span> <span class="n">newBalance</span><span class="o">);</span></span>
-<span id="L21" class="line">    <span class="o">}</span></span>
-<span id="L22" class="line"><span class="o">}</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">CompoundInterestCalculator</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Compound Interest Calculator&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter starting balance: &quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">startingBalance</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter interest rate: &quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter time in years: &quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">years</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter compounding frequency: &quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">frequency</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
+        <span class="kt">double</span> <span class="n">newBalance</span> <span class="o">=</span> <span class="n">startingBalance</span> <span class="o">*</span>
+            <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">rate</span><span class="o">/</span><span class="n">frequency</span><span class="o">,</span> <span class="n">frequency</span><span class="o">*</span><span class="n">years</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">interest</span> <span class="o">=</span> <span class="n">newBalance</span> <span class="o">-</span> <span class="n">startingBalance</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Interest earned: $&quot;</span> <span class="o">+</span> <span class="n">interest</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;New balance: $&quot;</span> <span class="o">+</span> <span class="n">newBalance</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 </div>
@@ -3522,7 +3392,7 @@ formula \(2\pi r\).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">circumference</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">Math</span><span class="o">.</span><span class="na">PI</span><span class="o">*</span><span class="n">radius</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">circumference</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">Math</span><span class="o">.</span><span class="na">PI</span><span class="o">*</span><span class="n">radius</span><span class="o">;</span></code></pre>
 </div>
 </div>
 </div>
@@ -3544,7 +3414,7 @@ you need to create a <code>Random</code> object as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3555,17 +3425,17 @@ value of the corresponding type.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="c1">// Random integer with all values possible</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span></span>
-<span id="L3" class="line"></span>
-<span id="L4" class="line"><span class="c1">// Random integer between 0 (inclusive) and 130 (exclusive)</span></span>
-<span id="L5" class="line"><span class="kt">int</span> <span class="n">humanAge</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">130</span><span class="o">);</span></span>
-<span id="L6" class="line"></span>
-<span id="L7" class="line"><span class="c1">// Random boolean value</span></span>
-<span id="L8" class="line"> <span class="kt">boolean</span> <span class="n">gender</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">();</span></span>
-<span id="L9" class="line"></span>
-<span id="L10" class="line"><span class="c1">// Random floating-point value between 0.0 (inclusive) and 1.0 (exclusive)</span></span>
-<span id="L11" class="line"><span class="kt">double</span> <span class="n">percent</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="c1">// Random integer with all values possible</span>
+<span class="kt">int</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+
+<span class="c1">// Random integer between 0 (inclusive) and 130 (exclusive)</span>
+<span class="kt">int</span> <span class="n">humanAge</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">130</span><span class="o">);</span>
+
+<span class="c1">// Random boolean value</span>
+ <span class="kt">boolean</span> <span class="n">gender</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">();</span>
+
+<span class="c1">// Random floating-point value between 0.0 (inclusive) and 1.0 (exclusive)</span>
+<span class="kt">double</span> <span class="n">percent</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3582,7 +3452,7 @@ in programming.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="o">)</span> <span class="o">+</span> <span class="n">a</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="o">)</span> <span class="o">+</span> <span class="n">a</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3598,7 +3468,7 @@ as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">value</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">()*(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="o">)</span> <span class="o">+</span> <span class="n">a</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">value</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">()*(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="o">)</span> <span class="o">+</span> <span class="n">a</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3616,22 +3486,22 @@ random values for the age, height, gender, and hit points of the dragon.</p>
 <div id="DragonAttributesProgram" class="listingblock">
 <div class="title">Program 3.2 Sets attributes of a randomly generated dragon for a video game.</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span> <i class="conum" data-value="1"></i><b>(1)</b></span>
-<span id="L2" class="line"></span>
-<span id="L3" class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DragonAttributes</span> <span class="o">{</span></span>
-<span id="L4" class="line">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span></span>
-<span id="L5" class="line">        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span> <i class="conum" data-value="2"></i><b>(2)</b></span>
-<span id="L6" class="line">        <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">100</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <i class="conum" data-value="3"></i><b>(3)</b></span>
-<span id="L7" class="line">        <span class="kt">double</span> <span class="n">height</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">()*</span><span class="mi">30</span><span class="o">;</span> <i class="conum" data-value="4"></i><b>(4)</b></span>
-<span id="L8" class="line">        <span class="kt">boolean</span> <span class="n">gender</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">();</span> <i class="conum" data-value="5"></i><b>(5)</b></span>
-<span id="L9" class="line">        <span class="kt">int</span> <span class="n">hitPoints</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">51</span><span class="o">)</span> <span class="o">+</span> <span class="mi">25</span><span class="o">;</span> <i class="conum" data-value="6"></i><b>(6)</b></span>
-<span id="L10" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Dragon Statistics&quot;</span><span class="o">);</span></span>
-<span id="L11" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Age:\t\t&quot;</span> <span class="o">+</span> <span class="n">age</span><span class="o">);</span></span>
-<span id="L12" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Height:\t\t%.1f feet\n&quot;</span><span class="o">,</span> <span class="n">height</span><span class="o">);</span></span>
-<span id="L13" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Female:\t\t&quot;</span> <span class="o">+</span> <span class="n">gender</span><span class="o">);</span></span>
-<span id="L14" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hit points:\t&quot;</span> <span class="o">+</span> <span class="n">hitPoints</span><span class="o">);</span></span>
-<span id="L15" class="line">    <span class="o">}</span></span>
-<span id="L16" class="line"><span class="o">}</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DragonAttributes</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">100</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="kt">double</span> <span class="n">height</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">()*</span><span class="mi">30</span><span class="o">;</span> <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="kt">boolean</span> <span class="n">gender</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">();</span> <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="kt">int</span> <span class="n">hitPoints</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">51</span><span class="o">)</span> <span class="o">+</span> <span class="mi">25</span><span class="o">;</span> <i class="conum" data-value="6"></i><b>(6)</b>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Dragon Statistics&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Age:\t\t&quot;</span> <span class="o">+</span> <span class="n">age</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Height:\t\t%.1f feet\n&quot;</span><span class="o">,</span> <span class="n">height</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Female:\t\t&quot;</span> <span class="o">+</span> <span class="n">gender</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hit points:\t&quot;</span> <span class="o">+</span> <span class="n">hitPoints</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -3730,9 +3600,9 @@ corresponding numeric value. We had such a situation in
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">response</span> <span class="o">=</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">showInputDialog</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span></span>
-<span id="L2" class="line">	<span class="s">&quot;Enter the height: &quot;</span><span class="o">,</span> <span class="n">title</span><span class="o">,</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">QUESTION_MESSAGE</span><span class="o">);</span></span>
-<span id="L3" class="line"><span class="n">height</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">response</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">response</span> <span class="o">=</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">showInputDialog</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span>
+	<span class="s">&quot;Enter the height: &quot;</span><span class="o">,</span> <span class="n">title</span><span class="o">,</span> <span class="n">JOptionPane</span><span class="o">.</span><span class="na">QUESTION_MESSAGE</span><span class="o">);</span>
+<span class="n">height</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">response</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3757,10 +3627,10 @@ converted to a numerical value.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="s">&quot;15&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">text</span><span class="o">);</span></span>
-<span id="L3" class="line"><span class="kt">float</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="na">parseFloat</span><span class="o">(</span><span class="n">text</span><span class="o">);</span></span>
-<span id="L4" class="line"><span class="kt">double</span> <span class="n">tolerance</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">text</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="s">&quot;15&quot;</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">text</span><span class="o">);</span>
+<span class="kt">float</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="na">parseFloat</span><span class="o">(</span><span class="n">text</span><span class="o">);</span>
+<span class="kt">double</span> <span class="n">tolerance</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">text</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3862,7 +3732,7 @@ code is executed.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">boolean</span> <span class="n">test</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="na">isLetter</span><span class="o">(</span><span class="sc">'x'</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">boolean</span> <span class="n">test</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="na">isLetter</span><span class="o">(</span><span class="sc">'x'</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3871,7 +3741,7 @@ executed.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">char</span> <span class="n">letter</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="na">toUpperCase</span><span class="o">(</span><span class="sc">'m'</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">char</span> <span class="n">letter</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="na">toUpperCase</span><span class="o">(</span><span class="sc">'m'</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4015,9 +3885,9 @@ primitive type can be stored in its wrapper type as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">Integer</span> <span class="n">fingers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span></span>
-<span id="L2" class="line"><span class="n">Double</span> <span class="n">pi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Double</span><span class="o">(</span><span class="mf">3.141592</span><span class="o">);</span></span>
-<span id="L3" class="line"><span class="n">Character</span> <span class="n">question</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Character</span><span class="o">(</span><span class="sc">'?'</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Integer</span> <span class="n">fingers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+<span class="n">Double</span> <span class="n">pi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Double</span><span class="o">(</span><span class="mf">3.141592</span><span class="o">);</span>
+<span class="n">Character</span> <span class="n">question</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Character</span><span class="o">(</span><span class="sc">'?'</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4028,7 +3898,7 @@ cases when you have to treat a primitive type as an object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="mi">42</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="mi">42</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4039,9 +3909,9 @@ appropriate. Thus, the earlier code could be written as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">Integer</span> <span class="n">fingers</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">Double</span> <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.141592</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="n">Character</span> <span class="n">question</span> <span class="o">=</span> <span class="sc">'?'</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Integer</span> <span class="n">fingers</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+<span class="n">Double</span> <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.141592</span><span class="o">;</span>
+<span class="n">Character</span> <span class="n">question</span> <span class="o">=</span> <span class="sc">'?'</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4080,12 +3950,12 @@ print a welcome message for the user, and create a <code>Scanner</code> object.<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span></span>
-<span id="L2" class="line"></span>
-<span id="L3" class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CollegeCosts</span> <span class="o">{</span></span>
-<span id="L4" class="line">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span></span>
-<span id="L5" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Welcome to the College Cost Calculator!&quot;</span><span class="o">);</span></span>
-<span id="L6" class="line">        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CollegeCosts</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Welcome to the College Cost Calculator!&quot;</span><span class="o">);</span>
+        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4099,20 +3969,20 @@ cost of food as a <code>double</code>, the interest rate for the loan as a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter your first name:\t\t&quot;</span><span class="o">);</span></span>
-<span id="L2" class="line">        <span class="n">String</span> <span class="n">firstName</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">next</span><span class="o">();</span></span>
-<span id="L3" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter your last name:\t\t&quot;</span><span class="o">);</span></span>
-<span id="L4" class="line">        <span class="n">String</span> <span class="n">lastName</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">next</span><span class="o">();</span></span>
-<span id="L5" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter tuition per semester:\t$&quot;</span><span class="o">);</span></span>
-<span id="L6" class="line">        <span class="kt">double</span> <span class="n">semesterTuition</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span>
-<span id="L7" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter rent per month:\t\t$&quot;</span><span class="o">);</span></span>
-<span id="L8" class="line">        <span class="kt">double</span> <span class="n">monthlyRent</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span>
-<span id="L9" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter food cost per month:\t$&quot;</span><span class="o">);</span></span>
-<span id="L10" class="line">        <span class="kt">double</span> <span class="n">monthlyFood</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span>
-<span id="L11" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Annual interest rate:\t\t&quot;</span><span class="o">);</span></span>
-<span id="L12" class="line">        <span class="kt">double</span> <span class="n">annualInterest</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span></span>
-<span id="L13" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Years to pay back your loan:\t&quot;</span><span class="o">);</span></span>
-<span id="L14" class="line">        <span class="kt">int</span> <span class="n">years</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter your first name:\t\t&quot;</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">firstName</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter your last name:\t\t&quot;</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">lastName</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter tuition per semester:\t$&quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">semesterTuition</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter rent per month:\t\t$&quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">monthlyRent</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter food cost per month:\t$&quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">monthlyFood</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Annual interest rate:\t\t&quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">annualInterest</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Years to pay back your loan:\t&quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">years</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4127,12 +3997,12 @@ monthly payment times 12 times the number of years.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line">        <span class="kt">double</span> <span class="n">yearlyCost</span> <span class="o">=</span> <span class="n">semesterTuition</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="o">(</span><span class="n">monthlyRent</span> <span class="o">+</span> <span class="n">monthlyFood</span><span class="o">)</span> <span class="o">*</span> <span class="mf">12.0</span><span class="o">;</span></span>
-<span id="L2" class="line">        <span class="kt">double</span> <span class="n">fourYearCost</span> <span class="o">=</span> <span class="n">yearlyCost</span> <span class="o">*</span> <span class="mf">4.0</span><span class="o">;</span></span>
-<span id="L3" class="line">        <span class="kt">double</span> <span class="n">monthlyInterest</span> <span class="o">=</span> <span class="n">annualInterest</span> <span class="o">/</span> <span class="mf">12.0</span><span class="o">;</span></span>
-<span id="L4" class="line">        <span class="kt">double</span> <span class="n">monthlyPayment</span> <span class="o">=</span> <span class="n">fourYearCost</span> <span class="o">*</span> <span class="n">monthlyInterest</span> <span class="o">/</span></span>
-<span id="L5" class="line">            <span class="o">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">monthlyInterest</span><span class="o">,</span> <span class="o">-</span><span class="n">years</span> <span class="o">*</span> <span class="mf">12.0</span><span class="o">));</span></span>
-<span id="L6" class="line">        <span class="kt">double</span> <span class="n">totalLoanCost</span> <span class="o">=</span> <span class="n">monthlyPayment</span> <span class="o">*</span> <span class="mf">12.0</span> <span class="o">*</span> <span class="n">years</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java">        <span class="kt">double</span> <span class="n">yearlyCost</span> <span class="o">=</span> <span class="n">semesterTuition</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="o">(</span><span class="n">monthlyRent</span> <span class="o">+</span> <span class="n">monthlyFood</span><span class="o">)</span> <span class="o">*</span> <span class="mf">12.0</span><span class="o">;</span>
+        <span class="kt">double</span> <span class="n">fourYearCost</span> <span class="o">=</span> <span class="n">yearlyCost</span> <span class="o">*</span> <span class="mf">4.0</span><span class="o">;</span>
+        <span class="kt">double</span> <span class="n">monthlyInterest</span> <span class="o">=</span> <span class="n">annualInterest</span> <span class="o">/</span> <span class="mf">12.0</span><span class="o">;</span>
+        <span class="kt">double</span> <span class="n">monthlyPayment</span> <span class="o">=</span> <span class="n">fourYearCost</span> <span class="o">*</span> <span class="n">monthlyInterest</span> <span class="o">/</span>
+            <span class="o">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">monthlyInterest</span><span class="o">,</span> <span class="o">-</span><span class="n">years</span> <span class="o">*</span> <span class="mf">12.0</span><span class="o">));</span>
+        <span class="kt">double</span> <span class="n">totalLoanCost</span> <span class="o">=</span> <span class="n">monthlyPayment</span> <span class="o">*</span> <span class="mf">12.0</span> <span class="o">*</span> <span class="n">years</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4144,14 +4014,14 @@ the decimal point, and tabs so that the output lines up.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\nCollege costs for &quot;</span> <span class="o">+</span> <span class="n">firstName</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">lastName</span> <span class="o">);</span></span>
-<span id="L2" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;***************************************&quot;</span><span class="o">);</span></span>
-<span id="L3" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Yearly cost:\t\t\t$%.2f%n&quot;</span><span class="o">,</span> <span class="n">yearlyCost</span><span class="o">);</span></span>
-<span id="L4" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Four year cost:\t\t\t$%.2f%n&quot;</span><span class="o">,</span> <span class="n">fourYearCost</span><span class="o">);</span></span>
-<span id="L5" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Monthly loan payment:\t\t$%.2f%n&quot;</span><span class="o">,</span> <span class="n">monthlyPayment</span><span class="o">);</span></span>
-<span id="L6" class="line">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Total loan cost:\t\t$%.2f%n&quot;</span><span class="o">,</span> <span class="n">totalLoanCost</span> <span class="o">);</span></span>
-<span id="L7" class="line">    <span class="o">}</span></span>
-<span id="L8" class="line"><span class="o">}</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\nCollege costs for &quot;</span> <span class="o">+</span> <span class="n">firstName</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">lastName</span> <span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;***************************************&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Yearly cost:\t\t\t$%.2f%n&quot;</span><span class="o">,</span> <span class="n">yearlyCost</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Four year cost:\t\t\t$%.2f%n&quot;</span><span class="o">,</span> <span class="n">fourYearCost</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Monthly loan payment:\t\t$%.2f%n&quot;</span><span class="o">,</span> <span class="n">monthlyPayment</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Total loan cost:\t\t$%.2f%n&quot;</span><span class="o">,</span> <span class="n">totalLoanCost</span> <span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 </div>
@@ -4208,7 +4078,7 @@ answer. The following example illustrates these steps.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">double</span> <span class="n">value</span> <span class="o">=</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">)*</span><span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">value</span> <span class="o">=</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">)*</span><span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4238,27 +4108,27 @@ illustrates this concurrent approach.</p>
 <div id="SplitExpressionProgram" class="listingblock">
 <div class="title">Program 3.3 Concurrent evaluation of an expression.</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SplitExpression</span> <span class="o">{</span></span>
-<span id="L2" class="line">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span></span>
-<span id="L3" class="line">        <span class="n">ComputeF</span> <span class="n">fThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ComputeF</span><span class="o">(</span><span class="mf">3.14</span><span class="o">,</span> <span class="mf">2.99</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b></span>
-<span id="L4" class="line">        <span class="n">ComputeG</span> <span class="n">gThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ComputeG</span><span class="o">(</span><span class="mf">5.55</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b></span>
-<span id="L5" class="line">        <span class="n">fThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b></span>
-<span id="L6" class="line">        <span class="n">gThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="4"></i><b>(4)</b></span>
-<span id="L7" class="line">        <span class="k">try</span> <span class="o">{</span></span>
-<span id="L8" class="line">            <span class="n">fThread</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>  <i class="conum" data-value="5"></i><b>(5)</b></span>
-<span id="L9" class="line">            <span class="n">gThread</span><span class="o">.</span><span class="na">join</span><span class="o">();</span> <i class="conum" data-value="6"></i><b>(6)</b></span>
-<span id="L10" class="line">            <span class="kt">double</span> <span class="n">fResult</span> <span class="o">=</span> <span class="n">fThread</span><span class="o">.</span><span class="na">getResult</span><span class="o">();</span> <i class="conum" data-value="7"></i><b>(7)</b></span>
-<span id="L11" class="line">            <span class="kt">double</span> <span class="n">gResult</span> <span class="o">=</span> <span class="n">gThread</span><span class="o">.</span><span class="na">getResult</span><span class="o">();</span> <i class="conum" data-value="8"></i><b>(8)</b></span>
-<span id="L12" class="line">            <span class="kt">double</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">fResult</span><span class="o">*</span><span class="n">gResult</span><span class="o">;</span> <i class="conum" data-value="9"></i><b>(9)</b></span>
-<span id="L13" class="line">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Result of f: &quot;</span> <span class="o">+</span> <span class="n">fResult</span> <span class="o">);</span></span>
-<span id="L14" class="line">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Result of g: &quot;</span> <span class="o">+</span> <span class="n">gResult</span> <span class="o">);</span></span>
-<span id="L15" class="line">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Final answer: &quot;</span> <span class="o">+</span> <span class="n">answer</span><span class="o">);</span></span>
-<span id="L16" class="line">        <span class="o">}</span></span>
-<span id="L17" class="line">        <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span></span>
-<span id="L18" class="line">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Computation interrupted!&quot;</span><span class="o">);</span></span>
-<span id="L19" class="line">        <span class="o">}</span></span>
-<span id="L20" class="line">    <span class="o">}</span></span>
-<span id="L21" class="line"><span class="o">}</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SplitExpression</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ComputeF</span> <span class="n">fThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ComputeF</span><span class="o">(</span><span class="mf">3.14</span><span class="o">,</span> <span class="mf">2.99</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="n">ComputeG</span> <span class="n">gThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ComputeG</span><span class="o">(</span><span class="mf">5.55</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="n">fThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="n">gThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">fThread</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>  <i class="conum" data-value="5"></i><b>(5)</b>
+            <span class="n">gThread</span><span class="o">.</span><span class="na">join</span><span class="o">();</span> <i class="conum" data-value="6"></i><b>(6)</b>
+            <span class="kt">double</span> <span class="n">fResult</span> <span class="o">=</span> <span class="n">fThread</span><span class="o">.</span><span class="na">getResult</span><span class="o">();</span> <i class="conum" data-value="7"></i><b>(7)</b>
+            <span class="kt">double</span> <span class="n">gResult</span> <span class="o">=</span> <span class="n">gThread</span><span class="o">.</span><span class="na">getResult</span><span class="o">();</span> <i class="conum" data-value="8"></i><b>(8)</b>
+            <span class="kt">double</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">fResult</span><span class="o">*</span><span class="n">gResult</span><span class="o">;</span> <i class="conum" data-value="9"></i><b>(9)</b>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Result of f: &quot;</span> <span class="o">+</span> <span class="n">fResult</span> <span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Result of g: &quot;</span> <span class="o">+</span> <span class="n">gResult</span> <span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Final answer: &quot;</span> <span class="o">+</span> <span class="n">answer</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Computation interrupted!&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -4431,9 +4301,9 @@ However, if we changed <code>2</code> to <code>2.0</code> or <code>5</code> to <
 would not be legal. Explain why.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">float</span> <span class="n">roomArea</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">float</span> <span class="n">homeArea</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">float</span> <span class="n">area</span> <span class="o">=</span> <span class="n">roomArea</span> <span class="o">*</span> <span class="n">homeArea</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">float</span> <span class="n">roomArea</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+<span class="kt">float</span> <span class="n">homeArea</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+<span class="kt">float</span> <span class="n">area</span> <span class="o">=</span> <span class="n">roomArea</span> <span class="o">*</span> <span class="n">homeArea</span><span class="o">;</span></code></pre>
 </div>
 </div>
 </li>
@@ -4442,14 +4312,14 @@ would not be legal. Explain why.</p>
 declarations.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="o">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">4</span><span class="o">,</span> <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="kt">float</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">3.99f</span><span class="o">,</span> <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9.89f</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="kt">int</span> <span class="n">population1</span> <span class="o">=</span> <span class="mi">15000</span><span class="o">,</span> <span class="n">population2</span> <span class="o">=</span> <span class="mi">8000</span><span class="o">;</span></span>
-<span id="L4" class="line"><span class="kd">final</span> <span class="kt">double</span> <span class="n">MAXIMUM_LEVEL</span> <span class="o">=</span> <span class="mi">350</span><span class="o">;</span></span>
-<span id="L5" class="line"><span class="kt">double</span> <span class="n">limitPerCapita</span> <span class="o">=</span> <span class="mf">0.03</span><span class="o">;</span></span>
-<span id="L6" class="line"><span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">14</span><span class="o">;</span></span>
-<span id="L7" class="line"><span class="kd">final</span> <span class="kt">int</span> <span class="n">MAXIMUM_AGE</span> <span class="o">=</span> <span class="mi">23</span><span class="o">;</span></span>
-<span id="L8" class="line"><span class="kt">boolean</span> <span class="n">allowed</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="o">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">4</span><span class="o">,</span> <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span><span class="o">;</span>
+<span class="kt">float</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">3.99f</span><span class="o">,</span> <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9.89f</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">population1</span> <span class="o">=</span> <span class="mi">15000</span><span class="o">,</span> <span class="n">population2</span> <span class="o">=</span> <span class="mi">8000</span><span class="o">;</span>
+<span class="kd">final</span> <span class="kt">double</span> <span class="n">MAXIMUM_LEVEL</span> <span class="o">=</span> <span class="mi">350</span><span class="o">;</span>
+<span class="kt">double</span> <span class="n">limitPerCapita</span> <span class="o">=</span> <span class="mf">0.03</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">14</span><span class="o">;</span>
+<span class="kd">final</span> <span class="kt">int</span> <span class="n">MAXIMUM_AGE</span> <span class="o">=</span> <span class="mi">23</span><span class="o">;</span>
+<span class="kt">boolean</span> <span class="n">allowed</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4554,9 +4424,9 @@ However, the expression <code>Double.MAX_VALUE + 1</code> results in
 following statements are executed.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="mi">15</span> <span class="o">+</span> <span class="mi">20</span><span class="o">);</span></span>
-<span id="L2" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;15&quot;</span> <span class="o">+</span> <span class="mi">20</span><span class="o">);</span></span>
-<span id="L3" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="o">+</span> <span class="mi">15</span> <span class="o">+</span> <span class="mi">20</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="mi">15</span> <span class="o">+</span> <span class="mi">20</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;15&quot;</span> <span class="o">+</span> <span class="mi">20</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="o">+</span> <span class="mi">15</span> <span class="o">+</span> <span class="mi">20</span><span class="o">);</span></code></pre>
 </div>
 </div>
 </li>
@@ -4653,9 +4523,9 @@ Java.</p>
 declarations of three <code>Car</code> objects.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"> <span class="n">Car</span> <span class="n">car1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">(</span><span class="s">&quot;Mercedes&quot;</span><span class="o">,</span> <span class="s">&quot;C300 Sport&quot;</span><span class="o">,</span> <span class="mi">75000</span><span class="o">);</span></span>
-<span id="L2" class="line"> <span class="n">Car</span> <span class="n">car2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">(</span><span class="s">&quot;Pontiac&quot;</span><span class="o">,</span> <span class="s">&quot;Vibe&quot;</span><span class="o">,</span> <span class="mi">17000</span><span class="o">);</span></span>
-<span id="L3" class="line"> <span class="n">Car</span> <span class="n">car3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">(</span><span class="s">&quot;Mercedes&quot;</span><span class="o">,</span> <span class="s">&quot;C300 Sport&quot;</span><span class="o">,</span> <span class="mi">75000</span><span class="o">);</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"> <span class="n">Car</span> <span class="n">car1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">(</span><span class="s">&quot;Mercedes&quot;</span><span class="o">,</span> <span class="s">&quot;C300 Sport&quot;</span><span class="o">,</span> <span class="mi">75000</span><span class="o">);</span>
+ <span class="n">Car</span> <span class="n">car2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">(</span><span class="s">&quot;Pontiac&quot;</span><span class="o">,</span> <span class="s">&quot;Vibe&quot;</span><span class="o">,</span> <span class="mi">17000</span><span class="o">);</span>
+ <span class="n">Car</span> <span class="n">car3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">(</span><span class="s">&quot;Mercedes&quot;</span><span class="o">,</span> <span class="s">&quot;C300 Sport&quot;</span><span class="o">,</span> <span class="mi">75000</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4708,9 +4578,9 @@ many websites such as <a href="http://www.asciitable.com" target="_blank" rel="n
 sequence of statements?</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">p</span> <span class="o">=</span> <span class="s">&quot;Break it&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">q</span> <span class="o">=</span> <span class="s">&quot;down like this!&quot;</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">((</span><span class="n">p</span> <span class="o">+</span> <span class="n">q</span><span class="o">).</span><span class="na">length</span><span class="o">());</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">p</span> <span class="o">=</span> <span class="s">&quot;Break it&quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">q</span> <span class="o">=</span> <span class="s">&quot;down like this!&quot;</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">((</span><span class="n">p</span> <span class="o">+</span> <span class="n">q</span><span class="o">).</span><span class="na">length</span><span class="o">());</span></code></pre>
 </div>
 </div>
 </li>
@@ -4720,10 +4590,10 @@ following sequence of statements? Note that <code>r</code> contains a single spa
 character.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="n">String</span> <span class="n">p</span> <span class="o">=</span> <span class="s">&quot;This is not a string.&quot;</span><span class="o">;</span></span>
-<span id="L2" class="line"><span class="n">String</span> <span class="n">q</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span></span>
-<span id="L3" class="line"><span class="n">String</span> <span class="n">r</span> <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="o">;</span></span>
-<span id="L4" class="line"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">((</span><span class="n">p</span> <span class="o">+</span> <span class="n">q</span> <span class="o">+</span> <span class="n">r</span><span class="o">).</span><span class="na">length</span><span class="o">());</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">String</span> <span class="n">p</span> <span class="o">=</span> <span class="s">&quot;This is not a string.&quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">q</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">r</span> <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">((</span><span class="n">p</span> <span class="o">+</span> <span class="n">q</span> <span class="o">+</span> <span class="n">r</span><span class="o">).</span><span class="na">length</span><span class="o">());</span></code></pre>
 </div>
 </div>
 </li>
@@ -4739,12 +4609,12 @@ character.</p>
 following program and observe the error reported by the compiler.</p>
 <div id="UninitializedStringProgram" class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"><span id="L1" class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UninitializedString</span> <span class="o">{</span></span>
-<span id="L2" class="line">     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span></span>
-<span id="L3" class="line">          <span class="n">String</span> <span class="n">greeting</span><span class="o">;</span></span>
-<span id="L4" class="line">          <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">greeting</span><span class="o">);</span></span>
-<span id="L5" class="line">    <span class="o">}</span></span>
-<span id="L6" class="line"><span class="o">}</span></span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UninitializedString</span> <span class="o">{</span>
+     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+          <span class="n">String</span> <span class="n">greeting</span><span class="o">;</span>
+          <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">greeting</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4775,9 +4645,144 @@ display properly.</p>
 </div></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-01-24 16:10:26 -0500
+Last updated 2019-05-15 16:57:12 -0400
 </div>
 </div>
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge, pre.rouge .w {
+  color: #000000;
+  background-color: #f8f8f8;
+}
+pre.rouge .c, pre.rouge .cd, pre.rouge .cm, pre.rouge .c1, pre.rouge .cs {
+  color: #408080;
+  font-style: italic;
+}
+pre.rouge .cp {
+  color: #BC7A00;
+}
+pre.rouge .k, pre.rouge .kc, pre.rouge .kd, pre.rouge .kn, pre.rouge .kr, pre.rouge .kv {
+  color: #008000;
+  font-weight: bold;
+}
+pre.rouge .kp {
+}
+pre.rouge .kt {
+  color: #B00040;
+}
+pre.rouge .o {
+  color: #666666;
+}
+pre.rouge .ow {
+  color: #AA22FF;
+  font-weight: bold;
+}
+pre.rouge .nb, pre.rouge .bp {
+  color: #008000;
+}
+pre.rouge .nf {
+  color: #0000FF;
+}
+pre.rouge .nc {
+  color: #0000FF;
+  font-weight: bold;
+}
+pre.rouge .nn {
+  color: #0000FF;
+  font-weight: bold;
+}
+pre.rouge .ne {
+  color: #D2413A;
+  font-weight: bold;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi {
+  color: #19177C;
+}
+pre.rouge .no {
+  color: #880000;
+}
+pre.rouge .nl {
+  color: #A0A000;
+}
+pre.rouge .ni {
+  color: #999999;
+  font-weight: bold;
+}
+pre.rouge .na {
+  color: #7D9029;
+}
+pre.rouge .nt {
+  color: #008000;
+  font-weight: bold;
+}
+pre.rouge .nd {
+  color: #AA22FF;
+}
+pre.rouge .s, pre.rouge .sb, pre.rouge .sc, pre.rouge .s2, pre.rouge .sh, pre.rouge .s1 {
+  color: #BA2121;
+}
+pre.rouge .sd {
+  font-style: italic;
+}
+pre.rouge .si {
+  color: #BB6688;
+  font-weight: bold;
+}
+pre.rouge .se {
+  color: #BB6622;
+  font-weight: bold;
+}
+pre.rouge .sr {
+  color: #BB6688;
+}
+pre.rouge .ss {
+  color: #19177C;
+}
+pre.rouge .sx {
+  color: ##008000;
+}
+pre.rouge .m, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mb, pre.rouge .mx {
+  color: #666666;
+}
+pre.rouge .gh {
+  color: #000080;
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #800080;
+  font-weight: bold;
+}
+pre.rouge .gd {
+  color: #A00000;
+}
+pre.rouge .gi {
+  color: #00A000;
+}
+pre.rouge .gr {
+  color: ##FF0000;
+}
+pre.rouge .ge {
+  font-style: italic;
+}
+pre.rouge .gs {
+  font-weight: bold;
+}
+pre.rouge .gp {
+  color: #000080;
+  font-weight: bold;
+}
+pre.rouge .go {
+  color: #888;
+}
+pre.rouge .gt {
+  color: #04D;
+}
+pre.rouge .err {
+  color: #F00;
+  background-color: #FAA;
+}
+</style>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",
@@ -4791,8 +4796,16 @@ MathJax.Hub.Config({
     ignoreClass: "nostem|noasciimath"
   },
   TeX: { equationNumbers: { autoNumber: "none" } }
-});
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 </body>
 </html>
