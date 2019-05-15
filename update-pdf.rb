@@ -1,5 +1,8 @@
 require 'asciidoctor'
+require 'rouge'
 require 'asciidoctor-pdf'
+#require 'asciidoctor-mathematical'
+require_relative './default.rb'
 require_relative './autoxref-treeprocessor.rb'
 
 Asciidoctor::Extensions.register do
@@ -9,7 +12,12 @@ end
 
 def convert()
     old_verbose, $VERBOSE = $VERBOSE, false
-    pdf = Asciidoctor.convert_file 'index.adoc', to_file: true, to_dir: '../pdf',  backend: 'pdf', safe: 'unsafe'    
+    pdf = Asciidoctor.convert_file 'index.adoc', to_file: true, to_dir: '../pdf',  backend: 'pdf', safe: 'unsafe'  
+
+    #pdf = Asciidoctor.convert_file 'index.adoc', to_file: false, backend: 'pdf', header_footer: true
+    #file = File.open("../pdf/index.pdf", "w")
+    #file.print pdf
+    #file.close	
     $VERBOSE = old_verbose
 end
 
