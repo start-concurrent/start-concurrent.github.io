@@ -13,10 +13,7 @@ end
 def convert()
     old_verbose, $VERBOSE = $VERBOSE, false
 
-    html = Asciidoctor.convert_file 'index.adoc', to_file: false, header_footer: true, safe: 'safe'
-    file = File.open("index.html", "w")
-    file.print html
-    file.close
+	Asciidoctor.convert_file 'index.adoc', to_file: true, header_footer: true, safe: 'safe'  
 
     $VERBOSE = old_verbose
 end

@@ -4,18 +4,17 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.5">
+<meta name="generator" content="Asciidoctor 2.0.9">
 <meta name="author" content="Barry Wittman, Tim Korb, Aditya Mathur">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
-/* Uncomment @import statement when using as custom stylesheet */
+/* Uncomment @import statement to use as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
-audio,canvas,video{display:inline-block}
+audio,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
-script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:none}
 a:focus{outline:thin dotted}
@@ -220,8 +219,8 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
-.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .listingblock>.content{position:relative}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
@@ -264,7 +263,8 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
@@ -726,15 +726,15 @@ either junk or a pile of gold, depending on your luck.</p>
 <div class="paragraph">
 <p>As it turns out, it’s always a better strategy to switch doors. If you
 keep your initial choice, you’ll win the gold with probability
-\(\frac{1}{3}\). However, if you switch doors, you will win
-with probability \(\frac{2}{3}\). The problem is
+\$\frac{1}{3}\$. However, if you switch doors, you will win
+with probability \$\frac{2}{3}\$. The problem is
 counterintuitive and leads many people, including mathematicians and
 people holding advanced degrees, to the incorrect answer.</p>
 </div>
 <div class="paragraph">
 <p>Think about it this way: Suppose you could pick two doors to open, and
 if the gold was behind either one of them, you’d win. Clearly, your
-probability of winning would be \(\frac{2}{3}\). Monty allows
+probability of winning would be \$\frac{2}{3}\$. Monty allows
 you this option. Just pick the two doors you want and tell Monty the
 third. He reveals one of your two initial doors as junk, and you switch
 to the other one.</p>
@@ -806,14 +806,14 @@ the kinds of choices we want to make:</p>
 executed by a computer. The person following this program asks herself,
 “Is it raining today?” If the answer is “yes,” then she’ll take
 her umbrella. We can abstract this idea a bit further by saying that
-<em>raining outside</em> is a condition \(p\) and that <em>taking my
-umbrella</em> is an action \(a\). In other words, if
-\(p\) is true, then do \(a\). We haven’t specified
-what is to be done if \(p\) is not true, although we can
+<em>raining outside</em> is a condition \$p\$ and that <em>taking my
+umbrella</em> is an action \$a\$. In other words, if
+\$p\$ is true, then do \$a\$. We haven’t specified
+what is to be done if \$p\$ is not true, although we can
 assume that the actor in this drama will <strong>not</strong> take an umbrella.</p>
 </div>
 <div class="paragraph">
-<p>If we want to view \(p\) as a decision to make, we can specify
+<p>If we want to view \$p\$ as a decision to make, we can specify
 what happens if it’s not true. For example, we could formulate another
 choice:</p>
 </div>
@@ -822,11 +822,11 @@ choice:</p>
 otherwise, I’ll eat fast food.</em></p>
 </div>
 <div class="paragraph">
-<p>In this case, we let <em>having at least $50</em> be condition \(q\),
-<em>eating a lobster dinner</em> be action \(b\), and <em>eating fast
-food</em> be action \(c\). Now we’ve created a decision. If
-\(q\) is true, the person will do action \(b\), but
-if it’s false, she’ll do action \(c\).</p>
+<p>In this case, we let <em>having at least $50</em> be condition \$q\$,
+<em>eating a lobster dinner</em> be action \$b\$, and <em>eating fast
+food</em> be action \$c\$. Now we’ve created a decision. If
+\$q\$ is true, the person will do action \$b\$, but
+if it’s false, she’ll do action \$c\$.</p>
 </div>
 </div>
 <div class="sect3">
@@ -844,9 +844,9 @@ television.</em></p>
 <div class="paragraph">
 <p>Someone following this program will watch television if he’s bored or
 if it’s late and he also can’t sleep. We can break the condition into
-three sub-conditions: <em>I’m bored</em> is condition \(x\), <em>it’s
-late</em> is condition \(y\), and <em>I can’t sleep</em> is condition
-\(z\). We have connected these three conditions together using
+three sub-conditions: <em>I’m bored</em> is condition \$x\$, <em>it’s
+late</em> is condition \$y\$, and <em>I can’t sleep</em> is condition
+\$z\$. We have connected these three conditions together using
 the words “and” and “or.” These two simple words represent powerful
 concepts in Boolean logic, AND and OR. When two conditions are combined
 with AND, the result is true only if both conditions are true. When two
@@ -856,12 +856,12 @@ conditions is true.</p>
 <div class="paragraph">
 <p>We can create a table called a <em>truth table</em> to show all the possible
 values certain conditions can take. We’re going to use the symbol
-\(\land\) to represent the concept of AND and the symbol
-\(\lor\) to represent the concept of OR. We’ll also
+\$\land\$ to represent the concept of AND and the symbol
+\$\lor\$ to represent the concept of OR. We’ll also
 abbreviate true to T and false to F.</p>
 </div>
 <div class="paragraph">
-<p>Given a condition \(x\), a condition \(y\), and the condition made by \(x \land y\), this truth table shows all possible values. As stipulated, \(x \land y\) is true only when both \(x\) and \(y\) are true.</p>
+<p>Given a condition \$x\$, a condition \$y\$, and the condition made by \$x \land y\$, this truth table shows all possible values. As stipulated, \$x \land y\$ is true only when both \$x\$ and \$y\$ are true.</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
@@ -871,9 +871,9 @@ abbreviate true to T and false to F.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-center valign-top">\(x\)</th>
-<th class="tableblock halign-center valign-top">\(y\)</th>
-<th class="tableblock halign-center valign-top">\(x \land y\)</th>
+<th class="tableblock halign-center valign-top">\$x\$</th>
+<th class="tableblock halign-center valign-top">\$y\$</th>
+<th class="tableblock halign-center valign-top">\$x \land y\$</th>
 </tr>
 </thead>
 <tbody>
@@ -900,7 +900,7 @@ abbreviate true to T and false to F.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>This truth table gives all the values for \(x \lor y\). As you can see, \(x \lor y\) is true if \(x\) or \(y\) are true.</p>
+<p>This truth table gives all the values for \$x \lor y\$. As you can see, \$x \lor y\$ is true if \$x\$ or \$y\$ are true.</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content center">
 <colgroup>
@@ -910,9 +910,9 @@ abbreviate true to T and false to F.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-center valign-top">\(x\)</th>
-<th class="tableblock halign-center valign-top">\(y\)</th>
-<th class="tableblock halign-center valign-top">\(x \lor y\)</th>
+<th class="tableblock halign-center valign-top">\$x\$</th>
+<th class="tableblock halign-center valign-top">\$y\$</th>
+<th class="tableblock halign-center valign-top">\$x \lor y\$</th>
 </tr>
 </thead>
 <tbody>
@@ -947,11 +947,11 @@ This difference gives another reason for a formally structured language
 like mathematics or Java to express ourselves precisely. When two
 conditions are connected with XOR, the result is true if one or the
 other but not both conditions are true. We use the symbol
-\(\oplus\) to represent the XOR operation in the truth table
+\$\oplus\$ to represent the XOR operation in the truth table
 below.</p>
 </div>
 <div class="paragraph">
-<p>This truth table gives all the values for \(x \oplus y\).</p>
+<p>This truth table gives all the values for \$x \oplus y\$.</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content text-center center">
 <colgroup>
@@ -961,9 +961,9 @@ below.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-center valign-top">\(x\)</th>
-<th class="tableblock halign-center valign-top">\(y\)</th>
-<th class="tableblock halign-center valign-top">\(x \oplus y\)</th>
+<th class="tableblock halign-center valign-top">\$x\$</th>
+<th class="tableblock halign-center valign-top">\$y\$</th>
+<th class="tableblock halign-center valign-top">\$x \oplus y\$</th>
 </tr>
 </thead>
 <tbody>
@@ -997,7 +997,7 @@ operator. A NOT simply reverses a condition. If a condition is true,
 then NOT applied to that condition will yield false, and vice versa.</p>
 </div>
 <div class="paragraph">
-<p>Here’s a truth table for NOT, using the symbol \(\lnot\) to represent the NOT operation.</p>
+<p>Here’s a truth table for NOT, using the symbol \$\lnot\$ to represent the NOT operation.</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content text-center center">
 <colgroup>
@@ -1006,8 +1006,8 @@ then NOT applied to that condition will yield false, and vice versa.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-center valign-top">\(x\)</th>
-<th class="tableblock halign-center valign-top">\(\lnot x\)</th>
+<th class="tableblock halign-center valign-top">\$x\$</th>
+<th class="tableblock halign-center valign-top">\$\lnot x\$</th>
 </tr>
 </thead>
 <tbody>
@@ -1024,11 +1024,11 @@ then NOT applied to that condition will yield false, and vice versa.</p>
 <div class="paragraph">
 <p>Now that we’ve nailed down some notation for Boolean logic, we can
 express the complicated expression that sent us down this path in the
-first place. Recall that \(x\) is <em>I’m bored</em>,
-\(y\) is <em>it’s late</em>, and \(z\) is <em>I can’t sleep</em>.
-Let \(d\) be the action <em>I’ll watch television</em>. We can
-express the choice in this way: If \(x \lor (y \land z)\),
-then do \(d\). Using this notation, we’ve expressed
+first place. Recall that \$x\$ is <em>I’m bored</em>,
+\$y\$ is <em>it’s late</em>, and \$z\$ is <em>I can’t sleep</em>.
+Let \$d\$ be the action <em>I’ll watch television</em>. We can
+express the choice in this way: If \$x \lor (y \land z)\$,
+then do \$d\$. Using this notation, we’ve expressed
 precisely the conditions for watching television, using parentheses to
 clear up the ambiguity present in the original statement. If we can map
 individual conditions to Boolean variables, we can build conditions of
@@ -1284,25 +1284,25 @@ Operator</th>
 <tbody>
 <tr>
 <td class="tableblock halign-center valign-middle"><p class="tableblock">AND</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(\land\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$\land\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>&amp;&amp;</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Returns <code>true</code> if both values are <code>true</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-middle"><p class="tableblock">OR</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(\lor\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$\lor\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>||</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Returns <code>true</code> if either value is <code>true</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-middle"><p class="tableblock">XOR</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(\oplus\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$\oplus\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>^</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Returns <code>true</code> if values are different</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-middle"><p class="tableblock">NOT</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(\lnot\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$\lnot\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>!</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Returns the opposite of the value</p></td>
 </tr>
@@ -1462,41 +1462,41 @@ Operator</th>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Equals</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(=\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$=\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>==</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code> if the two values are equal</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Not Equals</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(\neq\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$\neq\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>!=</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code> if the two values are not
 equal</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Less Than</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(&lt;\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$&lt;\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>&lt;</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code> if the first value is strictly
 less than the second</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Less Than or Equals</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(\leq\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$\leq\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>&lt;=</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code> if the first
 value is less than or equal to the second</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Greater Than</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(&gt;\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$&gt;\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>&gt;</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code> if the first value is
 strictly greater than the second</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Greater Than or Equals</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">\(\geq\)</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">\$\geq\$</p></td>
 <td class="tableblock halign-center valign-middle"><p class="tableblock"><code>&gt;=</code></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code> if the first
 value is greater than or equal to the second</p></td>
@@ -1524,9 +1524,9 @@ another.</p>
 </div>
 <div class="paragraph">
 <p>Confusion can also arise because, in the mathematical world, relational
-symbols are used to make a statement: \(x &lt; y\) is an
-announcement or a discovery that the value contained in \(x\)
-is, in fact, smaller than the value contained in \(y\). In the
+symbols are used to make a statement: \$x &lt; y\$ is an
+announcement or a discovery that the value contained in \$x\$
+is, in fact, smaller than the value contained in \$y\$. In the
 Java world, the statement <code>x &lt; y</code> is a <strong>test</strong> whose answer is <code>true</code> if
 the value contained in <code>x</code> is smaller than the value contained in <code>y</code>
 and <code>false</code> otherwise. Using these operators means performing a test at
@@ -1678,12 +1678,12 @@ leap year.</p>
 <div class="content">
 <div class="paragraph">
 <p>The quadratic formula is a useful tool from mathematics. Using this
-formula, you can solve equations of the form \(ax^2 + bx
-+ c = 0\). As you might recall, the quadratic equation that gives the
-solutions is: \(\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\)</p>
+formula, you can solve equations of the form \$ax^2 + bx
++ c = 0\$. As you might recall, the quadratic equation that gives the
+solutions is: \$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\$</p>
 </div>
 <div class="paragraph">
-<p>The \(b^2 - 4ac\) part of the formula is called the
+<p>The \$b^2 - 4ac\$ part of the formula is called the
 <em>discriminant</em>. If the discriminant is positive, there will be two real
 answers to the equation. If the discriminant is negative, there will be
 two complex answers to the equation. Finally, if the discriminant is
@@ -1781,7 +1781,7 @@ whether it is animal, vegetable, or mineral.</p>
 </div>
 <div class="paragraph">
 <p>Using counting principles from math, 20 yes-or-no questions makes it
-possible to differentiate \(2^{20} = 1,048,576\) items. If you
+possible to differentiate \$2^{20} = 1,048,576\$ items. If you
 are told ahead of time whether the thing is animal, vegetable, or
 mineral, it should be possible to guess over 3 million items! We are not
 yet ready to deal with such a large range of possibilities. To keep the
@@ -2364,7 +2364,7 @@ element of Chinese astrology is their zodiac, consisting of 12 animals.
 Each consecutive year in a 12-year cycle corresponds to an animal.
 Because this system repeats, the year one is born in modulo 12
 identifies the animal. Below is a table giving these values. For
-example, if you were born in 1979, \(1979 \mod 12 \equiv 11\),
+example, if you were born in 1979, \$1979 \mod 12 \equiv 11\$,
 and thus you would be a Ram. Note that this arrangement is based on
 years in the Gregorian calendar. Chinese astrologers do not list the
 Monkey as the first animal in the cycle.</p>
@@ -2886,14 +2886,14 @@ your program interact with each other.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Given that \(x\), \(y\), and \(z\) are
+<p>Given that \$x\$, \$y\$, and \$z\$ are
 propositions in Boolean logic, make a truth table for the expression
-\((\lnot(x \land \lnot y)
-\oplus \lnot z)\).</p>
+\$(\lnot(x \land \lnot y)
+\oplus \lnot z)\$.</p>
 </li>
 <li>
-<p>What is the value of the Boolean expression \(\lnot((T
-\oplus F) \land \lnot(F \lor T))\)?</p>
+<p>What is the value of the Boolean expression \$\lnot((T
+\oplus F) \land \lnot(F \lor T))\$?</p>
 </li>
 <li>
 <p>The calculation to determine the leap year given in
@@ -2911,8 +2911,8 @@ Java. Which one?</p>
 <p>De Morgan’s laws are the following, which show that the process of
 negating a clause changes an AND to an OR and vice versa.</p>
 <div class="paragraph">
-<p>\(\lnot(x \land y) = \lnot x \lor \lnot y\)
-\(\lnot(x \lor y) = \lnot x \land \lnot y\)</p>
+<p>\$\lnot(x \land y) = \lnot x \lor \lnot y\$
+\$\lnot(x \lor y) = \lnot x \land \lnot y\$</p>
 </div>
 <div class="paragraph">
 <p>Create truth tables to verify both of these statements.</p>
@@ -3096,7 +3096,7 @@ input and output.</p>
 </div></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-15 16:57:12 -0400
+Last updated 2019-06-03 14:31:40 UTC
 </div>
 </div>
 <style>
@@ -3258,5 +3258,13 @@ MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
 })
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-129929421-1','auto');
+ga('send','pageview');
+</script>
 </body>
 </html>

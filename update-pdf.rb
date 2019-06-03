@@ -12,12 +12,9 @@ end
 
 def convert()
     old_verbose, $VERBOSE = $VERBOSE, false
-    pdf = Asciidoctor.convert_file 'index.adoc', to_file: true, to_dir: '../pdf',  backend: 'pdf', safe: 'unsafe'  
 
-    #pdf = Asciidoctor.convert_file 'index.adoc', to_file: false, backend: 'pdf', header_footer: true
-    #file = File.open("../pdf/index.pdf", "w")
-    #file.print pdf
-    #file.close	
+    Asciidoctor.convert_file 'index.adoc', to_file: true, to_dir: '../pdf', backend: 'pdf', safe: 'unsafe'  
+
     $VERBOSE = old_verbose
 end
 
