@@ -764,9 +764,10 @@ popular version, the person who chooses the thing starts by declaring
 whether it is animal, vegetable, or mineral.
 
 Using counting principles from math, 20 yes-or-no questions makes it
-possible to differentiate stem:[2^{20} = 1,048,576] items. If you
-are told ahead of time whether the thing is animal, vegetable, or
-mineral, it should be possible to guess over 3 million items! We are not
+possible to differentiate 2^20^ = 1,048,576 items. If you're also told 
+whether the thing is animal, vegetable, or
+mineral, it should be possible to guess over 3 million items! At this point
+in our development as Java programmers, we're not
 yet ready to deal with such a large range of possibilities. To keep the
 size of the code reasonable, let's narrow the field to 10 different
 items: a lizard, an eagle, a dolphin, a human, some lead, a diamond, a
@@ -777,11 +778,11 @@ tomato, a peach, a maple tree, and a potato.
 image::flowchart.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
 
-Using these items, we can construct a tree of decisions to make,
+Using these items, we can construct a tree of decisions,
 starting with the decision between animal, vegetable, and mineral. If
-the thing is an animal, we could then ask if it is a mammal. If it is a
+the thing is an animal, we could then ask if it is a mammal. If it *is* a
 mammal, we could ask if it lives on land, deciding between human and
-dolphin. If it is not a mammal, we could ask if it flies, deciding
+dolphin. If it's *not* a mammal, we could ask if it flies, deciding
 between an eagle and a lizard. We can construct similar questions for
 the things in the vegetable and mineral categories, matching
 <<figure-flowchart>>.
@@ -796,10 +797,10 @@ include::{programsdir}/TwentyQuestions.java[]
 The code in this example is straightforward, although even 10 items
 makes for a lot of `if` and `else` blocks. Other than the `if`-`else`
 statements, only simple input and output are needed to make the program
-function. For proper `String` comparison, it is necessary to use the
+function. For proper `String` comparison, it's necessary to use the
 `equals()` method to test if two `String` values are the same.
 
-Note that we have added comments specifying what we assume is the case
+Note that we've added comments specifying what we assume is the case
 for each `else` block. If we were being more careful, we should test for
 the `"y"` and `"n"` cases and then give an error message when the user
 inputs something unexpected, like `"x"` or `"149"` or even `"no"`.
@@ -824,7 +825,7 @@ decisions with arbitrary complexity. Even so, the `if` statement can be
 a little clumsy because it only allows you to choose between two
 alternatives. After all, a conditional can only be `true` or `false`.
 Certainly, decisions can be nested, allowing for more than two
-possibilities, but long lists of possibilities can be cumbersome.
+possibilities, but long lists of possibilities can be cumbersome and hard to read.
 
 For example, imagine that we want to create a program that determines
 the appropriate gift for a wedding anniversary. Below is a table of
@@ -935,11 +936,10 @@ else {
 ----
 
 It appears that there is some kind of `else if` construct in Java, but
-there is not. Still, careful use of the rules for braces allows us to
-write code that nicely expresses a list of alternatives, even if the
-true compiler interpretation looks a little different.
+there isn't. Still, careful use of the rules for braces allows us to
+write code that nicely expresses a sequence of alternatives.
 
-Another way of expressing a long sequence of choices is by using a
+Another way of expressing a long sequence of alternatives is by using a
 `switch` statement. A `switch` statement takes a single integer type
 value (`int`, `long`, `short`, `byte`, `char`) or a `String` and jumps
 to a case corresponding to the input. We can recode the anniversary gift
@@ -1032,40 +1032,37 @@ As you can see, five different area codes are used by New York City. By
 leaving out the `break` statements, values of `212`, `347`, `646`, and
 `718` all have `"New York City"` stored into `location`. Area code 917
 was originally designated for cellular phones and pagers although now it
-has some landlines. By cleverly putting the statement for `917` ahead of
+includes some landlines. By cleverly putting the statement for `917` ahead of
 the other New York City entries, a value of `917` first stores
 `"Cellular: "` into `location` and then falls through and appends
 `"New York City"`. For each of these five area codes, execution in the
 `switch` statement ends only when the `break` statement is reached.
 
-The remaining nine area codes are by themselves. Each of them does a
+The remaining nine area codes are separate. Each of them does a
 single assignment and then breaks out of the `switch` block. Finally,
-the `default` label is used if the area code is not one of the ones
-specified. Note that we have ordered the (non-NYC) area codes in
-ascending order for the sake of readability. As you can see with the
-`917` example, there is no rule about the ordering of the labels. Even
+the `default` label is used if the area code doesn't match one of the
+given codes. Note that we've ordered the (non-NYC) area codes in
+ascending order for the sake of readability. As shown in the
+`917` example, there's no rule about the ordering of the labels. Even
 the `default` label can occur anywhere in the `switch` block you want,
-although it is common to put it at the end. Also, the `break` after the
+although it's common to put it at the end. Also, the `break` after the
 `default` label is unnecessary because execution exits the `switch`
-block anyway. Nevertheless, it is always wise to end on a `break`, in
+block anyway. Nevertheless, it's always wise to end on a `break`, in
 the event that you add more cases in later.
 
 Carelessness is always something to watch out for in `switch`
 statements. Leaving out a `break` statement can cause disastrous and
 difficult to discover bugs. The compiler does not warn you about missing
-`break` statements, either. It is entirely your job to use them
-appropriately. Because of the dangers involved, it is often better to
+`break` statements, either. It's entirely your responsibility to use them
+appropriately. Because of the dangers involved, it's often safe to
 use `if`-`else` statements. Any `switch` statement can be rewritten as
 some combination of `if`-`else` statements, but the reverse is not true.
-The main benefit of `switch` statements is the ability to list many
+The benefit of `switch` statements is their ability to list many
 alternatives clearly. Their drawbacks include the ease of making a
 mistake, an inability to express ranges of data or most types (`double`,
 `float`, or any reference type other than `String`), and limited
 expressive power. They should be used only when their benefit of clearly
-displaying a list of data outweighs the drawbacks. Note that Java 7
-added `String` values as legal input to a `switch`. If you are coding in
-Java 7 or later, you can use `String` literals for your cases, but then
-your code is not be compatible with earlier versions.
+displaying a list of data outweighs the drawbacks.
 
 Next we give a number of examples to help you get more familiar with
 `switch` statements.
@@ -1073,11 +1070,11 @@ Next we give a number of examples to help you get more familiar with
 .Days in the month
 ====
 
-The use of `switch` statements is usually a little more special purpose
-than `if` statements. Nevertheless, there are many problems where their
+There are fewer uses for `switch` statements than `if` statements.
+Nevertheless, there are problems where their
 fall-through behavior can be useful. Imagine that you need to write a
-program that gives the length of each month (assume that February always
-has 28 days). Given the month as a number, we can easily write a program
+program that gives the length of each month (with the assumption that February always
+has 28 days). Given the month as a number, we can use `switch` statements to write a program
 that maps the number of the month to the number of days it contains.
 
 .Computes the number of days in a given month.
@@ -1087,14 +1084,22 @@ that maps the number of the month to the number of days it contains.
 include::{programsdir}/DaysInMonth.java[]
 ----
 
-This program has a single label for February setting `days` to 28. Then,
+<1> This program has a single label for February setting `days` to 28.
+<2> Then,
 there are labels for April, June, September, and November, months that
-each have 30 days. Finally, the large block of January, March, May,
-July, August, October, and December all set `days` to 31. It would be
+each have 30 days.
+<3> Finally, the large block of January, March, May,
+July, August, October, and December all set `days` to 31.
+
+It would be
 easy to extend this code to prompt the user for a year so that you could
 integrate the leap year code from above for the February case. Note also
-that we do not have a `default` label. You might want to set `days` to
+that we didn't use a `default` label. You might want to set `days` to
 some special value (like `-1`) for invalid months.
+
+In this program it's necessary to initialize `days` to some value, in this case `0`.
+Otherwise, the program won't compile, since it'll try to print out the
+value inside `days`, a value that won't exist if `month` is not in the range 1 through 12.
 
 ====
 
@@ -1126,12 +1131,11 @@ include::{programsdir}/Ordinals.java[]
 ----
 
 This program prompts and then reads in an `int` from the user. We then
-find the remainder of `number` when it is divided by 10, yielding its
+find the remainder of `number` when it's divided by 10, yielding its
 last digit. Based on this digit, we can pick from the four possibilities
 and output the correct ordinal number in most cases. Unfortunately, the
-names for English numbers do not follow the normal pattern of tens place
-name followed by ones place name between 11 and 19, inclusive, and the
-ordinals for any number ending in 11, 12, or 13 will be given the wrong
+names for English numbers have an inconsistent naming convention between 11 and 19, inclusive,
+and the ordinals for any number ending in 11, 12, or 13 will be given the wrong
 suffix by our code. We leave a more complete solution as an exercise.
 ====
 
@@ -1148,10 +1152,11 @@ element of Chinese astrology is their zodiac, consisting of 12 animals.
 Each consecutive year in a 12-year cycle corresponds to an animal.
 Because this system repeats, the year one is born in modulo 12
 identifies the animal. Below is a table giving these values. For
-example, if you were born in 1979, stem:[1979 \mod 12 \equiv 11],
-and thus you would be a Ram. Note that this arrangement is based on
-years in the Gregorian calendar. Chinese astrologers do not list the
-Monkey as the first animal in the cycle.
+example, if you were born in 1979, 1979 mod 12 ≡ 11; thus, you would be a Ram.
+Note that this arrangement is based on years in the Gregorian calendar.
+Chinese astrologers do not list the Monkey as the first animal in the cycle.
+Note that the names of these animals are also sometimes translated in slightly
+different ways.
 
 
 [.center%autowidth,cols="<.>,^.>,<.>,^.>",options="header",]
@@ -1168,11 +1173,12 @@ modulo 12
 |Ox |5 |Ram |11
 |=====================
 
-Unfortunately, this table is not very accurate because it is based on
+Unfortunately, this table is not very accurate because it's based on
 numbering from the Gregorian calendar. The years in question actually
 start and end based on Chinese New Year, which occurs between January 21
 and February 20. As a consequence, you may miscalculate your animal if
-your birthday is early in the year. Let's ignore this problem for the
+your birthday is early in the year. Since calculating the date of
+Chinese New Year is challenging, let's ignore this problem for the
 moment and write a program using a `switch` statement designed to
 correctly output the animal corresponding to an input birth year.
 
@@ -1225,11 +1231,11 @@ down the sign.
 === Solution: Monty Hall
 
 We now return to the Monty Hall simulation described at the beginning of
-the chapter. Recall that the `Random` class allows us to generate all
+the chapter. Recall that objects of the `Random` class allow us to generate all
 kinds of random values. To implement this simulation successfully, our
-program must make all the decisions needed to set up the game for the
+program must make the decisions needed to set up the game for the
 user as well as respond to the user's input. We begin with the `import`
-statement that is necessary to use both the `Scanner` and `Random` class
+statement needed to use both the `Scanner` and `Random` class
 and then define the `MontyHall` class.
 
 [source, java]
@@ -1255,8 +1261,8 @@ include::{programsdir}/MontyHall.java[lines=13..38]
 ----
 
 
-Now we have to navigate a complicated series of decisions. In this
-segment of code, we are tackling the possibility that the user happened
+Now, we have to navigate a complicated series of decisions. In this
+segment of code, we tackle the possibility that the user happened
 to choose the winning door. To obey the rules of the game, we must
 randomly pick which of the two other doors to open. First, we determine
 which are the other two doors and save them in `low` and `high`,
@@ -1270,12 +1276,11 @@ number is greater than or equal to 0.5, we do the opposite.
 include::{programsdir}/MontyHall.java[lines=39..59]
 ----
 
-
-This `else` block covers the case that the player did not pick the
+This `else` block covers the case that the player did *not* pick the
 winning door the first time. Unlike the previous code segment, we no
-longer have a choice of which door to open. This time, we must always
+longer have a choice of which door to open. Instead, we must always
 make the winner the alternative for the user to pick. Then, we simply
-determine which door is leftover so that we can open it. Note that the
+determine which door is left over so that we can open it. Note that the
 braces surrounding the blocks for each of the braces surrounding the
 blocks for each of the three possible values of `choice` are not
 necessary but are included for readability.
@@ -1293,22 +1298,22 @@ junk.
 
 === Concurrency: Selection
 
-The selection primitives (`if` and `switch` statements) seem to have
+Selection statements (`if` and `switch`) seem to have
 little to do with concurrency or parallelism. Selection allows you to
 choose between alternatives while concurrency is about the interaction
 between different threads of execution. As it turns out, there are two
 reasons why selection and concurrency are deeply related to each other.
 
 The first reason is that selection is one of the most basic tools in
-Java. It is impossible to go more than a few lines of a code without
-encountering a selection primitive, usually an `if` statement.
+Java. It's impossible to go more than a few lines of a code without
+encountering a selection statement, usually an `if`.
 Concurrent programs are not exempt from this dependence on `if`
 statements. Making decisions is at the heart of all programming
 languages running on all computers.
 
-The second reason is more troubling and is related to a problem with
+The second, more troubling reason is related to a problem with
 some concurrent programs called a _race condition_, which is discussed
-in great detail in <<ch14-synchronization#ch14-synchronization>>. Remember, one of
+in detail in <<ch14-synchronization#ch14-synchronization>>. Remember, one of
 the biggest challenges of programming a computer is thinking in a
 completely sequential and logical way. Each line of code is executed one
 after the other. Adding in `if` statements means that some code is
@@ -1323,7 +1328,7 @@ if( !matches.areLit() && !flyingSparks ) {
 }
 ----
 
-In this `if` statement, the imaginary agent only enters the storage room
+In this `if` statement, an imaginary agent only enters the storage room
 and unpacks the dynamite if the matches are not lit and there are no
 flying sparks. When execution reaches the first line inside the `if`
 block, we are certain that `matches.areLit()` returned `false` and
@@ -1332,12 +1337,12 @@ that happens inside the `if` block is code that lights the matches, Java
 will *not* jump out of the `if` statement.
 
 As always, the programmer is responsible for making an `if` statement
-that makes sense. It is possible that entering the storage room or
+that makes sense. It's possible that entering the storage room or
 unpacking the dynamite causes sparks to fly or matches to burst into
 flames spontaneously, but it seems unlikely. If the `storageRoom` and
 `dynamite` objects were written by other people, we would expect their
 documentation to explain unusual side-effects of this kind. In a
-sequential program, the programmer can be reasonably sure that it is
+sequential program, the programmer can be reasonably sure that it's
 safe to unpack the dynamite.
 
 Consider another fragment of code:
@@ -1348,16 +1353,15 @@ matches.light();
 flyingSparks = sparklers.light( matches );
 ----
 
-This code appears to light the matches and uses the lit matches to set
+This code appears to light the matches and then to use the lit matches to set
 some sparklers on fire. Presumably, if the process was successful,
 `flyingSparks` will have the value `true`. This code is reasonable and
 potentially helpful. If you were celebrating the 4^th^ of July or needed
 to signal a passing helicopter to rescue you from a desert island,
 lighting sparklers could be a great idea. This sparkler-lighting code
-could occur before the dynamite-unpacking code or after it, but the
-protection of the `if` statement keeps our hero from being blown up if
-he tries to unpack the dynamite with lit sparklers, in a sequential
-program.
+could occur before the dynamite-unpacking code or after it, but, in a sequential
+program, the protection of the `if` statement keeps our hero from being blown up if
+she tries to unpack the dynamite with lit sparklers.
 
 In a concurrent program, all bets are off. Another thread of execution
 can be operating at the very same time. It's as if our hero is trying to
@@ -1371,10 +1375,10 @@ more) concurrent threads of execution. It might be possible to run a
 program 1,000 times with no problem. But if the timing is wrong on the
 1,001^st^ time, *BOOM!*
 
-At this point, you do not need to worry about values inside your `if`
+At this point, you don't need to worry about values inside your `if`
 statements being changed by other segments of code, but that problem is
 at the heart of why concurrent programming can be so difficult. Whether
-or not you are programming concurrently, it is always important to keep
+or not you're programming concurrently, it's important to keep
 in mind the assumptions your code makes and the way different parts of
 your program interact with each other.
 
@@ -1383,10 +1387,9 @@ your program interact with each other.
 
 . Given that stem:[x], stem:[y], and stem:[z] are
 propositions in Boolean logic, make a truth table for the expression
-stem:[(\lnot(x \land \lnot y)
-\oplus \lnot z)].
-. What is the value of the Boolean expression stem:[\lnot((T
-\oplus F) \land \lnot(F \lor T))]?
+stem:[(\lnot(x \land \lnot y) \oplus \lnot z)].
+. What's the value of the Boolean expression 
+stem:[\lnot((T \oplus F) \land \lnot(F \lor T))]?
 . The calculation to determine the leap year given in
 <<leapYearExample>> uses three `if` statements and three
 `else` statements. Write the leap year calculation using a single `if`
@@ -1398,7 +1401,7 @@ Java. Which one?
 . De Morgan's laws are the following, which show that the process of
 negating a clause changes an AND to an OR and vice versa.
 +
-stem:[\lnot(x \land y) = \lnot x \lor \lnot y]
+stem:[\lnot(x \land y) = \lnot x \lor \lnot y] +
 stem:[\lnot(x \lor y) = \lnot x \land \lnot y]
 +
 Create truth tables to verify both of these statements.
@@ -1422,8 +1425,7 @@ System.out.println("y: " + y);
 ----
 +
 What is the output? Is the output changed if the condition of the `if`
-statement is changed to +
-`y > 10 & (x = 10) > 5`? Why?
+statement is changed to `y > 10 & (x = 10) > 5`? Why?
 . Consider the following fragment of code.
 +
 [source,java]
@@ -1436,18 +1438,18 @@ else
 ----
 +
 What is the output? Is the output changed if the condition of the `if`
-statement is changed to `++a == 7`? Why? Note: It is generally wise to
+statement is changed to `++a == 7`? Why? +
+Note: It is generally wise to
 avoid increment, decrement, and assignment statements in the condition
 of an `if` statement because of the confusion that can arise.
 
 
 *Programming Practice*
 
-. This problem has two parts.
-..  Write a program that reads in two `double` values and prints the
+. Write programs that:
+..  Read in two `double` values and print the
 larger of the two of them.
-..  Expand the ideas from the previous program into a program that reads
-in *three* `double` values and prints the largest of the three out.
+..  Read in *three* `double` values and print the largest of the three out.
 Note: You should use nested `if` statements.
 . [[coinNamesExercise]] Write programs that:
 ..  Read an `int` value from the user specifying a certain number of
@@ -1484,8 +1486,8 @@ statements instead.
 are between 1 and 1,000,000 and have two special characteristics: They
 are multiples of 7 and all end with a 3 in the one's place. For example,
 63 is the smallest such value, and 999,943 is the largest such value.
-Write a program that prompts the user for an `int` value, read it in,
-and then say whether or not it could be used as an ID number. Note: You
+Write a program that prompts the user for an `int` value, reads it in,
+and then says whether or not it could be used as an ID number. Note: You
 need to use the `%` operator in two different ways to test the value
 correctly.
 . According to the North American Numbering Plan (NANP) used by the
