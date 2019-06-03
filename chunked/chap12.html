@@ -4,18 +4,17 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.5">
+<meta name="generator" content="Asciidoctor 2.0.9">
 <meta name="author" content="Barry Wittman, Tim Korb, Aditya Mathur">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
-/* Uncomment @import statement when using as custom stylesheet */
+/* Uncomment @import statement to use as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
-audio,canvas,video{display:inline-block}
+audio,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
-script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:none}
 a:focus{outline:thin dotted}
@@ -220,8 +219,8 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
-.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .listingblock>.content{position:relative}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
@@ -264,7 +263,8 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
@@ -886,11 +886,11 @@ B or C to complete.</p>
 <div class="content">
 <div class="paragraph">
 <p>Suppose that the following mathematical expression is to be evaluated
-for parameters \(a\) and \(K\) at a given value of
-\(t\).
-\(2\cdot K\cdot a\cdot t\cdot e^{-a\cdot t^2}\) We can
+for parameters \$a\$ and \$K\$ at a given value of
+\$t\$.
+\$2\cdot K\cdot a\cdot t\cdot e^{-a\cdot t^2}\$ We can
 divide the expression into two terms:
-\(2\cdot K\cdot a\cdot t\) and \(e^{-a\cdot t^2}\).
+\$2\cdot K\cdot a\cdot t\$ and \$e^{-a\cdot t^2}\$.
 Each of these terms can be assigned to a different task for evaluation.
 On a dual-core processor, these two tasks can be executed on separate
 cores and the results from each combined to generate the value of the
@@ -968,29 +968,29 @@ examples.</p>
 <div class="title">Example 13.3 Array summation preview</div>
 <div class="content">
 <div class="paragraph">
-<p>Suppose that we want to apply function \(f()\) to each element
-of an array \(A\) and sum the results. Mathematically, we want
+<p>Suppose that we want to apply function \$f()\$ to each element
+of an array \$A\$ and sum the results. Mathematically, we want
 to compute the following sum.</p>
 </div>
 <div class="paragraph">
-<p>\(S=\sum_{i=1}^N f\left(a(i)\right)\)</p>
+<p>\$S=\sum_{i=1}^N f\left(a(i)\right)\$</p>
 </div>
 <div class="paragraph">
-<p>In this formula, \(a(i)\) is the \(i\)<sup>th</sup> element
-of array \(A\). We want to perform the task of applying
-function \(f()\) to each element in the array and summing the
+<p>In this formula, \$a(i)\$ is the \$i\$<sup>th</sup> element
+of array \$A\$. We want to perform the task of applying
+function \$f()\$ to each element in the array and summing the
 result. Let’s assume that we have a dual-core processor available to
 compute the sum. We split up the array so that each core performs the
-task on half of the array. Let \(S_1\) and \(S_2\)
+task on half of the array. Let \$S_1\$ and \$S_2\$
 denote the sums computed by core 1 and core 2, respectively.</p>
 </div>
 <div class="paragraph">
-<p>\(S_1 =\sum_{i=1}^{\lfloor \frac{N}{2}\rfloor } f\left(a(i)\right)\hspace{.75in}
-S_2 =\sum_{i=\lfloor \frac{N}{2} \rfloor +1}^{N} f\left(a(i)\right)\)</p>
+<p>\$S_1 =\sum_{i=1}^{\lfloor \frac{N}{2}\rfloor } f\left(a(i)\right)\hspace{.75in}
+S_2 =\sum_{i=\lfloor \frac{N}{2} \rfloor +1}^{N} f\left(a(i)\right)\$</p>
 </div>
 <div class="paragraph">
-<p>Assuming that \(N\) is even, both cores process exactly the
-same amount of data. For odd \(N\), one of the cores processes
+<p>Assuming that \$N\$ is even, both cores process exactly the
+same amount of data. For odd \$N\$, one of the cores processes
 one more data item than the other.</p>
 </div>
 <div id="figure-array_decomposition" class="imageblock text-center">
@@ -1000,8 +1000,8 @@ one more data item than the other.</p>
 <div class="title">Figure 13.3 Computing the sum of a function of each element of an array.</div>
 </div>
 <div class="paragraph">
-<p>After \(S_1\) and \(S_2\) have been computed, one of
-the cores can add these two numbers together to get \(S\).
+<p>After \$S_1\$ and \$S_2\$ have been computed, one of
+the cores can add these two numbers together to get \$S\$.
 This strategy is illustrated in <a href="#figure-array_decomposition">Figure 13.3</a>.
 After the two cores have completed their work on each half of the array,
 the individual sums are added together to produce the final sum.</p>
@@ -1014,30 +1014,30 @@ the individual sums are added together to produce the final sum.</p>
 <div class="paragraph">
 <p>The need to multiply matrices arises in many mathematical, scientific,
 and engineering applications. Suppose we are asked to write a program to
-multiply two square matrices \(A\) and \(B\), which
-are both \(n\times n\) matrices. The product matrix
-\(C\) will also be \(n\times n\). A sequential
-program will compute each element of matrix \(C\) one at a
+multiply two square matrices \$A\$ and \$B\$, which
+are both \$n\times n\$ matrices. The product matrix
+\$C\$ will also be \$n\times n\$. A sequential
+program will compute each element of matrix \$C\$ one at a
 time. However, a concurrent program can compute more than one element of
-\(C\) simultaneously using multiple cores.</p>
+\$C\$ simultaneously using multiple cores.</p>
 </div>
 <div id="figure-matrix_decomposition" class="imageblock text-center">
 <div class="content">
 <img src="chapters/13-concurrency/images/matrixDecomposition.svg" alt="matrixDecomposition" width="75%">
 </div>
-<div class="title">Figure 13.4 Data decomposition to multiply two \(4\times 4\) matrices. The two cores perform the same multiplication tasks but on different data from matrix \(A\). The two cores compute the top and bottom two rows of \(C\), respectively.</div>
+<div class="title">Figure 13.4 Data decomposition to multiply two \$4\times 4\$ matrices. The two cores perform the same multiplication tasks but on different data from matrix \$A\$. The two cores compute the top and bottom two rows of \$C\$, respectively.</div>
 </div>
 <div class="paragraph">
-<p>In this problem, the task is to multiply matrices \(A\) and
-\(B\). Through domain decomposition, we can replicate this
+<p>In this problem, the task is to multiply matrices \$A\$ and
+\$B\$. Through domain decomposition, we can replicate this
 task on each core. As shown in <a href="#figure-matrix_decomposition">Figure 13.4</a>,
-each core computes only a portion of \(C\). For example, if
-\(A\) and \(B\) are \(4\times 4\)
+each core computes only a portion of \$C\$. For example, if
+\$A\$ and \$B\$ are \$4\times 4\$
 matrices, we can ask one core to compute the product of the first two
-rows of \(A\) with all four columns of \(B\) to
-generate the first two rows of \(C\). The second core computes
-the remaining two rows of \(C\). Both cores can access
-matrices \(A\) and \(B\).</p>
+rows of \$A\$ with all four columns of \$B\$ to
+generate the first two rows of \$C\$. The second core computes
+the remaining two rows of \$C\$. Both cores can access
+matrices \$A\$ and \$B\$.</p>
 </div>
 </div>
 </div>
@@ -1100,8 +1100,8 @@ the results from the two threads can either be a separate thread or a
 subtask included in one of the other threads. In
 <a href="#matrixMultiplicationPreviewExample">Example 13.4</a>, the two tasks can
 again be assigned to two distinct threads that operate on different
-parts of the input matrix \(A\) to generate the corresponding
-portions of the output matrix \(C\).</p>
+parts of the input matrix \$A\$ to generate the corresponding
+portions of the output matrix \$C\$.</p>
 </div>
 <div id="figure-tasks_in_threads" class="imageblock">
 <div class="content">
@@ -1566,19 +1566,19 @@ waiting for.</p>
 programs. To understand speedup, let’s assume we have a problem to
 solve. We write two programs to solve this problem, one that is
 sequential and another that is concurrent and, hence, able to exploit
-the multiple cores. Let \(t_s\) be the average time to execute
-the sequential program and \(t_c\) the average time to execute
+the multiple cores. Let \$t_s\$ be the average time to execute
+the sequential program and \$t_c\$ the average time to execute
 the concurrent program. Sometimes we will use the notation
-\(t_c^k\) to refer to the execution time of a concurrent
-program with \(k\) threads. So that the comparison is
+\$t_c^k\$ to refer to the execution time of a concurrent
+program with \$k\$ threads. So that the comparison is
 meaningful, assume that both programs are executed on the same computer.
 The speedup obtained from concurrent programming is defined as follows.
-\(\mbox{speedup}=\frac{t_s}{t_c}\)</p>
+\$\mbox{speedup}=\frac{t_s}{t_c}\$</p>
 </div>
 <div class="paragraph">
 <p>Speedup measures how much faster the concurrent program executes
 relative to the sequential program. Ideally, we expect
-\(t_c&lt;t_s\), making the speedup greater than 1. However,
+\$t_c&lt;t_s\$, making the speedup greater than 1. However,
 simply writing a concurrent program does not necessarily make it faster
 than the sequential version.</p>
 </div>
@@ -1591,8 +1591,8 @@ than the sequential version.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>To determine speedup, we need to measure \(t_s\) and
-\(t_c\). Time in a Java program can easily be measured with
+<p>To determine speedup, we need to measure \$t_s\$ and
+\$t_c\$. Time in a Java program can easily be measured with
 the following two static methods in the <code>System</code> class.</p>
 </div>
 <div class="listingblock">
@@ -1663,11 +1663,11 @@ computer with an Intel Core 2 Duo running at 2.16 Ghz. The execution
 time was measured at 1,660,000 nanoseconds. We also wrote a simple
 sequential program to evaluate the same expression. It took 4,100
 nanoseconds to execute this program on the same computer. Plugging in
-these values for \(t_c\) and \(t_s\), we can find
+these values for \$t_c\$ and \$t_s\$, we can find
 the speedup.</p>
 </div>
 <div class="paragraph">
-<p>\(\mbox{speedup}=\frac{t_s}{t_c} = \frac{4,100}{1,660,000}= 0.00246\)<br>
+<p>\$\mbox{speedup}=\frac{t_s}{t_c} = \frac{4,100}{1,660,000}= 0.00246\$<br>
 This speedup is much less than 1. Although the result may be surprising,
 the concurrent program with two threads executes much slower than the
 sequential program. In this example, the cost of creating, running, and
@@ -1821,14 +1821,14 @@ is printed out.</p>
 <p>In <a href="#matrixMultiplicationPreviewExample">Example 13.4</a>, we discussed the
 importance of matrix operations in many applications. Now that we know
 the necessary Java syntax, we can write a concurrent program to multiply
-two square matrices \(A\) and \(B\) and compute the
-resultant matrix \(C\). If these matrices have \(n\)
-rows and \(n\) columns, the value at the \(i\)<sup>th</sup>
-row and \(j\)<sup>th</sup> column of \(C\) is</p>
+two square matrices \$A\$ and \$B\$ and compute the
+resultant matrix \$C\$. If these matrices have \$n\$
+rows and \$n\$ columns, the value at the \$i\$<sup>th</sup>
+row and \$j\$<sup>th</sup> column of \$C\$ is</p>
 </div>
 <div class="paragraph">
-<p>\(C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \ldots +
-A_{in}B_{nj}\)</p>
+<p>\$C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \ldots +
+A_{in}B_{nj}\$</p>
 </div>
 <div class="paragraph">
 <p>In Java, it is natural for us to store matrices as 2-dimensional arrays.
@@ -1882,9 +1882,9 @@ number of rows in the answer matrix <code>c</code>.</p>
 </div>
 <div class="paragraph">
 <p>The constructor for <code>MatrixThread</code> stores references to the arrays
-corresponding to matrices \(A\), \(B\), and
-\(C\) as well as lower and upper bounds on the rows of
-\(C\) to compute. The body of the <code>run()</code> method is identical
+corresponding to matrices \$A\$, \$B\$, and
+\$C\$ as well as lower and upper bounds on the rows of
+\$C\$ to compute. The body of the <code>run()</code> method is identical
 to the sequential solution except that its outermost loop runs only from
 <code>lower</code> to <code>upper</code> instead of through all the rows of the result. It is
 critical that each thread is assigned a set of rows that does not
@@ -1942,7 +1942,7 @@ matrix that has only been partially filled in.</p>
 <div class="paragraph">
 <p>We completed the code for threaded matrix multiplication and executed it
 on an iMac computer running on an Intel running at 2.16 Ghz. The program
-was executed for matrices of different sizes (\(n \times n\)).
+was executed for matrices of different sizes (\$n \times n\$).
 For each size, the sequential and concurrent execution times in seconds
 and the corresponding speedup are listed in the following table.</p>
 </div>
@@ -1955,9 +1955,9 @@ and the corresponding speedup are listed in the following table.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Size (\(n\))</th>
-<th class="tableblock halign-left valign-top">\(t_s\) (s)</th>
-<th class="tableblock halign-left valign-top">\(t_c\) (s)</th>
+<th class="tableblock halign-left valign-top">Size (\$n\$)</th>
+<th class="tableblock halign-left valign-top">\$t_s\$ (s)</th>
+<th class="tableblock halign-left valign-top">\$t_c\$ (s)</th>
 <th class="tableblock halign-left valign-top">Speedup</th>
 </tr>
 </thead>
@@ -1983,7 +1983,7 @@ and the corresponding speedup are listed in the following table.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Only with \(1000\times1000\) matrices did we see improved
+<p>Only with \$1000\times1000\$ matrices did we see improved
 performance when using two threads. In that case, we achieved a speedup
 of 1.45, marked with an asterisk. In the other two cases, performance
 became worse.</p>
@@ -2608,7 +2608,7 @@ to be greater than the number of processors?</p>
 <p><a id="AmdahlLawExercise"></a> Amdahl’s Law is a mathematical description of
 the maximum amount you can improve a system by only improving a part of
 it. One form of it states that the maximum speedup attainable in a
-parallel program is \(\frac{1}{1 - P}\) where \(P\)
+parallel program is \$\frac{1}{1 - P}\$ where \$P\$
 is the fraction of the program which can be parallelized to an arbitrary
 degree. If 30% of the work in a program can be fully parallelized but
 the rest is completely serial, what is the speedup with 2 processors? 4?
@@ -2769,20 +2769,20 @@ screen. How accurate is your timer?</p>
 </li>
 <li>
 <p><a id="parallelPiApproximationExercise"></a> As you know,
-\(\pi\approx
-3.1416\). A more precise value can be found by writing a program which
+\$\pi\approx
+3.1416\$. A more precise value can be found by writing a program which
 approximates the area of a circle. The area of a circle can be
 approximated by summing up the area of rectangles filling curve of the
 arc of the circle. As the width of the rectangle goes to zero, the
 approximation becomes closer and closer to the true area. Recall that
-that height \(y\) of a circle centered at the origin at any
-distance \(x\) is given by \(y = \sqrt{r^2 - x^2}\)
-where \(r\) is the radius of the circle.</p>
+that height \$y\$ of a circle centered at the origin at any
+distance \$x\$ is given by \$y = \sqrt{r^2 - x^2}\$
+where \$r\$ is the radius of the circle.</p>
 <div class="paragraph">
 <p>Write a parallel implementation of this problem which divides up
 portions of the arc of the circle among several threads and then sums
-the results after they all finish. By setting \(r = 2\), you
-need only sum one quadrant of a circle to get \(\pi\). You
+the results after they all finish. By setting \$r = 2\$, you
+need only sum one quadrant of a circle to get \$\pi\$. You
 will need to use a very small rectangle width to get an accurate answer.
 When your program finishes running, you can compare your value against
 <code>Math.PI</code> for accuracy.</p>
@@ -2822,7 +2822,7 @@ the speedup performance changes. If possible, run your tests on machines
 with different numbers of cores or processors.</p>
 </li>
 <li>
-<p>Given a machine with \(k&gt;1\) cores, what is the maximum
+<p>Given a machine with \$k&gt;1\$ cores, what is the maximum
 speedup you can expect to obtain?</p>
 </li>
 </ol>
@@ -2856,9 +2856,9 @@ of each pair of neighboring partitions should be merged into a single
 sum. The process can be repeated until the final sum has been computed.
 At each step, half of the remaining threads will have nothing left to do
 and will stop. The pattern of summing is like a tree which starts with
-\(k\) threads working at the first stage,
-\(\frac{k}{2}\) working at the second stage,
-\(\frac{k}{4}\) working at the third, and so on, until a
+\$k\$ threads working at the first stage,
+\$\frac{k}{2}\$ working at the second stage,
+\$\frac{k}{4}\$ working at the third, and so on, until a
 single thread completes the summing process.</p>
 </div>
 <div id="figure-tree_summation" class="imageblock">
@@ -2896,7 +2896,7 @@ wait and which threads terminate.</p>
 </div></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-15 16:57:12 -0400
+Last updated 2019-06-03 14:31:40 UTC
 </div>
 </div>
 <style>
@@ -3058,5 +3058,13 @@ MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
 })
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-129929421-1','auto');
+ga('send','pageview');
+</script>
 </body>
 </html>
