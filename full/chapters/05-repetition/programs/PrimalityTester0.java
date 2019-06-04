@@ -10,8 +10,8 @@ public class PrimalityTester0 {
             if( number % i  ==  0 )
                 prime = false;
         if( prime )
-            System.out.println("" + number + " is prime.");
+            System.out.println(number + " is prime.");
         else
-            System.out.println("" + number + " is not prime.");
+            System.out.println(number + " is not prime.");
     }
 }
