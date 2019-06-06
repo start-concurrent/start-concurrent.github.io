@@ -14,9 +14,9 @@ public class TicTacToe {
 
         while( !gameOver ) {
             shape = turn ? 'X' : 'O';
-            System.out.print(shape + "'s turn.  Enter row(0-2): ");
+            System.out.print(shape + "'s turn.  Enter row (0-2): ");
             row = in.nextInt();
-            System.out.print("Enter column(0-2): ");
+            System.out.print("Enter column (0-2): ");
             column = in.nextInt();
             if( board[row][column] != ' ' )
                 System.out.println("Illegal move");
