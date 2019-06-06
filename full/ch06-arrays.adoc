@@ -47,7 +47,7 @@ given cell has 8 neighbors as shown in the figure below.
 .Cell (shown in gray) surrounded by 8 neighboring cells.
 image::cell.svg[scaledwidth=25%,pdfwidth=25%,width=25%]
 
-The pattern of living and dead cells at any given time on the grid is
+The pattern of alive and dead cells at any given time on the grid is
 called a _generation_. To determine the next generation, we use the
 following rules.
 
@@ -62,7 +62,7 @@ cell.
 
 These four simple rules allow for more complex interactions than you might expect.
 The patterns that emerge from applying these rules to a starting
-configuration of living and dead cells strike a balance between complete
+configuration of alive and dead cells strike a balance between complete
 chaos and rigid order. As the name of the game implies, the similarity
 to biological patterns of development can be surprising.
 
@@ -461,7 +461,7 @@ Setting the values in an array is only one possible task you can perform
 with a loop. Let's assume that an array of type `double` named `data`
 has been declared, instantiated, and filled with user input. We could
 sum all its elements using the following code. A more elegant way to do
-the same summation is discussed in <<The for-each loop>>.
+the same summation is discussed in <<Enhanced `for` loops>>.
 
 [source,java]
 ----
@@ -993,6 +993,10 @@ order to work. The simplest way to find the sample standard deviation of a list 
 requires its mean. At least two passes over the data are needed to
 compute the sample standard deviation: one to find the mean and another
 to apply the equation for sample standard deviation.
+
+****
+<<modeExercise>>
+****
 
 ====
 
@@ -1635,7 +1639,7 @@ and instantiate our 3 × 3 playing board as a
 two-dimensional array of type `char`. We want any unplayed space on the
 grid to be the `char` for a space, so we fill the array with `' '`.
 Next, we declare a `boolean` value to keep track of whose turn it is and
-another to keep track of whether the game is over or not. Finally, we
+another to keep track of whether the game is over. Finally, we
 declare variables to hold the row, the column, the number of moves that
 have been made so far and the current shape (`'X'` or `'O'`).
 
@@ -1681,15 +1685,15 @@ include::{programsdir}/TicTacToe.java[lines=36..62]
 ----
 
 
-Perhaps the trickiest part of our Tic Tac Toe program is checking for a
+Perhaps the trickiest part of our tic-tac-toe program is checking for a
 win. First we check each row to see if it contains three in a row. Then,
 we check each column. Finally, we check the two diagonals. If any of
 those checks ended the game, we announce a winner. Otherwise, if the
 number of moves has reached 9 with no winner, it must be a tie game. In
-a larger game (such as Connect Four, we would want to find better ways
-to automate checking rows, columns, and diagonals. For one thing, a very
-large board we mean that we would not want to check the entire thing
-each move. Instead, we could focus only on rows, columns, and diagonals
+a larger game (such as Connect Four), we would want to find better ways
+to automate checking rows, columns, and diagonals. For example, we wouldn't
+want to check the entirety of a larger board each move.
+Instead, we could focus only on rows, columns, and diagonals
 affected by the last move.
 ====
 
@@ -1703,24 +1707,24 @@ affected by the last move.
 Arrays are fundamental data structures in many programming languages.
 There are often special syntactical tools or libraries designed to make
 them easier to use. In this section, we explore two advanced tools, the
-for-each loop and the `Arrays` utility class.
+enhanced `for` loop and the `Arrays` utility class.
 
 
-==== The for-each loop
+==== Enhanced `for` loops
 
-In <<ch05-repetition#ch05-repetition>> we describe three loops: `while`
+In <<ch05-repetition#ch05-repetition>> we described three loops: `while`
 loops, `for` loops, and `do-while` loops. Although these are the only
-three loops in Java, there is a special form of the `for` loop designed
+three loops in Java, there's a special form of the `for` loop designed
 for use with arrays (and some other data structures). This construct is
-usually called a _for-each loop_.
+often called the _enhanced `for` loop_.
 
-A for-each loop does not have the three-part header of a regular `for`
-loop. Instead, it is designed to iterate over the contents of an array.
+An enhanced `for` loop does not have the three-part header of a regular `for`
+loop. Instead, it's designed to iterate over the contents of an array or other list.
 Inside its parentheses is a declaration of a variable with the same type
-of the elements of the array, then a colon (`:`), then the name of the
-array. Consider the following example of a for-each loop used to sum the
+as the elements of the array, then a colon (`:`), then the name of the
+array. Consider the following example of an enhanced `for` loop used to sum the
 values of an array of `int` values called `array`. As with all loops in
-Java, braces are optional if there is only one executable statement in
+Java, braces are optional if there's only one executable statement in
 the loop.
 
 [source,java]
@@ -1740,31 +1744,30 @@ for( int i = 0; i < array.length; i++ )
     sum += array[i];
 ----
 
-The advantage of the for-each loop is that it is shorter and clearer.
-There is also no worry about being off by one with your indexes. The
-for-each loop iterates over every element in the array, no indexes
+The advantage of the enhanced `for` loop is that it's shorter and clearer.
+There's also no worry about being off by one with your indexes. The
+enhanced `for` loop iterates over every element in the array, no indexes
 needed!
 
-For-each loops can be nested or used inside of other loops. Consider the
-following nested for-each loops that print out all of the kinds of chess
+Enhanced `for` loops can be nested or used inside of other loops. Consider the
+following nested enhanced `for` loops that print out all possible chess
 pieces, in both black and white colors.
 
 [source,java]
 ----
 String[] colors = {"Black", "White"};
-String[] pieces =
-    {"King", "Queen", "Rook", "Bishop", "Knight", "Pawn"};
+String[] pieces = {"King", "Queen", "Rook", "Bishop", "Knight", "Pawn"};
 for( String color : colors )
     for( String piece : pieces )
         System.out.println(color + " " + piece);
 ----
 
-For-each loops do have a few drawbacks. They are designed for iterating
-through an entire array. It is ugly to try to make them stop early, and
-it is impossible to make them go back to previous values. They are also
+Enhanced `for` loops do have a few drawbacks. For one, they're designed for iterating
+through an entire array. It's ugly to try to make them stop early, and
+it's impossible to make them go back to previous values. They're also
 only designed for *read* access, not write access. The variable in the
-header of the for-each loop takes on each value in the array in turn,
-but assigning values to that variable have no effect on the underlying
+header of the enhanced `for` loop takes on each value in the array in turn,
+but assigning values to that variable has *no effect* on the underlying
 array. Consider the following `for` loop that assigns `5` to every value
 in `array`.
 
@@ -1774,9 +1777,9 @@ for( int i = 0; i < array.length; i++ )
     array[i] = 5;
 ----
 
-This kind of assignment is impossible in a for-each loop. The
-"`equivalent`" for-each loop does nothing. It assigns `5` to the local
-variable `value` but never changes `array`.
+This kind of assignment is impossible in an enhanced `for` loop. The
+"`equivalent`" enhanced `for` loop does nothing. It assigns `5` to the local
+variable `value` but never changes the contents of `array`.
 
 [source,java]
 ----
@@ -1784,8 +1787,8 @@ for( int value : array )
     value = 5;
 ----
 
-Although for-each loops are great for arrays, they can also be used for
-any other data structures that implements the `Iterable` interface. We
+While enhanced `for` loops are great for arrays, they can also be used for
+any data structure that implements the `Iterable` interface. We
 discuss interfaces in <<ch10-interfaces#ch10-interfaces>> and dynamic data
 structures in <<ch18-dynamic-data-structures#ch18-dynamic-data-structures>> and
 <<ch19-recursion#ch19-recursion>>.
@@ -1809,7 +1812,7 @@ types.
 |binarySearch(double[] array, double value) |Returns index of `value`
 inside `array` or a negative number if it cannot be found. Adding 1 to
 the negative number and then negating it will give the index where the
-value would have been.
+value would have been.  Note: `array` must be sorted for this method to work.
 
 |copyOf(double[] array, int length) |Returns a copy of `array` with
 length `length`, either truncated or padded if it doesn't match the
@@ -1835,9 +1838,9 @@ of each element separated with commas.
 |=======================================================================
 
 Consult the API for more information. Even though tasks like `fill()`
-are simple, it is worth using the method from `Arrays` instead of
+are simple, it's worth using the method from `Arrays` instead of
 writing your own. The methods in the Java API have often been tuned for
-speed and use special commands that are not accessible to regular Java
+speed and use special instructions that are not accessible to regular Java
 programmers.
 
 === Solution: Game of Life
@@ -1857,21 +1860,20 @@ and `GENERATIONS` as named constants using the `final` keyword. Next, we
 create *two* arrays with `ROWS` rows and `COLUMNS` columns. The `board`
 array will hold the current generation. The `temp` array will be used to
 fill in the next generation. Then, `temp` will be copied into `board`,
-and the process will repeat. The `swap` variable is just a reference we
-will use to swap `board` and `temp`. We randomly fill the board, making
+and the process will repeat. The `swap` variable is just a reference we'll
+use to swap `board` and `temp`. We randomly fill the board, making
 10% of the cells living. Again, you may wish to play with this number to
 see how the patterns in the simulation are affected.
 
 [source, java]
 ----
-include::{programsdir}/Life.java[lines=12..33]
+include::{programsdir}/Life.java[lines=12..29]
 ----
-
 
 The `for` loop at the beginning of this segment of code runs once for
 each generation we simulate. The two nested `for` loops examine each
 cell in `board`. The two `for` loops nested inside of those loops do the
-calculations to determine if a cell will be living or dead in the next
+calculations to determine if a cell will be alive or dead in the next
 generation. These inner loops start one row before the current row and
 finish one row after the current row. They do the same for columns. The
 `Math.max()` and `Math.min()` methods are used to keep the loops from
@@ -1883,52 +1885,62 @@ make sure that we do not generate an index greater than `ROWS - 1` or
 
 After these two innermost `for` loops have counted the total of living
 cells around the cell in question, we decide the fate of the cell for
-the next generation. If the cell is living and has exactly 2 or 3 living
-neighbors, it will continue to be living. If a cell is dead, it will
-come to life only if it has exactly 3 living neighbors. After we have
+the next generation. If the cell's alive and has exactly 2 or 3 living
+neighbors, it'll continue to live. If a cell's dead, it'll
+come to life only if it has exactly 3 living neighbors. After we've
 stored the state of each cell in the next generation into `temp`, we
 swap `board` and `temp`, using the `swap` variable. We could have thrown
 out the old array stored in `board` instead of swapping it with `temp`,
-but then we would have to create a new array for `temp` each time, which
+but then we'd have to create a new array for `temp` each time, which
 is less efficient.
 
 [source, java]
 ----
-include::{programsdir}/Life.java[lines=34..48]
+include::{programsdir}/Life.java[lines=30..44]
 ----
-
 
 The first `for` loop in this segment prints 100 blank lines to clear the
 screen, as we explained earlier. The two nested `for` loops print out
 the state of the current generation, with a `*` for each living cell and
 a blank space for each dead one. After the output, the code sleeps for
-100 milliseconds to give the effect of an animation. We will discuss
+500 milliseconds to give the effect of an animation. We'll discuss
 exceptions in general in <<ch12-exceptions#ch12-exceptions>> and give more
 information about the `Thread.sleep()` method in <<ch13-concurrency#ch13-concurrency>>.
+
+Although 500 milliseconds
+(half a second) is a long delay for animation, the scrolling effect of the screen
+makes the pattern of alive and dead cells hard to perceive on a terminal.
+Some kind of GUI (such as we discuss in <<ch15-gui#ch15-gui>>) could provide
+a more pleasing way to visualize the Game of Life, but drawing arbitrary
+patterns on a GUI presents its own difficulties.
+
+****
+<<lifeGUIExercise>>
+****
 
 === Concurrency: Arrays
 
 Arrays are critical to concurrent programming in Java. In
-<<ch13-concurrency#ch13-concurrency>>, we will explain how to
+<<ch13-concurrency#ch13-concurrency>>, we'll explain how to
 create independent threads of execution, each of which is tied to a
 `Thread` object. If you have a dual, quad, or higher core computer, you
 might want to use two or four threads to solve a problem, but some
 programs can use hundreds. How can you keep track of all those `Thread`
-objects? In many cases, you will hold references to them in an array.
+objects? In many cases, you'll hold references to them in an array.
 
-Arrays also hold large lists of data. It is common for threaded programs
+Arrays can also hold large lists of data. It's common for threaded programs
 to share a single array which each thread reads and writes to. In this
-way, memory costs are kept low because there is only one copy of all the
+way, memory costs are kept low because there's only one copy of all the
 data. In the simplest case, each thread works on some portion of the
 array without interacting with the rest. Even then, how do you assign
 parts of the array to the different threads?
 
-We will assume that each element of the array needs to be processed in
+We'll assume that each element of the array needs to be processed in
 some way. For example, we might want to record whether or not each
 `long` in an array is prime or not. If you have stem:[k] threads
 and an array of length stem:[n] where stem:[n] happens to
 be a multiple of stem:[k], then it's easy: Each thread gets
-exactly stem:[n/k] items to work on. For example, the first
+exactly stem:[\frac{n}{k}] items to work on. For example, the first
 thread will work on indexes 0 through stem:[\frac{n}{k} - 1], the
 second thread will work on indexes stem:[\frac{n}{k}] through
 stem:[\frac{2n}{k} - 1], and so on, with the last thread working
@@ -1942,7 +1954,7 @@ What if the number of elements in the array is not a multiple of the
 number of threads? We still want to assign the work the work as fairly
 as possible. New programmers are sometimes tempted to use the same
 arithmetic from the case in which the threads evenly divide the length
-of the array: Each thread gets stem:[\frac{n}{k}] (using integer
+of the array: Each thread gets stem:[\lfloor \frac{n}{k} \rfloor] (using integer
 division) elements, and we stick the last thread with the leftovers. How
 bad can that be?
 
@@ -1952,10 +1964,10 @@ bad can that be?
 
 
 This assignment of work can be very poorly balanced. Consider a case
-with 10 threads and 28 pieces of data. stem:[\frac{28}{10} = 2],
+with 10 threads and 28 pieces of data. stem:[\lfloor \frac{28}{10} \rfloor = 2],
 using integer division. Thus, the first nine threads have 2 units of
 work to do, but the last thread is stuck with 10! Not only is this
-unfair, it is inefficient. The person writing the program probably wants
+unfair; it's inefficient. The person writing the program probably wants
 to minimize the total amount of time needed to finish the job. In this
 case, the time from when the first thread starts to when the last thread
 finishes is called the task's _makespan_. With this division of work,
@@ -2002,8 +2014,8 @@ include::{programsdir}/AssigningWork.java[]
 . Why can't an array be used to hold an arbitrarily long list of
 numbers entered by a user? What are strategies that can be used to
 overcome this problem?
-. In future chapters, we will introduce a data structure called a
-_linked list_. A linked list is a homogeneous, dynamic data structure,
+. In future chapters, we'll introduce a data structure called a
+_linked list_. A linked list is a homogeneous, dynamic data structure
 with sequential access (unlike an array, which has random access). You
 can instantly jump to any place in an array, but you have to step
 through each element of a linked list to get to the one you want, even
@@ -2054,14 +2066,14 @@ array as an array of arrays of arrays.
 .  Our original table of city distances allocates
 5 · 5 = 25 `int` elements to store all the distances
 between the five cities, including repeats. How many `int` elements are
-allocated for the triangular, ragged array version of the city distance
+allocated for the triangular, ragged array version of this city distance
 table? If we used the normal table style, stem:[n] cities would
 require stem:[n^2] `int` elements. How many elements would the
 triangular, ragged array version allocate for stem:[n] cities?
 .  [[dividingArraysExercise]] Consider the naive method of dividing
 an array of length stem:[n] among stem:[k] threads that
 was discussed in <<Concurrency: Arrays>>: Each thread gets
-stem:[n/k] (rounded down because of integer division) elements,
+stem:[\lfloor \frac{n}{k} \rfloor] (rounded down because of integer division) elements,
 and the last thread gets any extras. What mathematical expression
 describes how many extra elements are allocated to the last thread? Can
 you come up with an example in which the last element gets *all* the
@@ -2080,21 +2092,21 @@ as long as the character at the beginning of a word is not a letter,
 replacing the word with a substring of itself that does not include the
 first character. Use a second loop to remove non-letters from the end of
 a word. Be careful to stop if the length of the `String` becomes 0, as
-with text that is entirely composed of non-letters.
+with text that's entirely composed of non-letters.
 .  [[wordBinarySearchExercise]] In <<wordSearchExample>>, we
 wrote a program that counts the occurrences of each word from a list
 within a text. If the list of words to search within is long, it can
 take quite some time to search through the entire list. If the list of
 words were sorted, we could do a trick that would allow us to search
 much faster. We could play a "`high-low`" game, searching through the
-list by checking the middle word in the array. If that word is too late
-in the alphabet, repeat the search on the first half of the list. If it
-is too early in the alphabet, repeat the search on the second half of
+list by checking the middle word in the array. If that word's too late
+in the alphabet, repeat the search on the first half of the list. If it's
+too early in the alphabet, repeat the search on the second half of
 the list. By repeatedly dividing the list in half, until you either find
 the word you're looking for or narrow your search down to a single
 incorrect word, you can search much faster. This kind of searching is
 called _binary search_ and uses around stem:[\log n] comparisons
-to find an element in a list. In contrast, looking through the list one
+to find an element in a list of stem:[n] items. In contrast, looking through the list one
 element at a time takes about stem:[n] comparisons.
 +
 Rewrite the code from <<wordSearchExample>> to use binary
@@ -2102,19 +2114,19 @@ search, after applying selection sort from <<selectionSortExample>>. Although se
 more than make up the difference with such a fast search. To implement
 binary search, keep variables for the start, middle, and end of the
 list. Keep adjusting the three variables until the middle index has the
-word you are looking for or start and end reach each other. Remember to
+word you are looking for or the start and end variables reach each other. Remember to
 use the `compareTo()` method from the `String` class to compare words.
-. In <<statisticsExample>>, we gave a program that finds the
+. [[modeExercise]] In <<statisticsExample>>, we gave a program that finds the
 maximum, minimum, mean, standard deviation, and median of a list of
 values. Another statistic that is sometimes important is the _mode_, or
 most commonly occurring element. For example, in the list
 {1, 2, 3, 3, 3, 5, 6, 6, 10}, the mode is 3. Write a
 program that can determine the mode of a given list of `int` values. A
 list can have multiple modes if more than one element occurs with
-maximum frequency. For our purposes, we will consider any list with
+maximum frequency. For our purposes, we'll consider any list with
 multiple modes to have no modes. You may wish to sort the list before
 starting the process of counting the frequency of each value.
-. [[connectFourExercise]] We used the example of Tic Tac Toe in
+. [[connectFourExercise]] We used the example of tic-tac-toe in
 <<ticTacToeExample>> because a more complex game would have
 taken too much space to solve. The game of Connect Four (or the
 Captain's Mistress, as it was originally called) pits two players
@@ -2125,13 +2137,13 @@ the checkers will drop to the lowest empty row, due to gravity. The goal
 of the game is to be the first to make four in a row of your color.
 +
 Implement a version of Connect Four for two human players, similar to
-the version of Tic Tac Toe we created. Many of the ideas are the same,
+our version of tic-tac-toe. Many of the ideas are the same,
 but the details are more complicated. First, a player will only choose a
 particular column. Your program must then find which row a checker
 dropped into that column will fall to. Then, the process of counting
-four in a row is more difficult than the three in a row of Tic Tac Toe.
+four in a row is more difficult than the three in a row of tic-tac-toe.
 You will need more loops to automate the process fully.
-. Once you have mastered the material in
+. [[lifeGUIExercise]] Once you've mastered the material in
 <<ch15-gui#ch15-gui>>, adapt the
 solution to Conway's Game of Life from <<Solution: Game of Life>>
 to display on a graphical user interface. You can use a
@@ -2146,7 +2158,7 @@ representation.
 *Experiments*
 
 . Creating arrays with longer and longer lengths requires more
-processor time, since the all of those elements must be initialize to
+processor time, since all of those elements must be initialized to
 some default value. Using an OS `time` command, determine the amount of
 time it takes to create an `int` array of length 10, 10,000, and
 10,000,000. In all likelihood, the amount of time that instantiation of
@@ -2159,9 +2171,9 @@ arrays. When you exceed this size, your program will crash with an
 can estimate the size of your heap within 5MB or so.
 +
 This estimate will be very rough, since the JVM uses other memory in the
-background. For a more accurate picture, you can use the +
+background. For a more accurate picture, you can use the
 `Runtime.getRuntime().maxMemory()` method to determine the maximum JVM
-memory size and the +
+memory size and the
 `Runtime.getRuntime().totalMemory()` method to determine the total JVM
 memory being used.
 . Run the implementation of the word search program using the binary
@@ -2178,8 +2190,8 @@ relative to the regular version.
 10,000, and 100,000 random `int` values.
 Time our implementation of selection sort from
 <<selectionSortExample>> running on each of these input files
-and redirecting output to output files. What is the behavior of the
+and redirecting output to output files. What's the behavior of the
 running time as the input length increases by a factor of 10? As a
-function of stem:[n], how many times does the body of the inner
+function of stem:[n], how many times total does the body of the inner
 `for` loop run during selection sort? Does this function closely
-parallel the increase in running time?
+mirror the increase in running time?
