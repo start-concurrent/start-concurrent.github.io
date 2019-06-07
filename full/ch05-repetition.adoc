@@ -1059,44 +1059,41 @@ definition.
 ----
 include::{programsdir}/DNASearch.java[lines=1..8]
 ----
-
-
-The `main()` method instantiates a `Scanner` object and declares both of
-the `String` variables we'll need to store the DNA sequences. The method
+<.> The `main()` method instantiates a `Scanner` object and declares both of
+the `String` variables we'll need to store the DNA sequences.
+<.> The method
 also declares a `boolean` and a `char` we'll use for input checking.
 
 [source, java]
 ----
-include::{programsdir}/DNASearch.java[lines=10..22]
+include::{programsdir}/DNASearch.java[lines=10..21]
 ----
-
-
-Next, the user is prompted for a DNA sequence to search in. This
+<.> Next, the user is prompted for a DNA sequence to search in.
+<.> This
 `String` stored in `sequence` is converted to upper case just in case
-the user is not being consistent. The inner `for` loop in this code is
-checking each `char` inside of `sequence`. If any `char` is not an
+the user is not being consistent.
+<.> The inner `for` loop in this code checks each `char` inside of `sequence`.
+<.> If any `char` is not an
 `'A'`, `'C'`, `'G'`, or `'T'`, then `valid` is set to `false`. As a
 result, the `for` loop terminates. Also, the `do-while` loop repeats the
-prompt and gets a new `String` for `sequence` from the user. This outer
+prompt and gets a new `String` for `sequence` from the user.
+<.> This outer
 `do-while` loop continues as long as the user keeps entering invalid DNA
 sequences.
 
 [source, java]
 ----
-include::{programsdir}/DNASearch.java[lines=24..36]
+include::{programsdir}/DNASearch.java[lines=23..34]
 ----
-
 
 The code used to input `subsequence` while doing error checking is
 virtually identical to the code to input `sequence`.
 
 [source, java]
 ----
-include::{programsdir}/DNASearch.java[lines=38..49]
+include::{programsdir}/DNASearch.java[lines=36..46]
 ----
-
-
-The actual workhorse of the search is found in these nested `for` loops.
+<.> The workhorse of the search is found in these nested `for` loops.
 The outer loop iterates through every index in `sequence`, until it
 comes to an index that is too late to be the start of a new subsequence
 (since the subsequence would be too long to fit anymore). This happens
@@ -1109,12 +1106,13 @@ but not any later indexes. Also, if `subsequence` is one `char` longer
 than `sequence`, there can never be a match. In that case, the value of
 `sequence.length() - subsequence.length() + 1` would be `0`. Since `0`
 is not less than `0`, the outer `for` loop would never execute.
-
-The inner `for` loop iterates through the length of `subsequence`,
+<.> The inner `for` loop iterates through the length of `subsequence`,
 making sure that every `char` in `sequence`, starting at the appropriate
-offset, exactly matches a `char` in `subsequence`. If, at any point, the
+offset, exactly matches a `char` in `subsequence`.
+<.> If, at any point, the
 two `char` values do not match, the inner `for` loop will immediately
-exit, using the `break` command. However, on the last iteration of the
+exit, using the `break` command.
+<.> However, on the last iteration of the
 inner `for` loop, when `j` is one less than the length of `subsequence`,
 we know that all of `subsequence` matched a part of `sequence`. As a
 result, we print out the index of `sequence` where `subsequence` started
@@ -1127,15 +1125,14 @@ to replace the inner `for` loop. We leave that approach as an exercise.
 <<indexOfSearchExercise>>
 ****
 
-[source, java]
-----
-include::{programsdir}/DNASearch.java[lines=51..56]
-----
-
-
 Finally, we print out the total number of matches found. In order to
 avoid awkward output like `1 matches found.`, we used an `if`-`else` to
 customize the output based on the value of `found`.
+
+[source, java]
+----
+include::{programsdir}/DNASearch.java[lines=48..53]
+----
 
 The ideas needed to correctly implement the solution are not difficult,
 but catching all the off-by-one errors and getting every detail right
@@ -1146,11 +1143,10 @@ follows.
 [source,java]
 ----
 int found = 0;
-for( int i = 0; i < sequence.length() -
-    subsequence.length() + 1; i++ ) {
-    for( int j = 0; j < subsequence.length() &&
-        subsequence.charAt(j) == sequence.charAt(i + j); j++ )
-        if( j == subsequence.length() - 1 ) { //matches
+for(int i = 0; i < sequence.length() - subsequence.length() + 1; i++) {
+    for(int j = 0; j < subsequence.length() &&
+        subsequence.charAt(j) == sequence.charAt(i + j); j++)
+        if(j == subsequence.length() - 1) { //matches
             System.out.println("Match found at index " + i);
             found++;
         }
@@ -1166,11 +1162,10 @@ matching process is done outside of the inner `for` loop.
 ----
 int found = 0;
 int j;
-for( int i = 0; i < sequence.length() -
-    subsequence.length() + 1; i++ ) {
-    for( j = 0; j < subsequence.length() &&
-        subsequence.charAt(j) == sequence.charAt(i + j); j++ );
-    if( j == subsequence.length() ) { //matches
+for(int i = 0; i < sequence.length() - subsequence.length() + 1; i++) {
+    for(j = 0; j < subsequence.length() &&
+        subsequence.charAt(j) == sequence.charAt(i + j); j++);
+    if(j == subsequence.length()) { //matches
         System.out.println("Match found at index " + i);
         found++;
     }
@@ -1179,8 +1174,8 @@ for( int i = 0; i < sequence.length() -
 
 In this case, note that we must declare `j` outside of the inner `for`
 loop, since it will be used outside. This approach is more efficient
-because we only need to perform the check once. Notice also that the
-condition of the `if` statement has changed. Now, we know that all of
+because we only need to perform the check once. Notice that the
+condition of the `if` statement has also changed. Now, we know that all of
 `subsequence` matches because the loop ran to completion. If the loop
 did not run to completion, then `j` would be smaller than
 `subsequence.length()` and the loop must have terminated because the two
