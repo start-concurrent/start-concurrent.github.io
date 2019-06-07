@@ -2783,43 +2783,63 @@ down the sign.</p>
 the chapter. Recall that objects of the <code>Random</code> class allow us to generate all
 kinds of random values. To implement this simulation successfully, our
 program must make the decisions needed to set up the game for the
-user as well as respond to the user’s input. We begin with the <code>import</code>
-statement needed to use both the <code>Scanner</code> and <code>Random</code> class
-and then define the <code>MontyHall</code> class.</p>
+user as well as respond to the user’s input.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span> <i class="conum" data-value="1"></i><b>(1)</b>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MontyHall</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
-        <span class="kt">int</span> <span class="n">winner</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">winner</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
         <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">System</span><span class="o">.</span><span class="na">in</span> <span class="o">);</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Choose a door (enter 0, 1, or 2): &quot;</span><span class="o">);</span>
-        <span class="kt">int</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
-        <span class="kt">int</span> <span class="n">alternative</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="kt">int</span> <span class="n">alternative</span><span class="o">;</span> <i class="conum" data-value="4"></i><b>(4)</b>
         <span class="kt">int</span> <span class="n">open</span><span class="o">;</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>In the <code>main()</code> method we first decide which of the three doors is the
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We begin with the <code>import</code>
+statement needed to use both the <code>Scanner</code> and <code>Random</code> class
+and then define the <code>MontyHall</code> class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In the <code>main()</code> method we first decide which of the three doors is the
 winner. To do so, we instantiate a <code>Random</code> object and use it to
 generate a random number that is either 0, 1, or 2 by calling the
 <code>nextInt()</code> method with an argument of <code>3</code>. We could have added 1 to
 this value to get a random choice of 1, 2, or 3, but many counting
-systems in computer science start with 0 instead of 1. You might as well
-get used to it. Next, we prompt the user to pick from the three doors
-and read the choice. Finally, we declare two more <code>int</code> values to keep
+systems in computer science start with 0 instead of 1. We might as well
+embrace it.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Next, we prompt the user to pick from the three doors
+and read the choice.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Finally, we declare two more <code>int</code> values to keep
 track of which door to open and which door is the alternative that the
-user can choose to change over to.</p>
+user can choose to change over to.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now, we have to navigate a complicated series of decisions.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">        <span class="k">if</span><span class="o">(</span> <span class="n">choice</span> <span class="o">==</span> <span class="n">winner</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">        <span class="k">if</span><span class="o">(</span> <span class="n">choice</span> <span class="o">==</span> <span class="n">winner</span> <span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="kt">int</span> <span class="n">low</span><span class="o">;</span>
             <span class="kt">int</span> <span class="n">high</span><span class="o">;</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">choice</span> <span class="o">==</span>  <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span> <span class="n">choice</span> <span class="o">==</span>  <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="2"></i><b>(2)</b>
                 <span class="n">low</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
                 <span class="n">high</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
             <span class="o">}</span>
@@ -2832,34 +2852,54 @@ user can choose to change over to.</p>
                 <span class="n">high</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
             <span class="o">}</span>
             <span class="c1">//randomly choose between other two doors</span>
-            <span class="kt">double</span> <span class="n">threshold</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">threshold</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="kt">double</span> <span class="n">threshold</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="k">if</span><span class="o">(</span> <span class="n">threshold</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="4"></i><b>(4)</b>
                 <span class="n">alternative</span> <span class="o">=</span> <span class="n">low</span><span class="o">;</span>
                 <span class="n">open</span> <span class="o">=</span> <span class="n">high</span><span class="o">;</span>
             <span class="o">}</span>
-            <span class="k">else</span> <span class="o">{</span>
+            <span class="k">else</span> <span class="o">{</span> <i class="conum" data-value="5"></i><b>(5)</b>
                 <span class="n">alternative</span> <span class="o">=</span> <span class="n">high</span><span class="o">;</span>
                 <span class="n">open</span> <span class="o">=</span> <span class="n">low</span><span class="o">;</span>
             <span class="o">}</span>
         <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Now, we have to navigate a complicated series of decisions. In this
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>In this
 segment of code, we tackle the possibility that the user happened
 to choose the winning door. To obey the rules of the game, we must
-randomly pick which of the two other doors to open. First, we determine
+randomly pick which of the two other doors to open.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>First, we determine
 which are the other two doors and save them in <code>low</code> and <code>high</code>,
-respectively. Then, we generated a random number. If the random number
+respectively.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Then, we generate a random number.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>If the random number
 is less than 0.5, we keep the lower numbered door as an alternative
-choice for the user and open the higher numbered door. If the random
-number is greater than or equal to 0.5, we do the opposite.</p>
+choice for the user and open the higher numbered door.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>If the random number is greater than or equal to 0.5, we do the opposite.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">        <span class="k">else</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">        <span class="k">else</span> <span class="o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="n">alternative</span> <span class="o">=</span> <span class="n">winner</span><span class="o">;</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="2"></i><b>(2)</b>
                 <span class="k">if</span><span class="o">(</span> <span class="n">winner</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">)</span>
                     <span class="n">open</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
                 <span class="k">else</span>
@@ -2880,28 +2920,40 @@ number is greater than or equal to 0.5, we do the opposite.</p>
         <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This <code>else</code> block covers the case that the player did <strong>not</strong> pick the
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This <code>else</code> block covers the case that the player did <strong>not</strong> pick the
 winning door the first time. Unlike the previous code segment, we no
-longer have a choice of which door to open. Instead, we must always
+longer have a choice of which door to open.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Instead, we must always
 make the winner the alternative for the user to pick. Then, we simply
-determine which door is left over so that we can open it. Note that the
+determine which door is left over so that we can open it.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Note that the
 braces surrounding the blocks for each of the braces surrounding the
 blocks for each of the three possible values of <code>choice</code> are not
 necessary but are included for readability.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;We have opened Door &quot;</span> <span class="o">+</span> <span class="n">open</span> <span class="o">+</span>
+<pre class="rouge highlight"><code data-lang="java">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;We have opened Door &quot;</span> <span class="o">+</span> <span class="n">open</span> <span class="o">+</span> <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="s">&quot;, and there is junk behind it!&quot;</span><span class="o">);</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Do you want to change to Door &quot;</span> <span class="o">+</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Do you want to change to Door &quot;</span> <span class="o">+</span> <i class="conum" data-value="2"></i><b>(2)</b>
             <span class="n">alternative</span> <span class="o">+</span> <span class="s">&quot; from Door &quot;</span> <span class="o">+</span> <span class="n">choice</span> <span class="o">+</span>
             <span class="s">&quot;? (Enter 'y' or 'n'): &quot;</span><span class="o">);</span>
         <span class="n">String</span> <span class="n">change</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
         <span class="k">if</span><span class="o">(</span> <span class="n">change</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;y&quot;</span><span class="o">)</span> <span class="o">)</span>
             <span class="n">choice</span> <span class="o">=</span> <span class="n">alternative</span><span class="o">;</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;You chose Door &quot;</span> <span class="o">+</span> <span class="n">choice</span><span class="o">);</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">choice</span> <span class="o">==</span> <span class="n">winner</span> <span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span> <span class="n">choice</span> <span class="o">==</span> <span class="n">winner</span> <span class="o">)</span> <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;You win a pile of gold!&quot;</span><span class="o">);</span>
         <span class="k">else</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;You win a pile of junk.&quot;</span><span class="o">);</span>
@@ -2909,11 +2961,23 @@ necessary but are included for readability.</p>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This final segment of code informs the user which door has been opened
-and prompts the user to change his or her decision. Depending on the
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This final segment of code informs the user which door has been opened.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>It prompts the user to change his or her decision.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Depending on the
 final choice, the program says whether or not the user wins gold or
-junk.</p>
+junk.</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
