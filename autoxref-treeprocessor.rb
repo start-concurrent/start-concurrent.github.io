@@ -77,7 +77,7 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
     }
 	
     seen = false	
-	
+		
     # Scan for chapters.
     document.find_by(context: :section).each do |chapter|
       next unless not seen or chapter.level == chapter_section_level
@@ -157,9 +157,22 @@ class AutoXrefTreeprocessor < Extensions::Treeprocessor
 	# Update xrefs inside list_items.
 	document.find_by(context: :list_item).each do |item|
 		# Hack needed because item.text returns text with substitutions already applied.
+		# Also, the unary plus is used to get a non-frozen string.
 		text = +(item.instance_variable_get :@text)
 		update_reference_text(text, document)
 		item.instance_variable_set(:@text, text)
+	end
+	
+	# Update xrefs inside titles (which are what appear as captions in text).
+	[:section, :image, :listing, :table, :example].each do |type|
+		document.find_by(context: type).each do |item|			
+			if item.title? then
+				# Same tricks as above.
+				text = +(item.instance_variable_get :@title)
+				update_reference_text(text, document)
+				item.instance_variable_set(:@title, text)
+			end
+		end
 	end
 	
     nil
