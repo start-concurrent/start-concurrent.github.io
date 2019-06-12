@@ -10,9 +10,9 @@ public class OddEvenTest {
         int response = JOptionPane.showConfirmDialog(null, // <2>
             question, title, JOptionPane.YES_NO_OPTION);
         String message;     
-        // Response is YES_OPTION for Yes, NO_OPTION for No.
-        if((response == JOptionPane.YES_OPTION && x%2 != 0) ||
-            (response == JOptionPane.NO_OPTION && x%2 == 0))
+        //Response is YES_OPTION for yes, NO_OPTION for no
+        if((response == JOptionPane.YES_OPTION && x % 2 != 0) ||
+            (response == JOptionPane.NO_OPTION && x % 2 == 0))
             message = "You're right!";
         else
             message = "Sorry, that's incorrect.";

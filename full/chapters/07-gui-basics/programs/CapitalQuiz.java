@@ -6,17 +6,17 @@ public class CapitalQuiz {
         String country = "Azerbaijan";
         String[] capitals = {"Bujumbura","Baku", "Moroni"};
         int correct = 1; //Baku is the correct answer        
-        String question = "Select the capital of " + country;
+        String question = "Select the capital of " + country + ".";
         int response = JOptionPane.showOptionDialog(null, // <1>
             question, title, JOptionPane.PLAIN_MESSAGE,
             JOptionPane.QUESTION_MESSAGE, null, capitals, null);
-        // Response is 0, 1, or 2 for the three options
+        //Response is 0, 1, or 2 for the three options
         String message;     
         if(response == correct) 
             message = "You're right!";
         else
             message = "Sorry, the capital of " + country +
-            " is " + capitals[correct];     
+				" is " + capitals[correct] + ".";
         JOptionPane.showMessageDialog(null, message, title, // <2>
             JOptionPane.INFORMATION_MESSAGE);        
     }   
