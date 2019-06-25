@@ -139,10 +139,19 @@ functions in mathematics, a static method takes some number of inputs
 (possibly as few as zero) and usually produces some output.
 
 You've already used several static methods from the `Math` class, such
-as `Math.sqrt()`. The expression stem:[f(x) = \sqrt{x}] _f_ ( _x_ ) = √[overline]#_x_#. defines
-what stem:[f(x)] does in the same way that the code inside of
-`Math.sqrt()` does. When you want to use stem:[f(x)] for a
-specific value, you can set stem:[y = f(5)] in the same way that
+as `Math.sqrt()`. Consider the following function.
+
+//[stem]
+//++++
+//f(x) = \sqrt{x}
+//++++
+
+[.text-center]
+image::root.svg[scaledwidth=15%,pdfwidth=15%,width=15%]
+
+
+This function mirrors the code inside of `Math.sqrt()`. In math, when you apply _f_(_x_) to   
+a specific value, you might write _y_ = _f_(5). In Java,
 you might type the following.
 
 [source,java]
@@ -150,16 +159,16 @@ you might type the following.
 double y = Math.sqrt(5);
 ----
 
-In the statement stem:[f(5)], the value of stem:[x] is
-replaced by stem:[5]. In the same way, some variable inside of
+In the statement _f_(5), the placeholder variable _x_ takes on the value 5.
+In the same way, some variable inside of
 `Math.sqrt()` takes on the value `5` when the method is called.
 
-It is important to understand this similarity between methods and
+It's important to understand this similarity between methods and
 mathematical functions because the designers of many programming
 languages have been directly influenced by the older notation. However,
 there are many differences between the two concepts as well.
 Mathematical functions can take more than one input, and so can Java
-methods. Methods can also take no input, while the whole point of a
+methods. Java methods can also take no input, while the central idea of a
 mathematical function is to map some input value(s) to some output
 value. Java methods do not necessarily even have output values. They may
 just *do* something.
@@ -194,16 +203,15 @@ replaced by a `double` approximating the square root of 5.
 
 By now, you should have a good feel for the concepts behind calling and
 even creating static methods and are probably getting impatient to use
-them. There are a number of issues of method syntax in Java you should
-be aware of. First, we describe how you can create your own static
-methods, then discuss the finer points of calling static methods, and
-finally explain how _class variables_ can be used from many different
+them. However, we haven't yet described all the details of Java method syntax. First, we'll describe how you can create your own static
+methods, then we'll discuss the finer points of calling static methods, and
+finally we'll explain how _class variables_ can be used from many different
 methods.
 
 ==== Defining methods
 
 A very simple method that the `Math` class provides is the `Math.max()`
-method. This method selects the larger of two values that you give it as
+method. This method selects the larger of the two values provided as
 input.
 
 [source,java]
@@ -218,15 +226,15 @@ wanted to write this method ourselves, the code would be as follows.
 
 [source,java]
 ----
-public static int max( int a, int b ) {
-    if( a >= b )
+public static int max(int a, int b) {
+    if(a >= b)
         return a;
     else
         return b;
 }
 ----
 
-Even in such a small method, there are a lot of pieces of syntax to
+Even in such a small method, there's a lot of syntax to
 worry about. The first line of this method is called the _method
 header_. The `public` keyword in this header is used to denote that any
 code, even code from a different class, can call this method. We discuss
@@ -242,18 +250,18 @@ and classes in the next chapter. For now, all methods are `static`.
 
 The third keyword in the method header is the familiar `int`, giving the
 return type of the method. Wherever this method is called, it can be
-treated like an `int` value, because that is what it gives back. In this
+treated like an `int` value, because that's what it gives back. In this
 case, the return type is obvious: The maximum of two `int` values must
 also be an `int` value. Any type can be used as a return value including
 all the primitive types and any reference or array types. The only
-limitation is that a method can only return a single item, but, since
-that item can be an array, this limitation is usually not important. It
-is also possible for a method to return nothing. In that case, the
+limitation is that a method can only return a single item, but since
+that item can be an array, this limitation is usually not important. It's
+also possible for a method to return nothing. In that case, the
 keyword `void` is used for the return type.
 
 Next in the method header is the identifier `max`, which is the name of
 the method. Any legal identifier that you can use for a variable name is
-valid for a method name as well. It is important to pick a name that is
+valid for a method name as well. It's important to pick a name that's
 readable and gives a reader a clear idea about what the method does. A
 common convention is to name a method using a verb phrase, indicating
 the operation that is being done by that method (e.g., `computeTax`).
@@ -261,18 +269,17 @@ Like variable names, the Java standard is to use camel notation,
 starting with a lowercase letter and capitalizing the first letter of
 each new word in the name.
 
-After the name of the method is the list of the _parameters_, separated
-by commas. In this case, each parameter has the `int` type. You are free
+After the name of the method is the list of _parameters_, separated
+by commas. In this case, each parameter has the `int` type. You're free
 to name your parameters whatever you want, though they should be
-meaningful. You can have as few as zero parameters, but there is an
+meaningful. You can have as few as zero parameters, but there's an
 upper limit imposed by the JVM, usually 255. The body of the method
 follows the header of the method, surrounded by braces (`{ }`). Unlike
-`if` statements and loops, the braces for methods are required.
+`if` statements and loops, the braces for methods are *required*.
 
 Inside the body of a method, the usual rules for Java control flow
-apply. Each line is executed line by line unless there are selection
-statements or loops. Calling methods inside of methods is allowed as
-well. In the `max()` method, we use an `if-else` construction to find
+apply. Each line is executed one by one unless there are selection
+statements or loops. Calling methods inside of methods is also allowed. In the `max()` method, we use an `if`-`else` construction to find
 the larger of `a` and `b`. A `return` statement immediately stops
 execution of the method, transfers execution back to the calling code,
 and gives back the value that comes after it. In this case, the value of
@@ -283,8 +290,8 @@ code.
 
 [source,java]
 ----
-public static int max( int a, int b ) {
-    if( a >= b )
+public static int max(int a, int b) {
+    if(a >= b)
         return a;
     return b;
 }
@@ -293,9 +300,11 @@ public static int max( int a, int b ) {
 The only way that the line `return b;` can be reached is if `a` had not
 already been returned.
 
+Beginner programmers sometimes ask what to do if `a` and `b` are equal.  In our code it's clear that the value of `a` will be returned, but it hardly matters: two equal `int` values are indistinguishable from each other.  Some students imagine handling this special case by printing an error message, but that approach is seldom useful.  When trying to find the larger of two numbers in programming, it's usually the value we want, not information about which one is actually larger.
+
 ===== The `main()` method
 
-If some of this syntax seems eerily familiar, remember that you have
+If some of this syntax seems eerily familiar, remember that you've
 been coding static methods since your very first Java program. The
 `main()` method is just another static method, special only because the
 JVM chooses to start execution there. Let's look at the `main()` method
@@ -303,7 +312,7 @@ from a standard Hello, World! program.
 
 [source,java]
 ----
-public static void main( String[] args ) {
+public static void main(String[] args) {
     System.out.println("Hello, world!");
     return;
 }
@@ -312,7 +321,7 @@ public static void main( String[] args ) {
 Just like the `max()` method, the header for `main()` starts with
 `public static`. Then, the return type for `main()` is `void` because
 the JVM is not expecting to get any answer back. The `main()` method has
-a single parameter, an array of type `String`. In this program, we do
+a single parameter, an array `String` values. In this program, we do
 not use the `args` parameter, but it is available. For the `main()`
 method, this declaration is fine, because `main()` has to be uniform
 across all programs. However, when designing your own methods, you
@@ -321,8 +330,8 @@ should not include unnecessary parameters.
 The final executable line in this `main()` method is a `return`
 statement. Because `main()` has a `void` return type, the `return`
 statement has no value to return. For `void` methods, a `return`
-statement is optional. You can use it to leave a method early, if
-desired. For a value-returning method, execution must reach a `return`
+statement is optional. You can use it to leave a method early if
+desired. For a value-returning method, execution *must* reach a `return`
 statement with a valid value no matter what the input of the method is.
 If Java finds a way that execution could reach the end of a value
 returning method without reaching a `return` statement, it causes a
@@ -330,21 +339,20 @@ compiler error.
 
 ===== Overloaded methods
 
-Since this declaration is in another class, it is OK to create a `max()`
-method even though there is already one in the `Math` class. However, it
-is possible to create more than one method with the same name in the
+Since this declaration is in another class, it's fine to create a `max()`
+method even though there's already one in the `Math` class. However, it's possible to create more than one method with the same name even in the
 same class, provided that their _signatures_ are not the same. Two
 methods have the same _signature_ if they have the same name and
 parameter types.
 
 [source,java]
 ----
-public static int max( int a, int b, int c ) {
+public static int max(int a, int b, int c) {
     return max(max(a, b), c);
 }
 ----
 
-In this example, we have created yet another `max()` method, but this
+In this example, we've created yet another `max()` method, but this
 one takes three parameters instead of two. This method even calls the
 two parameter version of `max()`. Creating more than one method with the
 same name is called _overloading_ those methods. Overloading methods is
@@ -382,7 +390,7 @@ but we stick with the simpler terms parameters and arguments.
 Of course, the number of arguments must match the number of parameters
 defined by the method, and the types must match as well. Java performs
 automatic casting when no precision is lost. Thus, you can always supply
-an `int` argument for a `double` parameter, but not the reverse.
+an `int` argument for a `double` parameter but not the reverse.
 Arguments can be literal values, variables, or even other method calls
 that return the appropriate type.
 
@@ -394,7 +402,7 @@ example without a class name.
 int maximum = max(5, 10);
 ----
 
-Whenever you call a static method from code that is inside the same
+Whenever you call a static method from code that's inside the same
 class, you can leave out the class name.
 
 ===== Binding
@@ -407,7 +415,7 @@ Consider the following method.
 
 [source,java]
 ----
-public static int add( int a, int b ) {
+public static int add(int a, int b) {
     return a + b;
 }
 ----
@@ -420,7 +428,7 @@ call the method in the following context.
 ----
 int x = 3;
 int y = 5;
-int z = add( x, y );
+int z = add(x, y);
 ----
 
 Inside the method, the value of `x` is bound to the variable `a`, and
@@ -430,13 +438,13 @@ its own _scope_. Scope means the area where a variable name is visible
 method, only the variables `a` and `b` do. Since methods have their own
 scope, variables in one method can have the same names as variables in
 another method without the compiler (or the programmer!) becoming
-confused. Consider the following example:
+confused. Consider the following example.
 
 [source,java]
 ----
 int a = 3;
 int b = 5;
-int c = add( b, a );
+int c = add(b, a);
 ----
 
 Here the variables `a` and `b` exist in both the calling code and inside
@@ -453,11 +461,11 @@ argument is bound to the parameter. Whenever a method is called, the
 method creates a new variable for each parameter and copies the value of
 its argument into it. In practice, this approach means that a method
 cannot directly change the value of an argument. Consider the following
-method:
+method.
 
 [source,java]
 ----
-public static void increment( int counter ) {
+public static void increment(int counter) {
     counter++;
 }
 ----
@@ -469,8 +477,8 @@ argument is unchanged. Thus, the following fragment is an infinite loop.
 [source,java]
 ----
 int i = 0;
-while( i < 100 )
-    increment( i );
+while(i < 100)
+    increment(i);
 ----
 
 The value of `i` remains fixed at `0` for the entire program. The copy
@@ -483,9 +491,8 @@ statements. We can rewrite `increment()` to achieve this effect.
 
 [source,java]
 ----
-public static int increment( int counter ) {
-    counter++;
-    return counter;
+public static int increment(int counter) {
+    return counter + 1;
 }
 ----
 
@@ -495,25 +502,25 @@ instead of dropping it on the floor.
 [source,java]
 ----
 int i = 0;
-while( i < 100 )
-    i = increment( i );
+while(i < 100)
+    i = increment(i);
 ----
 
 A second way that methods can affect the values of outside variables is
 more indirect. In Java, every argument is passed by value, even arrays
 and objects. Practically, this means that, if a reference to an array is
 passed into a method, you cannot change which array it is pointing at.
-Since references are not values but names pointing at a particular
-location in memory, you can directly change the contents of that memory
+Since references are not values but names pointing at particular
+locations in memory, you can directly change the contents of that memory
 with a method, even if you can't change which locations are being
 referenced. For example, the following method does *not* reverse the
 order of an array.
 
 [source,java]
 ----
-public static void badReverseArray( int[] array ) {
+public static void badReverseArray(int[] array) {
     int[] temp = new int[array.length];
-    for( int i = 0; i < array.length; i++ )
+    for(int i = 0; i < array.length; i++)
         temp[i] = array[array.length - i - 1];
     array = temp;
 }
@@ -528,9 +535,9 @@ locations.
 
 [source,java]
 ----
-public static void goodReverseArray( int[] array ) {
+public static void goodReverseArray(int[] array) {
     int temp;
-    for( int i = 0; i < array.length / 2; i++ ) {
+    for(int i = 0; i < array.length / 2; i++) {
         temp = array[i];
         array[i] = array[array.length - i - 1];
         array[array.length - i - 1] = temp;
@@ -540,27 +547,26 @@ public static void goodReverseArray( int[] array ) {
 
 In this version of the method, we swap the first element of the array
 with the last, the second with the second to last, and so on. We only go
-up to the halfway point of the array, otherwise we undo the reversal
+up to the halfway point of the array, otherwise we would undo the reversal
 process. The values of the array are reversed, but they still occupy the
-same chunk of memory. It is possible to write a correct method more in
+same chunk of memory. It's possible to write a correct method more in
 the style of `badReverseArray()` which creates a temporary array, copies
 the original values into it, and then copies them back to the original
-array in reverse order, but it is less efficient to create the extra
+array in reverse order, but it's less efficient to create the extra
 array and perform two copies.
 
 ==== Class variables
 
-According to the rules we have given so far, the only legal variables in
+According to the rules we've given so far, the only legal variables in
 the scope of a static method are the parameters and any other _local_
-variables declared inside the method. However, it is possible to create
+variables declared inside the method. However, it's possible to create
 a variable that exists outside of static methods yet is visible inside
 all of them. These kinds of variables are called _class variables_ (or
 sometimes _static fields_ or _global variables_). These variables
 persist *between* method calls. The syntax for creating such a variable
-is to declare it outside of all methods (but inside the class) with an
-access modifier such as `public` or `private`, and the keyword `static`.
+is to declare it outside of all methods (but inside the class) with the keyword `static` and an access modifier such as `public` or `private`.
 For example, the following class includes a method called `record()`
-that increases the class variable `counter` every time it is called.
+that increases the class variable `counter` every time it's called.
 
 .Keeps track of the number of times the `record()` method is called.
 [source, java]
@@ -570,16 +576,16 @@ include::{programsdir}/Bookkeeper.java[]
 ----
 
 When run, this program calls the `record()` method some random number of
-times, and the variable `counter` keeps track of the number. Because
-both `main()` and `record()` are static methods, the value of `counter`
-is accessible to each of them. Many programmers frown on the use of
-class variables precisely because they are visible to many different
+times, and the variable `counter` keeps track of the number. Because `counter` is static,
+it's accessible to both the `main()` and `record()` methods.
+Many programmers frown on the use of
+class variables precisely because they're visible to many different
 methods. The idea of a method is to isolate pieces of code so that the
 complexity of a program can be divided into simple units. In the case of
 a public class variable, even code in other classes can modify its
-value. So many different pieces of code can modify the value that it may
-be difficult to keep the variable from being changed in an unexpected
-way. If another method used the `counter` variable to record the number
+value. If many different pieces of code can modify a variable, it may
+be difficult to keep that variable from being changed in unexpected
+ways. For example, if another method used the `counter` variable to record the number
 of times it was called, the final value of `counter` would be the sum of
 the number of times the two methods were called. There might be some
 reason to keep track of such information, but it would be impossible to
@@ -587,21 +593,33 @@ reconstruct what fraction of the value in `counter` came from one method
 and what fraction came from the other.
 
 Class variables have their uses, but they should generally be avoided.
-One exception to this rule is constants. Since a constant never changes,
+The chief exception to this rule is constants. Since a constant never changes,
 a class variable is a great place to store it, making the value
-available to any code that uses it. An example you have already used is
+available to all code. An example you've already used is
 `Math.PI`. As with static methods, a static field from another class can
-be accessed by using the class name, then a dot, then the name of the
+be accessed by using the class name, then a dot, and then the name of the
 static field. Again, when the code using the field is in the same class,
 the class name can be dropped. A class constant is declared like a class
-variable, but with the addition of the `final` keyword. The following
-class allows a user to compute the one-dimensional force due to gravity,
-given by the equation stem:[F =
-\frac{Gm_1m_2}{r^2}], where stem:[m_1] is the mass of one
-object, stem:[m_2] is the mass of another, stem:[r] is the
-distance between their centers, and stem:[G] is the gravitational
-constant,
-stem:[6.673 \times 10^{-11}\mbox{ N}\cdot\mbox{m}^2\cdot\mbox{kg}^{-2}].
+variable, but with the addition of the `final` keyword.
+
+.Gravitational attraction
+====
+
+The following class allows a user to compute the one-dimensional force due to gravity.
+This force _F_ is given by the following equation.
+//[stem]
+//****
+//F = \frac{Gm_1m_2}{r^2}
+//****
+
+[.text-center]
+image::gravitation.svg[scaledwidth=15%,pdfwidth=15%,width=15%]
+
+
+In this equation, _m_~1~ is the mass of one
+object, _m_~2~ is the mass of another, _r_ is the
+distance between their centers, and _G_ is the gravitational
+constant, 6.673 × 10^-11^ N⋅m^2^⋅kg^-2^.
 
 .Calculates the attraction due to gravity between two masses.
 [source, java]
@@ -610,7 +628,9 @@ stem:[6.673 \times 10^{-11}\mbox{ N}\cdot\mbox{m}^2\cdot\mbox{kg}^{-2}].
 include::{programsdir}/Gravity.java[]
 ----
 
-Use named constants this way whenever you can. You can use the `public`
+====
+
+Use named constants whenever they increase readability. You can use the `public`
 modifier if you want all classes to have access to your constant
 (`Gravity.G` is a good example). You can use the `private` modifier if
 you want the constant to be accessible only inside your class, if it has
@@ -619,8 +639,8 @@ no use outside, or if it contains secret information.
 === Examples: Defining methods
 
 Any large problem should be broken down into methods. Because the
-technique is useful in so many circumstances, it is difficult to give a
-set of examples that covers all the bases. Instead, our examples are
+technique is useful in so many circumstances, it's difficult to give a
+set of examples that covers all cases. Instead, our examples are
 short, easy to understand methods, focusing on Euclidean distance,
 testing for palindromes, and converting a `String` representation of an
 `int` to an `int`.
@@ -633,69 +653,75 @@ line connecting them. It plays an important role in 3D graphics and
 games and is the basis for many other practical applications involving
 spatial relationships.
 
-Given two points in 3D space stem:[(x_1, y_1, z_1)] and
-stem:[(x_2,
-y_2, z_2)], we can compute the Euclidean distance between them with the
-equation: stem:[d = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2 + (z_1
-- z_2)^2}] _d_ = √[overline]#(_x_₁ - _x_₂)² + (_y_₁ - _y_₂)² + (_z_₁
-- _z_₂)²# The following method applies this equation directly.
+Given two points in 3D space (_x_~1~, _y_~1~, _z_~1~) and
+(_x_~2~, _y_~2~, _z_~2~), we can compute the Euclidean distance between them with the following
+equation.
+
+//[stem]
+//****
+//d = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2 + (z_1 - z_2)^2}
+//****
+
+[.text-center]
+image::distance.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
+
+The method below applies this equation directly.
 
 [source,java]
 ----
 public static double distance(double x1, double y1, double z1,
-                  double x2, double y2, double z2 ) {
+						double x2, double y2, double z2) {
     double x = x1 - x2;
     double y = y1 - y2;
     double z = z1 - z2;
-    return Math.sqrt( x*x + y*y + z*z );
+    return Math.sqrt(x*x + y*y + z*z);
 }
 ----
 
 This calculation is a good choice for a static method since it might be
 necessary to do this calculation many times and it does not depend on
 any other variables or program state.
-
 ====
 
 [[palindromeTestingExample]]
 .Palindrome testing
 ====
 
-A palindrome is a word or phrase (or even a number) that is the same
+A palindrome is a word or phrase (or even a number) that's the same
 spelled forwards and backwards. "`Racecar,`" "`Madam, I'm Adam,`" and
 "`Satan, oscillate my metallic sonatas`" are examples in English.
-Typically, spaces and punctuation are ignored. We are going to write a
-function that, given a `String`, returns `true` if it is a palindrome
-and `false` otherwise. To simplify the problem, we are *not* going to
+Typically, spaces and punctuation are ignored. We're going to write a
+function that, given a `String`, returns `true` if it's a palindrome
+and `false` otherwise. To simplify the problem, we're *not* going to
 ignore spaces and punctuation. Thus, with our method, "`racecar`" counts
 as a palindrome, but neither of the other two examples would.
 
 [source,java]
 ----
-public static boolean isPalindrome(String text) {
-    text = text.toLowerCase();
-    for( int i = 0; i < text.length() / 2; i++ )
-        if( text.charAt(i) != text.charAt(text.length() - i - 1))
+public static boolean isPalindrome(String text) { //<.>
+    text = text.toLowerCase(); //<.>
+    for(int i = 0; i < text.length() / 2; i++) //<.>
+        if(text.charAt(i) != text.charAt(text.length() - i - 1)) //<.>
             return false;
     return true;
 }
 ----
-
-Because our method returns `true` or `false`, its return type must be
+<.> Because our method returns `true` or `false`, its return type must be
 `boolean`. Many methods that return a `boolean` value have a name
-starting with `is`, like our method. The first line of the body of our
+starting with `is`, like our method.
+<.> The first line of the body of our
 method changes `text` to lower case. The `String` method `toLowerCase()`
-creates a lower case copy of the `String` it is called on, in this case
+creates a lower case copy of the `String` it's called on, in this case
 `text`. Then, we point the reference variable `text` at that new, lower
 case `String`. On the outside of this function, the `String` passed in
-does not change because the name `text` is passed by value.
-
-The loop iterates through the first half of `text`, comparing it to the
+does not change because the reference `text` is passed by value.
+<.> The loop iterates through the first half of `text`, comparing it to the
 second half. This loop reflects the asymmetry of these kinds of tests:
-You can't be sure that `text` is a palindrome until you have checked the
-entire thing, but you immediately know that it is not if even a single
-pair of characters does not match. If the test in that `if` statement
-ever shows that the two `char` values are not equal, the `return false`
+You can't be sure that `text` is a palindrome until you've checked the
+entire thing, but you immediately know that it's not if even a single
+pair of characters doesn't match.
+<.> If the test in that `if` statement
+ever shows that the two `char` values aren't equal, the `return false`
 statement jumps out of the method without completing the loop.
 ====
 
