@@ -66,7 +66,7 @@ configuration of alive and dead cells strike a balance between complete
 chaos and rigid order. As the name of the game implies, the similarity
 to biological patterns of development can be surprising.
 
-Your problem is to create a Life simulator of size stem:[n \times m],
+Your problem is to create a Life simulator of size _n_ × _m_,
 specific values for which will be discussed below. The
 program should simulate the process at a speed that is engaging to
 watch, with a new generation every tenth of a second. The program should
@@ -194,9 +194,9 @@ fast and takes about the same amount of time as jumping to any
 other.
 
 An array is a list of a specific type of elements that has length
-stem:[n], a length specified when the array is created. Each of
-the stem:[n] elements is indexed using a number between 0 and
-stem:[n - 1]. Once again, zero-based counting rears its ugly
+_n_, a length specified when the array is created. Each of
+the _n_ elements is indexed using a number between 0 and
+_n_ - 1]. Once again, zero-based counting rears its ugly
 head. Consider the following list of items: {9, 4, 2, 1, 6, 8, 3}
 
 If this list is stored in an array, the first element, 9,
@@ -310,7 +310,7 @@ of those elements contains the `int` value `0`, as shown below.
 image::array.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
 
 
-Whenever an array is instantiated, each of its stem:[n] elements
+Whenever an array is instantiated, each of its _n_ elements
 is set to some default value. For `int`, `long`, `short`, and `byte`
 this value is `0`. For `double` and `float`, this value is `0.0`. For
 `char`, this value is `'\0'`, a special unprintable character. For
@@ -693,8 +693,8 @@ array and put it at index `0` of the array. Then, from the remaining
 elements, find the smallest element and put it at index `1` of the
 array. The process continues, filling the array up from the beginning
 with the smallest values until the entire array is sorted. If the length
-of the array is stem:[n], we'll need to look for the smallest
-element in the array stem:[n - 1] times. By putting the code that
+of the array is _n_, we'll need to look for the smallest
+element in the array _n_ - 1 times. By putting the code that
 searches for the smallest value inside of an outer loop, we can write a
 program that does selection sort of `int` values input by the user as
 follows. This program's not very long, but there's a lot going on. 
@@ -739,8 +739,7 @@ simple swap to do exactly that.
 ----
 include::{programsdir}/SelectionSort.java[lines=21..25]
 ----
-
-After all the sorting is done, the final `for` loop prints out the newly
+<.> After all the sorting is done, the final `for` loop prints out the newly
 sorted list.
 
 This program gives no prompts for user input, so it's well
@@ -805,8 +804,7 @@ same index and breaks out of the inner `for` loop.
 ----
 include::{programsdir}/WordCount.java[lines=21..24]
 ----
-
-After all the words in the text have been processed, the final `for`
+<.> After all the words in the text have been processed, the final `for`
 loop prints out each word from the list, along with its counts.
 
 This program uses two different arrays for bookkeeping: `words` contains
@@ -887,15 +885,18 @@ The statistics you want to collect are listed in the following table.
 minimum scores in a list. The mean is simply the sum of all the scores
 divided by the total number of scores. Standard deviation is a little
 bit trickier. It gives a measurement of how spread out the data is. Let
-stem:[n] be the number of data points, label each data point
-stem:[x_i], where stem:[1 \leq i \leq n], and let
-stem:[\bar{x}] be the mean of all the data points. Then, the
+_n_ be the number of data points, label each data point
+_x~i~_, where 1 ≤ _i_ ≤ _n_, and let
+_μ_ be the mean of all the data points. Then, the
 formula for the sample standard deviation is as follows.
 
-[stem]
-++++
-\sigma = \sqrt{\frac{1}{n - 1}\sum_{i = 1}^n (x_i - \bar{x})^2}
-++++
+//[stem]
+//++++
+//\sigma = \sqrt{\frac{1}{n - 1}\sum_{i = 1}^n (x_i - \mu)^2}
+//++++
+
+[.text-center]
+image::deviation.svg[scaledwidth=25%,pdfwidth=25%,width=25%]
 
 Finally, if you sort a list of numbers in order, the median is the
 middle value in the list, or the average of the two middle values, if
@@ -960,7 +961,7 @@ include::{programsdir}/Statistics.java[lines=24..28]
 sample standard deviation. Following the formula for sample standard
 deviation, we subtract the mean from each score, square the result, and
 add it to a running total. Although the formula for sample standard
-deviation uses the bounds stem:[1] to stem:[n], we
+deviation uses the bounds 1 to _n_, we
 translate them to `0` to `n - 1` because of zero-based array numbering.
 <.> Dividing the total by `n - 1` gives the sample variance.
 <.> Then, the
@@ -1563,37 +1564,45 @@ tab (`'\t'`) between each column and starting a new line for each row.
 
 Arrays give a natural way to represent vectors and matrices. In 3D
 graphics and video game design, we can represent a point in 3D space as
-a vector with three elements: stem:[x], stem:[y], and
-stem:[z]. If we want to rotate the three-dimensional point
+a vector with three elements: _x_, _y_, and
+_z_. If we want to rotate the three-dimensional point
 represented by this vector, we can multiply it by a matrix. For example,
-to rotate a point around the stem:[x]-axis by
-stem:[\theta] degrees, we could use the following matrix.
+to rotate a point around the _x_-axis by
+_θ_ degrees, we could use the following matrix.
 
-[stem]
-++++
-\begin{bmatrix}
-1 & 0 & 0 \\
-0 & \cos \theta & -\sin \theta \\
-0 & \sin \theta  & \cos \theta \\
-\end{bmatrix}
-++++
+//[stem]
+//++++
+//\begin{bmatrix}
+//1 & 0 & 0 \\
+//0 & \cos \theta & -\sin \theta \\
+//0 & \sin \theta  & \cos \theta \\
+//\end{bmatrix}
+//++++
 
-Given an stem:[m\times n] matrix stem:[A], let
-stem:[A_{ij}] be the element in the stem:[i]^th^ row,
-stem:[j]^th^ column. Given a vector stem:[v] of length
-stem:[n], let stem:[v_i] be the stem:[i]^th^
-element in the vector. To multiply stem:[A] by stem:[v],
-we use the following equation to find the stem:[i]^th^ element of
-the resulting vector stem:[v'].
+[.text-center]
+image::matrix.svg[scaledwidth=20%,pdfwidth=20%,width=20%]
 
-[stem]
-++++
-v'_i = \sum_{j = 1}^n A_{ij}\cdot v_j
-++++
+
+Given an _m_ × _n_ matrix _A_, let
+_A~ij~_ be the element in the _i_^th^ row,
+_j_^th^ column. Given a vector _v_ of length
+_n_, let _v~i~_ be the _i_^th^
+element in the vector. To multiply _A_ by _v_,
+we use the following equation to find the _i_^th^ element of
+the resulting vector _v′_.
+
+//[stem]
+//++++
+//v'_i = \sum_{j = 1}^n A_{ij}\cdot v_j
+//++++
+
+[.text-center]
+image::vector.svg[scaledwidth=20%,pdfwidth=20%,width=20%]
+
 
 By transforming this equation to Java code, we can write a program that
 can read in a three-dimensional point and rotate it around the
-stem:[x]-axis by the amount specified by the user.
+_x_-axis by the amount specified by the user.
 
 .Uses matrix multiplication to rotate a point in three-dimensional space.
 [source, java]
@@ -1957,15 +1966,15 @@ parts of the array to the different threads?
 
 We'll assume that each element of the array needs to be processed in
 some way. For example, we might want to record whether or not each
-`long` in an array is prime or not. If you have stem:[k] threads
-and an array of length stem:[n] where stem:[n] happens to
-be a multiple of stem:[k], then it's easy: Each thread gets
-exactly stem:[\frac{n}{k}] items to work on. For example, the first
-thread will work on indexes 0 through stem:[\frac{n}{k} - 1], the
-second thread will work on indexes stem:[\frac{n}{k}] through
-stem:[\frac{2n}{k} - 1], and so on, with the last thread working
-on indexes stem:[\frac{(k
-- 1)n}{k}] through stem:[n  - 1]. Not every element in the array
+`long` in an array is prime or not. If you have _k_ threads
+and an array of length _n_ where _n_ happens to
+be a multiple of _k_, then it's easy: Each thread gets
+exactly _n_/_k_ items to work on. For example, the first
+thread will work on indexes 0 through _n_/_k_ - 1, the
+second thread will work on indexes _n_/_k_ through
+2__n__/_k_ - 1, and so on, with the last thread working
+on indexes (_k_
+- 1)_n_/_k_ through _n_  - 1. Not every element in the array
 will require the same amount of computation, but we often assume that
 they do because it can be difficult to guess which elements will take
 more time to process.
@@ -1974,7 +1983,7 @@ What if the number of elements in the array is not a multiple of the
 number of threads? We still want to assign the work the work as fairly
 as possible. New programmers are sometimes tempted to use the same
 arithmetic from the case in which the threads evenly divide the length
-of the array: Each thread gets stem:[\lfloor \frac{n}{k} \rfloor] (using integer
+of the array: Each thread gets ⌊_n_/_k_⌋ (using integer
 division) elements, and we stick the last thread with the leftovers. How
 bad can that be?
 
@@ -1984,7 +1993,7 @@ bad can that be?
 
 
 This assignment of work can be very poorly balanced. Consider a case
-with 10 threads and 28 pieces of data. stem:[\lfloor \frac{28}{10} \rfloor = 2],
+with 10 threads and 28 pieces of data. ⌊28/10⌋ = 2,
 using integer division. Thus, the first nine threads have 2 units of
 work to do, but the last thread is stuck with 10! Not only is this
 unfair; it's inefficient. The person writing the program probably wants
@@ -2002,9 +2011,9 @@ image::split1.svg[scaledwidth=60%,pdfwidth=60%,width=60%]
 ====
 
 A simple way to fix this problem is to look at the value
-stem:[n \mod k], the leftovers when you divide stem:[n] by
-stem:[k]. We want to spread those out over the first few threads.
-We know that any remainder will be smaller than stem:[k]. If the
+_n_ mod _k_, the leftovers when you divide _n_ by
+_k_. We want to spread those out over the first few threads.
+We know that any remainder will be smaller than _k_. If the
 index of the thread (starting at 0, of course) is less than the
 remainder, we add an extra element to its work. In this way, 28 units of
 work spread over 10 threads will give 3 elements to the first 8 threads
@@ -2069,8 +2078,8 @@ String[] array = new String[100];
 System.out.println(array[99].charAt(0) +
            " is the first letter of the last String.");
 ----
-. An array of length stem:[n] in Java typically takes
-stem:[n] times the number of bytes for each element plus an
+. An array of length _n_ in Java typically takes
+_n_ times the number of bytes for each element plus an
 additional 16 bytes of overhead. Since an `int` uses 4 bytes of storage,
 an array of 100 `int` elements would take 416 bytes. Consider the
 following three-dimensional array declaration and allocation.
@@ -2087,13 +2096,13 @@ array as an array of arrays of arrays.
 5 · 5 = 25 `int` elements to store all the distances
 between the five cities, including repeats. How many `int` elements are
 allocated for the triangular, ragged array version of this city distance
-table? If we used the normal table style, stem:[n] cities would
-require stem:[n^2] `int` elements. How many elements would the
-triangular, ragged array version allocate for stem:[n] cities?
+table? If we used the normal table style, _n_ cities would
+require _n_^2^ `int` elements. How many elements would the
+triangular, ragged array version allocate for _n_ cities?
 .  [[dividingArraysExercise]] Consider the naive method of dividing
-an array of length stem:[n] among stem:[k] threads that
+an array of length _n_ among _k_ threads that
 was discussed in <<Concurrency: Arrays>>: Each thread gets
-stem:[\lfloor \frac{n}{k} \rfloor] (rounded down because of integer division) elements,
+⌊_n_/_k_⌋ (rounded down because of integer division) elements,
 and the last thread gets any extras. What mathematical expression
 describes how many extra elements are allocated to the last thread? Can
 you come up with an example in which the last element gets *all* the
@@ -2125,9 +2134,9 @@ too early in the alphabet, repeat the search on the second half of
 the list. By repeatedly dividing the list in half, until you either find
 the word you're looking for or narrow your search down to a single
 incorrect word, you can search much faster. This kind of searching is
-called _binary search_ and uses around stem:[\log n] comparisons
-to find an element in a list of stem:[n] items. In contrast, looking through the list one
-element at a time takes about stem:[n] comparisons.
+called _binary search_ and uses around log _n_ comparisons
+to find an element in a list of _n_ items. In contrast, looking through the list one
+element at a time takes about _n_ comparisons.
 +
 Rewrite the code from <<wordSearchExample>> to use binary
 search, after applying selection sort from <<selectionSortExample>>. Although selection sort will take some extra time, you should
@@ -2212,6 +2221,6 @@ Time our implementation of selection sort from
 <<selectionSortExample>> running on each of these input files
 and redirecting output to output files. What's the behavior of the
 running time as the input length increases by a factor of 10? As a
-function of stem:[n], how many times total does the body of the inner
+function of _n_, how many times total does the body of the inner
 `for` loop run during selection sort? Does this function closely
 mirror the increase in running time?

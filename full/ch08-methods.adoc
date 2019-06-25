@@ -31,7 +31,7 @@ hand.
 |Straight |6| |Nothing |0
 |===================
 
-If you're unfamiliar with poker rules or card games in general, here is
+If you're unfamiliar with poker rules or card games in general, here's
 a quick explanation of the various hands. A traditional English or
 American deck of cards is made up of 52 cards, organized into four
 suits: spades, hearts, diamonds, and clubs. In each suit, there are 13
@@ -63,22 +63,21 @@ Any reasonable solution to this problem uses arrays, discussed in the
 previous chapter. Using only that knowledge, you should be able to
 create a three card poker game. However, the focus of this chapter is
 _methods_, which can be used to break the solution to a problem into
-logical pieces. By dividing the solution in this way, we will be able to
+logical pieces. By dividing the solution in this way, we'll be able to
 solve the three card poker problem in a relatively short, elegant, and
 easy to read way.
 
 === Concepts: Dividing work into segments
 
-You should notice that the solutions to problems we have been working on
-have become increasingly complex as the book progresses. Partly, this
-tendency is due to the fact that interesting problems tend to have
-complex solutions. Partly, it is due to the fact that more advanced
-features in Java are generally designed to tackle more complicated
-problems.
+You should notice that the solutions to problems we've been working on
+have become increasingly complex as the book progresses. This
+progression is partly because we want to solve more interesting problems 
+with more complex solutions but also because we've introduced additional Java tools 
+that make solving these harder problems possible.
 
-The tools we introduce in this chapter do not allow you to solve a
-problem you could not solve before. Instead, the tools in this chapter
-and in the next one make solving a problem easier and less susceptible
+Suprisingly, the tools we introduce in this chapter do not allow you to solve a
+problem you couldn't solve before. Instead, the tools in this chapter
+and in the next make solving a problem easier and less susceptible
 to errors. A relatively long, complicated list of Java statements was
 necessary to solve problems like the statistics program or Conway's Game
 of Life. Instead of solving those problems as a single monolithic
@@ -87,60 +86,60 @@ methods_.
 
 ==== Reasons for `static` methods
 
-A static method is a short, named segment of code that has been packaged
+A static method is a short, named segment of code that's been packaged
 up so that it can be _called_ from other parts of the program. Whenever
 the task performed by this method is needed, the execution of the
-program jumps to the code in the method, does the work it is supposed
+program jumps to the code in the method, does the work it's supposed
 to, and then returns to whatever it was doing before.
 
 The reasons for using static methods can be boiled down to three
 essentials:
 
 Modularity:::
-  Very little software development is done by individuals. Commercial
-  software can have tens or even hundreds of programmers involved in
-  designing, implementing, testing, and maintaining code. When the code
-  is divided into individual methods, those methods can be written and
-  tested by different people with minimal interference. It is much
+  Very little software is written by individuals. Commercial
+  software can have tens or even hundreds of developers involved in
+  designing, implementing, testing, and maintaining code. When the code's
+  divided into individual methods, those methods can be written and
+  tested by different people with minimal interference. It's much
   harder to work together on one giant block of code.
 Readability:::
   Methods are *named* segments of code. When a method is called, its
   name is used. If a meaningful name is chosen, the line in the code
-  that calls the method helps document the code by explaining what is
+  that calls the method helps document the code by explaining what's
   happening. For example, if a method called `sort()` is used, a reader
-  instantly understands that something is being sorted. If, instead of a
-  separate `sort()` method, the code for selection sort were pasted into
+  instantly understands that something's being sorted. If, instead of a
+  separate `sort()` method, the code that does sorting was pasted into
   the same location, a reader might have to devote a few moments to
   understanding the meaning of those lines of code, particularly without
   comments.
 Reusability:::
   The fact that a method can be called from anywhere in the code makes
   it reusable. To use the `sort()` example again, we might have to sort
-  several different arrays in one program. Without methods, we would
+  several different arrays in one program. Without methods, we'd
   have to keep copying and pasting code over and over again. With
   methods, the total amount of source code can be smaller. In fact, if
-  you find yourself copying and pasting code, it is often an indication
-  that a method would be useful.
-  +
+  you find yourself copying and pasting code, it's often an indication
+  that a method would be useful. +
+{empty} +
   This idea of reusability stretches beyond individual programs. A
-  static method can be called from a different program entirely. If you
-  create a method that is really useful, you are free to use it in other
-  programs you may write. By doing so, you only have to makes changes in
+  static method can be called from an entirely different program. If you
+  create a method that's really useful, you're free to use it in other
+  programs you write. By doing so, you only have to makes changes in
   one place if you discover errors or want to increase its
   functionality.
 
 ==== Parallel to mathematical functions
 
-We have been discussing the usefulness of static methods without saying
+We've been discussing the usefulness of static methods without saying
 exactly what they are. One way to get insight into methods is by
 acknowledging their similarity to functions from mathematics. In
-procedural (non-object oriented) languages like C, the equivalent of
-static methods are usually referred to as functions, in fact. Like
+procedural (non-object oriented) languages like C, the equivalents of
+static methods are usually referred to as functions. Like
 functions in mathematics, a static method takes some number of inputs
-(though, as few as zero) and usually produces some output.
+(possibly as few as zero) and usually produces some output.
 
-You have already used several static methods from the `Math` class, such
-as `Math.sqrt()`. The expression stem:[f(x) = \sqrt{x}] defines
+You've already used several static methods from the `Math` class, such
+as `Math.sqrt()`. The expression stem:[f(x) = \sqrt{x}] _f_ ( _x_ ) = √[overline]#_x_#. defines
 what stem:[f(x)] does in the same way that the code inside of
 `Math.sqrt()` does. When you want to use stem:[f(x)] for a
 specific value, you can set stem:[y = f(5)] in the same way that
@@ -632,15 +631,14 @@ testing for palindromes, and converting a `String` representation of an
 The Euclidean distance between two points is the length of a straight
 line connecting them. It plays an important role in 3D graphics and
 games and is the basis for many other practical applications involving
-spatial relationships. Unfortunately, the real world is complicated
-enough that, even if the shortest distance between two points is a
-straight line, we can seldom travel along it.
+spatial relationships.
 
-Given a two points in 3D space stem:[(x_1, y_1, z_1)] and
+Given two points in 3D space stem:[(x_1, y_1, z_1)] and
 stem:[(x_2,
 y_2, z_2)], we can compute the Euclidean distance between them with the
 equation: stem:[d = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2 + (z_1
-- z_2)^2}] The following method applies this equation directly.
+- z_2)^2}] _d_ = √[overline]#(_x_₁ - _x_₂)² + (_y_₁ - _y_₂)² + (_z_₁
+- _z_₂)²# The following method applies this equation directly.
 
 [source,java]
 ----

@@ -1,12 +1,12 @@
 require 'asciidoctor'
 require 'rouge'
 require 'asciidoctor-pdf'
-#require 'asciidoctor-mathematical'
+require 'asciidoctor-mathematical'
 require_relative './default.rb'
 require_relative './autoxref-treeprocessor.rb'
 
 Asciidoctor::Extensions.register do
-  treeprocessor AutoXrefTreeprocessor  
+  treeprocessor AutoXrefTreeprocessor
 end
 
 
