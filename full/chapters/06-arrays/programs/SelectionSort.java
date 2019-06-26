@@ -19,7 +19,7 @@ public class SelectionSort {
             values[i] = temp;
         }
         System.out.print("The sorted list is: ");
-        for(int i = 0; i < values.length; i++)
+        for(int i = 0; i < values.length; i++) //<.>
             System.out.print(values[i] + " ");
     }
 }
