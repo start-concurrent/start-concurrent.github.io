@@ -678,7 +678,7 @@ public static double distance(double x1, double y1, double z1,
 }
 ----
 
-This calculation is a good choice for a static method since it might be
+This equation is a good candidate for a static method since it might be
 necessary to do this calculation many times and it does not depend on
 any other variables or program state.
 ====
@@ -739,7 +739,7 @@ type. For example, the `nextDouble()` method reads in some text and
 convert it into a `double`. When you use a `JOptionPane` method to read
 in input, it comes in as a `String`. If you want to use that data as a
 `double`, you must convert it using the `Double.parseDouble()` static
-method. Some Java programmer had to write this method. We are going to
+method. Some Java programmer had to write this method. We're going to
 recreate a similar method to convert the `String` representation of a
 floating-point number into a `double`. Our simple method ignores
 scientific notation.
@@ -750,59 +750,62 @@ public static double parseDouble(String value) {
     int i = 0;
     boolean negative = false;
     double temp = 0.0;
-    double fraction = 10;
-    if( value.charAt(i) == '-' ) {
+    double fraction = 10.0;
+    if(value.charAt(i) == '-') { //<.>
         negative = true;
         i++;
     }
-    else if( value.charAt(i) == '+' )
+    else if(value.charAt(i) == '+')
         i++;
-    while( i < value.length() && value.charAt(i) != '.' ) {
-        temp *= 10;
+    while(i < value.length() && value.charAt(i) != '.') { //<.>
+        temp *= 10.0;
         temp += value.charAt(i) - '0';
         i++;
     }
-    i++; //move past decimal point (if there)
-    while( i < value.length() ) {
+    i++; //move past decimal point (if there) <.>
+    while(i < value.length()) { //<.>
         temp += (value.charAt(i) - '0') / fraction;
-        fraction *= 10;
+        fraction *= 10.0;
         i++;
     }
-    if( negative )
+    if(negative) //<.>
         temp = -temp;
     return temp;
 }
 ----
-
-After declaring a few variables, this method first checks index `0` in
+<.> After declaring a few variables, this method first checks index `0` in
 the input `String` `value` to see if it is a `'-'` or a `'+'`. If it is
 a `'-'`, it sets `negative` to `true` and moves on. If it is a `'+'`, it
-simply moves on. Then, the method loops through `value` until it reaches
+simply moves on.
+<.> Then, the method loops through `value` until it reaches
 the end or reaches a decimal point. As it iterates, it multiplies the
-current value of `temp` by 10 and adds in the next digit from `value`
+current value of `temp` by `10.0` and adds in the next digit from `value`
 (after subtracting `'0'` so that the range is is from 0 to 9). This
-repetitive multiplication by 10 accounts for the increasing powers of 10
+repetitive multiplication by `10.0` accounts for the increasing powers of 10
 in the base 10 number system. Since `temp` starts with a value of `0.0`,
 the first multiplication has no effect, as intended.
-
-After the first `while` loop, the index `i` is incremented once, to skip
+<.> After the first `while` loop, the index `i` is incremented once, to skip
 the decimal point, if there is one. If there is no decimal point, the
-loop must have exited because the end of `value` had been reached. The
-second `while` loop runs to the end of `value`, this time adding in each
-digit value divided by `fraction`, which is increased by a factor of 10
+loop must have exited because the end of `value` had been reached.
+<.> The second `while` loop runs to the end of `value`, this time adding in each
+digit value divided by `fraction`, which is increased by a factor of `10.0`
 each time. Doing so allows us to add smaller and smaller fractional
-digits to the total. We set `temp` to its opposite if the flag
+digits to the total.
+<.> We set `temp` to its opposite if the flag
 `negative` was set earlier and finally return `temp`.
 
-You should note that the real `Double.parseDouble()` method not only
+Note that the real `Double.parseDouble()` method not only
 accepts `String` values in scientific notation but also does a great
 deal of error checking. Our code either crashes or gives inaccurate
 results on an empty `String`, a `String` containing non-numerical
 characters, or a `String` with more than one decimal point. Furthermore,
 this code does not use the best approach for minimizing floating-point
 precision errors.
-
 ====
+
+****
+<<scientificNotationExercise>>
+****
 
 === Solution: Three card poker
 
@@ -813,30 +816,32 @@ each method individually.
 ----
 include::{programsdir}/ThreeCardPoker.java[lines=1..11]
 ----
-
-
-Before our `main()` method even begins, we have declared a number of
+<.> Before our `main()` method begins, we declare a number of
 class constants. Two constant arrays of `String` values provide us with
-an easy way to represent suits and ranks. The remaining six `int`
+an easy way to represent suits and ranks.
+<.> The remaining six `int`
 constants are used to allocate a winning payoff to each possible
-outcome. Note that these constants can be declared anywhere inside the
-class, provided that they are outside of all methods. However, it is
+outcome.
+
+Note that these constants can be declared anywhere inside the
+class, provided that they're outside of methods. However, it's
 typical (and good style) to declare them at the top of the class.
 
 [source, java]
 ----
 include::{programsdir}/ThreeCardPoker.java[lines=13..29]
 ----
-
-
-In the `main()` method, an array representing a deck of 52 cards is
+<.> In the `main()` method, an array representing a deck of 52 cards is
 created first, followed by an array representing the 3 cards to be
-dealt. The deck is filled sequentially and then shuffled with a method.
-Next, the first 3 cards of the deck are copied into the array
-representing the hand of cards. The score of the hand is determined, and
+dealt.
+<.> The deck is filled sequentially and then shuffled with a method.
+<.> Next, the first 3 cards of the deck are copied into the array
+representing the hand of cards.
+<.> The score of the hand is determined, and
 then the hand is printed out. We print the hand after determining the
 score because the hand is sorted in the process of determining the
-score, making the output easier to read. Finally, we print the
+score, making the output easier to read. 
+<.> Finally, we print the
 appropriate output, depending on the score.
 
 [source, java]
@@ -844,30 +849,31 @@ appropriate output, depending on the score.
 include::{programsdir}/ThreeCardPoker.java[lines=31..39]
 ----
 
-
 This method shuffles the deck. Its approach is to swap the first element
 in the array of cards with one of the elements that follow, chosen
 randomly. Then, it swaps the second element in the array with any of the
 elements that follow it, and so on. If `Math.random()` truly gives us a
-uniformly generated random number in the range stem:[[0,1)], the
-final shuffled deck should be any one of the stem:[52!] possible
+uniformly generated random number in the range [0,1), the
+final shuffled deck should be any one of the 52! possible
 decks with equal probability.
 
 [source, java]
 ----
 include::{programsdir}/ThreeCardPoker.java[lines=41..48]
 ----
-
-
-The first of these methods prints out a human readable version of each
+<.> The first of these methods prints out a human readable version of each
 card in an array (instead of 0 - 51). It does so using the second and
-third methods as helper methods. Method `getRank()` computes the rank of
-a card from its number, and method `getSuit()` computes the suit of a
-card from its number. The indexes obtained from these methods are used
+third methods as helper methods.
+<.> Method `getRank()` computes the rank of
+a card from its number. 
+<.> Method `getSuit()` computes the suit of a
+card from its number.
+
+The indexes obtained from these methods are used
 to index into the `RANKS` and `SUITS` arrays.
 
-In the C language, calling a method from a method defined earlier
-required a special declaration step called _prototyping_ before both
+In the C language, calling the equivalent of a method from a method defined earlier
+requires a special declaration step called _prototyping_ before both
 methods. Java does not have this complication, and the `getRank()` and
 `getSuit()` methods compile and function perfectly if they are written
 above `print()` or below it inside the class definition.
@@ -876,7 +882,6 @@ above `print()` or below it inside the class definition.
 ----
 include::{programsdir}/ThreeCardPoker.java[lines=50..63]
 ----
-
 
 This method computes the score by first sorting the hand and then
 testing progressively worse outcomes, starting with the best, a straight
@@ -890,7 +895,7 @@ include::{programsdir}/ThreeCardPoker.java[lines=65..77]
 
 
 This code is an implementation of selection sort packaged into a method.
-Note that this method does actually change the values inside of the
+Note that this method *does* change the values inside of the
 array `hand` even though it cannot change the array that `hand` points
 to. The array itself is passed by value, but its contents are
 effectively passed by reference.
@@ -899,51 +904,53 @@ effectively passed by reference.
 ----
 include::{programsdir}/ThreeCardPoker.java[lines=79..100]
 ----
-
-
-These four methods do the actual work of determining the attributes of a
-hand. They are all similar and would be more complex for five- or
-seven-card poker hands. Methods `hasPair()` and `hasStraight()` depend
-on the array being sorted previously. The code in `hasPair()` works by
+<.> The code in `hasPair()` works by
 checking to see if the first and second or second and third cards have
-the same rank. The code in `hasThree()` checks to see if all the ranks
-are the same. The code in `hasFlush()` is the same as `hasThree()`
-except that it checks for suit instead of rank. Finally, `hasStraight()`
-checks to see if the ranks are all in ascending order, with an extra
+the same rank.  An extra condition would be required if the cards weren't sorted.
+<.> The code in `hasThree()` checks to see if all the ranks
+are the same.
+<.> The code in `hasFlush()` is the same as `hasThree()`
+except that it checks for suit instead of rank.
+<.> Finally, `hasStraight()`
+checks to see if the ranks come one after the other, with an extra
 case to deal with the possibility of the ace counting as low.
+This test only works because the cards were sorted previously.
+
+These four methods would be similar but more complex for five- or
+seven-card poker hands.
 
 === Concurrency: Methods
 
-In Java, it is impossible to have concurrency without methods. Methods
+In Java, it's impossible to have concurrency without methods. Methods
 are the way we break a large program into manageable pieces but are also
 part of the syntax that Java uses to create threads of execution. Each
-thread of execution is associated with a `Thread` object, but creating
+thread of execution is associated with a `Thread` object; however, creating
 the object is not enough to start a new thread of execution running.
 Only when the `start()` method is called on the `Thread` object does the
 new thread start running.
 
-Hopefully, you have begun to visualize the execution of Java programs as
-an arrow that sits next to each line of code as it is executed. This
+Hopefully, you've begun to visualize the execution of Java programs as
+an arrow that sits next to each line of code as it's executed. This
 arrow can jump to a choice and skip over other code using `if` and
 `switch` statements. Using loops, the arrow can jump backwards and
-repeatedly execute code it has just executed. As we have discussed in
-this chapter, it can jump into a method, execute the code in that
+repeatedly execute code it's just executed. As we discussed in
+this chapter, the arrow can jump into a method, execute the code in that
 method, and then return to its caller, going back right to where it left
 off before the call.
 
 When the `start()` method is called on a `Thread` object, however, the
 arrow returns to the caller, but it also splits itself into a second
-arrow that then executes the corresponding `run()` method and any
-methods it calls. Note that we are talking about a method called on a
+arrow that then executes the corresponding `run()` method and any other
+methods it calls. Note that we're talking about a method called on a
 `Thread` object, not a static method called on the class as a whole.
 Calling `start()` is an instance method, which we discuss in
-<<ch09-classes#ch09-classes>>. Unlike the static methods we have discussed
-in this chapter, an instance method is tied to a particular object, but
-most of what you have learned about methods still applies.
+<<ch09-classes#ch09-classes>>. Unlike the static methods in this chapter,
+an instance method is tied to a particular object, but
+most of what you've learned about methods still applies.
 
 Methods are supposed to make programming easier by breaking programs
 into chunks small enough to think about. One of the only real dangers of
-methods is using class variables, as discussed in
+methods is using class variables, as mentioned in
 <<Class variables>>. This problem becomes worse with
 multiple threads. With a single thread, two or more different methods
 can all affect the same class variable, perhaps in conflicting ways.
@@ -954,7 +961,7 @@ With multiple threads, even the *same* method can interfere with itself.
 
 A linear congruential generator (LCG) allows you to create a sequence of
 pseudorandom numbers using the equation
-stem:[x_i=(ax_{i-1}+b)\mod m], deriving the next number from the
+_x_~i~ = (_ax_~_i_-1~ + _b_) mod _m_, deriving the next number from the
 previous one, and so on.
 
 .Implements an LCG similar to one sometimes used in the function `rand()` used in the C language.
@@ -965,14 +972,14 @@ include::{programsdir}/UnsafeRandom.java[]
 ----
 
 The `UnsafeRandom` program listed above always generates the same
-sequence of pseudorandom numbers, which can be very useful for debugging
-a program. However, if two or more threads are calling `nextInt()`, they
-probably are getting different sequences. One thread picks up some of
-the numbers, and the other picks up the missing numbers in between. If
+sequence of pseudorandom numbers, which can be useful for debugging
+a program. However, if two or more threads call `nextInt()`, they'll
+probably get different sequences. One thread will pick up some of
+the numbers, and the other will pick up the missing numbers in between. If
 each thread wants to generate the same sequence of numbers, the method
-should be rewritten so that it takes in the previous number in the
-sequence. In that way, there is no shared state. Remember that using a
-(non-final) static field (class variable) should be avoided whenever
+should be rewritten so that it takes in the *previous* number in the
+sequence. In that way, there's no shared state. Remember that using a
+(non-final) class variable should be avoided whenever
 possible.
 
 .Implements the same LCG safely by requiring the caller to supply the previous random number.
@@ -988,10 +995,10 @@ include::{programsdir}/SafeRandom.java[]
 ====
 
 By forcing each thread to carry its own state, we fixed the previous
-problem. In <<ch14-synchronization#ch14-synchronization>> we talk about the much
+problem. In <<ch14-synchronization#ch14-synchronization>> we'll talk about the much
 nastier problem of two threads executing a method at exactly the same
 time. When that happens, very curious effects are possible. Consider the
-following program:
+following program.
 
 .The `print()` method always prints `"Even"` when run with a single thread but can sometimes print `"Odd"` if called repeatedly with multiple threads.
 [source, java]
@@ -999,12 +1006,12 @@ following program:
 ----
 include::{programsdir}/AlwaysEven.java[]
 ----
+<.> With a single thread running, `value` always goes up to an even number
+before printing.
+<.> Then, it increments to the next odd number afterwards.
 
-With a single thread running, `value` always goes up to an even number
-before printing and then increments to the next odd number afterwards.
-If two or more threads are calling the `print()` method, `value` could
+If two or more threads call the `print()` method, `value` could
 be changed by one right before the other executes the `if` statements.
-
 ====
 
 === Exercises
@@ -1013,7 +1020,7 @@ be changed by one right before the other executes the `if` statements.
 . Describe three advantages of dividing long segments of code into
 static methods.
 . Can you think of any disadvantages of dividing code into methods?
-Are there situations where using a method is unwise?
+Are there situations in which using a method is unwise?
 . If you wanted to declare a static method that would compute the
 mean, median, and standard deviation of an input array of `double`
 values, how would you return those three answers?
@@ -1021,7 +1028,7 @@ values, how would you return those three answers?
 +
 [source,java]
 ----
-public static void twice( int i ) {
+public static void twice(int i) {
     i = 2 * i;
 }
 ----
@@ -1031,35 +1038,35 @@ How many times does the following loop run, and why?
 [source,java]
 ----
 int x = 2;
-while( x < 128 )
+while(x < 128)
     twice(x);
 ----
 . Consider the following signatures of two overloaded methods.
 +
 [source,java]
 ----
-public static int magic( int rabbit, double hat )
-public static int magic( double wand, int spell )
+public static int magic(int rabbit, double hat)
+public static int magic(double wand, int spell)
 ----
 +
 Which method would be invoked by the following call?
 +
 [source,java]
 ----
-int x = magic( 3, 16 );
+int x = magic(3, 16);
 ----
 +
 What about the following?
 +
 [source,java]
 ----
-int y = magic( 3.2, 16.4 );
+int y = magic(3.2, 16.4);
 ----
 +
 Use a compiler to check your answers.
 . The following class generates a sequence of even numbers. Each time
 the `next()` method is called, the next even number in the sequence is
-returned. What is the design problem with using a static field to keep
+returned. What's the design problem with using a static field to keep
 track of the next value in the sequence?
 +
 [source,java]
@@ -1094,31 +1101,36 @@ element, the array is not sorted in ascending order. Note that you can
 only be sure that the array is in ascending order after you have checked
 all neighboring pairs.
 . Write a static method that finds the
-stem:[\lfloor\log_2(n)\rfloor] of an integer stem:[n].
-Note that if stem:[\log_2 n = x], it is also true that
-stem:[n = 2^x]. In other words, the stem:[\log_2] operator
-tells you what power of stem:[2] a number is. One way to define
-the stem:[\log_2 n] is the number of times you have to divide
-stem:[n] by stem:[2] to get stem:[1]. Use this
+⌊log~2~ _n_⌋  of an integer _n_.
+Note that if log~2~ _n_ = _x_, it's also true that
+_n_ = 2^_x_^. In other words, the log~2~ operator
+tells you what power of 2 a number is. One way to define
+the log~2~ _n_ is the number of times you have to divide
+_n_ by 2 to get 1. Use this
 definition to make a loop that finds the value without using any calls
 to the `Math` library.
 +
 Here are some examples of the return values your method should give for
-various input values of stem:[n].
+various input values of _n_.
 +
-[.center%autowidth%header,cols="4*^"]
+[.center%autowidth%header,cols="5*^"]
 |=============================
-|stem:[n] |Return Value |stem:[n] |Return Value
-|1 |0 |16 |4
-|2 |1 |100 |6
-|4 |2 |512 |9
-|8 |3 |1000 |9
-|10 |3 |1024 |10
+|_n_ |Return Value | |_n_ |Return Value
+|1 |0 | |16 |4
+|2 |1 | |100 |6
+|4 |2 | |512 |9
+|8 |3 | |1000 |9
+|10 |3 | |1024 |10
 |=============================
 . [[palindromeExercise]] Write a method that tests palindromes like
 the method from <<palindromeTestingExample>> but also ignores
 punctuation and spaces. Thus, `"A man, a plan, a canal: Panama"` should
 be counted as a palindrome by this new method.
+. [[scientificNotationExercise]] Add to the `parseDouble()` method from
+<<parsingANumberExample>> so that it can also handle numbers in standard Java
+scientific notation, such as `7.239e-14`.  Note that the `e` can be upper case
+or lower case, and the exponent can begin with a minus sign (`-`), a plus sign (`+`),
+or neither.
 . Re-implement the solution from <<Solution: Three card poker>>
 so that it uses a GUI constructed with `JOptionPane` to display the hand
 and the winnings.
@@ -1129,46 +1141,55 @@ deck is shuffled and then dealt into two hands of five cards each. Then,
 state which player's hand wins. With five cards, determining which hand
 wins is a more complicated process. The rankings of the various possible
 hands from best to worst are as follows.
-..  All five cards belong to the same suit and have ranks in sequential
+Straight Flush:::
+All five cards belong to the same suit and have ranks in sequential
 order (with either ace high or low). If two people both have straight
 flushes, the higher ranked one wins. If they both have the same ranks,
 it is a tie.
-..  Four of the five cards have the same rank. If two people have four
+Four of a Kind:::
+Four of the five cards have the same rank. If two people have four
 of a kind, the higher rank set of four wins.
-..  Three of the five cards have the same rank and the other two share
+Full House:::
+Three of the five cards have the same rank and the other two share
 another rank. If two people have a full house, the higher ranked set of
 three wins.
-..  All five cards have the same suit. If two people have flushes, the
+Flush:::
+All five cards have the same suit. If two people have flushes, the
 one with the highest card wins. If the highest card is a tie, the next
 highest is the tie breaker, and so on. If the two flushes have exactly
 the same ranks, the two flushes tie.
-..  All five cards have ranks in sequential order (with either ace high
-or low). If two people both have straight flushes, the higher ranked one
+Straight:::
+All five cards have ranks in sequential order (with either ace high
+or low). If two people both have straight, the higher ranked one
 wins. If they both have the same ranks, it is a tie.
-..  Three of the cards have the same rank. If two people have three of a
+Three of a Kind:::
+Three of the cards have the same rank. If two people have three of a
 kind, the higher ranked set of three wins.
-..  A pair of cards have the same rank and another pair of cards share
+Two Pair:::
+A pair of cards have the same rank and another pair of cards share
 another rank. If two people both have two pairs, the higher ranked pair
 is a tiebreaker. If the higher ranked pair is the same, the lower ranked
 pair is a tiebreaker. If the lower ranked pair is the same, the final
 unpaired card is the tiebreaker. If all the ranks of both hands match,
 it is a tie.
-..  A pair of cards has the same rank. If two people have pairs, the
+Pair:::
+A pair of cards has the same rank. If two people have pairs, the
 rank of the pair is a tiebreaker. If the pairs have the same rank, the
 remaining cards in each hand are tiebreakers, in descending rank order.
-..  If none of the other cases hold, the high card determines the value
+High Card:::
+If none of the other cases hold, the high card determines the value
 of the hand. If two people have the same highest card, the remaining
 cards in each hand are used as tiebreakers, in descending rank order.
 
 *Experiments*
 
-. In terms of time, there is a small overhead associated with calling
-a method and returning a value, but it is very hard to measure. Write a
+. In terms of time, there's a small overhead associated with calling
+a method and returning a value, but it's very hard to measure. Write a
 program with two `int` variables, `a` and `b`, where `a` starts with a
 value of `1` and `b` starts with a value of `2`. Run a `for` loop
 100,000,000 times. On each iteration first increase the value of `a` by
 the value of `b` and then increase the value of `b` by `a`. Time this
-loop with `System.nanoTime()` and then print out the time taken and the
+loop with `System.nanoTime()`, and then print out the time taken and the
 value of `a`. The value of `a` is not important, but the compiler will
 optimize away the math done with `a` and `b` unless we output the value.
 We recommend that you run this program repeatedly to get a sense of the
@@ -1184,11 +1205,11 @@ public static int add( int a, int b ) {
 }
 ----
 +
-Again, run your program repeatedly with this modification. What is the
+Again, run your program repeatedly with this modification. What's the
 difference in running time between the version that uses a method and
 the version that does addition directly?
 +
 Depending on your JVM, it's quite possible that there's almost no
 difference. The JVM does a lot of optimizations including _inlining_,
-which replaces a call to a method with the actual code inside the
+which replaces a call to a short method with the actual code inside the
 method.
