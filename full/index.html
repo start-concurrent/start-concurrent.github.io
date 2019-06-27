@@ -547,11 +547,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_problem_nested_expressions">9.1. Problem: Nested expressions</a></li>
 <li><a href="#_concepts_object_oriented_programming">9.2. Concepts: Object-oriented programming</a></li>
 <li><a href="#_syntax_classes_in_java">9.3. Syntax: Classes in Java</a></li>
-<li><a href="#_examples_classes">9.4. Examples: Classes</a></li>
-<li><a href="#_advanced_nested_classes">9.5. Advanced: Nested classes</a></li>
-<li><a href="#_solution_nested_expressions">9.6. Solution: Nested expressions</a></li>
-<li><a href="#_concurrency_objects">9.7. Concurrency: Objects</a></li>
-<li><a href="#_exercises_9">9.8. Exercises</a></li>
+<li><a href="#_advanced_nested_classes">9.4. Advanced: Nested classes</a></li>
+<li><a href="#_solution_nested_expressions">9.5. Solution: Nested expressions</a></li>
+<li><a href="#_concurrency_objects">9.6. Concurrency: Objects</a></li>
+<li><a href="#_exercises_9">9.7. Exercises</a></li>
 </ul>
 </li>
 <li><a href="#ch10-interfaces">10. Interfaces</a>
@@ -20970,7 +20969,7 @@ method.</p>
 <h3 id="_problem_nested_expressions">9.1. Problem: Nested expressions</h3>
 <div class="paragraph">
 <p>How does the compiler check the Java code that you write and find
-errors? Syntax checking and type checking are involved processes that
+errors? Parsing and type checking are involved processes that
 are key parts of compiler design. Compilers are some of the most complex
 programs of any kind, and building one is beyond the scope of the
 material covered in this book. However, we can get insight into some
@@ -20978,11 +20977,11 @@ problems faced by compiler designers by considering the problem of
 correctly nested expressions.</p>
 </div>
 <div class="paragraph">
-<p>There are many rules for forming correct Java code, but it is always the
-case that grouping symbols (<code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>{</code>, <code>}</code>) are correctly
+<p>There are many rules for forming correct Java code, but it&#8217;s always the
+case that grouping symbols (<code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>{</code>, <code>}</code>) must be correctly
 nested. Ignoring other symbols, we may find a section of code that
-contains the sequence <code>"( ) [ ]"</code>, but correctly written code never
-contains <code>"( [ ) ]"</code>.</p>
+contains the sequence <code>( ) [ ]</code>, but correctly written code never
+contains <code>( [ ) ]</code>.</p>
 </div>
 <div class="paragraph">
 <p>To be correctly nested, left and right parentheses must be balanced,
@@ -20990,7 +20989,8 @@ left and right square brackets must be balanced, and left and right
 curly braces must be balanced. Furthermore, a correctly balanced set of
 parentheses can be nested inside of a correctly balanced set of square
 brackets or curly braces (and vice versa), but they cannot intersect as
-they do at the end of the previous paragraph. The table below shows more examples of correctly and incorrectly nested
+they do at the end of the previous paragraph.
+The table below shows more examples of correctly and incorrectly nested
 expressions.</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content center">
@@ -21006,36 +21006,36 @@ expressions.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>""</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"("</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre></pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>(</pre></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"(){}"</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"}{"</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>(){}</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>}{</pre></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"((abc)){x}"</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"( a { b ) c }"</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>((abc)){x}</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>( a { b ) c }</pre></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"({[z]})"</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"{abc("</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>({[z]})</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>{abc(</pre></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"({xyz})({ijk}[123])"</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"{(333)888(})"</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>({xyz})({ijk}[123])</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>{(333)888(})</pre></div></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>But how can we examine an expression to see if it is correctly nested?
+<p>But how can we examine an expression to see if it&#8217;s correctly nested?
 The key to solving this problem is the idea of a <em>stack</em>. A stack is a
 simple data structure with three operations: <em>push</em>, <em>pop</em>, and <em>top</em>.
 The data structure is meant to behave like a stack of books or cups or
-any other physical objects. When you use the push operation, you are
+any other physical objects. When you use the push operation, you&#8217;re
 moving something to the top of the stack. When you use the pop
-operation, you are taking something off the top of the stack. The top
-operation is used to read what is at the top of the stack. In a stack,
+operation, you&#8217;re taking something off the top of the stack. The top
+operation is used to read what&#8217;s currently at the top of the stack. In a stack,
 you can only read that very topmost item, as if all the other items were
 buried underneath it. A stack is known as a FILO (first in, last out) or
 a LIFO (last in, first out) data structure because, if you push a series
@@ -21050,11 +21050,11 @@ input and follow these steps.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>If it is a left parenthesis, left square bracket, or left curly
+<p>If it&#8217;s a left parenthesis, left square bracket, or left curly
 brace, put it on the stack.</p>
 </li>
 <li>
-<p>If it is a right parenthesis, right square bracket, or right curly
+<p>If it&#8217;s a right parenthesis, right square bracket, or right curly
 brace, check that the top of the stack is its matching left half. If it
 is, pop the left half off the stack. If it isn&#8217;t (or if the stack is
 empty), the grouping symbols are either unbalanced or intersecting.
@@ -21076,7 +21076,7 @@ symbols left on the stack, and the expression isn&#8217;t correctly nested.</p>
 <div class="sect2">
 <h3 id="_concepts_object_oriented_programming">9.2. Concepts: Object-oriented programming</h3>
 <div class="paragraph">
-<p>To solve the nested expressions problem, we need to create a stack data
+<p>To solve the nested expressions problem, we can create a stack data
 structure. Each element of the stack should be able to hold a <code>char</code>
 value term from an expression, where a term is an operator, operand, or
 a parenthesis (bracket or curly brace). Although we could get by using
@@ -21084,33 +21084,33 @@ only the static methods we introduced in the previous chapter, a better
 tool can make programming easier.</p>
 </div>
 <div class="paragraph">
-<p>We are introducing these topics in a progression: First, all of our
+<p>We&#8217;re introducing these topics in a progression: First, all of our
 programs were a series of sequential instructions inside of a <code>main()</code>
 method. We added in selection statements and loops to solve more
 difficult problems. As our programs became more complicated, we started
 using additional static methods to divide the program into logical
-segments. Now, we are moving to fully object-oriented programming (OOP)
+segments. Now, we&#8217;re moving to fully object-oriented programming (OOP)
 in which data as well as code can be packaged into objects that interact
 with each other.</p>
 </div>
 <div class="paragraph">
 <p>OOP has been a controversial topic, particularly in the computer science
-education community. The most important thing to remember is that we are
-not throwing away any of the ideas we used before. We are continuing on
+education community. The most important thing to remember is that we&#8217;re
+not throwing away any of the ideas we used before. We&#8217;re continuing on
 a path toward making code safer and more reusable. Several other
 chapters in this book touch on important ideas in OOP such as
-inheritance and polymorphism. Below, we are going to focus on the
+inheritance and polymorphism. Below, we&#8217;re going to focus on the
 basics, including the fundamentals of objects, encapsulation of data,
 and instance (non-static) methods.</p>
 </div>
 <div class="sect3">
 <h4 id="_objects">9.2.1. Objects</h4>
 <div class="paragraph">
-<p>You have already used objects, perhaps without realizing it. Every time
-you use a <code>String</code>, you are using an object. So far, we have created a
-class every time we have written a program. A class is a way to organize
+<p>You&#8217;ve already used objects, perhaps without realizing it. Every time
+you use a <code>String</code>, you&#8217;re using an object. So far, we&#8217;ve created a
+class every time we&#8217;ve written a program. A class is a way to organize
 static methods, but a class is something more: a template for objects.
-Whenever you write a class, the potential to create specific objects
+Whenever you write a class, the potential to create objects from it
 exists.</p>
 </div>
 <div class="paragraph">
@@ -21129,8 +21129,8 @@ each one of those characteristics, such as Albert Einstein, March 14,
 </div>
 <div class="paragraph">
 <p>This idea of a class as a template is key because it means that an
-object of a given type (from a given class) can be used anywhere that is
-appropriate for another object of that type. Later in the chapter, we
+object of a given type (from a given class) can be used anywhere that&#8217;s
+appropriate for another object of that type. Later in the chapter, we&#8217;ll
 create an object that performs the work of a stack, storing a number of
 other objects. If we design a library of code that can manipulate or use
 stack objects, we should be able to use this library countless times for
@@ -21143,11 +21143,11 @@ of code reuse is one of the main goals of OOP.</p>
 <div class="paragraph">
 <p>In order to guarantee that objects can be used in many different
 contexts safely, the data inside of the object must be protected. Java
-provides access modifiers so that code without appropriate permission
-cannot change or even read the data inside of an object.</p>
+provides access modifiers so that code without the appropriate permission
+can&#8217;t change or even read the data inside of an object.</p>
 </div>
 <div class="paragraph">
-<p>This feature is called <em>encapsulation</em>. One programmer may write the
+<p>This feature is called <em>encapsulation</em>. One programmer might write the
 class file defining a type of object while another or many others write
 code that uses those objects. The programmers who use objects written by
 others do not need to understand the inner workings of those objects.
@@ -21160,12 +21160,12 @@ the object is hidden.</p>
 <div class="sect3">
 <h4 id="_instance_methods">9.2.3. Instance methods</h4>
 <div class="paragraph">
-<p>These &#8220;actions&#8221; are methods, but not static ones. Static methods did
+<p>These &#8220;actions&#8221; are methods but not static ones. Static methods did
 not need an object in order to be called. Regular (instance) methods
 should be thought of as an action performed on (or by) a specific
 object. This action could be asking a question, such as inquiring what
 the name of an object of type <code>Human</code> is. This action could be telling the
-object to change itself, such as the case of pushing something onto a
+object to change itself, as in the case of pushing something onto a
 stack.</p>
 </div>
 <div class="paragraph">
@@ -21193,7 +21193,7 @@ about protecting its privacy.</p>
 <h4 id="_fields">9.3.1. Fields</h4>
 <div class="paragraph">
 <p>Fields in an object must be declared like any other data in Java. The
-type of a piece of data can be a primitive or reference type. Fields are
+type of a field can be a primitive or reference type. Fields are
 also sometimes called member variables. You declare fields just like you
 would class variables, except without the <code>static</code> keyword. Here&#8217;s an
 example with the <code>Human</code> class.</p>
@@ -21210,10 +21210,10 @@ example with the <code>Human</code> class.</p>
 <div class="paragraph">
 <p>With this definition, a <code>Human</code> object has three attributes: <code>name</code>,
 <code>DOB</code>, and <code>height</code>. Because the access modifier for each field is
-<code>private</code>, code outside of this class cannot change or even read the
-values. Note that this class cannot do anything yet. Also, note that
-this class does not contain a <code>main()</code> method. There is no way to run
-this class, but that&#8217;s fine. We can add a <code>main()</code> method, of course.</p>
+<code>private</code>, code outside of this class can&#8217;t change or even read the
+values. This class can&#8217;t do anything yet. Also, it doesn&#8217;t contain
+a <code>main()</code> method. There&#8217;s no way to run
+this class, but that&#8217;s fine. We could add a <code>main()</code> method, of course.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -21231,10 +21231,10 @@ this class, but that&#8217;s fine. We can add a <code>main()</code> method, of c
 </div>
 </div>
 <div class="paragraph">
-<p>Now we have added a <code>main()</code> method, but our code does not compile.
+<p>Now we&#8217;ve added a <code>main()</code> method, but our code doesn&#8217;t compile.
 Since the <code>main()</code> method is a static method, it is not associated with
 any particular object. When we tell the <code>main()</code> method to change the
-fields, it does not know what object we are talking about. If we
+fields, it doesn&#8217;t know what object we&#8217;re talking about. If we
 actually want to use an object, we&#8217;ll have to create one.</p>
 </div>
 <div id="HumanProgram" class="listingblock">
@@ -21255,31 +21255,31 @@ actually want to use an object, we&#8217;ll have to create one.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The above code compiles because we have used the <code>new</code> keyword to create
+<p>The above code compiles because we&#8217;ve used the <code>new</code> keyword to create
 an object of type <code>Human</code> saved in a reference variable called
-<code>einstein</code>. With a <code>Human</code> object, we can set its fields using
+<code>einstein</code>. We can set the fields inside of a particular object using
 dot notation. With static methods and static variables, we used the name
-of the <strong>class</strong> followed by a dot, for instance methods and instance
+of the <strong>class</strong> followed by a dot, but for instance methods and instance
 variables, we use the name of the <strong>object</strong> followed by a dot. Even
 though each of these fields is private, we can access them from <code>main()</code>
 because <code>main()</code> is inside the <code>Human</code> class. Code inside of another
-class could create a new <code>Human</code> object, but it could not change its
+class could create a new <code>Human</code> object, but it could <strong>not</strong> change its
 fields.</p>
 </div>
 <div class="paragraph">
 <p>This juxtaposition of static and non-static fields and methods inside of
 a single class is confusing to many new Java programmers. The confusion
 seems to stem from the fact that the class (such as <code>Human</code>) is a
-template for objects but it is also a place to house other related code,
+template for objects but it&#8217;s also a place to house other related code,
 such as static methods, including <code>main()</code>.</p>
 </div>
 <div class="paragraph">
 <p>Although the practice is discouraged, we mentioned in
 <a href="#_class_variables">Section 8.3.3</a> that class variables can be
 stored in the class itself. Every object has a distinct copy of each
-field, but there is only a single copy of each class variable that they
+field, but there&#8217;s only a single copy of each class variable that they
 all share. By using the keyword <code>static</code>, we could add a class variable
-called <code>population</code> to our <code>Human</code> class, since that is information
+called <code>population</code> to our <code>Human</code> class, since that&#8217;s information
 connected to humans as a whole, not to any individual human being.</p>
 </div>
 <div class="listingblock">
@@ -21288,16 +21288,15 @@ connected to humans as a whole, not to any individual human being.</p>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">DOB</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">height</span><span class="o">;</span> <span class="c1">//in cm</span>
-    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span> <span class="n">population</span> <span class="o">=</span> <span class="mf">7.023E9</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">population</span> <span class="o">=</span> <span class="mi">7714576923</span><span class="o">;</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We are using a <code>double</code> to represent the world&#8217;s population since the
-value is too big to fit in an <code>int</code> and is easily expressed in
-scientific notation. If several <code>Human</code> objects were created, they would
-have their own <code>name</code>, <code>DOB</code>, and <code>height</code> values, but the value for
-<code>population</code> would only be stored in the class.</p>
+<p>We&#8217;re using a <code>long</code> to represent the world&#8217;s population since the
+value is too big to fit in an <code>int</code>. If several <code>Human</code> objects
+were created, they would each have their own <code>name</code>, <code>DOB</code>, and <code>height</code>
+values, but the value for <code>population</code> would only be stored in the class.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -21310,8 +21309,8 @@ have their own <code>name</code>, <code>DOB</code>, and <code>height</code> valu
 <h4 id="_constructors">9.3.2. Constructors</h4>
 <div class="paragraph">
 <p>To create a new object, you have to invoke a <em>constructor</em>, a special
-kind of method that can initialize the object. A constructor allows sets
-up the values inside an object when it is first created. Let&#8217;s consider
+kind of method that can initialize the object. A constructor sets
+up the values inside an object when the object&#8217;s first created. Let&#8217;s consider
 a simple <code>Rectangle</code> class with only two fields: <code>length</code> and <code>width</code>,
 both of type <code>int</code>.</p>
 </div>
@@ -21327,15 +21326,15 @@ both of type <code>int</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Rectangle</span><span class="o">(</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">w</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Rectangle</span><span class="o">(</span><span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">w</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">length</span> <span class="o">=</span> <span class="n">l</span><span class="o">;</span>
         <span class="n">width</span> <span class="o">=</span> <span class="n">w</span><span class="o">;</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This constructor lets us set the width and length when the object is
-created. To do so, code could invoke the constructor using the <code>new</code>
+<p>This constructor lets us set the width and length when the object&#8217;s
+created. To do so, code must invoke the constructor using the <code>new</code>
 keyword.</p>
 </div>
 <div class="listingblock">
@@ -21345,18 +21344,18 @@ keyword.</p>
 </div>
 <div class="paragraph">
 <p>This code creates a new <code>Rectangle</code> object, with length 50 and width 20.
-Constructors are almost always <code>public</code>, otherwise it would be
+Constructors are almost always <code>public</code>; otherwise, it would be
 impossible for code outside of the <code>Rectangle</code> class to create a
-<code>Rectangle</code> object. Notice that the definition of the <code>Rectangle</code>
-constructor does not have a return type. A constructors is the only kind
-of method that does not have a return type. It is possible to have more
+<code>Rectangle</code> object. Note that the definition of the <code>Rectangle</code>
+constructor does not have a return type. A constructor is the only kind
+of method that doesn&#8217;t have a return type. It&#8217;s possible to have more
 than one constructor as well, just as other methods can be overloaded.
 For more information about overloaded methods, refer back to
 <a href="#_overloaded_methods">Section 8.3.1.2</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Rectangle</span><span class="o">(</span> <span class="kt">int</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Rectangle</span><span class="o">(</span><span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">length</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
         <span class="n">width</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
     <span class="o">}</span></code></pre>
@@ -21364,9 +21363,9 @@ For more information about overloaded methods, refer back to
 </div>
 <div class="paragraph">
 <p>In the very same class, we could have this second constructor, allowing
-us to quickly and easily create a square. All classes have constructors,
-but some are not written explicitly. If you don&#8217;t type out a constructor
-for a class, a default one is automatically created. The default
+us to create a square quickly and easily. All classes have constructors,
+but some aren&#8217;t written explicitly. If you don&#8217;t type out a constructor
+for a class, a default one is automatically created for you. The default
 constructor takes no parameters and sets all the values inside the new
 object to defaults such as <code>null</code> and <code>0</code>. Once you do create a
 constructor, the default one is no longer provided. Thus, since our
@@ -21382,11 +21381,11 @@ it in their code.</p>
 <div class="paragraph">
 <p>Another important thing to consider with all instance methods is scope.
 Fields are visible inside of instance methods, but they can be hidden by
-parameters.</p>
+parameters and other local variables.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Rectangle</span><span class="o">(</span> <span class="kt">int</span> <span class="n">length</span><span class="o">,</span> <span class="kt">int</span> <span class="n">width</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Rectangle</span><span class="o">(</span><span class="kt">int</span> <span class="n">length</span><span class="o">,</span> <span class="kt">int</span> <span class="n">width</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">length</span> <span class="o">=</span> <span class="n">length</span><span class="o">;</span>
         <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="o">;</span>
     <span class="o">}</span></code></pre>
@@ -21394,36 +21393,36 @@ parameters.</p>
 </div>
 <div class="paragraph">
 <p>This version of the two parameter <code>Rectangle</code> constructor compiles, but
-it does not properly initialize the values of the fields <code>length</code> and
+it doesn&#8217;t properly initialize the values of the fields <code>length</code> and
 <code>width</code>. Instead, the parameters <code>length</code> and <code>width</code> are copied back
 into themselves for no reason. The designers of Java anticipated that it
 would be useful to refer to fields even in the presence of other
 variables with the same name. To do so, the <code>this</code> keyword can be used.
 Any field (or method) can be referred to by its object name, followed by
 a dot, followed by the name of that field or method. Since you don&#8217;t
-have a variable name to reference the object when you&#8217;re inside of it,
+have a variable name to reference the object when you&#8217;re <strong>inside</strong> of it,
 the <code>this</code> keyword acts as a reference to the object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Rectangle</span><span class="o">(</span> <span class="kt">int</span> <span class="n">length</span><span class="o">,</span> <span class="kt">int</span> <span class="n">width</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Rectangle</span><span class="o">(</span><span class="kt">int</span> <span class="n">length</span><span class="o">,</span> <span class="kt">int</span> <span class="n">width</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">length</span> <span class="o">=</span> <span class="n">length</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">width</span><span class="o">;</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This version of the code functions correctly, since we have explicitly
-told Java to store the argument <code>length</code> into the field <code>length</code> inside
+<p>This version of the code functions correctly, since we&#8217;ve explicitly
+told Java to store the <em>argument</em> <code>length</code> into the <em>field</em> <code>length</code> inside
 the object pointed at by <code>this</code> and to do similarly for <code>width</code>.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_methods">9.3.3. Methods</h4>
 <div class="paragraph">
-<p>Objects do not really come to life until you add instance methods. With
+<p>Objects don&#8217;t really come to life until you add instance methods. With
 the <code>Rectangle</code> class described above, any <code>Rectangle</code> objects created
-are not useful in other classes because it is impossible to access their
+would not be useful to other classes because it would be impossible to access their
 data. Instead, we want to create a clear and usable relationship between
 the fields and the methods.</p>
 </div>
@@ -21434,9 +21433,9 @@ are accessors and mutators.</p>
 <div class="sect4">
 <h5 id="_accessors">Accessors</h5>
 <div class="paragraph">
-<p>We often want to read the data inside of various the objects. With our
+<p>We often want to read the data inside of various objects. With our
 current definition of <code>Rectangle</code>, no code from an outside class can
-find out the length or width of the rectangle we are representing.</p>
+find out the length or width of the rectangle we&#8217;re representing.</p>
 </div>
 <div class="paragraph">
 <p><em>Accessor methods</em> (or simply <em>accessors</em>) are designed for this task.
@@ -21457,15 +21456,15 @@ of accessors often start with the word <code>get</code>.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Here are two accessors methods that we would expect in the <code>Rectangle</code>
+<p>Here are two accessors methods that we&#8217;d expect in the <code>Rectangle</code>
 class. The first returns the value of <code>length</code>, and the second returns
-the value of <code>width</code>. These methods only report information. They do not
+the value of <code>width</code>. These methods only report information. They don&#8217;t
 change the value of either variable. Their syntax should be
 self-explanatory. Each is declared to be <code>public</code> so that anyone can
 read the length and width of a rectangle. Both methods have a return
-type of <code>int</code> because that is the type used to store <code>length</code> and
+type of <code>int</code> because that&#8217;s the type used to store <code>length</code> and
 <code>width</code> inside a <code>Rectangle</code> object. Neither method has any parameters.
-An accessor does not have to be so simple. An accessor could return a
+Of course, an accessor doesn&#8217;t have to be so simple. An accessor could return a
 value that needs to be computed from the underlying field data.</p>
 </div>
 <div class="listingblock">
@@ -21481,7 +21480,7 @@ value that needs to be computed from the underlying field data.</p>
 </div>
 <div class="paragraph">
 <p>These accessors compute the area and perimeter, respectively, of the
-rectangle in question, even though that data is not stored directly in
+rectangle in question, even though that data isn&#8217;t stored directly in
 the <code>Rectangle</code> object.</p>
 </div>
 </div>
@@ -21489,8 +21488,8 @@ the <code>Rectangle</code> object.</p>
 <h5 id="_mutators">Mutators</h5>
 <div class="paragraph">
 <p>Some objects, such as <code>String</code> values, are <em>immutable</em> objects, meaning
-that the data stored inside them cannot be changed after they have been
-created with a constructor. If you have ever thought that you were
+that the data stored inside them cannot be changed after they&#8217;ve been
+created with a constructor. If you&#8217;ve ever thought you were
 changing a <code>String</code>, you were actually creating a new <code>String</code> with the
 appropriate modifications. Most objects are mutable, however, and we use
 methods called <em>mutator methods</em> (or simply <em>mutators</em>) to change their
@@ -21504,11 +21503,11 @@ describe any methods that change the data inside of an object. For the
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLength</span><span class="o">(</span> <span class="kt">int</span> <span class="n">length</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLength</span><span class="o">(</span><span class="kt">int</span> <span class="n">length</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">length</span> <span class="o">=</span> <span class="n">length</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setWidth</span><span class="o">(</span> <span class="kt">int</span> <span class="n">width</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setWidth</span><span class="o">(</span><span class="kt">int</span> <span class="n">width</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">width</span><span class="o">;</span>
     <span class="o">}</span></code></pre>
 </div>
@@ -21516,7 +21515,7 @@ describe any methods that change the data inside of an object. For the
 <div class="paragraph">
 <p>Just as the names for many accessors begin with <code>get</code>, the names for
 many mutators begin with <code>set</code>. Mutators often have a <code>void</code> return type
-because they are changing the object, not getting information back. Some
+because they&#8217;re changing the object, not getting information back. Some
 mutators might have a return type that gives information about an error
 that occurred while trying to make a change. Note that we used the
 <code>this</code> keyword once again to distinguish each field from the method
@@ -21532,13 +21531,13 @@ response, let&#8217;s improve the mutators that set <code>length</code> and <cod
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLength</span><span class="o">(</span> <span class="kt">int</span> <span class="n">length</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLength</span><span class="o">(</span><span class="kt">int</span> <span class="n">length</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
             <span class="k">this</span><span class="o">.</span><span class="na">length</span> <span class="o">=</span> <span class="n">length</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setWidth</span><span class="o">(</span> <span class="kt">int</span> <span class="n">width</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">width</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setWidth</span><span class="o">(</span><span class="kt">int</span> <span class="n">width</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">width</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
             <span class="k">this</span><span class="o">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">width</span><span class="o">;</span>
     <span class="o">}</span></code></pre>
 </div>
@@ -21569,7 +21568,7 @@ accessed by any code, no matter what class contains it. Most methods
 should be <code>public</code> so that they can be used freely to interact with
 their object. Virtually no fields should be <code>public</code>. Constants (static
 or otherwise) are the most significant exception to this rule. Making
-constants <code>public</code> is usually not a problem since they cannot be changed
+constants <code>public</code> is usually not a problem since they can&#8217;t be changed
 by outside code anyway. In the <code>Rectangle</code> class, variables <code>length</code> and
 <code>width</code> are so simple that making them <code>public</code> is not unreasonable. If
 you have a field that can be changed at any time by any code to any
@@ -21578,11 +21577,11 @@ value, you can leave that field <code>public</code>.</p>
 <dt class="hdlist1"><code>private</code> modifier</dt>
 <dd>
 <p>This modifier states that a variable or method cannot be accessed by any
-code unless the code is contained in the same class. It is important to
+code unless the code is contained in the same class. It&#8217;s important to
 realize that the restriction is based on the <strong>class</strong>, not on the
 <strong>object</strong>. Code inside any <code>Rectangle</code> object can modify <code>private</code> values
-inside of any other <code>Rectangle</code> object or class. Most fields should be
-<code>private</code> so that outside code cannot modify them. Methods can be
+inside of any other <code>Rectangle</code> object and the class as a whole. Most fields should be
+<code>private</code> so that outside code can&#8217;t modify them. Methods can be
 <code>private</code>, but these methods should be helper or utility methods used
 inside the class or object to divide up work.</p>
 </dd>
@@ -21597,14 +21596,14 @@ discuss it further in the context of subclasses and inheritance in
 </dd>
 <dt class="hdlist1">Package-private (no explicit modifier)</dt>
 <dd>
-<p>If you do not type an access modifier when you declare a field or
+<p>If you don&#8217;t type an access modifier when you declare a field or
 method, that field or method is not <code>public</code>. Instead, it has the
 default or package-private access modifier applied to it. Fields or
 methods with this modifier can be accessed by any code that is in the
 same <em>package</em> or directory. A package is yet another layer of
 organization that Java provides to group classes together. When you use
 an <code>import</code> statement, you can import an entire package of classes.
-There is no keyword for this access modifier. It is useful if you are
+There&#8217;s no keyword for this access modifier. It may be useful if you&#8217;re
 designing a package containing classes that must be able to access each
 other&#8217;s fields or methods. For now, you should always give your fields
 and methods an explicit <code>public</code> or <code>private</code> (or sometimes <code>protected</code>)
@@ -21663,21 +21662,16 @@ Classes</th>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_examples_classes">9.4. Examples: Classes</h3>
 <div class="paragraph">
 <p>Although large and complex programs are needed to see the real benefits
-of OOP in Java, here are two short examples showing, respectively, how
-objects can be used to make a roster of students and compute the value
-of an expression in postfix notation.</p>
+of OOP in Java, here&#8217;s an example showing how
+objects can be used to make a roster of students.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 9.1 Student roster</div>
 <div class="content">
 <div class="paragraph">
-<p>We are going to create a <code>Student</code> class so that we can store objects
+<p>We&#8217;re going to create a <code>Student</code> class so that we can store objects
 containing student roster information. Then, we&#8217;re going to create a
 client program that reads data from a user to create <code>Student</code> objects,
 sort them by GPA, and then print them out.</p>
@@ -21685,25 +21679,24 @@ sort them by GPA, and then print them out.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Student</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span><span class="o">[]</span> <span class="n">YEARS</span> <span class="o">=</span>
-    <span class="o">{</span><span class="s">"Freshman"</span><span class="o">,</span> <span class="s">"Sophomore"</span><span class="o">,</span> <span class="s">"Junior"</span><span class="o">,</span> <span class="s">"Senior"</span><span class="o">};</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span><span class="o">[]</span> <span class="n">YEARS</span> <span class="o">=</span> <span class="o">{</span><span class="s">"Freshman"</span><span class="o">,</span> <span class="s">"Sophomore"</span><span class="o">,</span> <span class="s">"Junior"</span><span class="o">,</span> <span class="s">"Senior"</span><span class="o">};</span>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">year</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">double</span> <span class="n">GPA</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We start by defining the <code>Student</code> class. First, there is a constant
-array of type <code>String</code>, giving the names of each of the four years.
-Next, the fields in the <code>Student</code> class store the name, year, and GPA of
+<p>We start by defining the <code>Student</code> class. First, there&#8217;s a constant
+array of <code>String</code> values, giving the names of each of the four years.
+Next, fields in the <code>Student</code> class are declared to store the name, year, and GPA of
 the student.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">Student</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">year</span><span class="o">,</span> <span class="kt">double</span> <span class="n">GPA</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">setName</span><span class="o">(</span> <span class="n">name</span> <span class="o">);</span>
-        <span class="n">setYear</span><span class="o">(</span> <span class="n">year</span> <span class="o">);</span>
-        <span class="n">setGPA</span><span class="o">(</span> <span class="n">GPA</span> <span class="o">);</span>
+        <span class="n">setName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="n">setYear</span><span class="o">(</span><span class="n">year</span><span class="o">);</span>
+        <span class="n">setGPA</span><span class="o">(</span><span class="n">GPA</span><span class="o">);</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -21720,7 +21713,7 @@ of the error checking in the GPA mutator.</p>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setYear</span><span class="o">(</span><span class="kt">int</span> <span class="n">year</span><span class="o">)</span> <span class="o">{</span> <span class="k">this</span><span class="o">.</span><span class="na">year</span> <span class="o">=</span> <span class="n">year</span><span class="o">;</span> <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setGPA</span><span class="o">(</span><span class="kt">double</span> <span class="n">GPA</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">GPA</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">GPA</span> <span class="o">&lt;=</span> <span class="mf">4.0</span> <span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">GPA</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">GPA</span> <span class="o">&lt;=</span> <span class="mf">4.0</span><span class="o">)</span>
             <span class="k">this</span><span class="o">.</span><span class="na">GPA</span> <span class="o">=</span> <span class="n">GPA</span><span class="o">;</span>
         <span class="k">else</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Invalid GPA: "</span> <span class="o">+</span> <span class="n">GPA</span><span class="o">);</span>
@@ -21729,7 +21722,7 @@ of the error checking in the GPA mutator.</p>
 </div>
 <div class="paragraph">
 <p>These are the mutators corresponding to each of the three fields. The
-input for the name and year mutators are not checked, but the GPA
+input for the name and year mutators aren&#8217;t checked, but the GPA
 mutator checks to make sure that the GPA value is in the proper range.</p>
 </div>
 <div class="listingblock">
@@ -21739,8 +21732,7 @@ mutator checks to make sure that the GPA value is in the proper range.</p>
     <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getGPA</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">GPA</span><span class="o">;</span> <span class="o">};</span>
 
     <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"\t"</span> <span class="o">+</span> <span class="n">YEARS</span><span class="o">[</span><span class="n">year</span><span class="o">]</span> <span class="o">+</span>
-            <span class="s">"\t"</span> <span class="o">+</span> <span class="n">GPA</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"\t"</span> <span class="o">+</span> <span class="n">YEARS</span><span class="o">[</span><span class="n">year</span><span class="o">]</span> <span class="o">+</span> <span class="s">"\t"</span> <span class="o">+</span> <span class="n">GPA</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -21748,12 +21740,12 @@ mutator checks to make sure that the GPA value is in the proper range.</p>
 <div class="paragraph">
 <p>Finally, these accessors allow the user to find out the name, year, or
 GPA of a given student. Every class in Java automatically has a
-<code>toString()</code> method that is called whenever an object is being printed
-out directly. We have changed this method to return the information in
+<code>toString()</code> method that&#8217;s called whenever an object is being printed
+out directly. We have made this method return the information in
 <code>Student</code> formatted as a <code>String</code>.</p>
 </div>
 <div class="paragraph">
-<p>Creating the <code>Student</code> class is only half the battle. We also must
+<p>Creating the <code>Student</code> class is only half the battle. We must also
 create client code to use it.</p>
 </div>
 <div class="listingblock">
@@ -21762,26 +21754,43 @@ create client code to use it.</p>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">StudentRoster</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">System</span><span class="o">.</span><span class="na">in</span> <span class="o">);</span>
-        <span class="n">Student</span><span class="o">[]</span> <span class="n">roster</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Student</span><span class="o">[</span><span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">()];</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+		<span class="kt">int</span> <span class="n">students</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>		<i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="n">Student</span><span class="o">[]</span> <span class="n">roster</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Student</span><span class="o">[</span><span class="n">students</span><span class="o">];</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span> <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
-            <span class="n">roster</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Student</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">(),</span>
-                <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(),</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">()</span> <span class="o">);</span>
+            <span class="n">roster</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Student</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">(),</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(),</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">());</span>
         <span class="o">}</span>
-        <span class="n">sort</span><span class="o">(</span><span class="n">roster</span><span class="o">);</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+        <span class="n">sort</span><span class="o">(</span><span class="n">roster</span><span class="o">);</span> <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">roster</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The <code>main()</code> method in the <code>StudentRoster</code> class begins by reading in
-the total number of students. Next, it makes an array of type <code>Student</code>
-of that length. Then, it repeatedly reads in a name, year, and GPA,
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>main()</code> method in the <code>StudentRoster</code> class begins by reading in
+the total number of students.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Next, it makes an array of type <code>Student</code>
+of that length.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Then, it repeatedly reads in a name, year, and GPA,
 creates a new <code>Student</code> object with those values, and stores it into the
-array. After creating all the <code>Student</code> objects, it sorts them with a
-method call and prints them out.</p>
+array.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>After creating all the <code>Student</code> objects, it sorts them with a
+method call and prints them out.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>One oddity in this code is the seemingly superfluous <code>in.nextLine()</code> in
@@ -21792,9 +21801,9 @@ program malfunctions.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Student</span><span class="o">[]</span> <span class="n">roster</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
             <span class="kt">int</span> <span class="n">smallest</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
-            <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++</span> <span class="o">)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
                 <span class="k">if</span><span class="o">(</span><span class="n">roster</span><span class="o">[</span><span class="n">j</span><span class="o">].</span><span class="na">getGPA</span><span class="o">()</span> <span class="o">&lt;</span> <span class="n">roster</span><span class="o">[</span><span class="n">smallest</span><span class="o">].</span><span class="na">getGPA</span><span class="o">())</span>
                     <span class="n">smallest</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
             <span class="n">Student</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">roster</span><span class="o">[</span><span class="n">smallest</span><span class="o">];</span>
@@ -21806,12 +21815,12 @@ program malfunctions.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This <code>sort()</code> method is similar to others that you have seen. It
+<p>This <code>sort()</code> method is similar to others you&#8217;ve seen. It
 implements selection sort in ascending order based on GPA.</p>
 </div>
 <div class="paragraph">
-<p>If you run this program, you will notice that it does not prompt the
-user for any input. This version of the code is designed for redirected
+<p>If you run this program, you&#8217;ll notice that it doesn&#8217;t prompt the
+user for input. This version of the code is designed for redirected
 input from a file. A more user friendly, interactive version should
 prompt the user clearly.</p>
 </div>
@@ -21824,21 +21833,22 @@ would become tedious, particularly when sorting.</p>
 </div>
 </div>
 </div>
+</div>
 <div class="sect2">
-<h3 id="_advanced_nested_classes">9.5. Advanced: Nested classes</h3>
+<h3 id="_advanced_nested_classes">9.4. Advanced: Nested classes</h3>
 <div class="paragraph">
 <p>Inside of a class, you can define fields and methods, but what about
 other classes? Yes! Doing so creates a <em>nested class</em>. When you define a
 class inside of an outer class, it can access fields and methods in the
 outer class, even if they are marked <code>private</code>. Java allows a number of
-different ways to define a nested class. They are all useful, but each
+different ways to define a nested class. They&#8217;re all useful, but each
 is subtly different. Some nested classes are tied to a specific object
 of the outer class while others are not.</p>
 </div>
 <div class="sect3">
-<h4 id="_static_nested_classes">9.5.1. Static nested classes</h4>
+<h4 id="_static_nested_classes">9.4.1. Static nested classes</h4>
 <div class="paragraph">
-<p>If you mark a nested class with the <code>static</code> keyword, you are creating a
+<p>If you mark a nested class with the <code>static</code> keyword, you&#8217;re creating a
 class whose objects are independent of any particular outer class
 object. Such a class is called a <em>static nested class</em>. Consider the
 following class definition.</p>
@@ -21860,14 +21870,14 @@ following class definition.</p>
 differences. First, the full name of a nested class is the name of the
 outer class followed by a dot followed by the nested class name. Second,
 when given an outer class object, code in a static nested class can
-access and modify <code>private</code> (and <code>protected)</code>) data in the outer class
+access and modify <code>private</code> (and <code>protected</code>) data in the outer class
 object.</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
 <img src="chapters/09-classes/images/nested.svg" alt="nested" width="80%">
 </div>
-<div class="title">Figure 9.3 A static nested class object is allowed to access data from outer class objects even though there is no direct relationship between them.</div>
+<div class="title">Figure 9.3 A static nested class object is allowed to access data from outer class objects even though there&#8217;s no direct relationship between them.</div>
 </div>
 <div class="paragraph">
 <p>Static nested classes can be used when the class you need is only useful
@@ -21881,16 +21891,16 @@ above as follows.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Because it is a static nested class, we do not need an instance of type
+<p>Because it&#8217;s a static nested class, we don&#8217;t need an instance of type
 <code>Outer</code> to create an instance of type <code>Outer.Nested</code>. If you compile
 <code>Outer.java</code>, it will create two files, <code>Outer.class</code> and
 <code>Outer$Nested.class</code>. The dollar sign (<code>$</code>) separates the names of each
-level of nested class in the file name. It is possible to nest classes
+level of nested class in the file name. It&#8217;s possible to nest classes
 inside of nested classes, producing another <code>.class</code> file with another
 dollar sign and the new class name appended.</p>
 </div>
 <div class="paragraph">
-<p>Note that static nested classes can be marked <code>public</code>, <code>private</code>,
+<p>Like members, static nested classes can be marked <code>public</code>, <code>private</code>,
 <code>protected</code>, or package-private (no explicit modifier). These access
 modifiers control which code can access or instantiate static nested
 classes using the sames access rules for fields and methods.</p>
@@ -21945,14 +21955,14 @@ The final code might be as follows.</p>
         <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">Square</span> <span class="n">square</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Square</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"Test 1: "</span><span class="o">);</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">square</span><span class="o">.</span><span class="na">getArea</span><span class="o">()</span> <span class="o">==</span> <span class="mi">25</span> <span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">square</span><span class="o">.</span><span class="na">getArea</span><span class="o">()</span> <span class="o">==</span> <span class="mi">25</span><span class="o">)</span>
                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Passed"</span><span class="o">);</span>
             <span class="k">else</span>
                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Failed"</span><span class="o">);</span>
 
             <span class="n">square</span><span class="o">.</span><span class="na">side</span> <span class="o">=</span> <span class="mi">7</span><span class="o">;</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"Test 2: "</span><span class="o">);</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">square</span><span class="o">.</span><span class="na">getArea</span><span class="o">()</span> <span class="o">==</span> <span class="mi">49</span> <span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">square</span><span class="o">.</span><span class="na">getArea</span><span class="o">()</span> <span class="o">==</span> <span class="mi">49</span><span class="o">)</span>
                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Passed"</span><span class="o">);</span>
             <span class="k">else</span>
                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Failed"</span><span class="o">);</span>
@@ -21963,21 +21973,21 @@ The final code might be as follows.</p>
 </div>
 <div class="paragraph">
 <p>To run the tests, you would compile <code>Square.java</code> and then run the
-nested class by invoking <code>java Square$Test</code>. It is unwise to use the
+nested class by invoking <code>java Square$Test</code>. It&#8217;s unwise to use the
 nested class to change the private fields in <code>square</code>, but we did so to
-show that it is allowed by Java. A better test would create a second
+show that it&#8217;s allowed in Java. A better test would create a second
 <code>Square</code> object with a side of length 7.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_inner_classes">9.5.2. Inner classes</h4>
+<h4 id="_inner_classes">9.4.2. Inner classes</h4>
 <div class="paragraph">
 <p>Another kind of nested class is an <em>inner class</em>. Unlike static nested
 classes, the objects of inner classes are associated with a particular
 object of the outer class. You can think of an inner class object living
-<strong>inside</strong> an outer class object. It is impossible to instantiate an inner
+<strong>inside</strong> an outer class object. It&#8217;s impossible to instantiate an inner
 class object without having an outer class object first. Consider the
 following class definition.</p>
 </div>
@@ -22025,18 +22035,18 @@ the same outer class object.</p>
 </div>
 <div class="paragraph">
 <p>Another issue with inner classes (as opposed to static nested classes)
-is that they cannot contain static fields (except for constants) or
-methods. Since each instance of an inner class is tied to an instance of
+is that they cannot contain static methods or static fields (except for constants).
+Since each instance of an inner class is tied to an instance of
 an outer class, the designers of Java thought that static fields and
 methods for an inner class really belong in the outer class.</p>
 </div>
 <div class="paragraph">
-<p>It is even possible to define a class <strong>inside</strong> a method, if that class
+<p>It&#8217;s even possible to define a class <strong>inside</strong> a method, if that class
 is only referred to in the method. Such a class is called a <em>local
-class</em>. It is possible to create an unnamed local class on the fly as
+class</em>. It&#8217;s possible to create an unnamed local class on the fly as
 well. Such a class is called an <em>anonymous class</em>. Both local and
 anonymous classes are special kinds of inner classes. Because of the way
-they are created and used, we discuss them in <a href="#_advanced_local_and_anonymous_classes">Section 10.4</a></p>
+they&#8217;re created and used, we&#8217;ll discuss them in <a href="#_advanced_local_and_anonymous_classes">Section 10.4</a></p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 9.3 Inner class objects as iterators</div>
@@ -22049,9 +22059,9 @@ independently from each other. Each piece of code can be given an inner
 class object called an <em>iterator</em> that can repeatedly get the next item
 in the data structure. Since instances of an inner class can read
 private data of the outer class, iterators can keep track of where they
-are inside the data structure. If outside code were allowed access to
+are inside of the data structure. If outside code were allowed access to
 the data structure&#8217;s internals, it would violate encapsulation.
-Iterators are a very common application of inner classes.</p>
+Iterators are a common application of inner classes.</p>
 </div>
 <div class="paragraph">
 <p>We can create a <code>SafeArray</code> class that only allows data to be written to
@@ -22062,12 +22072,12 @@ its internal array if it falls in the legal range of indexes.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SafeArray</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">double</span><span class="o">[]</span> <span class="n">data</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">SafeArray</span><span class="o">(</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">SafeArray</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="o">[</span><span class="n">size</span><span class="o">];</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">set</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="kt">double</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span> <span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
             <span class="n">data</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -22084,7 +22094,7 @@ discussed in <a href="#ch18-dynamic-data-structures">Chapter 18</a>.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SafeArray</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">double</span><span class="o">[]</span> <span class="n">data</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">SafeArray</span><span class="o">(</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">SafeArray</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="o">[</span><span class="n">size</span><span class="o">];</span>
     <span class="o">}</span>
 
@@ -22097,11 +22107,11 @@ discussed in <a href="#ch18-dynamic-data-structures">Chapter 18</a>.</p>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
 
         <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span>
-            <span class="k">return</span> <span class="o">(</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span> <span class="o">);</span>
+            <span class="k">return</span> <span class="o">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
         <span class="o">}</span>
 
         <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getNext</span><span class="o">()</span> <span class="o">{</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span> <span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
                 <span class="k">return</span> <span class="n">data</span><span class="o">[</span><span class="n">index</span><span class="o">++];</span>
             <span class="k">else</span>
                 <span class="k">return</span> <span class="n">Double</span><span class="o">.</span><span class="na">NaN</span><span class="o">;</span>
@@ -22111,16 +22121,16 @@ discussed in <a href="#ch18-dynamic-data-structures">Chapter 18</a>.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The following method uses the iterator we have defined to find the sum
+<p>The following method uses the iterator we&#8217;ve defined to find the sum
 of the values in a <code>SafeArray</code> object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="nf">findSum</span><span class="o">(</span> <span class="n">SafeArray</span> <span class="n">array</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="nf">findSum</span><span class="o">(</span><span class="n">SafeArray</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
     <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
     <span class="n">SafeArray</span><span class="o">.</span><span class="na">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="na">new</span> <span class="nf">Iterator</span><span class="o">();</span>
 
-    <span class="k">while</span><span class="o">(</span> <span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">()</span> <span class="o">)</span>
+    <span class="k">while</span><span class="o">(</span><span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span>
         <span class="n">sum</span> <span class="o">+=</span> <span class="n">iterator</span><span class="o">.</span><span class="na">getNext</span><span class="o">();</span>
 
     <span class="k">return</span> <span class="n">sum</span><span class="o">;</span>
@@ -22132,12 +22142,13 @@ of the values in a <code>SafeArray</code> object.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_solution_nested_expressions">9.6. Solution: Nested expressions</h3>
+<h3 id="_solution_nested_expressions">9.5. Solution: Nested expressions</h3>
 <div class="paragraph">
 <p>We now have enough knowledge to solve the nested expressions problem
 from the beginning of the chapter. Classes help us divide up the work of
-solving the problem. First, we need a stack class that can hold <code>char</code>
-values.</p>
+solving the problem. We need a stack class that can hold <code>char</code>
+values. The <code>SymbolStack</code> class allows us to perform the push, pop, and top
+stack operations with methods of the same names.</p>
 </div>
 <div id="SymbolStackProgram" class="listingblock">
 <div class="title">Program 9.2 Simple stack class to hold symbols from an input expression.</div>
@@ -22146,36 +22157,58 @@ values.</p>
     <span class="kd">private</span> <span class="kt">char</span><span class="o">[]</span> <span class="n">symbols</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">size</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">SymbolStack</span><span class="o">(</span> <span class="kt">int</span> <span class="n">maxSize</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">symbols</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="n">maxSize</span><span class="o">];</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">SymbolStack</span><span class="o">(</span><span class="kt">int</span> <span class="n">maxSize</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">symbols</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="n">maxSize</span><span class="o">];</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <i class="conum" data-value="2"></i><b>(2)</b>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span> <span class="kt">char</span> <span class="n">symbol</span> <span class="o">)</span> <span class="o">{</span> <span class="n">symbols</span><span class="o">[</span><span class="n">size</span><span class="o">++]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">;</span> <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pop</span><span class="o">()</span> <span class="o">{</span> <span class="n">size</span><span class="o">--;</span> <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">char</span> <span class="nf">top</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">symbols</span><span class="o">[</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span> <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span> <span class="kt">char</span> <span class="n">symbol</span> <span class="o">)</span> <span class="o">{</span> <span class="n">symbols</span><span class="o">[</span><span class="n">size</span><span class="o">++]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">;</span> <span class="o">}</span> <i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pop</span><span class="o">()</span> <span class="o">{</span> <span class="n">size</span><span class="o">--;</span> <span class="o">}</span> <i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="kd">public</span> <span class="kt">char</span> <span class="nf">top</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">symbols</span><span class="o">[</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span> <span class="o">}</span> <i class="conum" data-value="5"></i><b>(5)</b>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span> <i class="conum" data-value="6"></i><b>(6)</b>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The <code>SymbolStack</code> class allows us to perform the push, pop, and top
-stack operations with methods of the same names. Its constructor takes a
-maximize size for the stack and allocates an array of that size. It also
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Its constructor takes a
+maximize size for the stack and allocates an array of that size.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>It also
 sets the <code>size</code> field to <code>0</code> so that we can keep track of how many
-things are in the stack (and consequently where the top is).</p>
-</div>
-<div class="paragraph">
-<p>The <code>push()</code> method stores an input <code>char</code> into the stack at location
-<code>size</code> and then increments <code>size</code>. The <code>pop()</code> method simply decrements
+things are in the stack (and consequently where the top is).
+All <code>int</code> fields in Java are automatically initialized to <code>0</code>, but it
+doesn&#8217;t hurt to be explicit.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <code>push()</code> method stores an input <code>char</code> into the stack at location
+<code>size</code> and then increments <code>size</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The <code>pop()</code> method simply decrements
 <code>size</code>. It has no error checking to prevent a user from popping the
-stack once it is already empty. Finally, the <code>top()</code> method returns the
-value at the top of the stack, whose location is <code>size - 1</code>.
-<code>SymbolStack</code> also defines an <code>isEmpty()</code> method so that we can see if
-the stack is empty.</p>
+stack once it&#8217;s already empty.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The <code>top()</code> method returns the
+value at the top of the stack, whose location is <code>size - 1</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td><code>SymbolStack</code> also defines an <code>isEmpty()</code> method so that we can see if
+the stack is empty.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Now we need the client code that read the input and interacts with the
+<p>Now we need the client code that reads the input and interacts with the
 stack.</p>
 </div>
 <div class="listingblock">
@@ -22184,44 +22217,46 @@ stack.</p>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">NestedExpressions</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">System</span><span class="o">.</span><span class="na">in</span> <span class="o">);</span>
-        <span class="n">String</span> <span class="n">input</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
-        <span class="n">SymbolStack</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SymbolStack</span><span class="o">(</span><span class="n">input</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
+        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">input</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="n">SymbolStack</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SymbolStack</span><span class="o">(</span><span class="n">input</span><span class="o">.</span><span class="na">length</span><span class="o">());</span> <i class="conum" data-value="2"></i><b>(2)</b>
         <span class="kt">char</span> <span class="n">symbol</span><span class="o">;</span>
-        <span class="kt">boolean</span> <span class="n">correct</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span></code></pre>
+        <span class="kt">boolean</span> <span class="n">correct</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The <code>main()</code> method of this class reads in the input and creates a
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>main()</code> method of this class reads in the input.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Then, it creates a
 <code>SymbolStack</code> called <code>stack</code> with a maximum size of the input length. We
-know that the stack never needs to hold more than the total input. It
-also creates a <code>boolean</code> named <code>correct</code> to keep track of whether or not
-the input is correctly nested. We start by assuming that it is.</p>
+know that the stack will never need to hold more than the total input length.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>It also creates a <code>boolean</code> named <code>correct</code> to keep track of whether or not
+the input is correctly nested. We start by assuming that it is.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">input</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">correct</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">input</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">correct</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="n">symbol</span> <span class="o">=</span> <span class="n">input</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
-            <span class="k">switch</span><span class="o">(</span> <span class="n">symbol</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="k">switch</span><span class="o">(</span><span class="n">symbol</span><span class="o">)</span> <span class="o">{</span>
                 <span class="k">case</span> <span class="sc">'('</span><span class="o">:</span>
                 <span class="k">case</span> <span class="sc">'['</span><span class="o">:</span>
                 <span class="k">case</span> <span class="sc">'{'</span><span class="o">:</span>
-                    <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">symbol</span><span class="o">);</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">symbol</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
                     <span class="k">break</span><span class="o">;</span>
                 <span class="k">case</span> <span class="sc">')'</span><span class="o">:</span>
-                    <span class="k">if</span><span class="o">(</span><span class="n">stack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">||</span> <span class="n">stack</span><span class="o">.</span><span class="na">top</span><span class="o">()</span> <span class="o">!=</span> <span class="sc">'('</span><span class="o">)</span>
-                        <span class="n">correct</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-                    <span class="k">else</span>
-                        <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
-                    <span class="k">break</span><span class="o">;</span>
-                <span class="k">case</span> <span class="sc">']'</span><span class="o">:</span>
-                    <span class="k">if</span><span class="o">(</span><span class="n">stack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">||</span> <span class="n">stack</span><span class="o">.</span><span class="na">top</span><span class="o">()</span> <span class="o">!=</span> <span class="sc">'['</span><span class="o">)</span>
-                        <span class="n">correct</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-                    <span class="k">else</span>
-                        <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
-                    <span class="k">break</span><span class="o">;</span>
-                <span class="k">case</span> <span class="sc">'}'</span><span class="o">:</span>
-                    <span class="k">if</span><span class="o">(</span><span class="n">stack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">||</span> <span class="n">stack</span><span class="o">.</span><span class="na">top</span><span class="o">()</span> <span class="o">!=</span> <span class="sc">'{'</span><span class="o">)</span>
+				<span class="k">case</span> <span class="sc">']'</span><span class="o">:</span>
+				<span class="k">case</span> <span class="sc">'}'</span><span class="o">:</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">stack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">||</span> <span class="n">stack</span><span class="o">.</span><span class="na">top</span><span class="o">()</span> <span class="o">!=</span> <span class="n">symbol</span><span class="o">)</span> <i class="conum" data-value="3"></i><b>(3)</b>
                         <span class="n">correct</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
                     <span class="k">else</span>
                         <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
@@ -22230,23 +22265,35 @@ the input is correctly nested. We start by assuming that it is.</p>
         <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This <code>for</code> loop runs through each <code>char</code> in the input. If it is a left
-parenthesis, left square bracket, or left curly brace, it pushes the
-symbol onto the stack. If it is a right parenthesis, right square
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This <code>for</code> loop runs through each <code>char</code> in the input.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>If it&#8217;s a left parenthesis, left square bracket, or left curly brace, it pushes the
+symbol onto the stack.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If it&#8217;s a right parenthesis, right square
 bracket, or right curly brace, it checks to see if the stack is empty.
-Because of short-circuit evaluation, the code does not even look at the
-top of the stack if it is empty. However, if the stack is not empty, it
+Because of short-circuit evaluation, the code doesn&#8217;t even look at the
+top of the stack if it is empty. However, if the stack isn&#8217;t empty, it
 checks to see if the top matches the current symbol. If the stack is
-empty or its top does not match, <code>correct</code> is set to <code>false</code>. For
-efficiency, the loop stops early if <code>correct</code> is no longer <code>true</code>.</p>
+empty or its top doesn&#8217;t match, <code>correct</code> is set to <code>false</code>. For
+efficiency, the loop stops early if <code>correct</code> is no longer <code>true</code>.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">        <span class="k">if</span><span class="o">(</span> <span class="o">!</span><span class="n">stack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">)</span> <span class="c1">//unmatched left symbols</span>
+<pre class="rouge highlight"><code data-lang="java">        <span class="k">if</span><span class="o">(!</span><span class="n">stack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="c1">//unmatched left symbols </span><i class="conum" data-value="1"></i><b>(1)</b>
             <span class="n">correct</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
 
-        <span class="k">if</span><span class="o">(</span> <span class="n">correct</span> <span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">correct</span><span class="o">)</span> <i class="conum" data-value="2"></i><b>(2)</b>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"The input is correctly nested!"</span><span class="o">);</span>
         <span class="k">else</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"The input is incorrectly nested!"</span><span class="o">);</span>
@@ -22254,12 +22301,20 @@ efficiency, the loop stops early if <code>correct</code> is no longer <code>true
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>After the input has been examined, we check to see if the stack is
-empty. If it isn&#8217;t, there must be some left symbols that were not
-matched with right symbols. In that case, we set <code>correct</code> to <code>false</code>.
-Finally, we print out whether the input is correctly or incorrectly
-nested based on the value of <code>correct</code>.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>After the input has been examined, we check to see if the stack is
+empty. If it isn&#8217;t, there must be some left symbols that weren&#8217;t
+matched with right symbols. In that case, we set <code>correct</code> to <code>false</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Finally, we print out whether the input is correctly or incorrectly
+nested based on the value of <code>correct</code>.</td>
+</tr>
+</table>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -22271,24 +22326,24 @@ nested based on the value of <code>correct</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concurrency_objects">9.7. Concurrency: Objects</h3>
+<h3 id="_concurrency_objects">9.6. Concurrency: Objects</h3>
 <div class="paragraph">
 <p>Nearly everything in Java is an object: arrays, lists, <code>String</code> values,
 colors, and even exceptions, which form Java&#8217;s error-handling system and
-is discussed in <a href="#ch12-exceptions">Chapter 12</a>. Some critics of Java
+are discussed in <a href="#ch12-exceptions">Chapter 12</a>. Some critics of Java
 point out that <code>int</code>, <code>double</code>, and the other primitive types are not
 objects, forcing the programmer to adopt two different programming
 models. Regardless, threads are stored as objects as well. In
-<a href="#ch13-concurrency">Chapter 13</a>, we discuss how to create
+<a href="#ch13-concurrency">Chapter 13</a>, we&#8217;ll discuss how to create
 threads and the various methods that can be used to interact with them.</p>
 </div>
 <div class="paragraph">
 <p>However, objects of type <code>Thread</code> are not the only ones you deal with
-when writing concurrent programs. As we have just noted, most data in
+when writing concurrent programs. As we&#8217;ve just noted, most data in
 Java is encapsulated in an object. One of the deep reasons for using OOP
 is safety: We want the private data inside of an object to stay in a
 consistent state. Due to their inexplicable ability to get out of tight
-situations, one tradition holds that cats have nine lives. Because of
+spots, one tradition holds that cats have nine lives. Because of
 their inquisitive nature, another tradition holds that curiosity killed
 the cat. Consider the class below that keeps track of the lives a cat
 has, losing one every time it becomes curious.</p>
@@ -22298,14 +22353,14 @@ has, losing one every time it becomes curious.</p>
 <div class="content">
 <div class="paragraph">
 <p>If the relationship between curiosity and mortality is the only feature
-of a cat you are trying to model, the class below appears to function well.
-If the <code>useCuriosity()</code> method is invoked, it removes a life or prints
-an error message if the cat has run out of lives. In a single-threaded
+of a cat you&#8217;re trying to model, the class below appears to function well.
+When the <code>useCuriosity()</code> method is invoked, it removes a life or prints
+an error message if the cat has already run out of lives. In a single-threaded
 situation, this object would work perfectly. No cat would be able to
 lose more than 9 lives.</p>
 </div>
 <div class="paragraph">
-<p>In a multi-threaded situation, there is no telling when a thread might
+<p>In a multi-threaded situation, however, there&#8217;s no telling when a thread might
 pause in executing the <code>useCuriosity()</code> method.</p>
 </div>
 <div id="CatProgram" class="listingblock">
@@ -22316,7 +22371,7 @@ pause in executing the <code>useCuriosity()</code> method.</p>
 
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">useCuriosity</span><span class="o">()</span> <span class="o">{</span>
         <span class="k">if</span><span class="o">(</span> <span class="n">lives</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
-            <span class="n">lives</span><span class="o">--;</span>
+            <span class="n">lives</span><span class="o">--;</span> <i class="conum" data-value="2"></i><b>(2)</b>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Down to life "</span> <span class="o">+</span> <span class="n">lives</span><span class="o">);</span>
             <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
         <span class="o">}</span>
@@ -22332,14 +22387,18 @@ pause in executing the <code>useCuriosity()</code> method.</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>If 100 threads all called <code>useCuriosity()</code>, each one might successfully pass the <code>if</code> on this line before any had decremented <code>lives</code>. Once past the check, nothing would prevent them from continuing on and decrementing <code>lives</code>, resulting in a cat who lost 100 lives, resulting in a total of -91 lives. Such a scenario makes no sense.</td>
+<td>If 100 threads all called <code>useCuriosity()</code>, each one might successfully pass the <code>if</code> on this line before any had decremented <code>lives</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Once past the check, nothing would prevent them from continuing on and decrementing <code>lives</code>, resulting in a cat who lost 100 lives, resulting in a total of -91 lives. Such a scenario makes no sense.</td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>In <a href="#ch14-synchronization">Chapter 14</a>, we discuss how to prevent this
+<p>In <a href="#ch14-synchronization">Chapter 14</a>, we&#8217;ll discuss how to prevent this
 problem, using the <code>synchronized</code> keyword to allow only a single thread
-at a time to execute the body of a method. The goal is to make
+at a time to execute a section of code. The goal is to make
 <code>useCuriosity()</code> <em>thread-safe</em>, meaning that its behavior is consistent
 and correct no matter how many threads try to execute it at the same
 time.</p>
@@ -22348,29 +22407,30 @@ time.</p>
 </div>
 <div class="paragraph">
 <p>As you work through this book and begin to write your own concurrent
-programs, we discuss ways to make them thread-safe. However, you are
+programs, we&#8217;ll discuss many ways to make them thread-safe. However, you&#8217;re
 also a consumer of code written by other people. In multi-threaded
-environments, you may need to use library classes that are thread-safe.
+environments, you might need to use library classes that are thread-safe.
 For example, <code>AtomicInteger</code> is a thread-safe class designed to store
-and manipulate <code>int</code> values. In <a href="#ch18-dynamic-data-structures">Chapter 18</a>, we talk about the <code>ArrayList</code> and <code>Vector</code> classes, which
+and manipulate <code>int</code> values. In <a href="#ch18-dynamic-data-structures">Chapter 18</a>,
+we&#8217;ll talk about the <code>ArrayList</code> and <code>Vector</code> classes, which
 are both used to hold variable length lists of objects. One of the few
 differences between them is that <code>ArrayList</code> is not thread-safe while
-<code>Vector</code> is. There is even the <code>Collections.synchronizedCollection()</code>
-method (and other similar methods), which takes a collection that is not
+<code>Vector</code> is. There&#8217;s even the <code>Collections.synchronizedCollection()</code>
+method (and other similar methods), which takes a collection that&#8217;s not
 thread-safe and returns a version of it that is.</p>
 </div>
 <div class="paragraph">
 <p>Java was intended to be multi-threaded from the very beginning, but
 concurrency was never the most important feature in the language. For
-that reason, the documentation does not clearly mark which methods are
+that reason, the documentation doesn&#8217;t clearly mark which methods are
 thread-safe. Usually, some of the paragraphs of description above the
 list of methods say that a class is &#8220;synchronized&#8221; if it is
-thread-safe. If it is not, the documentation may not mention anything.
+thread-safe. If it&#8217;s not, the documentation may not mention anything.
 Careful attention is needed to be sure which classes and APIs are
 thread-safe.</p>
 </div>
 <div class="paragraph">
-<p>You may wonder why all classes are not thread-safe, but everything comes
+<p>You might wonder why <strong>all</strong> classes aren&#8217;t thread-safe, but everything comes
 with a price. If a class is thread-safe, its methods are usually marked
 with the <code>synchronized</code> keyword. The JVM is relatively efficient about
 how it enforces that keyword, but the computational expense is not zero.
@@ -22378,7 +22438,7 @@ Learn the libraries well, and use the right tools for the right job.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_exercises_9">9.8. Exercises</h3>
+<h3 id="_exercises_9">9.7. Exercises</h3>
 <div class="paragraph">
 <p><strong>Conceptual Problems</strong></p>
 </div>
@@ -22388,17 +22448,17 @@ Learn the libraries well, and use the right tools for the right job.</p>
 <p>Explain the relationship between a class and an object.</p>
 </li>
 <li>
-<p>What is the difference between a static method and an instance
+<p>What&#8217;s the difference between a static method and an instance
 method?</p>
 </li>
 <li>
-<p>What is the purpose of a constructor? Why is it impossible for a
+<p>What&#8217;s the purpose of a constructor? Why is it impossible for a
 constructor to return a value? Why is it impossible for a constructor to
 be called multiple times on the same object?</p>
 </li>
 <li>
 <p>A static method can be called directly from a instance method, but
-an instance method cannot be called directly from a static method. Why?</p>
+an instance method can&#8217;t be called directly from a static method. Why?</p>
 </li>
 <li>
 <p>Describe the uses of accessor and mutator methods. Is it possible to
@@ -22409,7 +22469,7 @@ create a method that is both an accessor and a mutator? Why or why not?</p>
 would be easier to make all fields <code>public</code>?</p>
 </li>
 <li>
-<p>What is the meaning of the <code>this</code> keyword? When is it necessary to
+<p>What&#8217;s the meaning of the <code>this</code> keyword? When is it necessary to
 use it? When can it be ignored?</p>
 </li>
 <li>
@@ -22419,13 +22479,9 @@ use it? When can it be ignored?</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">A</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">a</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">get</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
-    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getA</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">a</span><span class="o">;</span> <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">increment</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">a</span><span class="o">++;</span>
-    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">increment</span><span class="o">()</span> <span class="o">{</span> <span class="n">a</span><span class="o">++;</span> <span class="o">}</span>
 <span class="o">}</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">B</span> <span class="o">{</span>
@@ -22438,6 +22494,7 @@ use it? When can it be ignored?</p>
     <span class="kd">public</span> <span class="n">A</span> <span class="nf">generate</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">A</span> <span class="n">object</span> <span class="o">=</span> <span class="k">new</span> <span class="n">A</span><span class="o">();</span>
         <span class="n">object</span><span class="o">.</span><span class="na">a</span> <span class="o">=</span> <span class="n">b</span><span class="o">;</span>
+		<span class="k">return</span> <span class="n">object</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -22448,9 +22505,8 @@ uses cause a compiler error and why?</p>
 </div>
 </li>
 <li>
-<p><a id="publicMembersExercise"></a> In <a href="#_solution_nested_expressions">Section 9.6</a>, we gave a definition of
-<code>SymbolStack</code> that implements a simple stack using two fields, defined
-as followed:</p>
+<p><a id="publicMembersExercise"></a> In <a href="#_solution_nested_expressions">Section 9.5</a>, we gave a definition of
+<code>SymbolStack</code> that implements a simple stack using two fields, as follows.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">private</span> <span class="kt">char</span><span class="o">[]</span> <span class="n">symbols</span><span class="o">;</span>
@@ -22458,10 +22514,10 @@ as followed:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>By calling the <code>top()</code> or <code>pop()</code> methods on an empty stack, it is
+<p>By calling the <code>top()</code> or <code>pop()</code> methods on an empty stack, it&#8217;s
 possible to cause a program to crash. What additional problems could
 happen if <code>symbols</code> and <code>size</code> were declared <code>public</code> and malicious or
-poorly written code had access to the object?</p>
+poorly written code had access to these fields?</p>
 </div>
 </li>
 <li>
@@ -22472,7 +22528,7 @@ poorly written code had access to the object?</p>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">double</span> <span class="n">price</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">GroceryItem</span><span class="o">(</span> <span class="n">String</span> <span class="n">text</span><span class="o">,</span> <span class="kt">double</span> <span class="n">money</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">GroceryItem</span><span class="o">(</span><span class="n">String</span> <span class="n">text</span><span class="o">,</span> <span class="kt">double</span> <span class="n">money</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">text</span><span class="o">;</span>
         <span class="kt">double</span> <span class="n">price</span> <span class="o">=</span> <span class="n">money</span><span class="o">;</span>
     <span class="o">}</span>
@@ -22483,7 +22539,7 @@ poorly written code had access to the object?</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This class compiles, but its constructor does not function properly. Why
+<p>This class compiles, but its constructor doesn&#8217;t function properly. Why
 not?</p>
 </div>
 </li>
@@ -22500,8 +22556,8 @@ special relationships. Consider a clock with hours, minutes, and
 seconds. When the number of seconds reaches 60, the number of minutes is
 increased by 1, and the number of seconds is reset to 0. When the number
 of minutes reaches 60, the numer of hours is increased by 1, and the
-number of seconds is reset to 0. When the number of hours reaches 13, it
-is reset to 1. AM and PM switch whenever the number of hours reaches 12.</p>
+number of seconds is reset to 0. When the number of hours reaches 13, it&#8217;s
+reset to 1. AM and PM switch whenever the number of hours reaches 12.</p>
 <div class="paragraph">
 <p>Define a <code>Clock</code> class with private <code>int</code> fields <code>hours</code>, <code>minutes</code>, and
 <code>seconds</code> and a <code>boolean</code> field <code>PM</code>. Write a constructor that
@@ -22511,13 +22567,13 @@ mutator should correctly handle all the clock behavior described above.
 Write an accessor called <code>toString()</code> that returns a nicely formatted
 version of the time as a <code>String</code>. For example, the initial time would
 be returned as <code>"12:00:00 AM"</code>. Make sure you pad the output for
-<code>seconds</code> and <code>minutes</code> with an extra <code>"0"</code> if they are less than <code>10</code>.</p>
+<code>seconds</code> and <code>minutes</code> with an extra <code>"0"</code> if they&#8217;re less than <code>10</code>.</p>
 </div>
 </li>
 <li>
 <p>Draw on any of your hobbies to come up with a collection of items,
 whether those items are books you like to read, athletes you follow,
-music you collect, or anything else that is easy to classify. First
+music you collect, or anything else that&#8217;s easy to classify.  Then,
 create a class that can describe one of these items with three to five
 attributes. For example, the important attributes of a book might be
 author, title, genre, and page count. Each of these attributes should be
@@ -22526,15 +22582,15 @@ mutator methods.</p>
 <div class="paragraph">
 <p>Using an array, create a database of these objects. Write methods that
 print out all objects that have a particular value for an attribute.
-Using the book example, your database program should let the user input
+For example, a book database program should let the user input
 that he or she is looking for all books whose author is
-<code>Alexandre Dumas</code>. You may wish to use input redirection so that you do
-not have to enter data about your objects repetitively.</p>
+<code>"Alexandre Dumas"</code>. You might wish to use input redirection so that you
+don&#8217;t have to enter data about your objects repetitively.</p>
 </div>
 </li>
 <li>
 <p>The <code>java.awt</code> package defines a class called <code>Point</code> that can be
-used to manipulate an \((x,y)\) pair in programs involving the
+used to manipulate an (<em>x</em>, <em>y</em>) pair in programs involving the
 Cartesian coordinate system. Create your own <code>Point</code> class with <code>int</code>
 values <code>x</code> and <code>y</code> as fields.</p>
 <div class="paragraph">
@@ -22544,10 +22600,14 @@ and <code>y</code> and a default constructor that takes no arguments and sets bo
 </div>
 <div class="paragraph">
 <p>Finally, create a method with the signature
-<code>public double distance( Point p )</code> that uses the distance formula
-\(\sqrt{(x_1 - x_2)^2+(y_1 - y_2)^2}\) to find the distance
+<code>public double distance(Point p)</code> that finds the distance
 between the current <code>Point</code> object and the <code>Point</code> object <code>p</code> passed in
-as an argument.</p>
+as an argument.  Recall that the following formula finds the distance <em>d</em> between two 2D points.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/09-classes/images/distance.svg" alt="distance" width="40%">
+</div>
 </div>
 <div class="paragraph">
 <p>Write client code that allows you to create two <code>Point</code> objects and test
@@ -22555,7 +22615,7 @@ if the <code>distance()</code> method gives the right answer.</p>
 </div>
 </li>
 <li>
-<p><a id="nestedExpressionsGUIExercise"></a> Re-implement the solution from <a href="#_solution_nested_expressions">Section 9.6</a> so that it performs its input and output with GUIs created
+<p><a id="nestedExpressionsGUIExercise"></a> Re-implement the solution from <a href="#_solution_nested_expressions">Section 9.5</a> so that it performs its input and output with GUIs created
 using <code>JOptionPane</code>.</p>
 </li>
 </ol>
@@ -22566,15 +22626,15 @@ using <code>JOptionPane</code>.</p>
 <div class="olist arabic">
 <ol class="arabic" start="15">
 <li>
-<p>Objects are great tools for solving problems, but there is some
+<p>Objects are great tools for solving problems, but there&#8217;s some
 additional overhead associated with creating objects and calling
 methods.</p>
 <div class="paragraph">
 <p>Write a piece of code that allocates an array of 10,000,000 <code>int</code>
-values. Iterate through that array, storing the value <code>i</code> into index
+values. Iterate through that array, storing the <em>value</em> <code>i</code> into <em>index</em>
 <code>i</code>, and time the process using an OS <code>time</code> command. As you know, the
 <code>Integer</code> wrapper class allows us to store an <code>int</code> value in object
-form. Repeat the experiment, but, instead of <code>int</code> values, allocate an
+form. Repeat the experiment, but instead of <code>int</code> values, allocate an
 array to hold 10,000,000 <code>Integer</code> objects. Iterate through the array
 again, storing an <code>Integer</code> object into each index of the array. For
 index <code>i</code>, store a new <code>Integer</code> objected created by passing value <code>i</code>
@@ -23022,7 +23082,7 @@ interface type, we can make as many references to it as we want.</p>
 <div class="sect2">
 <h3 id="_advanced_local_and_anonymous_classes">10.4. Advanced: Local and anonymous classes</h3>
 <div class="paragraph">
-<p>If you have not read <a href="#_advanced_nested_classes">Section 9.5</a>, you may want
+<p>If you have not read <a href="#_advanced_nested_classes">Section 9.4</a>, you may want
 to look over that material to be sure that you understand what nested
 classes and inner classes are. Recall that a normal inner class is
 declared inside of another class, but it is also legal to declare a
@@ -30794,7 +30854,7 @@ exist yet, we have to create it. Of course, it is possible to supply any
 object that implements the <code>ActionListener</code> interface, not just
 instances of anonymous classes. For more information about nested
 classes, inner classes, and anonymous classes, refer to
-<a href="#_advanced_nested_classes">Section 9.5</a> and <a href="#_advanced_local_and_anonymous_classes">Section 10.4</a>.</p>
+<a href="#_advanced_nested_classes">Section 9.4</a> and <a href="#_advanced_local_and_anonymous_classes">Section 10.4</a>.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 15.3 GUI with actions</div>
@@ -37969,7 +38029,7 @@ modification. The nested class has two fields, one containing the data
 to be stored and the other containing a link or reference to the next
 object, or <em>node</em>, in the list. Since they are only accessed by the
 outer class, it is reasonable to make these fields public. If you need a
-refresher on static nested classes, refer to <a href="#_advanced_nested_classes">Section 9.5</a>.</p>
+refresher on static nested classes, refer to <a href="#_advanced_nested_classes">Section 9.4</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -38472,7 +38532,7 @@ setting its <code>value</code> field to the incoming <code>value</code>, and poi
 remove that node from the linked list. It does this by replacing the
 <code>head</code> node with the node pointed at by the <code>next</code> link in <code>head</code>. The
 <code>pop()</code> method from the simpler stack used in the solution to the nested
-expressions problem in <a href="#_solution_nested_expressions">Section 9.6</a> merely
+expressions problem in <a href="#_solution_nested_expressions">Section 9.5</a> merely
 removed the top and did not return the value. Most real-world stack
 implementations of <code>pop()</code> <strong>do</strong> return this value, giving programmers
 more flexibility.</td>
@@ -39722,7 +39782,7 @@ Thread ID removed from queue: 11</pre>
 <div class="sect2">
 <h3 id="_concurrency_thread_safe_libraries">18.8. Concurrency: Thread-safe libraries</h3>
 <div class="paragraph">
-<p>As we mentioned in <a href="#_concurrency_objects">Section 9.7</a>, some libraries are
+<p>As we mentioned in <a href="#_concurrency_objects">Section 9.6</a>, some libraries are
 thread-safe and some are not. The Java Collections Framework (JCF) is a
 very useful library, but it is also a library that requires thread
 safety to be at the forefront of your mind.</p>
