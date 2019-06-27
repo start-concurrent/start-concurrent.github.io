@@ -11,45 +11,46 @@ ____
 === Problem: Nested expressions
 
 How does the compiler check the Java code that you write and find
-errors? Syntax checking and type checking are involved processes that
+errors? Parsing and type checking are involved processes that
 are key parts of compiler design. Compilers are some of the most complex
 programs of any kind, and building one is beyond the scope of the
 material covered in this book. However, we can get insight into some
 problems faced by compiler designers by considering the problem of
 correctly nested expressions.
 
-There are many rules for forming correct Java code, but it is always the
-case that grouping symbols (`(`, `)`, `[`, `]`, `{`, `}`) are correctly
+There are many rules for forming correct Java code, but it's always the
+case that grouping symbols (`(`, `)`, `[`, `]`, `{`, `}`) must be correctly
 nested. Ignoring other symbols, we may find a section of code that
-contains the sequence `"( ) [ ]"`, but correctly written code never
-contains `"( [ ) ]"`.
+contains the sequence `( ) [ ]`, but correctly written code never
+contains `( [ ) ]`.
 
 To be correctly nested, left and right parentheses must be balanced,
 left and right square brackets must be balanced, and left and right
 curly braces must be balanced. Furthermore, a correctly balanced set of
 parentheses can be nested inside of a correctly balanced set of square
 brackets or curly braces (and vice versa), but they cannot intersect as
-they do at the end of the previous paragraph. The table below shows more examples of correctly and incorrectly nested
+they do at the end of the previous paragraph.
+The table below shows more examples of correctly and incorrectly nested
 expressions.
 
 [.center%autowidth%header,cols="<l,<l",]
 |===========================================
 |Correctly Nested |Incorrectly Nested
-|""|"("
-|"(){}"|"}{"
-|"((abc)){x}"|"( a { b ) c }"
-|"({[z]})"|"{abc("
-|"({xyz})({ijk}[123])"|"{(333)888(})"
+| |(
+|(){}|}{
+|((abc)){x}|( a { b ) c }
+|({[z]})|{abc(
+|({xyz})({ijk}[123])|{(333)888(})
 |===========================================
 
-But how can we examine an expression to see if it is correctly nested?
+But how can we examine an expression to see if it's correctly nested?
 The key to solving this problem is the idea of a _stack_. A stack is a
 simple data structure with three operations: _push_, _pop_, and _top_.
 The data structure is meant to behave like a stack of books or cups or
-any other physical objects. When you use the push operation, you are
+any other physical objects. When you use the push operation, you're
 moving something to the top of the stack. When you use the pop
-operation, you are taking something off the top of the stack. The top
-operation is used to read what is at the top of the stack. In a stack,
+operation, you're taking something off the top of the stack. The top
+operation is used to read what's currently at the top of the stack. In a stack,
 you can only read that very topmost item, as if all the other items were
 buried underneath it. A stack is known as a FILO (first in, last out) or
 a LIFO (last in, first out) data structure because, if you push a series
@@ -60,14 +61,14 @@ Armed with an understanding of the stack, it is straightforward to see
 if an expression is nested correctly. Scan through each character in the
 input and follow these steps.
 
-1.  If it is a left parenthesis, left square bracket, or left curly
+.  If it's a left parenthesis, left square bracket, or left curly
 brace, put it on the stack.
-2.  If it is a right parenthesis, right square bracket, or right curly
+.  If it's a right parenthesis, right square bracket, or right curly
 brace, check that the top of the stack is its matching left half. If it
 is, pop the left half off the stack. If it isn't (or if the stack is
 empty), the grouping symbols are either unbalanced or intersecting.
 Print an error and quit.
-3.  For any character that isn't a grouping symbol, ignore it and move
+.  For any character that isn't a grouping symbol, ignore it and move
 on.
 
 If you reach the end of input without an error, check to see if the
@@ -77,38 +78,38 @@ symbols left on the stack, and the expression isn't correctly nested.
 
 === Concepts: Object-oriented programming
 
-To solve the nested expressions problem, we need to create a stack data
+To solve the nested expressions problem, we can create a stack data
 structure. Each element of the stack should be able to hold a `char`
 value term from an expression, where a term is an operator, operand, or
 a parenthesis (bracket or curly brace). Although we could get by using
 only the static methods we introduced in the previous chapter, a better
 tool can make programming easier.
 
-We are introducing these topics in a progression: First, all of our
+We're introducing these topics in a progression: First, all of our
 programs were a series of sequential instructions inside of a `main()`
 method. We added in selection statements and loops to solve more
 difficult problems. As our programs became more complicated, we started
 using additional static methods to divide the program into logical
-segments. Now, we are moving to fully object-oriented programming (OOP)
+segments. Now, we're moving to fully object-oriented programming (OOP)
 in which data as well as code can be packaged into objects that interact
 with each other.
 
 OOP has been a controversial topic, particularly in the computer science
-education community. The most important thing to remember is that we are
-not throwing away any of the ideas we used before. We are continuing on
+education community. The most important thing to remember is that we're
+not throwing away any of the ideas we used before. We're continuing on
 a path toward making code safer and more reusable. Several other
 chapters in this book touch on important ideas in OOP such as
-inheritance and polymorphism. Below, we are going to focus on the
+inheritance and polymorphism. Below, we're going to focus on the
 basics, including the fundamentals of objects, encapsulation of data,
 and instance (non-static) methods.
 
 ==== Objects
 
-You have already used objects, perhaps without realizing it. Every time
-you use a `String`, you are using an object. So far, we have created a
-class every time we have written a program. A class is a way to organize
+You've already used objects, perhaps without realizing it. Every time
+you use a `String`, you're using an object. So far, we've created a
+class every time we've written a program. A class is a way to organize
 static methods, but a class is something more: a template for objects.
-Whenever you write a class, the potential to create specific objects
+Whenever you write a class, the potential to create objects from it
 exists.
 
 For a conceptual example, you can think of Human as a class and Albert
@@ -122,8 +123,8 @@ each one of those characteristics, such as Albert Einstein, March 14,
 image::class.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
 This idea of a class as a template is key because it means that an
-object of a given type (from a given class) can be used anywhere that is
-appropriate for another object of that type. Later in the chapter, we
+object of a given type (from a given class) can be used anywhere that's
+appropriate for another object of that type. Later in the chapter, we'll
 create an object that performs the work of a stack, storing a number of
 other objects. If we design a library of code that can manipulate or use
 stack objects, we should be able to use this library countless times for
@@ -134,10 +135,10 @@ of code reuse is one of the main goals of OOP.
 
 In order to guarantee that objects can be used in many different
 contexts safely, the data inside of the object must be protected. Java
-provides access modifiers so that code without appropriate permission
-cannot change or even read the data inside of an object.
+provides access modifiers so that code without the appropriate permission
+can't change or even read the data inside of an object.
 
-This feature is called _encapsulation_. One programmer may write the
+This feature is called _encapsulation_. One programmer might write the
 class file defining a type of object while another or many others write
 code that uses those objects. The programmers who use objects written by
 others do not need to understand the inner workings of those objects.
@@ -148,12 +149,12 @@ the object is hidden.
 
 ==== Instance methods
 
-These "`actions`" are methods, but not static ones. Static methods did
+These "`actions`" are methods but not static ones. Static methods did
 not need an object in order to be called. Regular (instance) methods
 should be thought of as an action performed on (or by) a specific
 object. This action could be asking a question, such as inquiring what
 the name of an object of type `Human` is. This action could be telling the
-object to change itself, such as the case of pushing something onto a
+object to change itself, as in the case of pushing something onto a
 stack.
 
 One of the broadest definitions of an object is a collection of data and
@@ -176,7 +177,7 @@ about protecting its privacy.
 ==== Fields
 
 Fields in an object must be declared like any other data in Java. The
-type of a piece of data can be a primitive or reference type. Fields are
+type of a field can be a primitive or reference type. Fields are
 also sometimes called member variables. You declare fields just like you
 would class variables, except without the `static` keyword. Here's an
 example with the `Human` class.
@@ -192,10 +193,10 @@ public class Human {
 
 With this definition, a `Human` object has three attributes: `name`,
 `DOB`, and `height`. Because the access modifier for each field is
-`private`, code outside of this class cannot change or even read the
-values. Note that this class cannot do anything yet. Also, note that
-this class does not contain a `main()` method. There is no way to run
-this class, but that's fine. We can add a `main()` method, of course.
+`private`, code outside of this class can't change or even read the
+values. This class can't do anything yet. Also, it doesn't contain
+a `main()` method. There's no way to run
+this class, but that's fine. We could add a `main()` method, of course.
 
 [source,java]
 ----
@@ -212,10 +213,10 @@ public class Human {
 }
 ----
 
-Now we have added a `main()` method, but our code does not compile.
+Now we've added a `main()` method, but our code doesn't compile.
 Since the `main()` method is a static method, it is not associated with
 any particular object. When we tell the `main()` method to change the
-fields, it does not know what object we are talking about. If we
+fields, it doesn't know what object we're talking about. If we
 actually want to use an object, we'll have to create one.
 
 .Class encapsulating the attributes of a human being.
@@ -225,29 +226,29 @@ actually want to use an object, we'll have to create one.
 include::{programsdir}/Human.java[]
 ----
 
-The above code compiles because we have used the `new` keyword to create
+The above code compiles because we've used the `new` keyword to create
 an object of type `Human` saved in a reference variable called
-`einstein`. With a `Human` object, we can set its fields using
+`einstein`. We can set the fields inside of a particular object using
 dot notation. With static methods and static variables, we used the name
-of the *class* followed by a dot, for instance methods and instance
+of the *class* followed by a dot, but for instance methods and instance
 variables, we use the name of the *object* followed by a dot. Even
 though each of these fields is private, we can access them from `main()`
 because `main()` is inside the `Human` class. Code inside of another
-class could create a new `Human` object, but it could not change its
+class could create a new `Human` object, but it could *not* change its
 fields.
 
 This juxtaposition of static and non-static fields and methods inside of
 a single class is confusing to many new Java programmers. The confusion
 seems to stem from the fact that the class (such as `Human`) is a
-template for objects but it is also a place to house other related code,
+template for objects but it's also a place to house other related code,
 such as static methods, including `main()`.
 
 Although the practice is discouraged, we mentioned in
 <<Class variables>> that class variables can be
 stored in the class itself. Every object has a distinct copy of each
-field, but there is only a single copy of each class variable that they
+field, but there's only a single copy of each class variable that they
 all share. By using the keyword `static`, we could add a class variable
-called `population` to our `Human` class, since that is information
+called `population` to our `Human` class, since that's information
 connected to humans as a whole, not to any individual human being.
 
 [source,java]
@@ -256,15 +257,14 @@ public class Human {
     private String name;
     private String DOB;
     private int height; //in cm
-    private static double population = 7.023E9;
+    private static long population = 7714576923;
 }
 ----
 
-We are using a `double` to represent the world's population since the
-value is too big to fit in an `int` and is easily expressed in
-scientific notation. If several `Human` objects were created, they would
-have their own `name`, `DOB`, and `height` values, but the value for
-`population` would only be stored in the class.
+We're using a `long` to represent the world's population since the
+value is too big to fit in an `int`. If several `Human` objects
+were created, they would each have their own `name`, `DOB`, and `height`
+values, but the value for `population` would only be stored in the class.
 
 .Class variables (static fields) are stored with the class, not with individual objects.
 image::staticvalue.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
@@ -273,8 +273,8 @@ image::staticvalue.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 ==== Constructors
 
 To create a new object, you have to invoke a _constructor_, a special
-kind of method that can initialize the object. A constructor allows sets
-up the values inside an object when it is first created. Let's consider
+kind of method that can initialize the object. A constructor sets
+up the values inside an object when the object's first created. Let's consider
 a simple `Rectangle` class with only two fields: `length` and `width`,
 both of type `int`.
 
@@ -289,14 +289,14 @@ One possible constructor for the class is given below.
 
 [source,java]
 ----
-    public Rectangle( int l, int w ) {
+    public Rectangle(int l, int w) {
         length = l;
         width = w;
     }
 ----
 
-This constructor lets us set the width and length when the object is
-created. To do so, code could invoke the constructor using the `new`
+This constructor lets us set the width and length when the object's
+created. To do so, code must invoke the constructor using the `new`
 keyword.
 
 [source,java]
@@ -305,27 +305,27 @@ Rectangle rectangle = new Rectangle(50, 20);
 ----
 
 This code creates a new `Rectangle` object, with length 50 and width 20.
-Constructors are almost always `public`, otherwise it would be
+Constructors are almost always `public`; otherwise, it would be
 impossible for code outside of the `Rectangle` class to create a
-`Rectangle` object. Notice that the definition of the `Rectangle`
-constructor does not have a return type. A constructors is the only kind
-of method that does not have a return type. It is possible to have more
+`Rectangle` object. Note that the definition of the `Rectangle`
+constructor does not have a return type. A constructor is the only kind
+of method that doesn't have a return type. It's possible to have more
 than one constructor as well, just as other methods can be overloaded.
 For more information about overloaded methods, refer back to
 <<Overloaded methods>>.
 
 [source,java]
 ----
-    public Rectangle( int value ) {
+    public Rectangle(int value) {
         length = value;
         width = value;
     }
 ----
 
 In the very same class, we could have this second constructor, allowing
-us to quickly and easily create a square. All classes have constructors,
-but some are not written explicitly. If you don't type out a constructor
-for a class, a default one is automatically created. The default
+us to create a square quickly and easily. All classes have constructors,
+but some aren't written explicitly. If you don't type out a constructor
+for a class, a default one is automatically created for you. The default
 constructor takes no parameters and sets all the values inside the new
 object to defaults such as `null` and `0`. Once you do create a
 constructor, the default one is no longer provided. Thus, since our
@@ -340,44 +340,44 @@ Rectangle defaultRectangle = new Rectangle();
 
 Another important thing to consider with all instance methods is scope.
 Fields are visible inside of instance methods, but they can be hidden by
-parameters.
+parameters and other local variables.
 
 [source,java]
 ----
-    public Rectangle( int length, int width ) {
+    public Rectangle(int length, int width) {
         length = length;
         width = width;
     }
 ----
 
 This version of the two parameter `Rectangle` constructor compiles, but
-it does not properly initialize the values of the fields `length` and
+it doesn't properly initialize the values of the fields `length` and
 `width`. Instead, the parameters `length` and `width` are copied back
 into themselves for no reason. The designers of Java anticipated that it
 would be useful to refer to fields even in the presence of other
 variables with the same name. To do so, the `this` keyword can be used.
 Any field (or method) can be referred to by its object name, followed by
 a dot, followed by the name of that field or method. Since you don't
-have a variable name to reference the object when you're inside of it,
+have a variable name to reference the object when you're *inside* of it,
 the `this` keyword acts as a reference to the object.
 
 [source,java]
 ----
-    public Rectangle( int length, int width ) {
+    public Rectangle(int length, int width) {
         this.length = length;
         this.width = width;
     }
 ----
 
-This version of the code functions correctly, since we have explicitly
-told Java to store the argument `length` into the field `length` inside
+This version of the code functions correctly, since we've explicitly
+told Java to store the _argument_ `length` into the _field_ `length` inside
 the object pointed at by `this` and to do similarly for `width`.
 
 ==== Methods
 
-Objects do not really come to life until you add instance methods. With
+Objects don't really come to life until you add instance methods. With
 the `Rectangle` class described above, any `Rectangle` objects created
-are not useful in other classes because it is impossible to access their
+would not be useful to other classes because it would be impossible to access their
 data. Instead, we want to create a clear and usable relationship between
 the fields and the methods.
 
@@ -386,9 +386,9 @@ are accessors and mutators.
 
 ===== Accessors
 
-We often want to read the data inside of various the objects. With our
+We often want to read the data inside of various objects. With our
 current definition of `Rectangle`, no code from an outside class can
-find out the length or width of the rectangle we are representing.
+find out the length or width of the rectangle we're representing.
 
 _Accessor methods_ (or simply _accessors_) are designed for this task.
 By definition, an accessor allows us to read some data or get some
@@ -407,15 +407,15 @@ of accessors often start with the word `get`.
     }
 ----
 
-Here are two accessors methods that we would expect in the `Rectangle`
+Here are two accessors methods that we'd expect in the `Rectangle`
 class. The first returns the value of `length`, and the second returns
-the value of `width`. These methods only report information. They do not
+the value of `width`. These methods only report information. They don't
 change the value of either variable. Their syntax should be
 self-explanatory. Each is declared to be `public` so that anyone can
 read the length and width of a rectangle. Both methods have a return
-type of `int` because that is the type used to store `length` and
+type of `int` because that's the type used to store `length` and
 `width` inside a `Rectangle` object. Neither method has any parameters.
-An accessor does not have to be so simple. An accessor could return a
+Of course, an accessor doesn't have to be so simple. An accessor could return a
 value that needs to be computed from the underlying field data.
 
 [source,java]
@@ -430,14 +430,14 @@ value that needs to be computed from the underlying field data.
 ----
 
 These accessors compute the area and perimeter, respectively, of the
-rectangle in question, even though that data is not stored directly in
+rectangle in question, even though that data isn't stored directly in
 the `Rectangle` object.
 
 ===== Mutators
 
 Some objects, such as `String` values, are _immutable_ objects, meaning
-that the data stored inside them cannot be changed after they have been
-created with a constructor. If you have ever thought that you were
+that the data stored inside them cannot be changed after they've been
+created with a constructor. If you've ever thought you were
 changing a `String`, you were actually creating a new `String` with the
 appropriate modifications. Most objects are mutable, however, and we use
 methods called _mutator methods_ (or simply _mutators_) to change their
@@ -450,18 +450,18 @@ describe any methods that change the data inside of an object. For the
 
 [source,java]
 ----
-    public void setLength( int length ) {
+    public void setLength(int length) {
         this.length = length;
     }
 
-    public void setWidth( int width ) {
+    public void setWidth(int width) {
         this.width = width;
     }
 ----
 
 Just as the names for many accessors begin with `get`, the names for
 many mutators begin with `set`. Mutators often have a `void` return type
-because they are changing the object, not getting information back. Some
+because they're changing the object, not getting information back. Some
 mutators might have a return type that gives information about an error
 that occurred while trying to make a change. Note that we used the
 `this` keyword once again to distinguish each field from the method
@@ -476,13 +476,13 @@ response, let's improve the mutators that set `length` and `width`.
 
 [source,java]
 ----
-    public void setLength( int length ) {
-        if( length > 0 )
+    public void setLength(int length) {
+        if(length > 0)
             this.length = length;
     }
 
-    public void setWidth( int width ) {
-        if( width > 0 )
+    public void setWidth(int width) {
+        if(width > 0)
             this.width = width;
     }
 ----
@@ -506,18 +506,18 @@ accessed by any code, no matter what class contains it. Most methods
 should be `public` so that they can be used freely to interact with
 their object. Virtually no fields should be `public`. Constants (static
 or otherwise) are the most significant exception to this rule. Making
-constants `public` is usually not a problem since they cannot be changed
+constants `public` is usually not a problem since they can't be changed
 by outside code anyway. In the `Rectangle` class, variables `length` and
 `width` are so simple that making them `public` is not unreasonable. If
 you have a field that can be changed at any time by any code to any
 value, you can leave that field `public`.
 `private` modifier::
 This modifier states that a variable or method cannot be accessed by any
-code unless the code is contained in the same class. It is important to
+code unless the code is contained in the same class. It's important to
 realize that the restriction is based on the *class*, not on the
 *object*. Code inside any `Rectangle` object can modify `private` values
-inside of any other `Rectangle` object or class. Most fields should be
-`private` so that outside code cannot modify them. Methods can be
+inside of any other `Rectangle` object and the class as a whole. Most fields should be
+`private` so that outside code can't modify them. Methods can be
 `private`, but these methods should be helper or utility methods used
 inside the class or object to divide up work.
 `protected` modifier::
@@ -528,14 +528,14 @@ in the same package. This level of access is more restrictive than
 discuss it further in the context of subclasses and inheritance in
 <<ch11-inheritance#ch11-inheritance>>.
 Package-private (no explicit modifier)::
-If you do not type an access modifier when you declare a field or
+If you don't type an access modifier when you declare a field or
 method, that field or method is not `public`. Instead, it has the
 default or package-private access modifier applied to it. Fields or
 methods with this modifier can be accessed by any code that is in the
 same _package_ or directory. A package is yet another layer of
 organization that Java provides to group classes together. When you use
 an `import` statement, you can import an entire package of classes.
-There is no keyword for this access modifier. It is useful if you are
+There's no keyword for this access modifier. It may be useful if you're
 designing a package containing classes that must be able to access each
 other's fields or methods. For now, you should always give your fields
 and methods an explicit `public` or `private` (or sometimes `protected`)

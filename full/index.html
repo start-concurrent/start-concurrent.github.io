@@ -20970,7 +20970,7 @@ method.</p>
 <h3 id="_problem_nested_expressions">9.1. Problem: Nested expressions</h3>
 <div class="paragraph">
 <p>How does the compiler check the Java code that you write and find
-errors? Syntax checking and type checking are involved processes that
+errors? Parsing and type checking are involved processes that
 are key parts of compiler design. Compilers are some of the most complex
 programs of any kind, and building one is beyond the scope of the
 material covered in this book. However, we can get insight into some
@@ -20978,11 +20978,11 @@ problems faced by compiler designers by considering the problem of
 correctly nested expressions.</p>
 </div>
 <div class="paragraph">
-<p>There are many rules for forming correct Java code, but it is always the
-case that grouping symbols (<code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>{</code>, <code>}</code>) are correctly
+<p>There are many rules for forming correct Java code, but it&#8217;s always the
+case that grouping symbols (<code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>{</code>, <code>}</code>) must be correctly
 nested. Ignoring other symbols, we may find a section of code that
-contains the sequence <code>"( ) [ ]"</code>, but correctly written code never
-contains <code>"( [ ) ]"</code>.</p>
+contains the sequence <code>( ) [ ]</code>, but correctly written code never
+contains <code>( [ ) ]</code>.</p>
 </div>
 <div class="paragraph">
 <p>To be correctly nested, left and right parentheses must be balanced,
@@ -20990,7 +20990,8 @@ left and right square brackets must be balanced, and left and right
 curly braces must be balanced. Furthermore, a correctly balanced set of
 parentheses can be nested inside of a correctly balanced set of square
 brackets or curly braces (and vice versa), but they cannot intersect as
-they do at the end of the previous paragraph. The table below shows more examples of correctly and incorrectly nested
+they do at the end of the previous paragraph.
+The table below shows more examples of correctly and incorrectly nested
 expressions.</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content center">
@@ -21006,36 +21007,36 @@ expressions.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>""</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"("</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre></pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>(</pre></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"(){}"</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"}{"</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>(){}</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>}{</pre></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"((abc)){x}"</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"( a { b ) c }"</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>((abc)){x}</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>( a { b ) c }</pre></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"({[z]})"</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"{abc("</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>({[z]})</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>{abc(</pre></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"({xyz})({ijk}[123])"</pre></div></td>
-<td class="tableblock halign-left valign-top"><div class="literal"><pre>"{(333)888(})"</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>({xyz})({ijk}[123])</pre></div></td>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>{(333)888(})</pre></div></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>But how can we examine an expression to see if it is correctly nested?
+<p>But how can we examine an expression to see if it&#8217;s correctly nested?
 The key to solving this problem is the idea of a <em>stack</em>. A stack is a
 simple data structure with three operations: <em>push</em>, <em>pop</em>, and <em>top</em>.
 The data structure is meant to behave like a stack of books or cups or
-any other physical objects. When you use the push operation, you are
+any other physical objects. When you use the push operation, you&#8217;re
 moving something to the top of the stack. When you use the pop
-operation, you are taking something off the top of the stack. The top
-operation is used to read what is at the top of the stack. In a stack,
+operation, you&#8217;re taking something off the top of the stack. The top
+operation is used to read what&#8217;s currently at the top of the stack. In a stack,
 you can only read that very topmost item, as if all the other items were
 buried underneath it. A stack is known as a FILO (first in, last out) or
 a LIFO (last in, first out) data structure because, if you push a series
@@ -21050,11 +21051,11 @@ input and follow these steps.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>If it is a left parenthesis, left square bracket, or left curly
+<p>If it&#8217;s a left parenthesis, left square bracket, or left curly
 brace, put it on the stack.</p>
 </li>
 <li>
-<p>If it is a right parenthesis, right square bracket, or right curly
+<p>If it&#8217;s a right parenthesis, right square bracket, or right curly
 brace, check that the top of the stack is its matching left half. If it
 is, pop the left half off the stack. If it isn&#8217;t (or if the stack is
 empty), the grouping symbols are either unbalanced or intersecting.
@@ -21076,7 +21077,7 @@ symbols left on the stack, and the expression isn&#8217;t correctly nested.</p>
 <div class="sect2">
 <h3 id="_concepts_object_oriented_programming">9.2. Concepts: Object-oriented programming</h3>
 <div class="paragraph">
-<p>To solve the nested expressions problem, we need to create a stack data
+<p>To solve the nested expressions problem, we can create a stack data
 structure. Each element of the stack should be able to hold a <code>char</code>
 value term from an expression, where a term is an operator, operand, or
 a parenthesis (bracket or curly brace). Although we could get by using
@@ -21084,33 +21085,33 @@ only the static methods we introduced in the previous chapter, a better
 tool can make programming easier.</p>
 </div>
 <div class="paragraph">
-<p>We are introducing these topics in a progression: First, all of our
+<p>We&#8217;re introducing these topics in a progression: First, all of our
 programs were a series of sequential instructions inside of a <code>main()</code>
 method. We added in selection statements and loops to solve more
 difficult problems. As our programs became more complicated, we started
 using additional static methods to divide the program into logical
-segments. Now, we are moving to fully object-oriented programming (OOP)
+segments. Now, we&#8217;re moving to fully object-oriented programming (OOP)
 in which data as well as code can be packaged into objects that interact
 with each other.</p>
 </div>
 <div class="paragraph">
 <p>OOP has been a controversial topic, particularly in the computer science
-education community. The most important thing to remember is that we are
-not throwing away any of the ideas we used before. We are continuing on
+education community. The most important thing to remember is that we&#8217;re
+not throwing away any of the ideas we used before. We&#8217;re continuing on
 a path toward making code safer and more reusable. Several other
 chapters in this book touch on important ideas in OOP such as
-inheritance and polymorphism. Below, we are going to focus on the
+inheritance and polymorphism. Below, we&#8217;re going to focus on the
 basics, including the fundamentals of objects, encapsulation of data,
 and instance (non-static) methods.</p>
 </div>
 <div class="sect3">
 <h4 id="_objects">9.2.1. Objects</h4>
 <div class="paragraph">
-<p>You have already used objects, perhaps without realizing it. Every time
-you use a <code>String</code>, you are using an object. So far, we have created a
-class every time we have written a program. A class is a way to organize
+<p>You&#8217;ve already used objects, perhaps without realizing it. Every time
+you use a <code>String</code>, you&#8217;re using an object. So far, we&#8217;ve created a
+class every time we&#8217;ve written a program. A class is a way to organize
 static methods, but a class is something more: a template for objects.
-Whenever you write a class, the potential to create specific objects
+Whenever you write a class, the potential to create objects from it
 exists.</p>
 </div>
 <div class="paragraph">
@@ -21129,8 +21130,8 @@ each one of those characteristics, such as Albert Einstein, March 14,
 </div>
 <div class="paragraph">
 <p>This idea of a class as a template is key because it means that an
-object of a given type (from a given class) can be used anywhere that is
-appropriate for another object of that type. Later in the chapter, we
+object of a given type (from a given class) can be used anywhere that&#8217;s
+appropriate for another object of that type. Later in the chapter, we&#8217;ll
 create an object that performs the work of a stack, storing a number of
 other objects. If we design a library of code that can manipulate or use
 stack objects, we should be able to use this library countless times for
@@ -21143,11 +21144,11 @@ of code reuse is one of the main goals of OOP.</p>
 <div class="paragraph">
 <p>In order to guarantee that objects can be used in many different
 contexts safely, the data inside of the object must be protected. Java
-provides access modifiers so that code without appropriate permission
-cannot change or even read the data inside of an object.</p>
+provides access modifiers so that code without the appropriate permission
+can&#8217;t change or even read the data inside of an object.</p>
 </div>
 <div class="paragraph">
-<p>This feature is called <em>encapsulation</em>. One programmer may write the
+<p>This feature is called <em>encapsulation</em>. One programmer might write the
 class file defining a type of object while another or many others write
 code that uses those objects. The programmers who use objects written by
 others do not need to understand the inner workings of those objects.
@@ -21160,12 +21161,12 @@ the object is hidden.</p>
 <div class="sect3">
 <h4 id="_instance_methods">9.2.3. Instance methods</h4>
 <div class="paragraph">
-<p>These &#8220;actions&#8221; are methods, but not static ones. Static methods did
+<p>These &#8220;actions&#8221; are methods but not static ones. Static methods did
 not need an object in order to be called. Regular (instance) methods
 should be thought of as an action performed on (or by) a specific
 object. This action could be asking a question, such as inquiring what
 the name of an object of type <code>Human</code> is. This action could be telling the
-object to change itself, such as the case of pushing something onto a
+object to change itself, as in the case of pushing something onto a
 stack.</p>
 </div>
 <div class="paragraph">
@@ -21193,7 +21194,7 @@ about protecting its privacy.</p>
 <h4 id="_fields">9.3.1. Fields</h4>
 <div class="paragraph">
 <p>Fields in an object must be declared like any other data in Java. The
-type of a piece of data can be a primitive or reference type. Fields are
+type of a field can be a primitive or reference type. Fields are
 also sometimes called member variables. You declare fields just like you
 would class variables, except without the <code>static</code> keyword. Here&#8217;s an
 example with the <code>Human</code> class.</p>
@@ -21210,10 +21211,10 @@ example with the <code>Human</code> class.</p>
 <div class="paragraph">
 <p>With this definition, a <code>Human</code> object has three attributes: <code>name</code>,
 <code>DOB</code>, and <code>height</code>. Because the access modifier for each field is
-<code>private</code>, code outside of this class cannot change or even read the
-values. Note that this class cannot do anything yet. Also, note that
-this class does not contain a <code>main()</code> method. There is no way to run
-this class, but that&#8217;s fine. We can add a <code>main()</code> method, of course.</p>
+<code>private</code>, code outside of this class can&#8217;t change or even read the
+values. This class can&#8217;t do anything yet. Also, it doesn&#8217;t contain
+a <code>main()</code> method. There&#8217;s no way to run
+this class, but that&#8217;s fine. We could add a <code>main()</code> method, of course.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -21231,10 +21232,10 @@ this class, but that&#8217;s fine. We can add a <code>main()</code> method, of c
 </div>
 </div>
 <div class="paragraph">
-<p>Now we have added a <code>main()</code> method, but our code does not compile.
+<p>Now we&#8217;ve added a <code>main()</code> method, but our code doesn&#8217;t compile.
 Since the <code>main()</code> method is a static method, it is not associated with
 any particular object. When we tell the <code>main()</code> method to change the
-fields, it does not know what object we are talking about. If we
+fields, it doesn&#8217;t know what object we&#8217;re talking about. If we
 actually want to use an object, we&#8217;ll have to create one.</p>
 </div>
 <div id="HumanProgram" class="listingblock">
@@ -21255,31 +21256,31 @@ actually want to use an object, we&#8217;ll have to create one.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The above code compiles because we have used the <code>new</code> keyword to create
+<p>The above code compiles because we&#8217;ve used the <code>new</code> keyword to create
 an object of type <code>Human</code> saved in a reference variable called
-<code>einstein</code>. With a <code>Human</code> object, we can set its fields using
+<code>einstein</code>. We can set the fields inside of a particular object using
 dot notation. With static methods and static variables, we used the name
-of the <strong>class</strong> followed by a dot, for instance methods and instance
+of the <strong>class</strong> followed by a dot, but for instance methods and instance
 variables, we use the name of the <strong>object</strong> followed by a dot. Even
 though each of these fields is private, we can access them from <code>main()</code>
 because <code>main()</code> is inside the <code>Human</code> class. Code inside of another
-class could create a new <code>Human</code> object, but it could not change its
+class could create a new <code>Human</code> object, but it could <strong>not</strong> change its
 fields.</p>
 </div>
 <div class="paragraph">
 <p>This juxtaposition of static and non-static fields and methods inside of
 a single class is confusing to many new Java programmers. The confusion
 seems to stem from the fact that the class (such as <code>Human</code>) is a
-template for objects but it is also a place to house other related code,
+template for objects but it&#8217;s also a place to house other related code,
 such as static methods, including <code>main()</code>.</p>
 </div>
 <div class="paragraph">
 <p>Although the practice is discouraged, we mentioned in
 <a href="#_class_variables">Section 8.3.3</a> that class variables can be
 stored in the class itself. Every object has a distinct copy of each
-field, but there is only a single copy of each class variable that they
+field, but there&#8217;s only a single copy of each class variable that they
 all share. By using the keyword <code>static</code>, we could add a class variable
-called <code>population</code> to our <code>Human</code> class, since that is information
+called <code>population</code> to our <code>Human</code> class, since that&#8217;s information
 connected to humans as a whole, not to any individual human being.</p>
 </div>
 <div class="listingblock">
@@ -21288,16 +21289,15 @@ connected to humans as a whole, not to any individual human being.</p>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">DOB</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">height</span><span class="o">;</span> <span class="c1">//in cm</span>
-    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span> <span class="n">population</span> <span class="o">=</span> <span class="mf">7.023E9</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">population</span> <span class="o">=</span> <span class="mi">7714576923</span><span class="o">;</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We are using a <code>double</code> to represent the world&#8217;s population since the
-value is too big to fit in an <code>int</code> and is easily expressed in
-scientific notation. If several <code>Human</code> objects were created, they would
-have their own <code>name</code>, <code>DOB</code>, and <code>height</code> values, but the value for
-<code>population</code> would only be stored in the class.</p>
+<p>We&#8217;re using a <code>long</code> to represent the world&#8217;s population since the
+value is too big to fit in an <code>int</code>. If several <code>Human</code> objects
+were created, they would each have their own <code>name</code>, <code>DOB</code>, and <code>height</code>
+values, but the value for <code>population</code> would only be stored in the class.</p>
 </div>
 <div class="imageblock">
 <div class="content">
