@@ -2,7 +2,7 @@ public class Cat implements Ageable, Weighable {
     private int age;
     private double weight;  
     
-    public Cat( int age, double weight ) {
+    public Cat(int age, double weight) {
         this.age = age;
         this.weight = weight;
     }

@@ -10,40 +10,42 @@ ____
 
 === Problem: Sort it out
 
-Defining classes as we did in <<ch09-classes#ch09-classes>> provides us
+Learning to use classes as we did in <<ch09-classes#ch09-classes>> provides us
 with useful tools. First, we can group related data together. Then, we
 can encapsulate that data so that it can only be changed in carefully
 controlled ways. But these ideas are only a fraction of the true power
-of object orientation that becomes apparent when we exploit
+of object orientation available when we exploit
 relationships between different classes. Eventually, in
-<<ch11-inheritance#ch11-inheritance>>, we will talk about hierarchical
-relationships, in which one class can be the parent of many other child
-classes. However, there is a simpler relationship that classes can
+<<ch11-inheritance#ch11-inheritance>>, we'll talk about hierarchical
+relationships, where one class can be the parent of many other child
+classes.
+
+However, there's a simpler relationship that classes can
 share, the ability to do some specific action or answer some specific
 question. If we know that several different classes can all do the same
 things, we want to be able to treat them in a unified way. For example,
-imagine that you are writing code to aid laboratory analysis of the free
-radical content of a number of creatures and items. For this analysis it
-is necessary to sort the test subjects by weight and by age.
+imagine that you're writing code to do laboratory analysis of the free
+radical content of a number of creatures and items. For this analysis
+it's necessary to sort the test subjects by weight and by age.
 
-The subjects you are going to sort will be objects of type `Dog`, `Cat`,
+The subjects you're going to sort will be objects of type `Dog`, `Cat`,
 `Person`, and `Cheese`. All of these subjects will have some calendar
-age. Naturally, the age we are interested for a `Dog` is 7 times its
-calendar age. At the same time, because a cat has nine lives, we will
-use stem:[\frac{1}{9}] of its calendar age. The age we use for
+age. Naturally, the age we're interested for a `Dog` is 7 times its
+calendar age. At the same time, because a cat has nine lives, we'll
+use 1/9 of its calendar age. The age we use for
 `Person` and `Cheese` objects is simply their calendar age.
 
 As we discussed in <<selectionSortExample>>, sorting is one of
-the most fundamental things that computer scientists do. In that
-example, we introduced selection sort. Here we are going to use another
-sort called bubble sort. We are introducing bubble sort to expose you to
-another way to sort data. Although they are easy to understand, neither
+the most fundamental tools for computer scientists. In that
+example, we introduced selection sort. Here we're going to use another
+sort called _bubble sort_. We introduce bubble sort to expose you to
+another way to sort data. Although both are easy to understand, neither
 bubble sort nor selection sort are the fastest ways known to sort lists.
 
 Bubble sort works by scanning through a list of items, a pair at a time,
-and swapping the elements of the pair if they are out of order. One scan
+and swapping the elements of the pair if they're out of order. One scan
 through the list is called a _pass_. The algorithm keeps making passes
-until no consecutive pair of elements is out of order. Here is an
+until no consecutive pair of elements is out of order. Here's an
 implementation of bubble sort that sorts an array of `int` values in
 ascending order.
 
@@ -51,10 +53,10 @@ ascending order.
 ----
 boolean swapped = true;
 int temp;
-while( swapped ) {
+while(swapped) {
     swapped = false;
-    for( int i = 0; i < array.length - 1; i++ )
-        if( array[i] > array[i + 1] ) {
+    for(int i = 0; i < array.length - 1; i++)
+        if(array[i] > array[i + 1]) {
             temp = array[i];
             array[i] = array[i + 1];
             array[i + 1] = temp;
@@ -68,8 +70,10 @@ while( swapped ) {
 ====
 
 Note that index variable `i` stops before `array.length - 1` since we
-don’t want to get an +
-`ArrayIndexOutOfBoundsException` when looking at `array[i + 1]`.
+don't want to get an `ArrayIndexOutOfBoundsException` when looking at `array[i + 1]`.
+Another way to think about it is that we only want to loop 
+`array.length - 1` times, since that's how many neighboring pairs of values there are
+in `array`.
 
 ====
 
@@ -80,42 +84,44 @@ change the sort from ascending to descending.
 
 === Concepts: Making a promise
 
-Knowing how to sort a list of items is half of the problem we want to
+Knowing how to sort a list of items is half the problem we want to
 solve. The other half is designing the classes so that sorting by either
-age or weight is easy. And easy sorting is not enough: We want to follow
-good object oriented design so that sorting future classes will be easy
+age or weight is easy. And easy sorting isn't enough: We want to follow
+good object-oriented design so that sorting future classes will be easy
 as well.
 
 For these kinds of situations, Java has a feature called _interfaces_.
-An interface is a set of methods that a class must have in order to
-_implement_ that interface. If a class implements an interface, it is
+An interface is a set of methods that an object *must* have in order to
+_implement_ that interface. If an object implements an interface, it's
 making a promise to have a version of each of the methods listed in the
 interface. It can choose to do anything it wants inside the body of each
 method, but it must have them to compile. Interfaces are also described
 as contracts, since a contract is a promise to do certain things. One
-reason that interfaces are so useful is because Java allows a class to
+reason that interfaces are so useful is because Java allows objects to
 implement any number of them.
 
-The purpose of an interface is to guarantee that a class has the
-capability to do something. In the case of this sorting problem, we will
+The purpose of an interface is to guarantee that an object has the
+capability to do something. In the case of this sorting problem, we'll
 need to sort by age and weight. Consequently, the ability to report age
-and weight are the two important capabilities that the objects we are
-sorting must have.
+and weight are the two important capabilities that the objects must have.
 
 === Syntax: Interfaces
 
 Declaring an interface is similar to declaring a class except that
-interfaces can only hold public abstract methods and constants. An
-_abstract method_ is one that does not have a body. Its return type,
-name, and parameters are given, but this information is concluded with a
-semicolon (`;`) instead of a method body. Because the purpose of an
-interface is to ensure a class has certain publicly available
-capabilities, all abstract methods and constants listed in an interface
-are assumed to be `public`. It is legal but needlessly cluttered to mark
-each method with `public`, and it is illegal to mark them with `private`
+interfaces can only hold abstract methods, default methods, static methods,
+and constants. Note that interfaces can never contain fields other than constants.
+Because the purpose of an
+interface is to ensure that an object has certain publicly available
+capabilities, all methods and constants listed in an interface
+are assumed to be `public`. It's legal but clutters code to mark
+interface members with `public`, and it's illegal to mark them with `private`
 or `protected`.
 
-Here is an interface for a guitar player that defines two abstract
+An _abstract method_ is one that doesn't have a body. Its return type,
+name, and parameters are given, but this information is concluded with a
+semicolon (`;`) instead of a method body. 
+
+Here's an interface for a guitar player that defines two abstract
 methods.
 
 [source, java]
@@ -124,10 +130,9 @@ methods.
 include::{programsdir}/Guitarist.java[]
 ----
 
-
-Any class that implements this interface must have both of these
+Any object that implements this interface must have both of these
 methods, declared with the access modifier `public`, the same return
-types, and the same parameters. We could create a `RockGuitarist` class
+types, and the same parameter types. We could create a `RockGuitarist` class
 that implements `Guitarist` as follows.
 
 [source, java]
@@ -135,7 +140,6 @@ that implements `Guitarist` as follows.
 ----
 include::{programsdir}/RockGuitarist.java[]
 ----
-
 
 Or we can create a `ClassicalGuitarist` class. A classical guitarist is
 going to approach playing a chord or a melody differently from a rock
@@ -148,10 +152,9 @@ implemented.
 include::{programsdir}/ClassicalGuitarist.java[]
 ----
 
-
 Interfaces make our code more flexible because we can use a reference
-with an interface type to refer to any objects which implement that
-interface. In the following snippet of code we do this by creating 100
+with an interface type to refer to *any* objects that implement the
+interface. In the following snippet of code, we do this by creating 100
 `Guitarist` references, each of which randomly points to either a
 `RockGuitarist` or a `ClassicalGuitarist`.
 
@@ -159,15 +162,16 @@ interface. In the following snippet of code we do this by creating 100
 ----
 Guitarist[] guitarists = new Guitarist[100];
 Random random = new Random();
-for( int i = 0; i < guitarists.length; i++ )
-    if( random.nextBoolean() )
+for(int i = 0; i < guitarists.length; i++)
+    if(random.nextBoolean())
         guitarists[i] = new RockGuitarist();
     else
         guitarists[i] = new ClassicalGuitarist();
 ----
 
-Mistakes in the use of interfaces should generally be caught at compile
-time. If you implement an interface with a class you are writing but
+One benefit of using interfaces is that more mistakes can be caught
+at compile time instead of run time.
+If you implement an interface with a class you're writing but
 forget (or misspell) a required method, the compiler will fail to
 compile that class. If you remember all of the required methods but
 forget to specify that your class implements a particular interface, the
@@ -186,10 +190,10 @@ and use it to strum a chord.
 
 [source,java]
 ----
-void checkBeforeStrum( Object unknown, Chord chord ) {
-    if( unknown instanceof Guitarist ) {
+void checkBeforeStrum(Object unknown, Chord chord) {
+    if(unknown instanceof Guitarist) {
         Guitarist player = (Guitarist)unknown;
-        player.strumChord( chord );
+        player.strumChord(chord);
     }
     else
         System.out.println("That's not a guitarist!");
@@ -200,30 +204,107 @@ void checkBeforeStrum( Object unknown, Chord chord ) {
 [WARNING]
 ====
 
-It is tempting to try to create an object of an interface type. If you
-think about this carefully, it should be clear why this is impossible.
-An interface is a promise to do things, but it is not a class. It has no
-data nor methods to manipulate data. Thus, the following code will fail
-to compile.
+It's tempting to try to create an object of an interface type. If you
+think about doing so carefully, it should be clear why this is impossible.
+An interface is only a list of promises, and it's *not* a class, a template
+for an object. It has neither data nor methods to manipulate data.
+Thus, the following code will fail to compile.
 
 [source,java]
 ----
 Guitarist guitarist = new Guitarist();
 ----
 
-We are permitted to make a reference to objects that implement
-`Guitarist`. We can make an array that holds such references. The
+As we showed before, we *are* permitted to make a reference to an object that implements
+`Guitarist` or make an array that holds such references. The
 interface itself, however, can never be instantiated.
 
 ====
 
+==== Default methods
+
+Before Java 8, only abstract methods (methods without bodies) could be added to interfaces.
+And that made sense: Interfaces were promises to do things, while classes actually did those things.
+Unfortunately, a problem became apparent over time.  Some Java library designers
+would create a useful interface, and many people would write classes that implement that interface.
+Eventually, someone would want to add a new method to the original interface, but doing so would break lots
+of code.  All the existing classes that implemented the interface would fail to compile until they
+added the new method.
+
+To allow new methods to be added to old interfaces without breaking existing clases, the idea of a
+default method was added to the rules for Java interfaces.  A method with a body could be added to
+an interface, provided that it was marked with the `default` keyword.  If a class implements that interface
+and has a public method that matches the default method, the class's method will be used.  However,
+if a class doesn't have a matching method, the default method will be used, and the class will still compile.
+
+Consider the following interface similar to the original `Guitarist` interface except that it contains a default
+`tune()` method.
+
+[source, java]
+[[DefaultGuitaristProgram]]
+----
+include::{programsdir}/DefaultGuitarist.java[]
+----
+
+If a class implements `DefaultGuitarist` and includes its own `tune()` method, that method will satisfy the interface.
+On the other hand, a class that implements `DefaultGuitarist` without a `tune()` method will automatically include
+the `tune()` method given above, which prints a message about tuning and then returns `true` (presumably indicating
+that tuning was successful). The way that a class can supply a method that overrides a default method
+is very similar to the way that methods can be overridden with inheritance, as discussed in <<Overriding methods and hiding fields>>.
+Note that a default method *must* have a body.
+
+An additional issue can arise with default methods when a class implements two or more interfaces that specify default
+methods with the same signature.  Consider the following interface that also has a `tune()` method.
+
+[source, java]
+[[DefaultEngineProgram]]
+----
+include::{programsdir}/DefaultEngine.java[]
+----
+
+By itself, this interface doesn't cause any problems.  However, when a class implements both it and `DefaultGuitarist`,
+there can be a conflict.
+
+[source, java]
+[[EngineGuitaristProgram]]
+----
+include::{programsdir}/EngineGuitarist.java[]
+----
+
+This strange class is the template for an object that's simultaneously an engine and a guitarist, implementing both
+`DefaultGuitarist` and `DefaultEngine`.  It has public methods for `strumChord()` and `playMelody()`, satisfying the
+`DefaultGuitarist` interface.  It also has public methods for `start()` and `getRedline()`, satisfying the `DefaultEngine`
+interface.  But it's received two different default methods for `tune()`, one that tunes like a guitarist and one that
+tunes like an engine.  As a consequence, an `EngineGuitarist` object wouldn't know which `tune()` to call and won't
+compile as it's written.
+
+You're allowed to create classes like `EngineGuitarist` that implement more than one interface with the same default method,
+but you need to create a `tune()` method inside `EngineGuitarist` to make clear what happens when `tune()` is called.
+
+The use of default methods in interfaces is relatively rare, and situations where there are two conflicting default methods
+are rarer still.  Even so, it's important to understand how all the features of a language work.  Note that it's unlikely that
+you'll be writing interfaces with default methods often, since their primary use is to add capabilities to existing interfaces
+without breaking classes that already use those interfaces.
+
+
 ==== Interfaces and `static`
 
-When designing an interface, you cannot mark a method as `static`.
-Whether or not a method is `static` is considered by Java to be an
-implementation detail that is not suitable to specify in an interface.
-For example, even with `Chord` and `Melody` defined, the following
+When designing an interface, you can't mark an abstract method `static`.
+One way to think about this rule is that interfaces specify actions
+(in the form of methods) that an _object_ can do.  Interfaces don't specify
+requirements for a _class_, such as its static methods or its class variables.
+To illustrate, even with `Chord` and `Melody` defined, the following
 interface fails to compile.
+
+[source, java]
+[[AbstractStaticGuitaristProgram]]
+----
+include::{programsdir}/AbstractStaticGuitarist.java[]
+----
+
+However, in Java 8 and higher, non-abstract static methods *are* allowed in interfaces.
+Such methods aren't promises that objects of a class must fulfill.  Instead, they're
+simply utility methods that perform some task associated with the interface.
 
 [source, java]
 [[StaticGuitaristProgram]]
@@ -231,15 +312,24 @@ interface fails to compile.
 include::{programsdir}/StaticGuitarist.java[]
 ----
 
+This interface includes the method `nextNote()`, which takes a `String` representation
+of a note such as `"D#"` or `"Bb"` and returns a `String` with a representation of a
+note one half step higher.  The rules for musical notes are somewhat complex, so this
+method is useful even when separate from any particular class that implements `StaticGuitarist`.
+The `nextNote()` method would be called just like any static method, using the name
+of its container `StaticGuitarist` followed by a dot followed by the name of the method itself.
 
-The designers of Java decided that they did not want their language to
-function this way. Some languages like PHP allow the equivalent of
-static methods in interfaces.
+[source, java]
+----
+String note = StaticGuitarist.nextNote("F");
+----
 
-Neither fields nor class variables are allowed in interfaces either, but
-class constants are allowed. Thus, we could define `static` `final`
+Neither fields nor class variables are allowed in interfaces, so neither static nor default
+methods will ever change any data inside the interface.  This is the fundamental difference
+between an interface and a class: Interfaces never contain _state_.  Even so, class constants are allowed.
+Thus, we could define `static` `final`
 values that might be useful to any class implementing an interface. With
-`Chord` and `Melody` defined, the following interface *will* compile.
+`Chord` and `Melody` defined, the following interface will compile.
 
 [source, java]
 [[ConstantGuitaristProgram]]
@@ -247,12 +337,14 @@ values that might be useful to any class implementing an interface. With
 include::{programsdir}/ConstantGuitarist.java[]
 ----
 
+Another source of confusion is that class variables will be both `static` and `final` by default
+in an interface, even if those keywords aren't used.
 
-Many modern Java users object to the use of constants in interfaces,
+Some Java users object to the use of constants in interfaces,
 since the purpose of an interface is to define a list of a requirements
-for what a class does rather than dealing with data values.
-Nevertheless, constants are allowed in interfaces, and the Java API does
-so in many cases.
+for objects of a class rather than dealing with data values.
+Nevertheless, constants are allowed in interfaces, and the Java API uses
+them in many cases.
 
 [[supermarketPricingExample]]
 .Supermarket pricing
@@ -261,7 +353,7 @@ so in many cases.
 Interface names often include the suffix _-able_, for example,
 `Runnable`, `Callable`, and `Comparable`. This suffix is typical because
 it reminds us that a class implementing an interface has some specific
-ability. Let’s consider an example in a supermarket in which the items
+ability. Let's consider an example in a supermarket in which the items
 could have very little in common with each other but they all have a
 price. We could define the interface `Priceable` as follows.
 
@@ -303,8 +395,8 @@ include::{programsdir}/Water.java[]
 
 
 Each class could be much more complicated, but the code shown is all
-that is needed to implement the `Priceable` interface. Even though there
-is no clear relationship between bananas, eggs, and water, a shopping
+that's needed to implement the `Priceable` interface. Even though
+there's no clear relationship between bananas, eggs, and water, a shopping
 cart filled with these items (and any others implementing the
 `Priceable` interface) could easily be totaled at the register. If we
 represent the shopping cart as an array of `Priceable` items, we could
@@ -312,9 +404,9 @@ write a simple method to total the values like so.
 
 [source,java]
 ----
-public static double getTotal( Priceable[] cart ) {
+public static double getTotal(Priceable[] cart) {
     double total = 0.0;
-    for( int i = 0; i < cart.length; i++ )
+    for(int i = 0; i < cart.length; i++)
         total += cart[i].getPrice();
 
     return total;
@@ -323,14 +415,14 @@ public static double getTotal( Priceable[] cart ) {
 
 Note that we can pass in `Bananas`, `Eggs`, `Water`, and many other
 kinds of objects in a `Priceable` array as long as they all implement
-this interface. Even though it is impossible to create an object with an
+this interface. Even though it's impossible to create an object with an
 interface type, we can make as many references to it as we want.
 
 ====
 
 === Advanced: Local and anonymous classes
 
-If you have not read <<Advanced: Nested classes>>, you may want
+If you haven't read <<Advanced: Nested classes>>, you may want
 to look over that material to be sure that you understand what nested
 classes and inner classes are. Recall that a normal inner class is
 declared inside of another class, but it is also legal to declare a
@@ -372,7 +464,7 @@ public static void createEllipse(double a1, double a2) {
         private double axis1;
         private double axis2;
 
-        public Ellipse( double axis1, double axis2 ) {
+        public Ellipse(double axis1, double axis2) {
             this.axis2 = axis2;
             this.axis1 = axis1;
         }
@@ -408,9 +500,9 @@ areas.
 
 [source,java]
 ----
-public static double sumAreas( AreaGettable[] shapes ) {
+public static double sumAreas(AreaGettable[] shapes) {
     double sum  = 0;
-    for( int i = 0; i < shapes.length; i++ )
+    for(int i = 0; i < shapes.length; i++)
         sum += shapes[i].getArea();
 
     return sum;
@@ -430,7 +522,7 @@ public static void createEllipses() {
         private double axis2;
         this.axis1 = axis1;
 
-        public Ellipse( double axis1, double axis2 ) {
+        public Ellipse(double axis1, double axis2) {
             this.axis2 = axis2;
         }
 
@@ -441,10 +533,10 @@ public static void createEllipses() {
 
 
     AreaGettable[] ellipses = new AreaGettable[100];
-    for( int i = 0; i < 100; i++ )
+    for(int i = 0; i < 100; i++)
         ellipses[i] = new Ellipse(Math.random() * 25.0,
             Math.random() * 25.0);
-    double sum = sumAreas( ellipses );
+    double sum = sumAreas(ellipses);
 
     System.out.println("The total area is " + sum);
 }
@@ -477,7 +569,7 @@ so that it creates an anonymous class which behaves exactly like the
 public static void createEllipses() {
     AreaGettable[] ellipses = new AreaGettable[100];
 
-    for( int i = 0; i < 100; i++ ) {
+    for(int i = 0; i < 100; i++) {
         final double value1 = Math.random();
         final double value2 = Math.random();
 
@@ -491,7 +583,7 @@ public static void createEllipses() {
         };
     }
 
-    double sum = sumAreas( ellipses );
+    double sum = sumAreas(ellipses);
     System.out.println("The total area is " + sum);
 }
 ----
@@ -562,7 +654,7 @@ Classes implementing these two interfaces will be able to give their age
 and weight independently. The next step is to create the `Dog`, `Cat`,
 `Person`, and `Cheese` classes which can do so.
 
-We’ll see in <<ch11-inheritance#ch11-inheritance>> that the `Dog`, `Cat`, and
+We'll see in <<ch11-inheritance#ch11-inheritance>> that the `Dog`, `Cat`, and
 `Person` classes could inherit from a common ancestor (such as
 `Creature` or `Mammal`) which implements the `Ageable` and `Weighable`
 interfaces. That design could reduce the total amount of code needed.
@@ -603,13 +695,13 @@ to generalize the sort beyond `int` values.
 
 [source,java]
 ----
-public void sort( Object[] array, boolean age ) {
+public void sort(Object[] array, boolean age) {
     boolean swapped = true;
     Object temp;
-    while( swapped ) {
+    while(swapped) {
         swapped = false;
-        for( int i = 0; i < array.length - 1; i++ )
-            if( outOfOrder( array[i], array[i + 1], age ) {
+        for(int i = 0; i < array.length - 1; i++)
+            if(outOfOrder(array[i], array[i + 1], age) {
                 temp = array[i];
                 array[i] = array[i + 1];
                 array[i + 1] = temp;
@@ -629,8 +721,8 @@ comparison (`>`) with the `outOfOrder()` method, which we define below.
 
 [source,java]
 ----
-public boolean outOfOrder( Object o1, Object o2, boolean age ) {
-    if( age ) {
+public boolean outOfOrder(Object o1, Object o2, boolean age) {
+    if(age) {
         Ageable age1 = (Ageable)o1;
         Ageable age2 = (Ageable)o2;
         return age1.getAge() > age2.getAge();
@@ -744,7 +836,7 @@ public interface Singable {
         return false;
     }
     public static boolean hasPerfectPitch();
-    public synchronized void tune( int frequency );
+    public synchronized void tune(int frequency);
 }
 ----
 . Consider the interface defined below.
@@ -752,7 +844,7 @@ public interface Singable {
 [source,java]
 ----
 public interface Explodable {
-    boolean explode( double megatons );
+    boolean explode(double megatons);
 }
 ----
 +
@@ -768,7 +860,7 @@ public class Dynamite implements Explodable {
 }
 
 public class AtomicBomb implements Explodable {
-    public boolean explode( double size ) {
+    public boolean explode(double size) {
         System.out.println("A huge " + size +
             " megaton blast shakes the earth!");
         return true;
@@ -776,13 +868,13 @@ public class AtomicBomb implements Explodable {
 }
 
 public class Grenade {
-    public boolean explode( double megatons ) {
+    public boolean explode(double megatons) {
         return true;
     }
 }
 
 public class Firecracker implements Explodable {
-    private boolean explode( double megatons ) {
+    private boolean explode(double megatons) {
         return (megatons < 0.0000001);
     }
 }
@@ -793,21 +885,21 @@ interfaces.
 [source,java]
 ----
 public interface Laughable {
-    boolean laugh( int times );
+    boolean laugh(int times);
 }
 ----
 +
 [source,java]
 ----
 public interface Cryable {
-    void cry( int tears, boolean moaning );
+    void cry(int tears, boolean moaning);
 }
 ----
 +
 [source,java]
 ----
 public interface Shoutable {
-    void shout( double volume, String words );
+    void shout(double volume, String words);
 }
 ----
 . If you are sorting a list of items stem:[n] elements long
