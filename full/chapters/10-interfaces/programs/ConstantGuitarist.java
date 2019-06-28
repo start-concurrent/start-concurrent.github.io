@@ -6,6 +6,6 @@ public interface ConstantGuitarist {
     static final int CHROMATIC = 5;
     static final int PENTATONIC = 6;    
 
-    void strumChord( Chord chord );
-    void playMelody( Melody notes );    
+    void strumChord(Chord chord);
+    void playMelody(Melody notes);    
 }
