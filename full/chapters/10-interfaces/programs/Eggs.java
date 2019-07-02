@@ -4,13 +4,13 @@ public class Eggs implements Priceable {
     private int dozens;
     private boolean extraLarge;
     
-    public Eggs( int dozens, boolean extraLarge ) {
+    public Eggs(int dozens, boolean extraLarge) {
         this.dozens = dozens;
         this.extraLarge = extraLarge;
     }       
 
     public double getPrice() {
-        if( extraLarge )
+        if(extraLarge)
             return dozens*PRICE_PER_DOZEN_EXTRA_LARGE;
         else
             return dozens*PRICE_PER_DOZEN_LARGE;            
