@@ -1,5 +1,5 @@
 public class Child extends Parent {
-    public Child( String name ) {
-        super( "Baby " + name );
+    public Child(String name) {
+        super("Baby " + name);
     }
 }
