@@ -1,12 +1,12 @@
-import java.util.*; // <1>
+import java.util.*; // <.>
 
 public class DragonAttributes {    
     public static void main(String[] args) {
-        Random random = new Random(); // <2>
-        int age = random.nextInt(100) + 1; // <3>
-        double height = random.nextDouble()*30; // <4>
-        boolean gender = random.nextBoolean(); // <5>
-        int hitPoints = random.nextInt(51) + 25; // <6>
+        Random random = new Random(); // <.>
+        int age = random.nextInt(100) + 1; // <.>
+        double height = random.nextDouble()*30; // <.>
+        boolean gender = random.nextBoolean(); // <.>
+        int hitPoints = random.nextInt(51) + 25; // <.>
         System.out.println("Dragon Statistics");
         System.out.println("Age:\t\t" + age);
         System.out.format("Height:\t\t%.1f feet\n", height);
