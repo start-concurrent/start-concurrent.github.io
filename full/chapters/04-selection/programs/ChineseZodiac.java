@@ -20,7 +20,6 @@ public class ChineseZodiac {
             case 10: animal = "Horse"; break;
             case 11: animal = "Ram"; break;
         }   
-        System.out.println("The Chinese zodiac animal for " + 
-            "this year is: " + animal);
+        System.out.println("The Chinese zodiac animal for this year is: " + animal);
     }
 }
