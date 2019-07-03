@@ -2,7 +2,7 @@ import java.util.*;
 
 public class DNASearch {
     public static void main(String[] args) {                
-        Scanner in = new Scanner( System.in ); //<.>
+        Scanner in = new Scanner(System.in); //<.>
         String sequence, subsequence;
         boolean valid; //<.>
         char c;
@@ -18,7 +18,7 @@ public class DNASearch {
                     valid = false;
                 }
             }
-        } while( !valid ); //<.>
+        } while(!valid); //<.>
         
         do {        
             System.out.print("Enter the subsequence you wish to search for: ");
@@ -31,7 +31,7 @@ public class DNASearch {
                     valid = false;
                 }
             }
-        } while( !valid );
+        } while(!valid);
         
         int found = 0;
         for(int i = 0; i < sequence.length() - subsequence.length() + 1; i++) { //<.>
