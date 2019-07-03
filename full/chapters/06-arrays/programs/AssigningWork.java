@@ -10,9 +10,9 @@ public class AssigningWork {
         int quotient = n / k;
         int remainder = n % k;
         int next = 0;       
-        for( int i = 0; i < k; i++ ) {      
+        for(int i = 0; i < k; i++) {      
             int work = quotient;
-            if( i < remainder )
+            if(i < remainder)
                 work++;
             System.out.println("Thread " + i + " does " + work
                 + " units of work, starting at index " + next

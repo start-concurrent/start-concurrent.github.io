@@ -10,10 +10,10 @@ public class Calendar {
         squares[0][4] = "Thu";
         squares[0][5] = "Fri";
         squares[0][6] = "Sat";
-        for( int i = 1; i < squares.length; i++ ) //<3>
-            for( int j = 0; j < squares[i].length; j++ )
+        for(int i = 1; i < squares.length; i++) //<3>
+            for(int j = 0; j < squares[i].length; j++)
                 squares[i][j] = " ";        
-        Scanner in = new Scanner( System.in );
+        Scanner in = new Scanner(System.in);
         System.out.print("Which day does your month start on? (0 - 6) ");
         int start = in.nextInt(); //read starting day <4>        
         System.out.print("How many days does your month have? (28 - 31) ");
@@ -21,18 +21,18 @@ public class Calendar {
         int day = 1;
         int row = 1;
         int column = start; 
-        while( day <= days ) { //fill calendar <6>
+        while(day <= days) { //fill calendar <6>
             squares[row][column] = "" + day;
             day++;
             column++;
-            if( column >= squares[row].length ) {
+            if(column >= squares[row].length) {
                 column = 0;
                 row++;
             }
         }
-        for( int i = 0; i < squares.length; i++ ) { //<7>
-            for( int j = 0; j < squares[i].length; j++ )
-                System.out.print( squares[i][j] + "\t" );
+        for(int i = 0; i < squares.length; i++) { //<7>
+            for(int j = 0; j < squares[i].length; j++)
+                System.out.print(squares[i][j] + "\t");
             System.out.println();
         }
     }

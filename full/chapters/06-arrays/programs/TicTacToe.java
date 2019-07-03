@@ -35,12 +35,12 @@ public class TicTacToe {
                          + board[2][1] + "|" + board[2][2] + "\n");             
                 //check rows      <.>
                 for(int i = 0; i < board.length; i++)
-                    if( board[i][0] == shape && board[i][1] == shape
-                        && board[i][2] == shape )
+                    if(board[i][0] == shape && board[i][1] == shape
+                        && board[i][2] == shape)
                         gameOver = true;
                 //check columns   <.>
                 for(int i = 0; i < board[0].length; i++)
-                    if( board[0][i] == shape && board[1][i] == shape
+                    if(board[0][i] == shape && board[1][i] == shape
                         && board[2][i] == shape)
                         gameOver = true;
                 //check diagonals <.>
