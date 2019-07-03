@@ -25584,7 +25584,7 @@ processes. Is there a significant difference in the times you found?</p>
 <h3 id="_problem_bank_burglary">12.1. Problem: Bank burglary</h3>
 <div class="paragraph">
 <p>Let&#8217;s consider a problem in which various aspects of a bank burglary are
-modeled as objects in Java. You want to write some code that will
+modeled as Java objects. You want to write some code that will
 accomplish the following steps:</p>
 </div>
 <div class="olist arabic">
@@ -25612,12 +25612,12 @@ burglar alarm, you might set it off. When you try to break into the
 bank, you might have thought that you&#8217;d disabled the burglar alarm but
 actually failed to do so. The door of the bank might be too difficult to
 open. The vault might be impossible to find, or the vault might be
-impossible to open. It could even be empty. The money might be made of
+impossible to open. It could even be empty! The money might be made of
 enormous gold blocks that are too heavy to carry away. Finally, at any
 time during the heist, a night watchman might catch you in the act.</p>
 </div>
 <div class="paragraph">
-<p>If you are the criminal mastermind who planned this deed, you need to
+<p>If you&#8217;re the criminal mastermind who planned this deed, you need to
 know if (and preferably how) your henchman bungled the burglary. You
 need a simple system that can inform you of any errors that have
 occurred along the way. Likewise, you need to be able to react
@@ -25709,14 +25709,14 @@ is a difficult and complex process. Even if a segment of code is free
 from errors, it may call other code which contains mistakes. The user
 could be making mistakes and issuing commands to a program that are
 impossible to execute. Even hardware can produce errors, as in a hard
-drive crash or a DVD with a scratch on its surface.</p>
+drive crash or a network connectivity problem.</p>
 </div>
 <div class="sect3">
 <h4 id="_error_codes">12.2.1. Error codes</h4>
 <div class="paragraph">
 <p>A robust program should deal with as many errors as possible. One
 strategy is to have every method give back a special error code
-corresponding to the error that has just occurred. Then, the code
+corresponding to an error when it occurs. Then, the code
 calling the method can react appropriately. Of course, many methods do
 not return a numerical type, limiting this kind of error handling. A
 solution that was very common in the C language, particularly in Unix
@@ -25724,15 +25724,15 @@ system calls, was to set a globally visible <code>int</code> variable called
 <code>errno</code> to a value corresponding to the error that has just happened.</p>
 </div>
 <div class="paragraph">
-<p>These solutions have a number of drawbacks. In the case of <code>errno</code>, if a
+<p>These approaches have a number of drawbacks. In the case of <code>errno</code>, if a
 number of different threads were running at the same time, different
 errors could occur simultaneously, but only one value could be kept in
 <code>errno</code>. For any system that relies on checking for an error condition
 after each method call, a large amount of error handling code must be
 mixed in with normal code. Doing so reduces code readability and makes
-it difficult to centralize error handling. Likewise, a numerical value
-can be difficult to deal with. A user may have to look it up to find out
-what kind of error it is.</p>
+it difficult to handle errors in a central place. Likewise, a numerical value
+doesn&#8217;t describe the error, requiring good documentation to know what
+the number means.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -25748,21 +25748,21 @@ what kind of error it is.</p>
 <p>Java adopts a different error handling strategy called exceptions.
 Whenever a specified error state or unusual situation is reached, an
 exception is thrown. When an exception is thrown, normal execution stops
-immediately. The exception looks for code that is designed to deal with
+immediately. The JVM starts backtracking, looking for code that&#8217;s designed to deal with
 that specific exception. The code that will handle the exception can be
 in the current method, in the calling method, in the caller of the
 calling method, or arbitrarily far back in the chain of method calls,
 all the way to <code>main()</code>. Each method will return, looking for code to
-handle this exception, until it is found. If no handling code is found,
-the exception will propagate all the way past <code>main()</code> to the JVM, and
+handle this exception, until it&#8217;s found. If no handling code is found,
+the exception will propagate all the way past <code>main()</code>, and
 the program will end.</p>
 </div>
 <div class="paragraph">
 <p>Exceptions give a unified and simple way to handle all errors. You can
 choose to deal with errors directly or delegate that responsibility to
-methods that call the code you are writing. Selection statements and
-loops are forms of local control flow, but exceptions give us the power
-of non-local control flow, able to jump back through any number of
+methods that call the code you&#8217;ve written. Selection statements and
+loops are forms of <em>local</em> control flow, but exceptions give us the power
+of <em>non-local</em> control flow, able to jump back through any number of
 method calls.</p>
 </div>
 </div>
@@ -25770,16 +25770,16 @@ method calls.</p>
 <div class="sect2">
 <h3 id="_syntax_exceptions_in_java">12.3. Syntax: Exceptions in Java</h3>
 <div class="paragraph">
-<p>In Java syntax, there are two important parts needed to use exceptions:
+<p>In Java syntax, there are two important sides of using exceptions:
 throwing the exception when an error occurs and then handling that
-exception properly. Below we will explain both of these as well as the
+exception properly. Below we explain both of these as well as the
 catch or specify requirement, the <code>finally</code> keyword, and the process of
 creating custom exceptions.</p>
 </div>
 <div class="sect3">
 <h4 id="_throwing_exceptions">12.3.1. Throwing exceptions</h4>
 <div class="paragraph">
-<p>By now you have probably experienced a <code>NullPointerException</code> in the
+<p>By now you&#8217;ve probably experienced a <code>NullPointerException</code> in the
 process of coding. This exception happens when an object reference is
 <code>null</code> but we try to access one of its methods or fields.</p>
 </div>
@@ -25793,14 +25793,13 @@ process of coding. This exception happens when an object reference is
 <p>In this case, the exception is thrown by the JVM itself. It is possible
 to catch this exception and deal with it, but a <code>NullPointerException</code>
 generally means a mistake in the program, not an error that can be
-recovered from. Although many useful exceptions such as<br>
-<code>NullPointerException</code>, <code>ArithmeticException</code>, and
-<code>ArrayIndexOutOfBoundsException</code> are implicitly thrown by the JVM, we
-are permitted to throw them explicitly.</p>
+recovered from. Although many useful exceptions such as <code>NullPointerException</code>,
+<code>ArithmeticException</code>, and <code>ArrayIndexOutOfBoundsException</code> are implicitly
+thrown by the JVM, we&#8217;re also allowed to throw them explicitly.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="k">if</span><span class="o">(</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">14</span> <span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="k">if</span><span class="o">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">14</span><span class="o">)</span>
     <span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">();</span></code></pre>
 </div>
 </div>
@@ -25810,8 +25809,8 @@ are permitted to throw them explicitly.</p>
 use the <code>throw</code> keyword to cause the exception to go into effect. Any
 exception you throw explicitly must use the <code>throw</code> keyword, but the
 majority of exceptions thrown by your programs will either be mistakes
-or exceptions thrown by library code you are calling. If you write a
-significant amount of library or API code, you may use <code>throw</code> more
+or exceptions thrown by library code you&#8217;re calling. If you write a
+significant amount of library or API code, you might use <code>throw</code> more
 often.</p>
 </div>
 </div>
@@ -25820,10 +25819,10 @@ often.</p>
 <div class="paragraph">
 <p>Normal application programmers will find themselves writing code that
 handles exceptions much more often than code that throws them. In order
-to catch an exception, you must enclose the code that you think is going
+to catch an exception, you must enclose the code you think is going
 to throw an exception in a <code>try</code> block. Immediately after the <code>try</code>
-block, you can list one or more <code>catch</code> blocks. The code inside the
-first <code>catch</code> block that matches your exception will be executed.</p>
+block, you can list one or more <code>catch</code> blocks. The first <code>catch</code>
+block that matches your exception will be executed.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -25832,21 +25831,21 @@ first <code>catch</code> block that matches your exception will be executed.</p>
     <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="c1">//NullPointerException</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"This will never be printed."</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">NullPointerException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">NullPointerException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Surprise! A NullPointerException!"</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>In this case, trying to access the <code>length()</code> method of a <code>null</code>
-reference will still throw a <code>NullPointerException</code>, but now it will be
+reference will still throw a <code>NullPointerException</code>, but now it&#8217;ll be
 caught by the <code>catch</code> block below. The message
 <code>"Surprise! A NullPointerException!"</code> will be printed to the screen, and
 execution will continue normally after the <code>catch</code> block. Once the
 exception is caught, it stops trying to propagate. Of course, whatever
 the code was doing when the exception was thrown was abandoned
 immediately because it might have depended on successful execution of
-the code that threw an exception. Thus, the call to the
+the code that threw the exception. Thus, the call to the
 <code>System.out.println()</code> method in the <code>try</code> block will never be executed.</p>
 </div>
 <div class="paragraph">
@@ -25862,7 +25861,7 @@ example with <code>Exception</code> instead.</p>
     <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="c1">//NullPointerException</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"This will never be printed."</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Well, of course you got a NullPointerException!"</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -25870,28 +25869,28 @@ example with <code>Exception</code> instead.</p>
 <div class="paragraph">
 <p>In general, you should write the most specific exception class possible
 for your <code>catch</code> blocks. Otherwise, you might be catching a different
-exception than you plan for or preventing an exception from propagating
-up to an appropriate handler. For example, the following code has the
-potential to throw either a <code>NullPointerException</code> or an
-<code>ArithmeticException</code>, because of a division by 0.</p>
+exception than you planned for, preventing that exception from propagating
+up to an appropriate handler. For example, the following code will randomly
+throw either a <code>NullPointerException</code> or an
+<code>ArithmeticException</code> (because of a division by 0).</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="k">try</span> <span class="o">{</span>
     <span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
     <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="o">)</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="o">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="c1">//NullPointerException</span>
     <span class="k">else</span>
         <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">//ArithmeticException</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"You got some kind of exception!"</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This code will catch either kind of exception, but it will not tell you
+<p>This code will catch either kind of exception, but it won&#8217;t tell you
 which you got. Instead, the correct approach is to have one <code>catch</code>
 block for each possible kind of exception.</p>
 </div>
@@ -25900,15 +25899,15 @@ block for each possible kind of exception.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="k">try</span> <span class="o">{</span>
     <span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
     <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="o">)</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="o">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="c1">//NullPointerException</span>
     <span class="k">else</span>
         <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">//ArithmeticException</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">NullPointerException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"You got a null pointer!"</span><span class="o">);</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">NullPointerException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"You used a null pointer!"</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">ArithmeticException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">ArithmeticException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"You divided by zero!"</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -25918,8 +25917,8 @@ block for each possible kind of exception.</p>
 from the most specific exceptions to the most general, like <code>Exception</code>,
 otherwise some exceptions could never be reached. The Java compiler
 enforces this requirement. The <code>e</code> is a reference to the exception
-itself, which behaves something like a parameter in a method. It is
-common to use <code>e</code> as the identifier but you are allowed to call it any
+itself, which behaves something like a parameter in a method. It&#8217;s
+common to use <code>e</code> as the identifier, but you&#8217;re allowed to call it any
 legal variable name. Usually, the kind of exception is all you need to
 know, but every exception is an object and has fields and methods.
 Particularly useful is the <code>getMessage()</code> method which can give
@@ -25936,7 +25935,7 @@ additional information about the exception.</p>
 <div class="sect3">
 <h4 id="_catch_or_specify">12.3.3. Catch or specify</h4>
 <div class="paragraph">
-<p>Despite the examples given above, you will rarely write code to catch a
+<p>In contrast to the examples given above, you&#8217;ll rarely write code to catch a
 <code>NullPointerException</code> or an <code>ArithmeticException</code>. Both of these
 exceptions are called <em>unchecked</em> exceptions. In
 <a href="#ch06-arrays">Chapter 6</a>, we used the <code>Thread.sleep()</code> method to put
@@ -25949,7 +25948,7 @@ block for <code>InterruptedException</code>.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="k">try</span><span class="o">{</span>
     <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span>  <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span>  <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Wake up!"</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -25958,11 +25957,11 @@ block for <code>InterruptedException</code>.</p>
 <p>An <code>InterruptedException</code> is thrown when another thread tells your
 thread of execution to wake up before it finishes sleeping or waiting.
 This exception is a <em>checked</em> exception, meaning that Java insists that
-you use a <code>try</code>-<code>catch</code> pair anytime there is even a chance of it being
-thrown. Otherwise your code will not compile.</p>
+you use a <code>try</code>-<code>catch</code> pair anytime there&#8217;s even a chance of it being
+thrown. Otherwise, your code won&#8217;t compile.</p>
 </div>
 <div class="paragraph">
-<p>Checked exceptions are those exceptions that your program should plan
+<p>Checked exceptions are those exceptions that your program must plan
 for. Library and API code often throw checked exceptions. For example,
 when trying to open a file with an API call, it&#8217;s possible that no file
 with that name exists or that the user might not have permission to
@@ -25980,9 +25979,8 @@ for a new name or explain that the required permission is not set.</p>
 </div>
 <div class="paragraph">
 <p>In <a href="#ch06-arrays">Chapter 6</a>, there were no executable statements in
-the <code>catch</code> block used with the<br>
-<code>Thread.sleep()</code> method. You should <strong>never</strong> write an empty <code>catch</code>
-block. Doing so allows errors to fail silently.</p>
+the <code>catch</code> block used with the <code>Thread.sleep()</code> method. However, you
+should <strong>never</strong> write an empty <code>catch</code> block. Doing so allows errors to fail silently.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -25992,8 +25990,8 @@ block. Doing so allows errors to fail silently.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We are allowed to put code that can throw a checked exception into a
-<code>try</code>-<code>catch</code> block, but there is another possibility. Java has a catch
+<p>We&#8217;re allowed to put code that can throw a checked exception into a
+<code>try</code>-<code>catch</code> block, but there&#8217;s another option. Java has a catch
 or specify requirement, meaning that your code is required either to
 catch a checked exception or to specify that it has the potential for
 causing that exception. To specify that a method can throw certain
@@ -26010,16 +26008,16 @@ same as the <code>throw</code> keyword.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sleepWithoutTry</span><span class="o">(</span> <span class="kt">int</span> <span class="n">milliseconds</span> <span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span> <span class="n">milliseconds</span> <span class="o">);</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sleepWithoutTry</span><span class="o">(</span><span class="kt">int</span> <span class="n">milliseconds</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">milliseconds</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In this case, there is no need for a <code>try</code>-<code>catch</code> block because the
+<p>In this case, there&#8217;s no need for a <code>try</code>-<code>catch</code> block because the
 method announces that it has a risk of throwing an
 <code>InterruptedException</code>. Of course, any code that uses this method will
-have to have a <code>try</code>-<code>catch</code> block or specify that it also throws<br>
+have to have a <code>try</code>-<code>catch</code> block or specify that it also throws
 <code>InterruptedException</code>. A method can throw many different exceptions,
 and you can simply list them out after the <code>throws</code> keyword, separated
 by commas.</p>
@@ -26039,19 +26037,19 @@ descendants of <code>RuntimeException</code> are checked.</p>
 <div class="sect3">
 <h4 id="_the_finally_keyword">12.3.4. The <code>finally</code> keyword</h4>
 <div class="paragraph">
-<p>To deal with the situation in which some important cleanup or finalizing
+<p>To deal with the situation in which an important cleanup or finalizing
 task must be done no matter what, the designers of Java introduced the
 <code>finally</code> keyword. A <code>finally</code> block comes after all the <code>catch</code> blocks
 following a <code>try</code> block. The code inside the <code>finally</code> block will be
 executed <strong>whether or not</strong> any exception was thrown. A <code>finally</code> block is
 often used with file I/O to close the file, which should be closed
-whether or not something went wrong in the process of reading it as we
-demonstrate in <a href="#ch20-file-io">Chapter 20</a></p>
+whether or not something went wrong in the process of reading it, as
+we&#8217;ll demonstrate in <a href="#_reading_and_writing_text_files">Section 20.3.2</a>.</p>
 </div>
 <div class="paragraph">
-<p>The <code>finally</code> keyword is unusually powerful. If an exception is not
+<p>The <code>finally</code> keyword is unusually powerful. If an exception isn&#8217;t
 caught and propagates up another level, the <code>finally</code> block will be
-executed before propagating the exception. Even a <code>return</code> statement
+executed <strong>before</strong> propagating the exception. Even a <code>return</code> statement
 will wait for a <code>finally</code> block to be executed before returning, leading
 to the following bizarre possibility.</p>
 </div>
@@ -26072,7 +26070,7 @@ to the following bizarre possibility.</p>
 <code>finally</code> block returns <code>false</code>. Only one value can be returned, and the
 <code>finally</code> block wins. You should be aware of <code>finally</code> blocks and their
 unusual semantics. Use them sparingly and only for careful cleanup
-operations when necessary to guarantee that some event occurs.</p>
+operations when needed to guarantee that some event occurs.</p>
 </div>
 <div class="paragraph">
 <p>Code in a <code>finally</code> block will execute <strong>no matter what</strong> unless the JVM
@@ -26091,22 +26089,25 @@ exits or the thread in question terminates.</p>
 <div class="sect3">
 <h4 id="_customized_exceptions">12.3.5. Customized exceptions</h4>
 <div class="paragraph">
-<p>Exceptions are incredibly useful when dealing with problems encountered
+<p>Exceptions are most useful when dealing with problems encountered
 by API code. In those cases, your code must merely catch exceptions
-defined by someone else; however, it is sometimes useful to define your
-own exceptions. For one thing, you may write an API yourself. Generally,
-you will want to use the standard exceptions whenever possible, but your
-code may generate some unusual or very specific error condition that you
-want to communicate to a programmer using your own exception.</p>
+defined by someone else; however, it&#8217;s sometimes useful to define your
+own exceptions. For one thing, you might write some API code yourself. Generally,
+you&#8217;ll want to use the standard exceptions whenever possible, but your
+code might generate some unusual or specific error condition that you
+want to communicate to a programmer, using your own exception.</p>
 </div>
 <div class="paragraph">
 <p>Defining a new exception is surprisingly simple. All you have to do is
 write a class that extends <code>Exception</code>. Theoretically, you could
-alternately extend <code>RuntimeException</code> or <code>Error</code>, but you typically will
-not. Children of <code>RuntimeException</code> are intended to indicate a bug in
-the program and children of <code>Error</code> are intended to indicate a system
-error. When creating your new exception, you don&#8217;t even have to create
-any methods, but it is wise to implement a default constructor and one
+extend <code>RuntimeException</code> or <code>Error</code> instead, but you typically won&#8217;t.
+Children of <code>RuntimeException</code> are intended to indicate a bug in
+the program, and children of <code>Error</code> are intended to indicate a system
+error.</p>
+</div>
+<div class="paragraph">
+<p>When creating your new exception, you don&#8217;t even have to create
+any methods, but it&#8217;s wise to implement a default constructor and one
 that takes a <code>String</code> as an additional message.</p>
 </div>
 <div class="listingblock">
@@ -26114,19 +26115,19 @@ that takes a <code>String</code> as an additional message.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">EndOfWorldException</span> <span class="kd">extends</span> <span class="n">Exception</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="nf">EndOfWorldException</span><span class="o">()</span> <span class="o">{}</span>
 
-    <span class="kd">public</span> <span class="nf">EndOfWorldException</span><span class="o">(</span> <span class="n">String</span> <span class="n">message</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">message</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">EndOfWorldException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>As with all other classes, your exceptions should be named in a readable
-way. This exception is apparently thrown when the world ends. It is
+way. This exception is apparently thrown when the world ends. It&#8217;s
 considered good style to end the name of any exception class with
 <code>Exception</code>. An exception class is a fully fledged class. If you need to
 add other fields or methods to give your exception the functionality it
-needs, go ahead. However, the main value of an exception is simply in
+needs, go ahead. However, the main value of an exception lies in
 its existence as a named error, not in any tricks it can perform.</p>
 </div>
 <div class="sidebarblock">
@@ -26139,8 +26140,8 @@ its existence as a named error, not in any tricks it can perform.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Here we will give a few examples of exception handling, although
-exceptions are more useful in large systems with heavy API use. We will
+<p>Here we&#8217;ll give a few examples of exception handling, although
+exceptions are more useful in large systems with heavy API use. We&#8217;ll
 start with an example of a simple calculator that detects division by
 zero, then look at exceptions as a tool to detect array bounds problems,
 and end with a custom exception used with the <code>Color</code> class.</p>
@@ -26149,11 +26150,11 @@ and end with a custom exception used with the <code>Color</code> class.</p>
 <div class="title">Example 12.1 Calculator with division by zero</div>
 <div class="content">
 <div class="paragraph">
-<p>Here we will implement a quick calculator that reads input from the user
-in the form of <strong>integer</strong> <strong>operator</strong> <strong>integer</strong>, where <strong>operator</strong> is one
+<p>Here we implement a quick calculator that reads input from the user
+in the form of <em>integer operator integer</em>, where <em>operator</em> is one
 of the four basic arithmetic operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>). Our code
-will perform the appropriate operation and output the answer, but we
-will use exception handling to avoid killing the program when a division
+will perform the appropriate operation and output the answer, but we&#8217;ll
+use exception handling to avoid killing the program when a division
 by zero occurs.</p>
 </div>
 <div class="listingblock">
@@ -26163,34 +26164,43 @@ by zero occurs.</p>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickCalculator</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
         <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
-        <span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="kt">char</span> <span class="n">operator</span><span class="o">;</span>
-        <span class="n">String</span><span class="o">[]</span> <span class="n">terms</span><span class="o">;</span>
-        <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">().</span><span class="na">trim</span><span class="o">().</span><span class="na">toLowerCase</span><span class="o">();</span>
-        <span class="k">while</span><span class="o">(</span> <span class="o">!</span><span class="n">line</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"quit"</span><span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">terms</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" "</span><span class="o">);</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">terms</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
-            <span class="n">operator</span> <span class="o">=</span> <span class="n">terms</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">terms</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span></code></pre>
+        <span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">().</span><span class="na">trim</span><span class="o">().</span><span class="na">toLowerCase</span><span class="o">();</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="k">while</span><span class="o">(!</span><span class="n">line</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"quit"</span><span class="o">))</span> <span class="o">{</span> <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="n">String</span><span class="o">[]</span> <span class="n">terms</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" "</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">terms</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="kt">char</span> <span class="n">operator</span> <span class="o">=</span> <span class="n">terms</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">terms</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>By this point, the <code>main()</code> method has set up a system to read a line of
-input from a user, test to see if it is the sentinel value <code>"quit"</code>, and
-then parsing it into two <code>int</code> values and a <code>char</code> otherwise.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The program reads a line of input from the user.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>It tests to see if it&#8217;s the sentinel value <code>"quit"</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If it isn&#8217;t, the program parses it into two <code>int</code> values and a <code>char</code>.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">            <span class="k">try</span><span class="o">{</span>
-                <span class="k">switch</span><span class="o">(</span> <span class="n">operator</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">            <span class="k">try</span><span class="o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="k">switch</span><span class="o">(</span><span class="n">operator</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="2"></i><b>(2)</b>
                     <span class="k">case</span> <span class="sc">'+'</span><span class="o">:</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span> <span class="k">break</span><span class="o">;</span>
                     <span class="k">case</span> <span class="sc">'-'</span><span class="o">:</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="o">;</span> <span class="k">break</span><span class="o">;</span>
                     <span class="k">case</span> <span class="sc">'*'</span><span class="o">:</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="o">;</span> <span class="k">break</span><span class="o">;</span>
                     <span class="k">case</span> <span class="sc">'/'</span><span class="o">:</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="o">;</span> <span class="k">break</span><span class="o">;</span>
                 <span class="o">}</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Answer: "</span> <span class="o">+</span> <span class="n">answer</span><span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Answer: "</span> <span class="o">+</span> <span class="n">answer</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="o">}</span>
-            <span class="k">catch</span><span class="o">(</span> <span class="n">ArithmeticException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="k">catch</span><span class="o">(</span><span class="n">ArithmeticException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="4"></i><b>(4)</b>
                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"You can't divide by 0!"</span><span class="o">);</span>
             <span class="o">}</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">().</span><span class="na">trim</span><span class="o">().</span><span class="na">toLowerCase</span><span class="o">();</span>
@@ -26199,17 +26209,36 @@ then parsing it into two <code>int</code> values and a <code>char</code> otherwi
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Here we have a <code>try</code> block enclosing the code where the operations
-occur. Inside the <code>switch</code> statement, the code will blindly perform
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here we have a <code>try</code> block enclosing the code where the operations
+occur.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inside the <code>switch</code> statement, the code blindly performs
 addition, subtraction, multiplication, or division, depending on the
-value of <code>operator</code>. Then, it will print the answer. However, if a
-division by zero occurred, the execution would jump to the <code>catch</code> block
-and print an appropriate message. This <code>try</code>-<code>catch</code> pair is situated
+value of <code>operator</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Then, it prints the answer.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>However, if a division by zero occurrs, the execution jumps to the <code>catch</code> block
+and prints an appropriate message.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This <code>try</code>-<code>catch</code> pair is situated
 inside the loop so that the input will continue even if there was a
 division by zero. We could achieve the same effect by using an <code>if</code>
 statement to test if the divisor is zero, but our solution allows easy
-extensions if there are other possible exceptions we want to catch.</p>
+extensions if there are other exceptions we want to catch.</p>
 </div>
 </div>
 </div>
@@ -26220,25 +26249,24 @@ extensions if there are other possible exceptions we want to catch.</p>
 <p>Exceptions provide a lot of power. If we want, we can use the
 <code>ArrayOutOfBoundsException</code> as a crutch when we don&#8217;t want to think
 about the bounds of our array. Although this makes for an interesting
-example, exceptions should not be used in Java to perform normal tasks.
+example, exceptions should <strong>not</strong> be used in Java to perform normal tasks.
 This method takes in an array of <code>int</code> values and prints them all out.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exceptionalArrayPrint</span><span class="o">(</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">array</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exceptionalArrayPrint</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
     <span class="k">try</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">while</span><span class="o">(</span> <span class="kc">true</span> <span class="o">)</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">++]</span> <span class="o">+</span> <span class="s">" "</span><span class="o">);</span>
     <span class="o">}</span>
-    <span class="k">catch</span><span class="o">(</span>  <span class="n">ArrayIndexOutOfBoundsException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{}</span>
+    <span class="k">catch</span><span class="o">(</span><span class="n">ArrayIndexOutOfBoundsException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Although the <code>while</code> loop will run without stopping, the moment that <code>i</code>
-reaches<br>
-<code>array.length</code>, it will throw an <code>ArrayIndexOutOfBoundsException</code> when
+reaches <code>array.length</code>, it will throw an <code>ArrayIndexOutOfBoundsException</code> when
 it tries to access that element in <code>array</code>. Since we left the <code>catch</code>
 block empty, nothing will happen, the method will return, and everything
 will work fine. This example is a peculiar kind of laziness, indeed,
@@ -26252,13 +26280,13 @@ of Connect Four. To see if a player has won, the computer must examine
 all horizontal, vertical, and diagonal possibilities for four in a row.
 If the game board is represented as a 2D array, the programmer must be
 careful to make sure that checking for four in a row does not access any
-index greater than the last rows or column or smaller than 0.</p>
+index greater than the last row or column or smaller than 0.</p>
 </div>
 <div class="paragraph">
 <p>The danger of using exceptions for these kinds of tasks has several
 sources. First, the programmer may not deeply understand the problem and
-may be careless about the solution. Second, there is a risk of hiding
-real exceptions that are generated because of real errors. Third, the
+may be careless about the solution. Second, there&#8217;s a risk of hiding
+exceptions that are generated because of real errors. Third, the
 code becomes difficult to read and unintuitive. Finally, excessive use
 of exceptions can negatively impact performance.</p>
 </div>
@@ -26288,8 +26316,8 @@ give two custom exceptions that could serve in these roles.</p>
 <div id="ColorUnderflowExceptionProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ColorUnderflowException</span> <span class="kd">extends</span> <span class="n">Exception</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="nf">ColorUnderflowException</span><span class="o">(</span> <span class="n">String</span> <span class="n">message</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">message</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">ColorUnderflowException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="kd">public</span> <span class="nf">ColorComponentTooSmallException</span><span class="o">()</span> <span class="o">{</span> <span class="kd">super</span><span class="o">();</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -26298,8 +26326,8 @@ give two custom exceptions that could serve in these roles.</p>
 <div id="ColorOverflowExceptionProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ColorOverflowException</span> <span class="kd">extends</span> <span class="n">Exception</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="nf">ColorOverflowException</span><span class="o">(</span> <span class="n">String</span> <span class="n">message</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">message</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">ColorOverflowException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="kd">public</span> <span class="nf">ColorOverflowException</span><span class="o">()</span> <span class="o">{</span> <span class="kd">super</span><span class="o">();</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -26312,63 +26340,51 @@ the component is out of range, an appropriate exception will be thrown.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">increaseRed</span><span class="o">(</span> <span class="n">Color</span> <span class="n">color</span> <span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">increaseRed</span><span class="o">(</span><span class="n">Color</span> <span class="n">color</span><span class="o">)</span>
     <span class="kd">throws</span> <span class="n">ColorOverflowException</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">255</span> <span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorOverflowException</span><span class="o">(</span><span class="s">"Red: "</span>
-            <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">));</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorOverflowException</span><span class="o">(</span><span class="s">"Red: "</span> <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">));</span>
     <span class="k">else</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">,</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">(),</span>
-            <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">,</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">());</span>
 <span class="o">}</span>
 
-<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">increaseGreen</span><span class="o">(</span> <span class="n">Color</span> <span class="n">color</span> <span class="o">)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">increaseGreen</span><span class="o">(</span><span class="n">Color</span> <span class="n">color</span><span class="o">)</span>
     <span class="kd">throws</span> <span class="n">ColorOverflowException</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">255</span> <span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorOverflowException</span><span class="o">(</span><span class="s">"Green: "</span>
-            <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">));</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorOverflowException</span><span class="o">(</span><span class="s">"Green: "</span> <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">));</span>
     <span class="k">else</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">,</span>
-            <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">,</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">());</span>
 <span class="o">}</span>
 
-<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">increaseBlue</span><span class="o">(</span> <span class="n">Color</span> <span class="n">color</span> <span class="o">)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">increaseBlue</span><span class="o">(</span><span class="n">Color</span> <span class="n">color</span><span class="o">)</span>
     <span class="kd">throws</span> <span class="n">ColorOverflowException</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">255</span> <span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorOverflowException</span><span class="o">(</span><span class="s">"Blue: "</span>
-            <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">));</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorOverflowException</span><span class="o">(</span><span class="s">"Blue: "</span> <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">));</span>
     <span class="k">else</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">(),</span>
-            <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">+</span> <span class="mi">5</span><span class="o">);</span>
 <span class="o">}</span>
 
-<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">decreaseRed</span><span class="o">(</span> <span class="n">Color</span> <span class="n">color</span> <span class="o">)</span> <span class="kd">throws</span> <span class="n">ColorUnderflowException</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorUnderflowException</span><span class="o">(</span><span class="s">"Red: "</span>
-            <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">));</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">decreaseRed</span><span class="o">(</span><span class="n">Color</span> <span class="n">color</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ColorUnderflowException</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorUnderflowException</span><span class="o">(</span><span class="s">"Red: "</span> <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">));</span>
     <span class="k">else</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">,</span>
-            <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">,</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">());</span>
 <span class="o">}</span>
 
-<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">decreaseGreen</span><span class="o">(</span> <span class="n">Color</span> <span class="n">color</span> <span class="o">)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">decreaseGreen</span><span class="o">(</span><span class="n">Color</span> <span class="n">color</span><span class="o">)</span>
     <span class="kd">throws</span> <span class="n">ColorUnderflowException</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorUnderflowException</span><span class="o">(</span><span class="s">"Green: "</span>
-            <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">));</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorUnderflowException</span><span class="o">(</span><span class="s">"Green: "</span> <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">));</span>
     <span class="k">else</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">,</span>
-            <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">,</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">());</span>
 <span class="o">}</span>
 
-<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">decreaseBlue</span><span class="o">(</span> <span class="n">Color</span> <span class="n">color</span> <span class="o">)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">decreaseBlue</span><span class="o">(</span><span class="n">Color</span> <span class="n">color</span><span class="o">)</span>
     <span class="kd">throws</span> <span class="n">ColorUnderflowException</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorUnderflowException</span><span class="o">(</span><span class="s">"Blue: "</span>
-            <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">));</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ColorUnderflowException</span><span class="o">(</span><span class="s">"Blue: "</span> <span class="o">+</span> <span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">));</span>
     <span class="k">else</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span> <span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">(),</span>
-            <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Color</span><span class="o">(</span><span class="n">color</span><span class="o">.</span><span class="na">getRed</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getGreen</span><span class="o">(),</span> <span class="n">color</span><span class="o">.</span><span class="na">getBlue</span><span class="o">()</span> <span class="o">-</span> <span class="mi">5</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -26378,27 +26394,27 @@ user input and deals with exceptions appropriately.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">changeColor</span><span class="o">(</span> <span class="n">Color</span> <span class="n">color</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">changeColor</span><span class="o">(</span><span class="n">Color</span> <span class="n">color</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Enter 'R', 'G', or 'B' to increase "</span> <span class="o">+</span>
         <span class="s">"the amount of red, green, or blue in your color. "</span> <span class="o">+</span>
         <span class="s">"Enter 'r', 'g', or 'b' to decrease the amount of "</span> <span class="o">+</span>
         <span class="s">"red, green, or blue in your color."</span><span class="o">);</span>
-        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">System</span><span class="o">.</span><span class="na">in</span> <span class="o">);</span>
+        <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
     <span class="k">try</span> <span class="o">{</span>
-        <span class="k">switch</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">trim</span><span class="o">().</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="k">case</span> <span class="sc">'R'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseRed</span><span class="o">(</span> <span class="n">color</span> <span class="o">);</span> <span class="k">break</span><span class="o">;</span>
-            <span class="k">case</span> <span class="sc">'G'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseGreen</span><span class="o">(</span> <span class="n">color</span> <span class="o">);</span> <span class="k">break</span><span class="o">;</span>
-            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseBlue</span><span class="o">(</span> <span class="n">color</span> <span class="o">);</span> <span class="k">break</span><span class="o">;</span>
-            <span class="k">case</span> <span class="sc">'r'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseRed</span><span class="o">(</span> <span class="n">color</span> <span class="o">);</span> <span class="k">break</span><span class="o">;</span>
-            <span class="k">case</span> <span class="sc">'g'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseGreen</span><span class="o">(</span> <span class="n">color</span> <span class="o">);</span> <span class="k">break</span><span class="o">;</span>
-            <span class="k">case</span> <span class="sc">'b'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseBlue</span><span class="o">(</span> <span class="n">color</span> <span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+        <span class="k">switch</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">trim</span><span class="o">().</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">case</span> <span class="sc">'R'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseRed</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'G'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseGreen</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseBlue</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'r'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseRed</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'g'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseGreen</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'b'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseBlue</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
         <span class="o">}</span>
     <span class="o">}</span>
-    <span class="k">catch</span><span class="o">(</span> <span class="n">ColorOverflowException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">e</span> <span class="o">);</span>
+    <span class="k">catch</span><span class="o">(</span><span class="n">ColorOverflowException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
     <span class="o">}</span>
-    <span class="k">catch</span><span class="o">(</span> <span class="n">ColorUnderflowException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">e</span> <span class="o">);</span>
+    <span class="k">catch</span><span class="o">(</span><span class="n">ColorUnderflowException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="k">return</span> <span class="n">color</span><span class="o">;</span>
 <span class="o">}</span></code></pre>
@@ -26407,11 +26423,11 @@ user input and deals with exceptions appropriately.</p>
 <div class="paragraph">
 <p>The code that uses these methods and exceptions is compact. One <code>try</code>
 block enclosing the method calls is needed so that the exceptions can be
-caught. Following the <code>try</code>, there is a <code>catch</code> block for the
+caught. Following the <code>try</code>, there&#8217;s a <code>catch</code> block for the
 <code>ColorOverflowException</code> and one for the <code>ColorUnderflowException</code>. Each
 will print out its exception, including the customized message inside.
 If an exception occurred, the value of <code>color</code> would remain unchanged
-because execution would have jumped to a <code>catch</code> block before the
+because the execution would have jumped to a <code>catch</code> block before the
 assignment could happen.</p>
 </div>
 </div>
@@ -26421,15 +26437,15 @@ assignment could happen.</p>
 <div class="sect2">
 <h3 id="_solution_bank_burglary">12.4. Solution: Bank burglary</h3>
 <div class="paragraph">
-<p>Here is our solution to the bank burglary problem. Although somewhat
+<p>Here&#8217;s our solution to the bank burglary problem. Although somewhat
 fanciful, the process could be expanded into a more serious simulation.
 We begin by defining each of the exceptions.</p>
 </div>
 <div id="BurglarAlarmExceptionProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BurglarAlarmException</span> <span class="kd">extends</span> <span class="n">Exception</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="nf">BurglarAlarmException</span><span class="o">(</span> <span class="n">String</span> <span class="n">message</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">message</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">BurglarAlarmException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="kd">public</span> <span class="nf">BurglarAlarmException</span><span class="o">()</span> <span class="o">{</span> <span class="kd">super</span><span class="o">();</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -26438,8 +26454,8 @@ We begin by defining each of the exceptions.</p>
 <div id="WatchmanExceptionProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WatchmanException</span> <span class="kd">extends</span> <span class="n">Exception</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="nf">WatchmanException</span><span class="o">(</span> <span class="n">String</span> <span class="n">message</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">message</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">WatchmanException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="kd">public</span> <span class="nf">WatchmanException</span><span class="o">()</span> <span class="o">{</span> <span class="kd">super</span><span class="o">();</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -26448,8 +26464,8 @@ We begin by defining each of the exceptions.</p>
 <div id="LockPickFailExceptionProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LockPickFailException</span> <span class="kd">extends</span> <span class="n">Exception</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="nf">LockPickFailException</span><span class="o">(</span> <span class="n">String</span> <span class="n">message</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">message</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">LockPickFailException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="kd">public</span> <span class="nf">LockPickFailException</span><span class="o">()</span> <span class="o">{</span> <span class="kd">super</span><span class="o">();</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -26458,8 +26474,8 @@ We begin by defining each of the exceptions.</p>
 <div id="LootTooHeavyExceptionProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LootTooHeavyException</span> <span class="kd">extends</span> <span class="n">Exception</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="nf">LootTooHeavyException</span><span class="o">(</span> <span class="n">String</span> <span class="n">message</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">message</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">LootTooHeavyException</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="kd">public</span> <span class="nf">LootTooHeavyException</span><span class="o">()</span> <span class="o">{</span> <span class="kd">super</span><span class="o">();</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -26476,14 +26492,14 @@ each of these contructors <strong>without</strong> a customized message.</p>
 <p>With the exceptions defined, we can assume that the <code>Bank</code> class and the
 <code>Vault</code> class throw the appropriate exceptions when something goes
 wrong. Thus, we can make a <code>Henchman</code> class who can try to do the heist
-and react appropriately if there is a problem.</p>
+and react appropriately if there&#8217;s a problem.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Henchman</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">burgle</span><span class="o">(</span> <span class="n">Bank</span> <span class="n">bank</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">burgle</span><span class="o">(</span><span class="n">Bank</span> <span class="n">bank</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">bank</span><span class="o">.</span><span class="na">disableAlarm</span><span class="o">();</span>
+            <span class="n">bank</span><span class="o">.</span><span class="na">disableAlarm</span><span class="o">();</span> <i class="conum" data-value="2"></i><b>(2)</b>
             <span class="n">bank</span><span class="o">.</span><span class="na">breakIn</span><span class="o">();</span>
             <span class="n">Vault</span> <span class="n">vault</span> <span class="o">=</span> <span class="n">bank</span><span class="o">.</span><span class="na">findVault</span><span class="o">();</span>
 
@@ -26491,40 +26507,53 @@ and react appropriately if there is a problem.</p>
             <span class="n">Loot</span> <span class="n">loot</span> <span class="o">=</span> <span class="n">vault</span><span class="o">.</span><span class="na">getLoot</span><span class="o">();</span>
             <span class="n">loot</span><span class="o">.</span><span class="na">carryAway</span><span class="o">();</span>
 
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"We got "</span> <span class="o">+</span> <span class="n">loot</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"We got "</span> <span class="o">+</span> <span class="n">loot</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
         <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>To burgle a bank, one must create a <code>Henchman</code> object then pass a <code>Bank</code>
-object into its <code>burgle()</code> method. The method will try to disable the
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>To burgle a bank, one must create a <code>Henchman</code> object then pass a <code>Bank</code>
+object into its <code>burgle()</code> method.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The method will try to disable the
 alarm, break into the bank, find the vault, open the vault, get the loot
-out of the vault, and carry it away. If all those steps happen
-successfully, the method will print out a <code>String</code> version of the loot.
-All of this code is inside of a <code>try</code> block. If an exception is thrown
+out of the vault, and carry it away.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If all those steps happen
+successfully, the method will print out a <code>String</code> version of the loot.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>All of this code is inside of a <code>try</code> block. If an exception is thrown
 at any point, the following <code>catch</code> blocks will deal with it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">        <span class="k">catch</span><span class="o">(</span> <span class="n">BurglarAlarmException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"I set off the burglar because "</span>
-                    <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+<pre class="rouge highlight"><code data-lang="java">        <span class="k">catch</span><span class="o">(</span><span class="n">BurglarAlarmException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"I set off the burglar because "</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"I had to run away."</span><span class="o">);</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">WatchmanException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"A watchman caught me because "</span>
-                    <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">WatchmanException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>     <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"A watchman caught me because "</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Please bail me out of jail."</span><span class="o">);</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">LockPickFailException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">LockPickFailException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"I couldn't pick the vault lock."</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"No loot for us."</span><span class="o">);</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">LootTooHeavyException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">LootTooHeavyException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="4"></i><b>(4)</b>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"The loot was too heavy to carry."</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"No loot for us."</span><span class="o">);</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">NullPointerException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">NullPointerException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>  <i class="conum" data-value="5"></i><b>(5)</b>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"The vault was hidden or empty."</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"No loot for us."</span><span class="o">);</span>
         <span class="o">}</span>
@@ -26532,26 +26561,43 @@ at any point, the following <code>catch</code> blocks will deal with it.</p>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>If a <code>BurglarAlarmException</code> happens, the henchman is forced to run
-away. If a <code>WatchmanException</code> happens, the henchman is caught and must
-be bailed out of jail. If a <code>LockPickFailException</code> or
-<code>LootTooHeavyException</code> happens, the henchman is unable to carry the
-loot off.</p>
-</div>
-<div class="paragraph">
-<p>The last <code>catch</code> block is a little unusual. In this case, a
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>If a <code>BurglarAlarmException</code> happens, the henchman is forced to run
+away.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>If a <code>WatchmanException</code> happens, the henchman is caught and must
+be bailed out of jail.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If a <code>LockPickFailException</code> the henchman is unable to carry the
+loot off.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Something similar happens for a <code>LootTooHeavyException</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The last <code>catch</code> block is a little unusual. In this case, a
 <code>NullPointerException</code> has occurred. Within the <code>try</code> block, two obvious
 sources of this exception are the <code>vault</code> and the <code>loot</code> variables. If
 either of them were <code>null</code>, in the case of a vault that could not be
 found or a vault that was empty, trying to call a method on that <code>null</code>
 reference would throw a <code>NullPointerException</code>. Although this code shows
-the power of exception handling, it is a little unwieldy since we do not
-know which variable was <code>null</code>. Also, we will hide any
-<code>NullPointerException</code> that might have for other reasons. A better
+the power of exception handling, it&#8217;s a little unwieldy since we don&#8217;t
+know which variable was <code>null</code>. Also, it&#8217;ll hide any
+<code>NullPointerException</code> that might happen for other reasons. A better
 solution would be to check for each of these <code>null</code> cases or create more
 specific exceptions thrown by <code>findVault()</code> and <code>getLoot()</code> if either
-returns <code>null</code>.</p>
+returns <code>null</code>.</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -26562,11 +26608,11 @@ thread or it might be an extra one that you spawned yourself. (Or even
 one spawned behind the scenes through a library call.)</p>
 </div>
 <div class="paragraph">
-<p>What happens when a thread throws an exception? As we have been
+<p>What happens when a thread throws an exception? As we&#8217;ve been
 discussing in this chapter, the exception will either be caught or
-passed on to its caller. If the exception is caught, the <code>catch</code> block
-determines what happens. If the exception is passed up and up and up and
-never caught, then what? If you have coded some of the examples in this
+propagate back to its caller. If the exception is caught, the <code>catch</code> block
+determines what happens. If the exception propagates back and back and back and
+is never caught, then what? If you&#8217;ve coded some of the examples in this
 chapter, you might think the entire program crashes, but only the thread
 throwing the exception dies.</p>
 </div>
@@ -26586,19 +26632,19 @@ will run to completion before the JVM shuts down.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CrazyThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">value</span><span class="o">;</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-            <span class="k">new</span> <span class="nf">CrazyThread</span><span class="o">(</span> <span class="n">i</span> <span class="o">).</span><span class="na">start</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">new</span> <span class="nf">CrazyThread</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
         <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">();</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="nf">CrazyThread</span><span class="o">(</span> <span class="kt">int</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">CrazyThread</span><span class="o">(</span><span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">7</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">value</span> <span class="o">==</span> <span class="mi">7</span><span class="o">)</span> <span class="o">{</span>
             <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-            <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">1000000</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">1000000</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
                 <span class="n">sum</span> <span class="o">+=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sin</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Sum: "</span> <span class="o">+</span> <span class="n">sum</span><span class="o">);</span>
         <span class="o">}</span>
@@ -26610,10 +26656,9 @@ will run to completion before the JVM shuts down.</p>
 </div>
 <div class="paragraph">
 <p>In the program given above, all of the threads except one will die
-because of the<br>
-<code>RuntimeException</code> that they throw. Note that we use the unchecked
+because of the <code>RuntimeException</code> that they throw. Note that we use the unchecked
 <code>RuntimeException</code> so that Java does not complain about the lack of
-<code>catch</code> blocks. The thread with a <code>value</code> of 7 will complete its
+<code>catch</code> blocks. The thread with a <code>value</code> of <code>7</code> will complete its
 calculation and print it to the screen even though the main thread has
 died. For more information on how to spawn threads, refer to
 <a href="#ch13-concurrency">Chapter 13</a>.</p>
@@ -26624,35 +26669,33 @@ died. For more information on how to spawn threads, refer to
 <p>This behavior can cause a program that never seems to finish. You might
 write a program that spawns a number of threads and does some work. Even
 if the <code>main()</code> method has completed and all the important data has been
-output, the program will not terminate if any threads are still alive.
+output, the program won&#8217;t terminate if any threads are still alive.
 This problem can also be caused by creating a GUI (such as a <code>JFrame</code>),
-which spawns one or more threads indirectly, if the GUI is not properly
+which spawns one or more threads indirectly, if the GUI isn&#8217;t properly
 disposed.</p>
 </div>
 <div class="sect3">
 <h4 id="_interruptedexception">12.5.1. <code>InterruptedException</code></h4>
 <div class="paragraph">
 <p>In conjunction with concurrency, one exception deserves special
-attention:<br>
-<code>InterruptedException</code>. This exception can happen when a thread calls
-<code>wait()</code>, <code>join()</code>, or <code>sleep()</code>. It is a checked exception, requiring
-either a <code>catch</code> block or a <code>throws</code> declaration.</p>
+attention: <code>InterruptedException</code>. This exception can happen when a thread calls
+<code>wait()</code>, <code>join()</code>, or <code>sleep()</code>. It&#8217;s a checked exception, requiring
+either a <code>catch</code> block or a <code>throws</code> specification.</p>
 </div>
 <div class="paragraph">
 <p>This exception is used in cases where the executing thread must wait for
 some event to occur or some time to pass. In extreme circumstances,
 another thread can interrupt the waiting thread, forcing it to continue
 executing before it&#8217;s done waiting. If that happens, the code in the
-<code>catch</code> block determines how the thread should recover from being woken
+<code>catch</code> block determines how the thread should recover from being awoken
 prematurely.</p>
 </div>
 <div class="paragraph">
 <p>Programmers who are new to concurrency in Java are often confused or
-annoyed by<br>
-<code>InterruptedException</code>, particularly since it never seems to be thrown.
-Although it is thrown rarely, situations such as a system shutting down
+annoyed by <code>InterruptedException</code>, particularly since it never seems to be thrown.
+Although it&#8217;s thrown rarely, situations such as a system shutting down
 may be best dealt with by calling <code>interrupt()</code> on a waiting thread,
-causing such an exception. Although we will generally leave the
+causing such an exception. Although we&#8217;ll generally leave the
 <code>InterruptedException</code> <code>catch</code> block empty in this book, threads written
 for production code should always handle interruptions gracefully.</p>
 </div>
@@ -26672,10 +26715,10 @@ using exceptions instead of returning error codes?</p>
 <li>
 <p><a id="finalFinallyFinalizeExercise"></a> The keywords <code>final</code> and <code>finally</code>,
 as well as the <code>Object</code> method <code>finalize()</code>, are sometimes confused.
-What is the purpose of each one?</p>
+What&#8217;s the purpose of each one?</p>
 </li>
 <li>
-<p><a id="throwThrowsExercise"></a> What is the difference between the
+<p><a id="throwThrowsExercise"></a> What&#8217;s the difference between the
 <code>throw</code> keyword and the <code>throws</code> keyword?</p>
 </li>
 <li>
@@ -26685,7 +26728,7 @@ requirement of Java.</p>
 <li>
 <p><a id="checkedExceptionsExercise"></a> What must be done differently
 when using methods that throw checked exceptions as compared to
-unchecked exceptions? How do the classes <code>Exception</code>,<br>
+unchecked exceptions? How do the classes <code>Exception</code>,
 <code>RuntimeException</code>, and <code>Error</code> play a role?</p>
 </li>
 <li>
@@ -26697,10 +26740,9 @@ approach a bad programming decision?</p>
 </li>
 <li>
 <p>Why did the designers of Java choose to make <code>NullPointerException</code>
-and<br>
-<code>ArithmeticException</code> unchecked exceptions even though this choice means
-that a program that unintentionally dereferences a <code>null</code> pointer or
-divides by zero will often crash.</p>
+and <code>ArithmeticException</code> unchecked exceptions even though a program that
+unintentionally dereferences a <code>null</code> pointer or
+divides by zero will often crash?</p>
 </li>
 <li>
 <p><a id="needThrowsExercise"></a> Consider the following two classes.</p>
@@ -26729,12 +26771,12 @@ and what could be done to make <code>Hazard</code> compile.</p>
 always return and why?</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">magic</span><span class="o">(</span> <span class="n">String</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">magic</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
     <span class="k">try</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span> <span class="n">value</span> <span class="o">);</span>
+        <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">x</span><span class="o">;</span>
     <span class="o">}</span>
-    <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Some exception occurred."</span><span class="o">);</span>
         <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
     <span class="o">}</span>
@@ -26753,10 +26795,10 @@ segment of code fail to compile?</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="k">try</span><span class="o">{</span>
     <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Exception occurred!"</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Woke up early!"</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -26776,7 +26818,7 @@ Java.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This code is legal Java. It is possible to have a <code>finally</code> block after
+<p>This code is legal Java. It&#8217;s possible to have a <code>finally</code> block after
 a <code>try</code> block without any <code>catch</code> blocks between them. However, only a
 single exception can be active at once. Which exception will propagate
 up from this code and why?</p>
@@ -26791,7 +26833,8 @@ up from this code and why?</p>
 <ol class="arabic" start="12">
 <li>
 <p><a id="NumberFormatExceptionExercise"></a> The <code>NumberFormatException</code>
-exception is thrown whenever the <code>Integer.parseInt()</code> method receives a poorly formatted <code>String</code> representation of an integer. Re-implement <code>QuickCalculator</code> to catch any <code>NumberFormatException</code> and give an appropriate message to the user.</p>
+exception is thrown whenever the <code>Integer.parseInt()</code> method receives a poorly formatted <code>String</code> representation of an integer.
+Re-implement <code>QuickCalculator</code> to catch any <code>NumberFormatException</code> and give an appropriate message to the user.</p>
 </li>
 <li>
 <p><a id="customExceptionsExercise"></a> Refer to
@@ -26853,7 +26896,7 @@ below.</p>
 then pass it to the <code>check()</code> method. If the method throws an exception,
 you should catch it and print an appropriate error message. Otherwise,
 you should report to the user that the password is acceptable. Note that
-you will need to define each of the four exceptions as well.</p>
+you&#8217;ll need to define each of the four exceptions as well.</p>
 </div>
 </li>
 </ol>
@@ -26871,8 +26914,8 @@ array containing 100,000 random <code>int</code> values. First, sum all these
 variables up using a <code>for</code> loop and time how long it takes. Then, do the
 same thing, but, inside of the <code>for</code> loop, put a <code>try</code> block containing
 a simple division by zero instruction such as <code>x = 5 / 0;</code>. After the
-<code>try</code> block, put a <code>catch</code> block catching an<br>
-<code>ArithmeticException</code>. Time this version of the code. Again, you may
+<code>try</code> block, put a <code>catch</code> block catching an <code>ArithmeticException</code>.
+Time this version of the code. Again, you may
 wish to use <code>System.nanoTime()</code> to measure the time accurately. Was
 there a large difference in the time taken? Do your findings have any
 implications for code that routinely throws thousands of exceptions?</p>
