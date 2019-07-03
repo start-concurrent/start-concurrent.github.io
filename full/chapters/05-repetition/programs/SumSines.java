@@ -9,9 +9,9 @@ public class SumSines {
         int end = in.nextInt();
         
         double sum = 0;
-        for( int i = start; i <= end; i++ )     
+        for(int i = start; i <= end; i++)     
             sum += Math.sin(start);
         
-        System.out.println("Sum of sines: " + sum );
+        System.out.println("Sum of sines: " + sum);
     }
 }

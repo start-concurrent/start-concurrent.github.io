@@ -4,7 +4,7 @@ public class MatrixRotate {
     public static void main(String[] args) {
         double[] point = new double[3]; //<1>
         System.out.println("What point do you want to rotate?");
-        Scanner in = new Scanner( System.in );
+        Scanner in = new Scanner(System.in);
         System.out.print("x: "); //<2>
         point[0] = in.nextDouble();
         System.out.print("y: ");
@@ -20,8 +20,8 @@ public class MatrixRotate {
         rotation[2][1] = Math.sin(theta);
         rotation[2][2] = Math.cos(theta);
         double[] rotatedPoint = new double[3];
-        for( int i = 0; i < rotatedPoint.length; i++ ) //<5>
-            for( int j = 0; j < point.length; j++ )
+        for(int i = 0; i < rotatedPoint.length; i++) //<5>
+            for(int j = 0; j < point.length; j++)
                 rotatedPoint[i] += rotation[i][j]*point[j];
         System.out.println("Rotated point: [" + rotatedPoint[0] + //<6>
             "," + rotatedPoint[1] + "," + rotatedPoint[2] + "]");

@@ -10,7 +10,7 @@ public class TemperatureCLI {
 		double fahrenheit = in.nextDouble();
 		double celsius = 5.0*(fahrenheit - 32.0)/9.0;
 		System.out.println("Temperature (C): " + celsius);
-		for( int i = 0; i < 10; ++i )
+		for(int i = 0; i < 10; ++i)
 			System.out.println();		
 	}	
 }

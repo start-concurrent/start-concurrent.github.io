@@ -10,14 +10,14 @@ public class Life {
             for(int column = 0; column < COLUMNS; column++)
                 board[row][column] = (Math.random() < 0.1);
         for(int generation = 0; generation < GENERATIONS; generation++) { //<.>
-            for(int row = 0; row < ROWS; row++ ) //<.>
+            for(int row = 0; row < ROWS; row++) //<.>
                 for(int column = 0; column < COLUMNS; column++) {
                     int total = 0;
                     for(int i = Math.max(row - 1, 0); //<.>
 						i < Math.min(row + 2, ROWS); i++)
                         for(int j = Math.max(column - 1, 0);
 							j < Math.min(column + 2, COLUMNS); j++)
-                            if((i != row || j != column ) && board[i][j] )
+                            if((i != row || j != column) && board[i][j])
                                 total++;
                     if(board[row][column])
                         temp[row][column] = (total == 2 || total == 3); //<.>
@@ -38,7 +38,7 @@ public class Life {
                 System.out.println();
             }           
             try { Thread.sleep(500); } //<.>
-            catch( InterruptedException e ) {}
+            catch(InterruptedException e) {}
         }
     }
 }

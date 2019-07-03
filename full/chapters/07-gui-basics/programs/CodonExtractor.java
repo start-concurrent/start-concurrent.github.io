@@ -12,15 +12,15 @@ public class CodonExtractor {
                 displayCodons(input); // <.>
             else
                 message = "Invalid DNA Sequence.\n" + message;
-            continueProgram = JOptionPane.showConfirmDialog( // <.>
+            continueProgram = JOptionPane.showConfirmDialog(// <.>
                 null, message, "Alert", JOptionPane.YES_NO_OPTION);            
         } while(continueProgram == JOptionPane.YES_OPTION);
         JOptionPane.showMessageDialog(null, "Thanks for using the Codon Extractor!");  
     }
         
-    public static boolean isValid( String dna ) {
+    public static boolean isValid(String dna) {
         String validBases = "ACGT";                
-        for( int i = 0; i < dna.length(); i++) {
+        for(int i = 0; i < dna.length(); i++) {
             char base = dna.charAt(i);
             if(validBases.indexOf(base) == -1)          
                 return false; //base not in "ACGT"
