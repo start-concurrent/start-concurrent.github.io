@@ -14,8 +14,8 @@ public class TemperatureGUI extends JFrame implements ActionListener {
 		JPanel panel = new JPanel(new GridLayout(3,2,5,5));
 		panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 	
-		panel.add( new JLabel("Celsius") );
-		panel.add( new JLabel("Fahrenheit") );		
+		panel.add(new JLabel("Celsius"));
+		panel.add(new JLabel("Fahrenheit"));		
         panel.add(celsiusField);
         panel.add(fahrenheitField);
         panel.add(celsiusToFahrenheitButton);
@@ -32,9 +32,9 @@ public class TemperatureGUI extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if( source == fahrenheitToCelsiusButton )
+        if(source == fahrenheitToCelsiusButton)
 			convertToCelsius();
-        else if( source == celsiusToFahrenheitButton )
+        else if(source == celsiusToFahrenheitButton)
 			convertToFahrenheit();    
     }
     
@@ -44,7 +44,7 @@ public class TemperatureGUI extends JFrame implements ActionListener {
             fahrenheitField.setText("" + (32.0+9.0/5.0*value));            
         }
 		catch(NumberFormatException e){
-			JOptionPane.showMessageDialog( null, "Celsius value is incorrect.", "Format Error", JOptionPane.ERROR_MESSAGE );
+			JOptionPane.showMessageDialog(null, "Celsius value is incorrect.", "Format Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -54,7 +54,7 @@ public class TemperatureGUI extends JFrame implements ActionListener {
             celsiusField.setText("" + (5.0/9*(value-32)));
         }
 		catch(NumberFormatException e) {
-			JOptionPane.showMessageDialog( null, "Fahrenheit value is incorrect.", "Format Error", JOptionPane.ERROR_MESSAGE );
+			JOptionPane.showMessageDialog(null, "Fahrenheit value is incorrect.", "Format Error", JOptionPane.ERROR_MESSAGE);
         }        
     }
     
