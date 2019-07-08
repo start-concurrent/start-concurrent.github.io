@@ -711,22 +711,21 @@ the fire.</p>
 <div class="sect2">
 <h3 id="_introduction_2">13.1. Introduction</h3>
 <div class="paragraph">
-<p>So far we have focused mostly on writing sequential programs. Such
-programs are executed sequentially by a computer. Sequential execution
-implies that program statements are executed one at a time in a sequence
-determined by program logic and input data. While it is common for
+<p>So far we’ve focused mostly on writing sequential programs. Sequential execution
+means that program statements are executed one at a time in a sequence
+determined by program logic and input data. However, more than
+one program statement can be executed independently by a multicore
+processor. While it’s common for
 programmers to write sequential programs, the widespread availability of
 multicore processors in a single computer has led to an increase in the
-demand for programmers who can write <em>concurrent</em> programs. More than
-one program statement can be executed independently by a multicore
-processor.</p>
+demand for programmers who can write <em>concurrent</em> programs.</p>
 </div>
 <div class="paragraph">
 <p>A concurrent program is one in which several statements can be executed
 simultaneously by two or more cores. In this chapter we show how to
 write simple concurrent programs in Java that exploit the power of a
-multicore computer. We begin with an example in which the fate of the
-planet is in grave danger!</p>
+multicore computer. We begin with a problem where the fate of the
+planet’s in grave danger!</p>
 </div>
 </div>
 <div class="sect2">
@@ -736,23 +735,23 @@ planet is in grave danger!</p>
 be released by an evil mastermind. Only he knows the security code that
 can stop the countdown. The world is doomed. The single hope for
 salvation lies with you and your Java programming skills. Through the
-investigations of a top secret, government-funded spy ring, it has been
+investigations of a top secret, government-funded spy ring, it’s been
 revealed that the security code is tied to the number
 59,984,005,171,248,659. This large number is the product of two prime
 numbers, and the security code is their sum. All you need to do is
-factor the number 59,984,005,171,248,659 into its two prime factors.</p>
+factor the number 59,984,005,171,248,659 into its two prime factors and add them.</p>
 </div>
 <div class="paragraph">
-<p>Of course, there is a catch. The deadly virus is going to be released
+<p>Of course, there’s a catch. The deadly virus is going to be released
 soon, so soon that there might not be enough time for your computer to
 search through all the numbers one by one. Instead, you must use
 concurrency to check more than one number at a time.</p>
 </div>
 <div class="paragraph">
 <p>Does this problem sound contrived? To keep information sent over the
-Internet private, some kinds of public key cryptography rely on the
+Internet private, many kinds of public key cryptography rely on the
 difficulty of factoring large numbers. Although factoring the number in
-this problem is not difficult, the numbers used for public key
+this problem isn’t difficult, the numbers used for public key
 cryptography, typically more than 300 decimal digits long, have resisted
 factorization by even the fastest computers.</p>
 </div>
@@ -768,14 +767,14 @@ concurrent solution to a problem.</p>
 <div class="paragraph">
 <p>In a multicore processor, each core is an independent worker. It takes
 some care to coordinate these workers. First of all, we still need to
-get the right answer. A concurrent solution is worthless if it is
+get the right answer. A concurrent solution is worthless if it’s
 incorrect, and by reading and writing to the same shared memory, answers
 found by one core can corrupt answers found by other cores. Preventing
 that problem will be addressed in <a href="chap13.html#ch14-synchronization">Chapter 14</a>.
-If we are sure the concurrent solution is correct, we also want to
-improve performance in some way. Perhaps we want the task to finish more
+Once we can guarantee the concurrent solution is correct, we also want to
+improve performance. Perhaps we want the task to finish more
 quickly. Perhaps we have an interactive system that should continue to
-handle user requests even though it is working on a solution in the
+handle user requests even though it’s working on a solution in the
 background. Again, if the overhead of coordinating our workers takes
 more time than a sequential solution or makes the system less
 responsive, it’s not useful.</p>
@@ -788,14 +787,14 @@ responsive, it’s not useful.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>There are two main ways to split up work. The first is called <em>task
-decomposition</em>. In this approach, each worker is given a different job
+<p>There are two main ways to split up work. The first is called
+<em>task decomposition</em>. In this approach, each worker is given a different job
 to do. The second is called <em>domain decomposition</em>. In this approach,
-the workers do the same job, but to different data.</p>
+the workers do the same job but to different data.</p>
 </div>
 <div class="paragraph">
-<p>It is possible to use both task and domain decomposition together to
-solve the same problem. With both kinds of decomposition, it is usually
+<p>It’s possible to use both task and domain decomposition together to
+solve the same problem. With both kinds of decomposition, it’s usually
 necessary to coordinate the workers so that they can share information.
 In the next two subsections, we describe task decomposition and domain
 decomposition in greater depth. Then we discuss mapping tasks to threads
@@ -806,16 +805,16 @@ concurrent programming.</p>
 <h4 id="_task_decomposition">13.3.1. Task decomposition</h4>
 <div class="paragraph">
 <p>The idea of breaking a task down into smaller subtasks is a natural one.
-Imagine you are planning a dinner party. You need to buy supplies, cook
+Imagine you’re planning a dinner party. You need to buy supplies, cook
 the dinner, clean your house, and set the table. If four of you were
 planning the party, each could perform a separate activity. The
 preparations could go much faster than if a single person was doing the
 work, but coordination is still important. Perhaps the person cooking
-the dinner couldn’t finish until certain supplies had been bought.</p>
+the dinner couldn’t finish until certain supplies were bought.</p>
 </div>
 <div class="paragraph">
 <p>Task decomposition is often easier than domain decomposition because
-many tasks have natural divisions. Unfortunately, it is not always an
+many tasks have natural divisions. Unfortunately, it’s not always an
 effective way to use multiple cores on a computer. If one task finishes
 long before the others, a core might sit idle.</p>
 </div>
@@ -840,19 +839,19 @@ programming.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>start game</p>
+<p>Start game</p>
 </li>
 <li>
-<p>process move</p>
+<p>Process move</p>
 </li>
 <li>
-<p>update score</p>
+<p>Update score</p>
 </li>
 <li>
-<p>repaint screen</p>
+<p>Repaint screen</p>
 </li>
 <li>
-<p>end game</p>
+<p>End game</p>
 </li>
 </ol>
 </div>
@@ -875,7 +874,7 @@ In a dual-core processor tasks B and C can execute on one core while
 task D is executing concurrently on another. Note from the figure that
 task C sends the score and any other data to task D which is
 continuously updating the screen. Having two cores can allow a faster
-refresh of the display as the processor does not have to wait for tasks
+refresh of the display since the processor doesn’t have to wait for tasks
 B or C to complete.</p>
 </div>
 </div>
@@ -884,16 +883,14 @@ B or C to complete.</p>
 <div class="title">Example 13.2 Math expression tasks</div>
 <div class="content">
 <div class="paragraph">
-<p>Suppose that the following mathematical expression is to be evaluated
-for parameters \(a\) and \(K\) at a given value of
-\(t\).
-\(2\cdot K\cdot a\cdot t\cdot e^{-a\cdot t^2}\) We can
-divide the expression into two terms:
-\(2\cdot K\cdot a\cdot t\) and \(e^{-a\cdot t^2}\).
+<p>Suppose we need to evaluate the mathematical expression
+2<em>Kate</em><sup>-<em>at</em>²</sup> with parameters <em>a</em> and <em>K</em> at a given value of
+<em>t</em>.  We can divide the expression into two terms:
+2<em>Kat</em> and <em>e</em><sup>-<em>at</em>²</sup>.
 Each of these terms can be assigned to a different task for evaluation.
 On a dual-core processor, these two tasks can be executed on separate
-cores and the results from each combined to generate the value of the
-expression by the main task.</p>
+cores and the results from each combined to find the value of the
+expression for the main task.</p>
 </div>
 <div id="figure-math_evaluation" class="imageblock text-center">
 <div class="content">
@@ -905,8 +902,8 @@ expression by the main task.</p>
 <p><a href="#figure-math_evaluation">Figure 13.2</a> shows how this expression can be
 evaluated on single core and dual-core processors. Sometimes, using
 multiple cores to evaluate an expression like this will take less time
-than a single core. However, there is no guarantee that using multiple
-cores will always be faster, because tasks take time to set up and to
+than a single core. However, there’s no guarantee that using multiple
+cores will always be faster since tasks take time to set up and to
 communicate with each other.</p>
 </div>
 </div>
@@ -915,7 +912,7 @@ communicate with each other.</p>
 <div class="content">
 <div class="paragraph">
 <p><a href="#mathExpressionTimingExercise">Exercise 13.4</a><br>
-<a href="#quadcoreExercise">Exercise 13.5</a></p>
+<a href="#quad-coreExercise">Exercise 13.5</a></p>
 </div>
 </div>
 </div>
@@ -932,26 +929,26 @@ larger number of cores.</p>
 <p>In a computer program, every task performs operations on data. This data
 is called the <em>domain</em> of that task. In domain decomposition, the data
 is divided into smaller chunks where each chunk is assigned to a
-different core, instead of dividing a task into subtasks. Each core
+different core, instead of dividing a task into subtasks. Thus, each core
 executes the same task but on different data.</p>
 </div>
 <div class="paragraph">
 <p>In the example of the dinner party, we could have used domain
 decomposition instead of (or in addition to) task decomposition. If you
 want to cook a massive batch of mashed potatoes, you could peel 24
-potatoes yourself. However, if there are four of you (and you each have
+potatoes yourself. However, if there are four people (and each has
 a potato peeler), each person would only need to peel 6 potatoes.</p>
 </div>
 <div class="paragraph">
 <p>The strategy of domain decomposition is very useful and is one of the
 major focuses of concurrency in this book. Problems in modern computing
-often use massive data, comprising millions of numbers or thousands of
+often use massive data, comprising millions of values or thousands of
 database records. Writing programs that can chop up data so that
 multiple cores can process smaller sections of it can greatly speed up
-the time it takes to finish computing a solution.</p>
+the time it takes to finish computation.</p>
 </div>
 <div class="paragraph">
-<p>Domain decomposition can be more difficult than task decomposition. The
+<p>In some ways, domain decomposition can be more difficult than task decomposition. The
 data must be divided evenly and fairly. Once each section of data has
 been processed, the results must be combined. Companies like Google that
 process massive amounts of information have developed terminology to
@@ -967,29 +964,30 @@ examples.</p>
 <div class="title">Example 13.3 Array summation preview</div>
 <div class="content">
 <div class="paragraph">
-<p>Suppose that we want to apply function \(f()\) to each element
-of an array \(A\) and sum the results. Mathematically, we want
+<p>Suppose we want to apply function <em>f</em> to each element
+of an array <em>a</em> and sum the results. Mathematically, we want
 to compute the following sum.</p>
 </div>
-<div class="paragraph">
-<p>\(S=\sum_{i=1}^N f\left(a(i)\right)\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/13-concurrency/images/oneCoreSum.svg" alt="oneCoreSum" width="15%">
+</div>
 </div>
 <div class="paragraph">
-<p>In this formula, \(a(i)\) is the \(i\)<sup>th</sup> element
-of array \(A\). We want to perform the task of applying
-function \(f()\) to each element in the array and summing the
-result. Let’s assume that we have a dual-core processor available to
+<p>In this formula, <em>a</em><sub><em>i</em></sub> is the <em>i</em><sup>th</sup> element
+of array <em>a</em>. Let’s assume we have a dual-core processor available to
 compute the sum. We split up the array so that each core performs the
-task on half of the array. Let \(S_1\) and \(S_2\)
+task on half of the array. Let <em>S</em><sub>1</sub> and <em>S</em><sub>2</sub>
 denote the sums computed by core 1 and core 2, respectively.</p>
 </div>
-<div class="paragraph">
-<p>\(S_1 =\sum_{i=1}^{\lfloor \frac{N}{2}\rfloor } f\left(a(i)\right)\hspace{.75in}
-S_2 =\sum_{i=\lfloor \frac{N}{2} \rfloor +1}^{N} f\left(a(i)\right)\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/13-concurrency/images/twoCoreSum.svg" alt="twoCoreSum" width="50%">
+</div>
 </div>
 <div class="paragraph">
-<p>Assuming that \(N\) is even, both cores process exactly the
-same amount of data. For odd \(N\), one of the cores processes
+<p>Assuming that <em>N</em> is even, both cores process exactly the
+same amount of data. For odd <em>N</em>, one of the cores processes
 one more data item than the other.</p>
 </div>
 <div id="figure-array_decomposition" class="imageblock text-center">
@@ -999,8 +997,8 @@ one more data item than the other.</p>
 <div class="title">Figure 13.3 Computing the sum of a function of each element of an array.</div>
 </div>
 <div class="paragraph">
-<p>After \(S_1\) and \(S_2\) have been computed, one of
-the cores can add these two numbers together to get \(S\).
+<p>After <em>S</em><sub>1</sub> and <em>S</em><sub>2</sub> have been computed, one of
+the cores can add these two numbers together to get <em>S</em>.
 This strategy is illustrated in <a href="#figure-array_decomposition">Figure 13.3</a>.
 After the two cores have completed their work on each half of the array,
 the individual sums are added together to produce the final sum.</p>
@@ -1012,31 +1010,31 @@ the individual sums are added together to produce the final sum.</p>
 <div class="content">
 <div class="paragraph">
 <p>The need to multiply matrices arises in many mathematical, scientific,
-and engineering applications. Suppose we are asked to write a program to
-multiply two square matrices \(A\) and \(B\), which
-are both \(n\times n\) matrices. The product matrix
-\(C\) will also be \(n\times n\). A sequential
-program will compute each element of matrix \(C\) one at a
+and engineering applications. Suppose we’re asked to write a program to
+multiply two square matrices <em>A</em> and <em>B</em>, which
+are both <em>n</em> × <em>n</em> matrices. The product matrix
+<em>C</em> will also be <em>n</em> × <em>n</em>. A sequential
+program will compute each element of matrix <em>C</em> one at a
 time. However, a concurrent program can compute more than one element of
-\(C\) simultaneously using multiple cores.</p>
+<em>C</em> simultaneously using multiple cores.</p>
 </div>
 <div id="figure-matrix_decomposition" class="imageblock text-center">
 <div class="content">
 <img src="chapters/13-concurrency/images/matrixDecomposition.svg" alt="matrixDecomposition" width="75%">
 </div>
-<div class="title">Figure 13.4 Data decomposition to multiply two \(4\times 4\) matrices. The two cores perform the same multiplication tasks but on different data from matrix \(A\). The two cores compute the top and bottom two rows of \(C\), respectively.</div>
+<div class="title">Figure 13.4 Data decomposition to multiply two 4 × 4 matrices. The two cores perform the same multiplication tasks but on different data from matrix <em>A</em>. The two cores compute the top two and bottom two rows of <em>C</em>, respectively.</div>
 </div>
 <div class="paragraph">
-<p>In this problem, the task is to multiply matrices \(A\) and
-\(B\). Through domain decomposition, we can replicate this
+<p>In this problem, the task is to multiply matrices <em>A</em> and
+<em>B</em>. Through domain decomposition, we can replicate this
 task on each core. As shown in <a href="#figure-matrix_decomposition">Figure 13.4</a>,
-each core computes only a portion of \(C\). For example, if
-\(A\) and \(B\) are \(4\times 4\)
+each core computes only a portion of <em>C</em>. For example, if
+<em>A</em> and <em>B</em> are 4 × 4
 matrices, we can ask one core to compute the product of the first two
-rows of \(A\) with all four columns of \(B\) to
-generate the first two rows of \(C\). The second core computes
-the remaining two rows of \(C\). Both cores can access
-matrices \(A\) and \(B\).</p>
+rows of <em>A</em> with all four columns of <em>B</em> to
+generate the first two rows of <em>C</em>. The second core computes
+the remaining two rows of <em>C</em>. Both cores can access
+matrices <em>A</em> and <em>B</em>.</p>
 </div>
 </div>
 </div>
@@ -1044,27 +1042,26 @@ matrices \(A\) and \(B\).</p>
 <div class="sect3">
 <h4 id="_tasks_and_threads">13.3.3. Tasks and threads</h4>
 <div class="paragraph">
-<p>It is the programmer’s responsibility to divide his or her solution into
+<p>It’s the programmer’s responsibility to divide his or her solution into
 a number of tasks and subtasks which will run on one or more cores on a
 processor. In previous sections, we described concurrent programs as if
-specific tasks could be assigned specific cores, but Java does not
+specific tasks could be assigned specific cores, but Java doesn’t
 provide a direct way to do so.</p>
 </div>
 <div class="paragraph">
 <p>Instead, a Java programmer must group together a set of tasks and
 subtasks into a <em>thread</em>. A thread is very much like a sequential
-program. In fact, all sequential programs have only one thread. A thread
-is a segment of executing code that runs through its instructions step
+program. In fact, all sequential programs are made up of a single thread.
+A thread is a segment of executing code that runs through its instructions step
 by step. Each thread can run independently. If you have a single core
 processor, only one thread can run at a time, and all the threads will
 take turns. If you have a multicore processor, as many threads as there
-are cores can execute at the same time. You cannot pick which core a
-given thread will run on. In most cases, you will not even be able to
+are cores can execute at the same time. You can’t pick which core a
+given thread will run on. In most cases, you won’t even be able to
 tell which core a given thread is using.</p>
 </div>
 <div class="paragraph">
-<p>Even though you cannot control which core a thread will use to execute,
-it takes care to package up the right set of tasks into a single thread
+<p>It takes care to package up the right set of tasks into a single thread
 of execution. Recall the previous examples of concurrent programming in
 this chapter.</p>
 </div>
@@ -1079,34 +1076,35 @@ can be packaged into thread 2. This division is shown in
 <a href="#figure-tasks_in_threads">Figure 13.5</a>(b). In many problems there are
 several reasonable ways of dividing a set of subtasks into threads.</p>
 </div>
-<div class="paragraph">
-<p>Note that these figures look exactly like the earlier figures, except
-that the tasks are grouped as threads instead of cores. This grouping is
-matches reality better, since we can control how the tasks are packaged
-into threads but not how they are assigned to cores.</p>
-</div>
-<div class="paragraph">
-<p>In both examples, we have two threads. It is possible that some other
-thread started these threads running. Every Java program, concurrent or
-sequential, starts with one thread. We will refer to this thread as the
-<em>main</em> thread since it contains the <code>main()</code> method.</p>
-</div>
-<div class="paragraph">
-<p><a href="#arraySummationPreviewExample">Example 13.3</a> and <a href="#matrixMultiplicationPreviewExample">Example 13.4</a> use multiple identical tasks. But these tasks
-operate on different data. Nevertheless, in <a href="#arraySummationPreviewExample">Example 13.3</a>, the two tasks can be assigned two threads that
-operate on different portions of the input array. The task of summing
-the results from the two threads can either be a separate thread or a
-subtask included in one of the other threads. In
-<a href="#matrixMultiplicationPreviewExample">Example 13.4</a>, the two tasks can
-again be assigned to two distinct threads that operate on different
-parts of the input matrix \(A\) to generate the corresponding
-portions of the output matrix \(C\).</p>
-</div>
 <div id="figure-tasks_in_threads" class="imageblock">
 <div class="content">
 <img src="chapters/13-concurrency/images/task-thread-packaging.svg" alt="task thread packaging" width="100%">
 </div>
 <div class="title">Figure 13.5 (a) Tasks in a video game shown packaged into two threads. (b) Tasks to evaluate a mathematical expression shown packaged into two threads. Each thread may or may not run on the same core as the other.</div>
+</div>
+<div class="paragraph">
+<p>Note that these figures look exactly like the earlier figures, except
+that the tasks are grouped as threads instead of cores. This grouping
+matches reality better, since we can control how the tasks are packaged
+into threads but not how they are assigned to cores.</p>
+</div>
+<div class="paragraph">
+<p>In both examples, we have two threads. It’s possible that some other
+thread started these threads running. Every Java program, concurrent or
+sequential, starts with one thread. We’ll refer to this thread as the
+<em>main</em> thread since it contains the <code>main()</code> method.</p>
+</div>
+<div class="paragraph">
+<p><a href="#arraySummationPreviewExample">Example 13.3</a> and <a href="#matrixMultiplicationPreviewExample">Example 13.4</a> use multiple identical tasks,
+but these tasks operate on different data. In <a href="#arraySummationPreviewExample">Example 13.3</a>,
+the two tasks can be assigned to two threads that
+operate on different portions of the input array. The task of summing
+the results from the two threads can either be a separate thread or a
+subtask included in one of the other threads. In
+<a href="#matrixMultiplicationPreviewExample">Example 13.4</a>, the two tasks can
+again be assigned to two distinct threads that operate on different
+parts of the input matrix <em>A</em> to generate the corresponding
+portions of the output matrix <em>C</em>.</p>
 </div>
 <div class="paragraph">
 <p>There can be many ways to package tasks into threads. There can also be
@@ -1121,32 +1119,33 @@ executed.</p>
 <div class="paragraph">
 <p>The two most important paradigms for concurrent programming are message
 passing and shared memory systems. Each paradigm handles communication
-between the various pieces of code running in parallel in a different
-way. Message passing systems such as MPI and PVM approach this problem
-by sending messages between otherwise independent pieces of code called
+between the various units of code running in parallel in a different
+way. Message passing systems such as MPI approach this problem
+by sending messages between otherwise independent units of code called
 processes. A process which is executing a task may have to wait until it
 receives a message from another process before it knows how to proceed.
-Messages can be sent from a single process to a single other or
+Messages can be sent from a single process to one other or
 broadcast to many. Message passing systems are especially useful when
 the processors doing the work do not share memory.</p>
 </div>
 <div class="paragraph">
-<p>In contrast, Java uses the shared memory paradigm. In Java, a programmer
+<p>In contrast, the built-in system for conurrencey in Java uses the shared
+memory paradigm. In Java, a programmer
 can create a number of threads which share the same memory space. Each
 thread is an object which can perform work. We described threads as a
 way to package up a group of tasks, and processes are another. People
-use the term <em>processes</em> to describe executing sections of code with
-separate memory and <em>threads</em> to describe executing sections of code
+use the term <em>processes</em> to describe units of code executing with
+separate memory and <em>threads</em> to describe units of code executing
 with shared memory.</p>
 </div>
 <div class="paragraph">
 <p>When you first learned to program, one of the biggest challenges was
 probably learning to solve a problem step by step. Each line of the
 program had to be executed one at a time, logically and
-deterministically. Human beings do not naturally think that way. We tend
+deterministically. Human beings don’t naturally think that way. We tend
 to jump from one thing to another, making inferences and guesses,
-thinking about two unrelated things at once, and so on. As you know well
-by now, it is only possible to write and debug programs because of the
+thinking about two unrelated things at once, and so on. As you know
+now, it’s only possible to write and debug programs because of the
 methodical way they work.</p>
 </div>
 <div class="paragraph">
@@ -1158,11 +1157,11 @@ execution in the program currently is. The code can move the arrow
 forward, it can do basic arithmetic, it can decide between choices with
 <code>if</code> statements, it can do things repeatedly with loops, it can jump
 into a method and then come back. A single thread of execution can do
-all of these things, but it cannot be two places at once. It cannot both
+all of these things, but its arrow can’t be two places at once. It can’t
 be dividing two numbers in one part of the program and evaluating an
-<code>if</code> statement in another. However, there is a way to split this thread
+<code>if</code> statement in another. However, there’s a way to split this thread
 of execution so that two or more threads are executing different parts
-of the program, and the next section will show you how it is done in
+of the program, and the next section will show you how this is done in
 Java.</p>
 </div>
 </div>
@@ -1172,7 +1171,7 @@ Java.</p>
 <div class="sect3">
 <h4 id="_the_thread_class">13.4.1. The <code>Thread</code> class</h4>
 <div class="paragraph">
-<p>Java, like many programming languages, provides the necessary features
+<p>Java, like many programming languages, includes the necessary features
 to package tasks and subtasks into threads. The <code>Thread</code> class and its
 subclasses provide the tools for creating and managing threads. For
 example, the following class definition allows objects of type
@@ -1187,7 +1186,7 @@ separate thread.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The constructor is written just like any other constructor, but there is
+<p>The constructor is written just like any other constructor, but there’s
 a special <code>run()</code> method in <code>Thread</code> that can be overridden by any of
 its subclasses. This method is the starting point for the thread of
 execution associated with an instance of the class. Most Java
@@ -1201,7 +1200,7 @@ each evaluating a separate subexpression as in <a href="#figure-tasks_in_threads
 <div class="title">Example 13.5 Thread samples</div>
 <div class="content">
 <div class="paragraph">
-<p>We will create <code>Thread1</code> and <code>Thread2</code> classes. The threads of execution
+<p>We’ll create <code>Thread1</code> and <code>Thread2</code> classes. The threads of execution
 created by instances of these classes compute, respectively, the two
 subexpressions in <a href="#figure-tasks_in_threads">Figure 13.5</a>(b) and save the
 computed values.</p>
@@ -1252,12 +1251,12 @@ class above to create an object called <code>thread1</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">Thread1</span> <span class="n">thread1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread1</span><span class="o">(</span> <span class="mf">15.1</span><span class="o">,</span> <span class="mf">2.8</span><span class="o">,</span> <span class="mf">7.53</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Thread1</span> <span class="n">thread1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread1</span><span class="o">(</span><span class="mf">15.1</span><span class="o">,</span> <span class="mf">2.8</span><span class="o">,</span> <span class="mf">7.53</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Using the <code>new</code> keyword to invoke the constructor creates a <code>Thread1</code>
-object, but it does not start executing it as a new thread. As with all
+object, but it doesn’t start executing it as a new thread. As with all
 other classes, the constructor initializes the values inside of the new
 object. A subclass of <code>Thread</code> can have many different constructors with
 whatever parameters its designer thinks appropriate.</p>
@@ -1272,12 +1271,14 @@ as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="n">thread1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">thread1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Once started, a thread executes independently. When a thread needs to
-share data with another thread, it might have to wait.</p>
+<p>Once started, a thread executes independently.  Calling the <code>start()</code>
+method automatically calls the object’s <code>run()</code> method behind the
+scenes. When a thread needs to share data with another thread, it
+might have to wait.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1290,27 +1291,27 @@ thread executes the following code will wait for <code>thread1</code> to complet
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="n">thread1</span><span class="o">.</span><span class="na">join</span><span class="o">();</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">thread1</span><span class="o">.</span><span class="na">join</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Calling <code>join()</code> is a <em>blocking</em> call, meaning that the code calling
 this method will wait until it returns. Since it can throw a a checked
-<code>InterruptedException</code>. while the code is waiting, the <code>join()</code> method
+<code>InterruptedException</code> while the code’s waiting, the <code>join()</code> method
 is generally used within a <code>try</code>-<code>catch</code> block. We can add a
 <code>try</code>-<code>catch</code> block to the <code>thread1</code> example so that we can recover from
 being interrupted while waiting for <code>thread1</code> to finish.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="k">try</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Waiting for thread 1...&quot;</span><span class="o">);</span>
-        <span class="n">thread1</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Thread 1 finished!&quot;</span><span class="o">);</span>
-    <span class="o">}</span>
-    <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Thread 1 didn't finish!&quot;</span><span class="o">);</span>
-    <span class="o">}</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="k">try</span> <span class="o">{</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Waiting for thread 1...&quot;</span><span class="o">);</span>
+	<span class="n">thread1</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Thread 1 finished!&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Thread 1 didn't finish!&quot;</span><span class="o">);</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1322,8 +1323,9 @@ interrupted the main thread, forcing it to stop waiting for <code>thread1</code>
 </div>
 <div class="paragraph">
 <p>In earlier versions of Java, there was a <code>stop()</code> method which would
-stop an executing thread. Although this method still exists, it has been
-deprecated and should not be used.</p>
+stop an executing thread. Although this method still exists, it’s been
+deprecated and shouldn’t be used because it can make a program behave
+in an unexpected way.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -1337,7 +1339,8 @@ deprecated and should not be used.</p>
 <div class="content">
 <div class="paragraph">
 <p>Now that we have the syntax to start threads and wait for them to
-finish, we can use the threads defined in <a href="#threadSamplesExample">Example 13.5</a> with a main thread to make our first complete concurrent
+finish, we can use the threads defined in <a href="#threadSamplesExample">Example 13.5</a> with a
+main thread to make our first complete concurrent
 program. The main thread in class <code>MathExpression</code> creates and starts
 the worker threads <code>thread1</code> and <code>thread2</code> and waits for their
 completion. When the two threads complete their execution, we can ask
@@ -1351,9 +1354,9 @@ these values, which is the result of the expression we want to evaluate.</p>
         <span class="kt">double</span> <span class="n">K</span> <span class="o">=</span> <span class="mi">120</span><span class="o">,</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">1.2</span><span class="o">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
         <span class="n">Thread1</span> <span class="n">thread1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread1</span><span class="o">(</span><span class="n">K</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">t</span><span class="o">);</span>
         <span class="n">Thread2</span> <span class="n">thread2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread2</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">t</span><span class="o">);</span>
-        <span class="n">thread1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <span class="c1">// start thread1</span>
-        <span class="n">thread2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <span class="c1">// start thread2</span>
-        <span class="k">try</span> <span class="o">{</span> <span class="c1">// wait for both threads to complete</span>
+        <span class="n">thread1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <span class="c1">// Start thread1</span>
+        <span class="n">thread2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <span class="c1">// Start thread2</span>
+        <span class="k">try</span> <span class="o">{</span> <span class="c1">// Wait for both threads to complete</span>
             <span class="n">thread1</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
             <span class="n">thread2</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Value of expression: &quot;</span> <span class="o">+</span>
@@ -1379,7 +1382,7 @@ for real Java code.</p>
 <p>In the code above, execution starts with the <code>main()</code> method in
 <code>MathExpression</code>. It creates <code>Thread1</code> and <code>Thread2</code> objects and waits
 for them to finish. Then, it reads the values from the objects after
-they have stopped executing. We could have put the <code>main()</code> method in
+they’ve stopped executing. We could have put the <code>main()</code> method in
 the <code>Thread1</code> class, omitting the <code>MathExpression</code> class entirely. Doing
 so would make the execution match <a href="#figure-tasks_in_threads">Figure 13.5</a>
 more closely, but it would make the two <code>Thread</code> subclasses less
@@ -1395,11 +1398,10 @@ execute code inside the <code>Thread2</code> class.</p>
 </div>
 <div class="paragraph">
 <p><a href="#figure-thread_execution">Figure 13.6</a> shows the execution of <code>thread1</code> and
-<code>thread2</code> and the main thread. Note that the creation and start of the
-main thread is done implicitly by the JVM while <code>thread1</code> and <code>thread2</code>
-are created explicitly and started by the main thread. Even after the
-threads associated with <code>thread1</code> and <code>thread2</code> have stopped running,
-the objects continue to exist. Methods and fields can continue to be
+<code>thread2</code> and the main thread. Note that the JVM implicitly creates and starts
+the main thread which explicitly creates and starts <code>thread1</code> and <code>thread2</code>.
+Even after the threads associated with <code>thread1</code> and <code>thread2</code> have stopped running,
+the objects associated with them continue to exist. Their methods and fields can still be
 accessed.</p>
 </div>
 </div>
@@ -1408,7 +1410,7 @@ accessed.</p>
 <div class="sect3">
 <h4 id="_the_runnable_interface">13.4.5. The <code>Runnable</code> interface</h4>
 <div class="paragraph">
-<p>Although it is possible to create Java threads by inheriting from the
+<p>Although it’s possible to create Java threads by inheriting from the
 <code>Thread</code> class directly, the Java API allows the programmer to use an
 interface instead.</p>
 </div>
@@ -1426,14 +1428,14 @@ an array.</p>
     <span class="kt">int</span> <span class="n">upper</span><span class="o">;</span>
     <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">Summer</span><span class="o">(</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lower</span><span class="o">,</span> <span class="kt">int</span> <span class="n">upper</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Summer</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lower</span><span class="o">,</span> <span class="kt">int</span> <span class="n">upper</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">lower</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">upper</span> <span class="o">=</span> <span class="n">upper</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">upper</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">upper</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
             <span class="n">sum</span> <span class="o">+=</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
     <span class="o">}</span>
 
@@ -1457,20 +1459,20 @@ the two styles. The familiar way of creating and running a thread from a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">Summer</span> <span class="n">summer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Summer</span><span class="o">(</span> <span class="n">array</span><span class="o">,</span> <span class="n">lower</span><span class="o">,</span> <span class="n">upper</span> <span class="o">);</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Summer</span> <span class="n">summer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Summer</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">lower</span><span class="o">,</span> <span class="n">upper</span><span class="o">);</span>
 <span class="n">summer</span><span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Since <code>Summer</code> does not inherit from <code>Thread</code>, it does not have a
-<code>start()</code> method, and this code will not compile. When a class only
-implements <code>Runnable</code>, it is still necessary to create a <code>Thread</code> object
+<p>Since <code>Summer</code> doesn’t inherit from <code>Thread</code>, it doesn’t have a
+<code>start()</code> method, and this code won’t compile. When a class only
+implements <code>Runnable</code>, it’s still necessary to create a <code>Thread</code> object
 and call its <code>start()</code> method. Thus, an extra step is needed.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">Summer</span> <span class="n">summer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Summer</span><span class="o">(</span> <span class="n">array</span><span class="o">,</span> <span class="n">lower</span><span class="o">,</span> <span class="n">upper</span> <span class="o">);</span>
-<span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span> <span class="n">summer</span> <span class="o">);</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Summer</span> <span class="n">summer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Summer</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">lower</span><span class="o">,</span> <span class="n">upper</span><span class="o">);</span>
+<span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">summer</span><span class="o">);</span>
 <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre>
 </div>
 </div>
@@ -1480,8 +1482,8 @@ cumbersome than inheriting directly from <code>Thread</code>, since you have to
 instantiate a separate <code>Thread</code> object. However, most developers prefer
 to design classes that implement <code>Runnable</code> instead of inheriting from
 <code>Thread</code>. Why? Java only allows for single inheritance. If your class
-implements <code>Runnable</code>, it is free to inherit from another parent class
-with the features you want.</p>
+implements <code>Runnable</code>, it’s free to inherit from another parent class
+with features you might want.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -1503,7 +1505,7 @@ declaration.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NumberedThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">value</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">NumberedThread</span><span class="o">(</span> <span class="kt">int</span> <span class="n">input</span> <span class="o">)</span> <span class="o">{</span> <span class="n">value</span> <span class="o">=</span> <span class="n">input</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="nf">NumberedThread</span><span class="o">(</span><span class="kt">int</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span> <span class="n">value</span> <span class="o">=</span> <span class="n">input</span><span class="o">;</span> <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Thread &quot;</span> <span class="o">+</span> <span class="n">value</span><span class="o">);</span>
@@ -1512,38 +1514,51 @@ declaration.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now suppose that we want to create 10 thread objects of type
+<p>Now, suppose we want to create 10 thread objects of type
 <code>NumberedThread</code>, start them, and then wait for them to complete.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">NumberedThread</span><span class="o">[]</span> <span class="n">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NumberedThread</span><span class="o">[</span><span class="mi">10</span><span class="o">];</span>
-<span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">threads</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NumberedThread</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
-    <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">NumberedThread</span><span class="o">[]</span> <span class="n">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NumberedThread</span><span class="o">[</span><span class="mi">10</span><span class="o">];</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">threads</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+    <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NumberedThread</span><span class="o">(</span><span class="n">i</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b>
 <span class="o">}</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">threads</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-        <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">join</span><span class="o">();</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">threads</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+        <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">join</span><span class="o">();</span> <i class="conum" data-value="4"></i><b>(4)</b>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;A thread didn't finish!&quot;</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>First, we declare an array to hold references to <code>NumberedThread</code>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>First, we declare an array to hold references to <code>NumberedThread</code>
 objects. Like any other type, we can make an array to hold objects that
-inherit from <code>Thread</code>. The first line of the <code>for</code> loop instantiates a
-new <code>NumberedThread</code> objects, invoking the constructor which stores the
+inherit from <code>Thread</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The first line of the <code>for</code> loop instantiates a
+new <code>NumberedThread</code> object, invoking the constructor which stores the
 current iteration of the loop into the <code>value</code> field. The reference to
 each <code>NumberedThread</code> object is stored in the array. Remember that the
-constructor does <strong>not</strong> start a new thread running. The second line of
-the <code>for</code> loop does that.</p>
-</div>
-<div class="paragraph">
-<p>We are also interested in when the threads stop. Calling the <code>join()</code>
-method forces the main thread to wait for each thread to finish.</p>
+constructor does <strong>not</strong> start a new thread running.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The second line of the <code>for</code> loop does that.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>We’re also interested in when the threads stop. Calling the <code>join()</code>
+method forces the main thread to wait for each thread to finish.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The entire second <code>for</code> loop is nested inside of a <code>try</code> block. If the
@@ -1561,24 +1576,21 @@ waiting for.</p>
 <div class="sect2">
 <h3 id="_examples_concurrency_and_speedup">13.5. Examples: Concurrency and speedup</h3>
 <div class="paragraph">
-<p>Speedup is one of the classic motivations for writing concurrent
+<p>Speedup is one of the strongest motivations for writing concurrent
 programs. To understand speedup, let’s assume we have a problem to
-solve. We write two programs to solve this problem, one that is
-sequential and another that is concurrent and, hence, able to exploit
-the multiple cores. Let \(t_s\) be the average time to execute
-the sequential program and \(t_c\) the average time to execute
-the concurrent program. Sometimes we will use the notation
-\(t_c^k\) to refer to the execution time of a concurrent
-program with \(k\) threads. So that the comparison is
+solve. We write two programs to solve this problem, one that’s
+sequential and another that’s concurrent and, hence, able to exploit
+multiple cores. Let <em>t</em><sub><em>s</em></sub> be the average time to execute
+the sequential program and <em>t</em><sub><em>c</em></sub> the average time to execute
+the concurrent program. So that the comparison is
 meaningful, assume that both programs are executed on the same computer.
-The speedup obtained from concurrent programming is defined as follows.
-\(\mbox{speedup}=\frac{t_s}{t_c}\)</p>
+The speedup obtained from concurrent programming is defined as <em>t</em><sub><em>s</em></sub>/<em>t</em><sub><em>c</em></sub>.</p>
 </div>
 <div class="paragraph">
 <p>Speedup measures how much faster the concurrent program executes
 relative to the sequential program. Ideally, we expect
-\(t_c&lt;t_s\), making the speedup greater than 1. However,
-simply writing a concurrent program does not necessarily make it faster
+<em>t</em><sub><em>c</em></sub> &lt; <em>t</em><sub><em>s</em></sub>, making the speedup greater than 1. However,
+simply writing a concurrent program doesn’t guarantee that it’s faster
 than the sequential version.</p>
 </div>
 <div class="sidebarblock">
@@ -1590,8 +1602,8 @@ than the sequential version.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>To determine speedup, we need to measure \(t_s\) and
-\(t_c\). Time in a Java program can easily be measured with
+<p>To determine speedup, we need to measure <em>t</em><sub><em>s</em></sub> and
+<em>t</em><sub><em>c</em></sub>. Time in a Java program can easily be measured with
 the following two static methods in the <code>System</code> class.</p>
 </div>
 <div class="listingblock">
@@ -1604,10 +1616,10 @@ the following two static methods in the <code>System</code> class.</p>
 <p>The first of these methods returns the current time in milliseconds
 (ms). A <em>millisecond</em> is 0.001 seconds. This method gives the difference
 between the current time on your computer’s clock and midnight of
-January 1, 1970 coordinated universal time (UTC). This point in time is
+January 1, 1970 Coordinated Universal Time (UTC). This point in time is
 used for many timing features on many computer platforms and is called
-the <em>Unix epoch</em>. The second method returns the current time in
-nanoseconds (ns). A <em>nanosecond</em> is 0.000001 seconds. This method also
+the <em>Unix epoch</em>. The other method returns the current time in
+nanoseconds (ns). A <em>nanosecond</em> is 0.000000001 or 10<sup>-9</sup> seconds. This method also
 gives the difference between the current time and some fixed time, which
 is system dependent and not necessarily the Unix epoch. The
 <code>System.nanoTime()</code> method can be used when you want timing precision
@@ -1662,15 +1674,19 @@ computer with an Intel Core 2 Duo running at 2.16 Ghz. The execution
 time was measured at 1,660,000 nanoseconds. We also wrote a simple
 sequential program to evaluate the same expression. It took 4,100
 nanoseconds to execute this program on the same computer. Plugging in
-these values for \(t_c\) and \(t_s\), we can find
+these values for <em>t</em><sub><em>c</em></sub> and <em>t</em><sub><em>s</em></sub>, we can find
 the speedup.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/13-concurrency/images/speedup.svg" alt="speedup" width="45%">
+</div>
+</div>
 <div class="paragraph">
-<p>\(\mbox{speedup}=\frac{t_s}{t_c} = \frac{4,100}{1,660,000}= 0.00246\)<br>
-This speedup is much less than 1. Although the result may be surprising,
-the concurrent program with two threads executes much slower than the
+<p>This speedup is much less than 1. Although this result might be surprising,
+the concurrent program with two threads executes slower than the
 sequential program. In this example, the cost of creating, running, and
-joining threads outweighed the benefits of concurrent calculation on two
+joining threads outweighs the benefits of concurrent calculation on two
 cores.</p>
 </div>
 </div>
@@ -1707,100 +1723,161 @@ elements of the array in its assigned partition.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SumThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span><span class="o">[]</span> <span class="n">data</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span> <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">lower</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">upper</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">SIZE</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kt">double</span><span class="o">[]</span> <span class="n">array</span><span class="o">;</span> <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">SIZE</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">;</span> <i class="conum" data-value="3"></i><b>(3)</b>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">THREADS</span> <span class="o">=</span> <span class="mi">8</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">SumThread</span><span class="o">(</span> <span class="kt">int</span> <span class="n">lower</span><span class="o">,</span> <span class="kt">int</span> <span class="n">upper</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">SumThread</span><span class="o">(</span><span class="kt">double</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lower</span><span class="o">,</span> <span class="kt">int</span> <span class="n">upper</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="4"></i><b>(4)</b>
+		<span class="k">this</span><span class="o">.</span><span class="na">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">lower</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">upper</span> <span class="o">=</span> <span class="n">upper</span><span class="o">;</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>First, we set up all the fields that the class will need. We fix the
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>First, we set up all the fields that the class will need.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Note that every <code>SumThread</code> object will have its own reference to the array of data.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>We fix the
 array size at 1,000,000 and the number of threads at 8, but these values
-could easily be changed or read as input instead. In its constructor, a
-<code>SumThread</code> takes the lower and upper bounds of its partition. Like most
+could easily be changed or read as input instead.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>In its constructor, a <code>SumThread</code> takes a reference to the array of data
+and the lower and upper bounds of its partition. Like most
 ranges we discuss, the lower bound is inclusive though the upper bound
-is exclusive.</p>
+is exclusive.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">upper</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-            <span class="n">sum</span> <span class="o">+=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sin</span><span class="o">(</span><span class="n">data</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">upper</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="n">sum</span> <span class="o">+=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sin</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span> <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getSum</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">sum</span><span class="o">;</span> <span class="o">}</span></code></pre>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getSum</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">sum</span><span class="o">;</span> <span class="o">}</span> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>In the <code>for</code> loop of the <code>run()</code> method, the <code>SumThread</code> finds the sine
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>In the <code>for</code> loop of the <code>run()</code> method, the <code>SumThread</code> finds the sine
 of each number in its array partition and adds that value to its running
-sum. The <code>getSum()</code> method is an accessor that allows the running sum to
-be retrieved.</p>
+sum.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <code>getSum()</code> method is an accessor that allows the running sum to
+be retrieved.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="o">[</span><span class="n">SIZE</span><span class="o">];</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">double</span><span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="o">[</span><span class="n">SIZE</span><span class="o">];</span> <i class="conum" data-value="1"></i><b>(1)</b>
         <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
         <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <i class="conum" data-value="2"></i><b>(2)</b>
             <span class="n">data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
-        <span class="n">SumThread</span> <span class="n">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SumThread</span><span class="o">[</span><span class="n">THREADS</span><span class="o">];</span>
+        <span class="n">SumThread</span><span class="o">[]</span> <span class="n">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SumThread</span><span class="o">[</span><span class="n">THREADS</span><span class="o">];</span>
         <span class="kt">int</span> <span class="n">quotient</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span> <span class="o">/</span> <span class="n">THREADS</span><span class="o">;</span>
         <span class="kt">int</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span> <span class="o">%</span> <span class="n">THREADS</span><span class="o">;</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
             <span class="kt">int</span> <span class="n">work</span> <span class="o">=</span> <span class="n">quotient</span><span class="o">;</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">remainder</span> <span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">remainder</span><span class="o">)</span>
                 <span class="n">work</span><span class="o">++;</span>
-            <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SumThread</span><span class="o">(</span> <span class="n">start</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">work</span> <span class="o">);</span>
-            <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+            <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SumThread</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">work</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="4"></i><b>(4)</b>
             <span class="n">start</span> <span class="o">+=</span> <span class="n">work</span><span class="o">;</span>
         <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The <code>main()</code> method begins by instantiating the array and filling it
-with random values. Note that the array is a static field so that it can
-be shared by all instances of <code>SumThread</code>. Then each thread is created
-with lower and upper bounds that mark its array partition. If the
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>main()</code> method begins by instantiating the array.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>It fills it with random values.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Then, each thread is created by passing in a reference to the array and
+lower and upper bounds that mark the thread’s partition of the array. If the
 process using the array length and the number of threads to determine
 upper and lower bounds doesn’t make sense, refer to
 <a href="chap5.html#_concurrency_arrays">Section 6.11</a> which describes the fair division of work
 to threads. If the length of the array is not divisible by the number of
-threads, simple division isn’t enough. After creating each thread, its
-<code>start()</code> method is called.</p>
+threads, simple division isn’t enough.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>After each thread is created, its <code>start()</code> method is called.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">        <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java">        <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span> <i class="conum" data-value="1"></i><b>(1)</b>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-                <span class="n">thread</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">join</span><span class="o">();</span>
-                <span class="n">sum</span> <span class="o">+=</span> <span class="n">thread</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">getSum</span><span class="o">();</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">join</span><span class="o">();</span> <i class="conum" data-value="2"></i><b>(2)</b>
+                <span class="n">sum</span> <span class="o">+=</span> <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">getSum</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="o">}</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sum: &quot;</span> <span class="o">+</span> <span class="n">threads</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">getSum</span><span class="o">());</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sum: &quot;</span> <span class="o">+</span> <span class="n">threads</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">getSum</span><span class="o">());</span> <i class="conum" data-value="4"></i><b>(4)</b>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span> <i class="conum" data-value="5"></i><b>(5)</b>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>After the threads have started working, the main thread creates its own
-running total and iterates through each thread waiting for it to
-complete. When each thread is done, the main thread adds its value to
-the running total. If the main thread is interrupted while waiting for a
-thread to complete, the stack trace is printed. Otherwise, the final sum
-is printed out.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Once the threads have started working, the main thread creates its own
+running total.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>It iterates through each thread waiting for it to
+complete.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>When each thread is done, its value is added to
+the running total.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Finally, the sum is printed out.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>If the main thread is interrupted while waiting for a
+thread to complete, the stack trace is printed.</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1820,17 +1897,18 @@ is printed out.</p>
 <p>In <a href="#matrixMultiplicationPreviewExample">Example 13.4</a>, we discussed the
 importance of matrix operations in many applications. Now that we know
 the necessary Java syntax, we can write a concurrent program to multiply
-two square matrices \(A\) and \(B\) and compute the
-resultant matrix \(C\). If these matrices have \(n\)
-rows and \(n\) columns, the value at the \(i\)<sup>th</sup>
-row and \(j\)<sup>th</sup> column of \(C\) is</p>
+two square matrices <em>A</em> and <em>B</em> and compute the
+resultant matrix <em>C</em>. If these matrices have <em>n</em>
+rows and <em>n</em> columns, the value at the <em>i</em><sup>th</sup>
+row and <em>j</em><sup>th</sup> column of <em>C</em> is</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/13-concurrency/images/matrixValue.svg" alt="matrixValue" width="55%">
+</div>
 </div>
 <div class="paragraph">
-<p>\(C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \ldots +
-A_{in}B_{nj}\)</p>
-</div>
-<div class="paragraph">
-<p>In Java, it is natural for us to store matrices as 2-dimensional arrays.
+<p>In Java, it’s natural for us to store matrices as 2-dimensional arrays.
 To do this multiplication sequentially, the simplest approach uses three
 nested <code>for</code> loops. The code below is a direct translation of the
 mathematical notation, but we do have to be careful about bookkeeping.
@@ -1840,9 +1918,9 @@ names with lowercase letters.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">c</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">c</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++</span> <span class="o">)</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++</span> <span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">c</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">c</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span>
             <span class="n">c</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">+=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">k</span><span class="o">]</span> <span class="o">*</span> <span class="n">b</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">j</span><span class="o">];</span></code></pre>
 </div>
 </div>
@@ -1861,8 +1939,8 @@ number of rows in the answer matrix <code>c</code>.</p>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">lower</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">upper</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">MatrixThread</span><span class="o">(</span> <span class="kt">double</span><span class="o">[][]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">double</span><span class="o">[][]</span> <span class="n">b</span><span class="o">,</span>
-        <span class="kt">double</span><span class="o">[][]</span> <span class="n">c</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lower</span><span class="o">,</span> <span class="kt">int</span> <span class="n">upper</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">MatrixThread</span><span class="o">(</span><span class="kt">double</span><span class="o">[][]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">double</span><span class="o">[][]</span> <span class="n">b</span><span class="o">,</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="kt">double</span><span class="o">[][]</span> <span class="n">c</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lower</span><span class="o">,</span> <span class="kt">int</span> <span class="n">upper</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">;</span>
@@ -1870,27 +1948,36 @@ number of rows in the answer matrix <code>c</code>.</p>
         <span class="k">this</span><span class="o">.</span><span class="na">upper</span> <span class="o">=</span> <span class="n">upper</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">upper</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-            <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">c</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++</span> <span class="o">)</span>
-                <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++</span> <span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">upper</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">c</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span>
                     <span class="n">c</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">+=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">k</span><span class="o">]</span> <span class="o">*</span> <span class="n">b</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">j</span><span class="o">];</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The constructor for <code>MatrixThread</code> stores references to the arrays
-corresponding to matrices \(A\), \(B\), and
-\(C\) as well as lower and upper bounds on the rows of
-\(C\) to compute. The body of the <code>run()</code> method is identical
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The constructor for <code>MatrixThread</code> stores references to the arrays
+corresponding to matrices <em>A</em>, <em>B</em>, and
+<em>C</em> as well as lower and upper bounds on the rows of
+<em>C</em> to compute.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The body of the <code>run()</code> method is identical
 to the sequential solution except that its outermost loop runs only from
-<code>lower</code> to <code>upper</code> instead of through all the rows of the result. It is
+<code>lower</code> to <code>upper</code> instead of through all the rows of the result. It’s
 critical that each thread is assigned a set of rows that does not
 overlap with the rows another thread has. Not only would having multiple
-threads compute the same row be inefficient, it could very likely lead
-to an incorrect result, as we will see in
-<a href="chap13.html#ch14-synchronization">Chapter 14</a>.</p>
+threads compute the same row be inefficient, it would very likely lead
+to an incorrect result, as we’ll see in
+<a href="chap13.html#ch14-synchronization">Chapter 14</a>.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The following client code uses an array of <code>MatrixThread</code> objects to
@@ -1904,44 +1991,56 @@ create.</p>
 <span class="kt">int</span> <span class="n">quotient</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="na">length</span> <span class="o">/</span> <span class="n">THREADS</span><span class="o">;</span>
 <span class="kt">int</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="na">length</span> <span class="o">%</span> <span class="n">THREADS</span><span class="o">;</span>
 <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-<span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
     <span class="kt">int</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">quotient</span><span class="o">;</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">remainder</span> <span class="o">)</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">remainder</span><span class="o">)</span>
         <span class="n">rows</span><span class="o">++;</span>
-    <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MatrixThread</span><span class="o">(</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">rows</span> <span class="o">);</span>
-    <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+    <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MatrixThread</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">rows</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="2"></i><b>(2)</b>
     <span class="n">start</span> <span class="o">+=</span> <span class="n">rows</span><span class="o">;</span>
 <span class="o">}</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <i class="conum" data-value="3"></i><b>(3)</b>
         <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">join</span><span class="o">();</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>We loop through the array, creating a <code>MatrixThread</code> object for each
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We loop through the array, creating a <code>MatrixThread</code> object for each
 location. As in the previous example, we use the approach described in
 <a href="chap5.html#_concurrency_arrays">Section 6.11</a> to allocate rows to each thread fairly.
 Each new <code>MatrixThread</code> object is given a reference to each of the three
-matrices as well as an inclusive starting and an exclusive ending row.
-After the <code>MatrixThread</code> objects are created, we start them running with
-the next line of code.</p>
+matrices as well as an inclusive starting and an exclusive ending row.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>After the <code>MatrixThread</code> objects are created, we start them running with
+the next line of code.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Next, there’s a familiar <code>for</code> loop with the <code>join()</code> calls that force
+the main thread to wait for the other threads to finish.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Next, there is a familiar <code>for</code> loop with the <code>join()</code> calls that force
-the main thread to wait for the other threads to finish. Presumably,
+<p>Presumably,
 code following this snippet will print the values of the result matrix
-or use it for some other calculations. If we don’t use the <code>join()</code>
+or use it for other calculations. If we didn’t use the <code>join()</code>
 calls to be sure the threads have finished, we might print out a result
-matrix that has only been partially filled in.</p>
+matrix that’s only been partially filled in.</p>
 </div>
 <div class="paragraph">
 <p>We completed the code for threaded matrix multiplication and executed it
-on an iMac computer running on an Intel running at 2.16 Ghz. The program
-was executed for matrices of different sizes (\(n \times n\)).
+on an iMac computer with an Intel Core 2 Duo running at 2.16 Ghz. The program
+was executed for matrices of different sizes (<em>n</em> × <em>n</em>).
 For each size, the sequential and concurrent execution times in seconds
 and the corresponding speedup are listed in the following table.</p>
 </div>
@@ -1954,9 +2053,9 @@ and the corresponding speedup are listed in the following table.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Size (\(n\))</th>
-<th class="tableblock halign-left valign-top">\(t_s\) (s)</th>
-<th class="tableblock halign-left valign-top">\(t_c\) (s)</th>
+<th class="tableblock halign-left valign-top">Size (<em>n</em>)</th>
+<th class="tableblock halign-left valign-top"><em>t</em><sub><em>s</em></sub> (s)</th>
+<th class="tableblock halign-left valign-top"><em>t</em><sub><em>c</em></sub> (s)</th>
 <th class="tableblock halign-left valign-top">Speedup</th>
 </tr>
 </thead>
@@ -1974,7 +2073,7 @@ and the corresponding speedup are listed in the following table.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0.39</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1,000</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">15.6</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">10.7</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1.45<sup>*</sup></p></td>
@@ -1982,7 +2081,7 @@ and the corresponding speedup are listed in the following table.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Only with \(1000\times1000\) matrices did we see improved
+<p>Only with 1,000 × 1,000 matrices did we see improved
 performance when using two threads. In that case, we achieved a speedup
 of 1.45, marked with an asterisk. In the other two cases, performance
 became worse.</p>
@@ -2001,20 +2100,20 @@ became worse.</p>
 <div class="sect2">
 <h3 id="_concepts_thread_scheduling">13.6. Concepts: Thread scheduling</h3>
 <div class="paragraph">
-<p>Now that we have seen how multiple threads can be used together, a
-number of questions should be coming to the forefront. Who decides when
+<p>Now that we’ve seen how multiple threads can be used together, a
+number of questions arise: Who decides when
 these threads run? How is processor time shared between threads? Can we
-make any assumptions about the order in which the threads will run? Can
+make any assumptions about the order in which the threads run? Can
 we affect this order?</p>
 </div>
 <div class="paragraph">
 <p>These questions focus on thread scheduling. Because different concurrent
-systems handle scheduling differently, we will only describe scheduling
+systems handle scheduling differently, we’ll only describe scheduling
 in Java. Although sequential programming is all about precise control
 over what happens <strong>next</strong>, concurrency takes much of this control away
 from the programmer. When threads are scheduled and which processor they
 run on is handled by a combination of the JVM and the OS. With normal
-JVMs, there is no explicit way to access the scheduling and alter it to
+JVMs, there’s no explicit way to access the scheduling and alter it to
 your liking.</p>
 </div>
 <div class="paragraph">
@@ -2024,17 +2123,17 @@ systems, threads have <em>priorities</em>. Higher priority threads run more
 often than lower priority threads. Some threads are performing
 mission-critical operations which must be carried out as quickly as
 possible, and some threads are just doing periodic tasks in the
-background. A programmer can set the priorities accordingly.</p>
+background. A programmer can set thread priorities accordingly.</p>
 </div>
 <div class="paragraph">
 <p>Setting priorities gives only a very general way of controlling which
 thread will run. The threads themselves might have more specific
-information about when they will and will not need processor time. A
-thread may need to wait for a specific event and will not need to run
+information about when they will and won’t need processor time. A
+thread may need to wait for a specific event and won’t need to run
 until then. Java allows threads to interact with the scheduler through
-<code>Thread.sleep()</code> and <code>Thread.yield()</code>, which we will discuss in
+<code>Thread.sleep()</code> and <code>Thread.yield()</code>, which we’ll discuss in
 <a href="#_syntax_thread_states">Section 13.7</a>, and through the <code>wait()</code>, method which
-we will discuss in <a href="chap13.html#ch14-synchronization">Chapter 14</a>.</p>
+we’ll discuss in <a href="chap13.html#ch14-synchronization">Chapter 14</a>.</p>
 </div>
 <div class="sect3">
 <h4 id="_nondeterminism">13.6.1. Nondeterminism</h4>
@@ -2042,20 +2141,20 @@ we will discuss in <a href="chap13.html#ch14-synchronization">Chapter 14</a>.</p
 <p>In Java, the mapping of a thread inside the JVM to a thread in the OS
 varies. Some implementations give each Java thread an OS thread, some
 put all Java threads on a single OS thread (with the side effect of
-preventing concurrency), and some allow for the possibility of changing
+preventing parallel execution), and some allow for the possibility of changing
 which OS thread a Java thread uses. Thus, the performance and, in some
 cases, the correctness of your program might vary, depending on which
-system you are running. This is, yet again, one of those times when Java
-is platform independent…​ but not entirely.</p>
+system you’re running. This is, yet again, one of those times when Java
+is platform independent…​but not entirely.</p>
 </div>
 <div class="paragraph">
 <p>Unfortunately, the situation is even more complicated. Making threads
 part of your program means that the same program could run differently
 on the <strong>same</strong> system. The JVM and the OS have to cooperate to schedule
 threads, and both programs are complex mountains of code which try to
-balance many factors. If you create three threads, there is no guarantee
+balance many factors. If you create three threads, there’s no guarantee
 that the first will run first, the second second, and the third third,
-not even if it happens that way the first 10 times you run the program.
+even if it happens that way the first 10 times you run the program.
 <a href="#executionOrderExercise">Exercise 13.18</a> shows that the pattern of thread
 execution can vary a lot.</p>
 </div>
@@ -2072,11 +2171,11 @@ would always produce the same sequence of output. Perhaps the biggest
 hurdle created by this nondeterminism is that programmers must shift
 their paradigm considerably. The processor can switch between executions
 of threads at any time, even in the middle of operations. Every possible
-interleaving of thread execution can crop up at some point. Unless you
-can be sure that your program behaves properly for all of them, you may
-never be able to debug your code completely. What is so insidious about
-some nondeterministic bugs is that they can occur rarely and be almost
-impossible to reproduce. In this chapter, we introduce how to create and
+interleaving of thread execution could crop up at some point. Unless you
+can be sure that your program behaves properly for all of them, you might
+never be able to debug your code completely. What’s so insidious about
+nondeterministic bugs is that they can occur rarely and be almost
+impossible to reproduce. In this chapter, we’ve introduced how to create and
 run threads, but making these threads interact properly is a major
 problem we tackle in subsequent chapters.</p>
 </div>
@@ -2097,7 +2196,7 @@ them to get it.</p>
 <div class="sect3">
 <h4 id="_polling">13.6.2. Polling</h4>
 <div class="paragraph">
-<p>So far the only mechanism we have introduced for coordinating different
+<p>So far the only mechanism we’ve introduced for coordinating different
 threads is using the <code>join()</code> method to wait for a thread to end.
 Another technique is <em>polling</em>, or <em>busy waiting</em>. The idea is to keep
 checking the state of one thread until it changes.</p>
@@ -2107,9 +2206,9 @@ checking the state of one thread until it changes.</p>
 wastes CPU cycles. Those cycles spent by the waiting thread continually
 checking could have been used productively by some other thread in the
 system. The second problem is that we have to be certain that the state
-of the thread we are waiting for won’t change back to the original state
+of the thread we’re waiting for won’t change back to the original state
 or to some other state. Because of the unpredictability of scheduling,
-there is no guarantee that the waiting thread will read the state of the
+there’s no guarantee that the waiting thread will read the state of the
 other thread when it has the correct value.</p>
 </div>
 <div class="paragraph">
@@ -2133,7 +2232,7 @@ the reasons why we need better techniques for thread communication.</p>
 <p>A widely used Java tool for manipulating scheduling is the
 <code>Thread.sleep()</code> method. This method can be called any time you want a
 thread to do nothing for a set period of time. Until the sleep timer
-expires, the thread will not be scheduled for any CPU time, unless it is
+expires, the thread will not be scheduled for any CPU time, unless it’s
 interrupted. To make a thread of execution sleep, call <code>Thread.sleep()</code>
 in that thread of execution with a number of milliseconds as a
 parameter. For example, calling <code>Thread.sleep(2000)</code> will make the
@@ -2142,10 +2241,10 @@ calling thread sleep for two full seconds.</p>
 <div class="paragraph">
 <p>Another useful tool is the <code>Thread.yield()</code> method. It gives up use of
 the CPU so that the next waiting thread can run. To use it, a thread
-calls <code>Thread.yield()</code>. This method is very useful in practice, but
-according to official documentation, the JVM does not <strong>have</strong> to do to
+calls <code>Thread.yield()</code>. This method is useful in practice, but
+according to official documentation, the JVM doesn’t <strong>have</strong> to do to
 anything when a <code>Thread.yield()</code> call happens. The Java specification
-does not demand a particular implementation. A JVM could ignore a
+doesn’t demand a particular implementation. A JVM could ignore a
 <code>Thread.yield()</code> call completely, but most JVMs will move on to the next
 thread in the schedule.</p>
 </div>
@@ -2169,7 +2268,7 @@ thread begins its life in the New Thread state, after the constructor is
 called. When the <code>start()</code> method is called, the thread begins to run
 and transitions to the Runnable state. Being Runnable doesn’t
 necessarily mean that the thread is executing at any given moment but
-that it is ready to run at any time. When in the Runnable state, a
+that it’s ready to run at any time. When in the Runnable state, a
 thread may call <code>Thread.yield()</code>, relinquishing use of the processor,
 but it will still remain Runnable.</p>
 </div>
@@ -2184,7 +2283,7 @@ finishes. A Terminated thread cannot become Runnable again and is no
 longer a separate thread of execution.</p>
 </div>
 <div class="paragraph">
-<p>Any object with a type that is a subclass of <code>Thread</code> can tell you its
+<p>Any object with a type that’s a subclass of <code>Thread</code> can tell you its
 current state using the <code>getState()</code> method. This method returns an
 <em>enum</em> type, whose value must come from a fixed list of constant
 objects. These objects are <code>Thread.State.NEW</code>, <code>Thread.State.RUNNABLE</code>,
@@ -2192,14 +2291,14 @@ objects. These objects are <code>Thread.State.NEW</code>, <code>Thread.State.RUN
 <code>Thread.State.TIMED_WAITING</code>, and <code>Thread.State.TERMINATED</code>. Although
 the others are self explanatory, we lump the <code>Thread.State.BLOCKED</code>,
 <code>Thread.State.WAITING</code>, and <code>Thread.State.TIMED_WAITING</code> values into
-the Not Runnable state, since the distinction between the three is not
+the Not Runnable state, since the distinction between the three isn’t
 important for us.</p>
 </div>
 <div class="paragraph">
-<p>Threads also have priorities in Java. When an object that is a subclass
+<p>Threads also have priorities in Java. When an object that’s a subclass
 of <code>Thread</code> is created in Java, its priority is initially the same as
 the thread that creates it. Usually, this priority is
-<code>Thread.NORM_PRIORITY</code>, but there are some special cases when it is a
+<code>Thread.NORM_PRIORITY</code>, but there are some special cases when it’s a
 good idea to raise or lower this priority. Avoid changing thread
 priorities because it increases platform dependence and because the
 effects are not always predictable. Be aware that priorities exist, but
@@ -2214,7 +2313,7 @@ might be familiar with sound of soldiers marching: “Left, Left, Left,
 Right, Left!” We can design a thread that prints <code>Left</code> and another
 thread that prints <code>Right</code>. We can combine the two to print the correct
 sequence for marching and loop the whole thing 10 times so that we can
-see how accurately place the words. We want to use the scheduling tools
+see how accurately we can place the words. We want to use the scheduling tools
 discussed above to get the timing right. Let’s try <code>Thread.sleep()</code>
 first.</p>
 </div>
@@ -2222,54 +2321,78 @@ first.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LeftThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>  <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
-            <span class="k">try</span> <span class="o">{</span> <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span> <span class="o">}</span>
-            <span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span> <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span> <span class="o">}</span>  <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
             <span class="o">}</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Left&quot;</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Left&quot;</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Class <code>LeftThread</code> has a <code>for</code> loop which prints out <code>Left</code> three times,
-waits for 10 milliseconds, prints out <code>Left</code> again, then repeats.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Inside, the <code>for</code> loop, this thread prints out <code>Left</code> three times.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The, it waits for 10 milliseconds.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Finally, it prints out <code>Left</code> again and repeats the loop.</td>
+</tr>
+</table>
 </div>
 <div id="RightThreadProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RightThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">try</span> <span class="o">{</span> <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span> <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+			<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
+			<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Right &quot;</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
+				<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
+			<span class="o">}</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-        <span class="o">}</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Right &quot;</span><span class="o">);</span>
-            <span class="k">try</span> <span class="o">{</span> <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span> <span class="o">}</span>
-            <span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-            <span class="o">}</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This thread waits for 5 milliseconds to get synchronized.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inside its <code>for</code> loop, it prints out <code>Right</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Then, it waits for 10 milliseconds and repeats the loop.</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>Class <code>RightThread</code> waits for 5 milliseconds to get synchronized, then
-has a <code>for</code> loop which prints out <code>Right</code>, waits for 10 milliseconds,
-and repeats. The driver program below creates a thread for each of these
+<p>The driver program below creates a thread for each of these
 classes and then starts them. If you run this program, you should see 10
 lines of <code>Left Left Left Right Left</code>, but there are a few problems.</p>
 </div>
 <div id="MilitaryMarchingProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MilitaryMarching</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">LeftThread</span> <span class="n">left</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LeftThread</span><span class="o">();</span>
         <span class="n">RightThread</span> <span class="n">right</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RightThread</span><span class="o">();</span>
         <span class="n">left</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
@@ -2278,7 +2401,7 @@ lines of <code>Left Left Left Right Left</code>, but there are a few problems.</
             <span class="n">left</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
             <span class="n">right</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
         <span class="o">}</span>
     <span class="o">}</span>
@@ -2290,16 +2413,16 @@ lines of <code>Left Left Left Right Left</code>, but there are a few problems.</
 calls. We could shorten the <code>Thread.sleep()</code> calls, but there are limits
 on the resolution of the timer. The bigger problem is that the two
 threads can sometimes get out of sync. If you run the program many
-times, you may see a <code>Right</code> out of place once in a while. If you
+times, you might see a <code>Right</code> out of place once in a while. If you
 increase the repetitions of the <code>for</code> loops to a larger number, the
-errors are more likely. Whether or not you see errors is somewhat system
+errors will become more likely. Whether or not you see errors is somewhat system
 dependent. We can try <code>Thread.yield()</code> instead of <code>Thread.sleep()</code>.</p>
 </div>
 <div id="LeftYieldThreadProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LeftYieldThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
@@ -2314,7 +2437,7 @@ dependent. We can try <code>Thread.yield()</code> instead of <code>Thread.sleep(
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RightYieldThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Right &quot;</span><span class="o">);</span>
             <span class="n">Thread</span><span class="o">.</span><span class="na">yield</span><span class="o">();</span>
         <span class="o">}</span>
@@ -2325,21 +2448,21 @@ dependent. We can try <code>Thread.yield()</code> instead of <code>Thread.sleep(
 <div class="paragraph">
 <p>These new versions of the two classes have essentially replaced calls to
 <code>Thread.sleep()</code> with calls to <code>Thread.yield()</code>. Without the need for
-exception handling, the code is simpler, but we have traded one set of
+exception handling, the code is simpler, but we’ve traded one set of
 problems for another. If there are other threads operating in the same
-application, they will be scheduled in ways that will interfere with the
-pattern of yielding. Also, if you are running this code on a machine
+application, they’ll be scheduled in ways that will interfere with the
+pattern of yielding. If you’re running this code on a machine
 with a single processor and a single core, you have a good chance of
-seeing something which matches the expected output. If you are running
-this on multiple cores, everything will be jumbled. It is likely that
+seeing something which matches the expected output. However, if you’re running
+it on multiple cores, everything will be jumbled. It’s likely that
 the <code>LeftYieldThread</code> will be running on one processor with the
 <code>RightYieldThread</code> on another. In that case, neither has any competition
 to yield to.</p>
 </div>
 <div class="paragraph">
-<p>Finally, let us look at a polling solution which still falls short of
+<p>Finally, let’s look at a polling solution which still falls short of
 the mark. To do this, we need state variables inside of each class to
-keep track of whether or not it is done. Each thread needs a reference
+keep track of whether or not it’s done. Each thread needs a reference
 to the other thread to make queries, and the driver program must be
 updated to add these in before starting the threads.</p>
 </div>
@@ -2349,24 +2472,24 @@ updated to add these in before starting the threads.</p>
     <span class="kd">private</span> <span class="n">RightThread</span> <span class="n">right</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">done</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setRight</span><span class="o">(</span> <span class="n">RightPollingThread</span> <span class="n">right</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setRight</span><span class="o">(</span><span class="n">RightPollingThread</span> <span class="n">right</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">right</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Left &quot;</span><span class="o">);</span>
             <span class="n">done</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
-            <span class="k">while</span><span class="o">(</span> <span class="o">!</span><span class="n">right</span><span class="o">.</span><span class="na">isDone</span><span class="o">()</span> <span class="o">);</span>
-            <span class="n">right</span><span class="o">.</span><span class="na">setDone</span><span class="o">(</span> <span class="kc">false</span> <span class="o">);</span>
+            <span class="k">while</span><span class="o">(!</span><span class="n">right</span><span class="o">.</span><span class="na">isDone</span><span class="o">());</span>
+            <span class="n">right</span><span class="o">.</span><span class="na">setDone</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Left&quot;</span><span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isDone</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">done</span><span class="o">;</span> <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDone</span><span class="o">(</span> <span class="kt">boolean</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span> <span class="n">done</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDone</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span> <span class="n">done</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -2376,13 +2499,13 @@ updated to add these in before starting the threads.</p>
     <span class="kd">private</span> <span class="n">LeftThread</span> <span class="n">left</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">done</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLeft</span><span class="o">(</span> <span class="n">LeftPollingThread</span> <span class="n">left</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLeft</span><span class="o">(</span><span class="n">LeftPollingThread</span> <span class="n">left</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="k">while</span><span class="o">(</span> <span class="o">!</span><span class="n">left</span><span class="o">.</span><span class="na">isDone</span><span class="o">()</span> <span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">while</span><span class="o">(!</span><span class="n">left</span><span class="o">.</span><span class="na">isDone</span><span class="o">());</span>
             <span class="n">left</span><span class="o">.</span><span class="na">setDone</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Right &quot;</span><span class="o">);</span>
             <span class="n">done</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
@@ -2390,14 +2513,14 @@ updated to add these in before starting the threads.</p>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isDone</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">done</span><span class="o">;</span> <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDone</span><span class="o">(</span> <span class="kt">boolean</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span> <span class="n">done</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDone</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span> <span class="n">done</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Whether single core or multicore, this solution will always give the
 right output. Or it should. Java experts will point out that we are
-violating a technicality of the Java Memory Model. Because we are not
+violating a technicality of the Java Memory Model. Because we’re not
 using synchronization tools, we have no guarantee that the change of the
 <code>done</code> variable will even be <strong>visible</strong> from one thread to another. In
 practice, this problem should affect you rarely, but to be safe, both of
@@ -2406,12 +2529,12 @@ This keyword makes Java aware that the value may be accessed at any time
 from arbitrary threads.</p>
 </div>
 <div class="paragraph">
-<p>Another issue is that there is <strong>no</strong> concurrency. Each thread must wait
+<p>Another issue is that there’s <strong>no</strong> parallel execution. Each thread must wait
 for the other to complete. Of course, this problem does not benefit from
-a concurrent solution, but applying this solution to problems which can
-benefit from concurrency might cause performance problems. Each thread
+a parallelism, but applying this solution to problems which can
+benefit from parallelism might cause performance problems. Each thread
 wastes time busy waiting in a <code>while</code> loop for the other to be done,
-consuming CPU cycles while it does so. You will notice that the code
+consuming CPU cycles while it does so. You’ll notice that the code
 must still be carefully written. Each thread must set the other thread’s
 <code>done</code> value to <code>false</code>. If threads were responsible for setting their
 own <code>done</code> values to <code>false</code>, one thread might print its information and
@@ -2432,7 +2555,7 @@ introduce better tools for coordination and synchronization in
 <div class="paragraph">
 <p>Finally, we give the solution to the deadly virus problem. By this
 point, the threaded part of this problem should not seem very difficult.
-It is simpler than some of the examples, such as matrix multiplication.
+It’s simpler than some of the examples, such as matrix multiplication.
 We begin with the worker class <code>FactorThread</code> that can be spawned as a
 thread.</p>
 </div>
@@ -2443,18 +2566,17 @@ thread.</p>
     <span class="kd">private</span> <span class="kt">long</span> <span class="n">lower</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">long</span> <span class="n">upper</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">FactorThread</span><span class="o">(</span> <span class="kt">long</span> <span class="n">lower</span><span class="o">,</span> <span class="kt">long</span> <span class="n">upper</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">FactorThread</span><span class="o">(</span><span class="kt">long</span> <span class="n">lower</span><span class="o">,</span> <span class="kt">long</span> <span class="n">upper</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">lower</span> <span class="o">=</span> <span class="n">lower</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">upper</span> <span class="o">=</span> <span class="n">upper</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">lower</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">)</span> <span class="c1">//only check odd numbers</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">lower</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="c1">// Only check odd numbers</span>
             <span class="n">lower</span><span class="o">++;</span>
-        <span class="k">while</span><span class="o">(</span> <span class="n">lower</span> <span class="o">&lt;</span> <span class="n">upper</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">Factor</span><span class="o">.</span><span class="na">NUMBER</span> <span class="o">%</span> <span class="n">lower</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Security code: &quot;</span> <span class="o">+</span>
-                    <span class="o">(</span><span class="n">lower</span> <span class="o">+</span> <span class="n">Factor</span><span class="o">.</span><span class="na">NUMBER</span> <span class="o">/</span> <span class="n">lower</span><span class="o">));</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">lower</span> <span class="o">&lt;</span> <span class="n">upper</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">Factor</span><span class="o">.</span><span class="na">NUMBER</span> <span class="o">%</span> <span class="n">lower</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Security code: &quot;</span> <span class="o">+</span> <span class="o">(</span><span class="n">lower</span> <span class="o">+</span> <span class="n">Factor</span><span class="o">.</span><span class="na">NUMBER</span> <span class="o">/</span> <span class="n">lower</span><span class="o">));</span>
                 <span class="k">return</span><span class="o">;</span>
             <span class="o">}</span>
             <span class="n">lower</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">;</span>
@@ -2472,67 +2594,81 @@ one of the factors, making the other factor easy to find, sum, and print
 out. We have to add a couple of extra lines of code to make sure that we
 only search the odd numbers in the range. This solution is tuned for
 efficiency for this specific security problem. A program to find general
-prime factors would have to be more flexible. Next let us examine the
+prime factors would have to be more flexible. Next, let’s examine the
 driver program <code>Factor</code>.</p>
 </div>
 <div id="FactorProgram" class="listingblock">
 <div class="title">Program 13.2 Driver class which creates threads to lower the average search time for the factors of a large odd composite.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Factor</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">THREADS</span> <span class="o">=</span> <span class="mi">4</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">THREADS</span> <span class="o">=</span> <span class="mi">4</span><span class="o">;</span> <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">NUMBER</span> <span class="o">=</span> <span class="mi">59984005171248659L</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">FactorThread</span><span class="o">[]</span> <span class="n">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactorThread</span><span class="o">[</span><span class="n">THREADS</span><span class="o">];</span>
-        <span class="kt">long</span> <span class="n">root</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">NUMBER</span><span class="o">);</span> <span class="c1">// go to square root</span>
-        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>  <span class="c1">// no need to test 2</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">FactorThread</span><span class="o">[]</span> <span class="n">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactorThread</span><span class="o">[</span><span class="n">THREADS</span><span class="o">];</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="kt">long</span> <span class="n">root</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">NUMBER</span><span class="o">);</span> <span class="c1">// Go to square root</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>  <span class="c1">// No need to test 2</span>
         <span class="kt">long</span> <span class="n">quotient</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="n">THREADS</span><span class="o">;</span>
         <span class="kt">long</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">root</span> <span class="o">%</span> <span class="n">THREADS</span><span class="o">;</span>
 
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
             <span class="kt">long</span> <span class="n">work</span> <span class="o">=</span> <span class="n">quotient</span><span class="o">;</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">remainder</span> <span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">remainder</span><span class="o">)</span>
                 <span class="n">work</span><span class="o">++;</span>
-            <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactorThread</span><span class="o">(</span> <span class="n">start</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">work</span> <span class="o">);</span>
+            <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactorThread</span><span class="o">(</span><span class="n">start</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">work</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
             <span class="n">start</span> <span class="o">+=</span> <span class="n">work</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-                <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">join</span><span class="o">();</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+                <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">join</span><span class="o">();</span> <i class="conum" data-value="4"></i><b>(4)</b>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Static constants hold both the number to be factored and the number of
-threads. In the <code>main()</code> method, we create an array of threads for
-storage. Then, we create each <code>FactorThread</code> object, assigning upper and
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Static constants hold both the number to be factored and the number of
+threads.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In the <code>main()</code> method, we create an array of threads for
+storage.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Then, we create and start each <code>FactorThread</code> object, assigning upper and
 lower bounds at the same time, using the standard technique from
 <a href="chap5.html#_concurrency_arrays">Section 6.11</a> to divide the work fairly. Because we
 know the number we’re dividing isn’t even, we start with 3. By only
 going up to the square root of the number, we know that we will only
 find the smaller of the two factors. In that way we can avoid having one
-thread find the smaller while another is finds the larger.</p>
-</div>
-<div class="paragraph">
-<p>Afterwards, we have the usual <code>join()</code> calls to make sure that all the
+thread find the smaller while another is finds the larger.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Afterwards, we have the usual <code>join()</code> calls to make sure that all the
 threads are done. In this problem, these calls are unnecessary. One
 thread will print out the correct security code, and the others will
 search fruitlessly. If the program went on to do other work, we might
 need to let the other threads finish or even interrupt them. Don’t
-forget <code>join()</code> calls since they are usually very important.</p>
+forget <code>join()</code> calls since they’re usually very important.</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_summary_5">13.9. Summary</h3>
 <div class="paragraph">
-<p>In this chapter we have examined tasks and domains. We have explained
-two strategies to obtain a concurrent solution to a programming problem.
+<p>In this chapter we’ve explored
+two strategies to obtain a concurrent solution to programming problems.
 One strategy, task decomposition, splits a task into two or more
 subtasks. These subtasks can then be packaged as Java threads and
 executed on different cores of a multicore processor. Another strategy,
@@ -2540,17 +2676,17 @@ domain decomposition, partitions input data into smaller chunks and
 allows different threads to work concurrently on each chunk of data.</p>
 </div>
 <div class="paragraph">
-<p>A concurrent solution to a programming problem can execute more quickly
+<p>A concurrent solution to a programming problem can sometimes execute more quickly
 than a sequential solution. Speedup measure how effective a concurrent
 solution is at exploiting the architecture of a multicore processor.
 Note that not all concurrent programs lead to speedup as some run slower
 than their sequential counterparts. Writing a concurrent program is a
-challenge that forces us to discover solutions that best exploit a given
-processor and OS.</p>
+challenge that forces us to divide up work and data in a
+way that best exploits the available processors and OS.</p>
 </div>
 <div class="paragraph">
 <p>Java provides a rich set of primitives and syntactic elements to write
-concurrent programs. Only a few of these have been introduced in this
+concurrent programs, but only a few of these were introduced in this
 chapter. Subsequent chapters give additional tools to code more complex
 concurrent programs.</p>
 </div>
@@ -2568,7 +2704,7 @@ methods are essential parts of the process of using threads in Java.
 Explain the purpose of each method.</p>
 </li>
 <li>
-<p><a id="extendingThreadExercise"></a> What is the difference between
+<p><a id="extendingThreadExercise"></a> What’s the difference between
 extending the <code>Thread</code> class and implementing the <code>Runnable</code> interface?
 When should you use one over the other?</p>
 </li>
@@ -2584,8 +2720,8 @@ Compute the number of time units required to evaluate the expression as
 in <a href="#figure-math_evaluation">Figure 13.2</a>(a) and (b).</p>
 </li>
 <li>
-<p><a id="quadcoreExercise"></a> Suppose that a computer has one
-quadcore processor. Can the tasks in <a href="#videoGameTasksExample">Example 13.1</a> and <a href="#mathExpressionTasksExample">Example 13.2</a> be further subdivided to
+<p><a id="quad-coreExercise"></a> Suppose that a computer has one
+quad-core processor. Can the tasks in <a href="#videoGameTasksExample">Example 13.1</a> and <a href="#mathExpressionTasksExample">Example 13.2</a> be further subdivided to
 improve performance on four cores? Why or why not?</p>
 </li>
 <li>
@@ -2593,10 +2729,10 @@ improve performance on four cores? Why or why not?</p>
 <a href="#_examples_concurrency_and_speedup">Section 13.5</a>. Let’s assume you have a
 job 1,000,000 units in size. A thread can process 10,000 units of work
 every second. It takes an additional 100 units of work to create a new
-thread. What is the speedup if you have a dual-core processor and create
-2 threads? What if you have a quadcore processor and create 4 threads?
+thread. What’s the speedup if you have a dual-core processor and create
+2 threads? What if you have a quad-core processor and create 4 threads?
 Or an 8-core processor and create 8 threads? You may assume that a
-thread does not need to communicate after it has been created.</p>
+thread does not need to communicate after it’s been created.</p>
 </li>
 <li>
 <p><a id="speedupLimitationsExercise"></a> In which situations can speedup be
@@ -2607,11 +2743,11 @@ to be greater than the number of processors?</p>
 <p><a id="AmdahlLawExercise"></a> Amdahl’s Law is a mathematical description of
 the maximum amount you can improve a system by only improving a part of
 it. One form of it states that the maximum speedup attainable in a
-parallel program is \(\frac{1}{1 - P}\) where \(P\)
+parallel program is 1/(1 - <em>P</em>) where <em>P</em>
 is the fraction of the program which can be parallelized to an arbitrary
 degree. If 30% of the work in a program can be fully parallelized but
-the rest is completely serial, what is the speedup with 2 processors? 4?
-8? What implications does Amdahl’s Law have?</p>
+the rest is completely serial, what’s the speedup with two processors? Four?
+Eight? What implications does Amdahl’s Law have?</p>
 </li>
 <li>
 <p><a id="minimumTimeForTasksExercise"></a> Consider the following table of
@@ -2668,13 +2804,13 @@ tasks:</p>
 <p>In this table, the <strong>Time</strong> column gives the number of minutes a task
 takes to perform with a single person, the <strong>Concurrency</strong> column gives
 the maximum number of people who can be assigned to a task, and the
-<strong>Dependency</strong> column shows which tasks cannot start until other tasks
+<strong>Dependency</strong> column shows which tasks can’t start until other tasks
 have been finished. Assume that people assigned to a given task can
 perfectly divide the work. In other words, the time a task takes is the
-single person time divided by the number of people assigned. What is the
+single person time divided by the number of people assigned. What’s the
 minimum amount of time needed to perform all tasks with only a single
 person? What is the minimum amount of time needed to perform all tasks
-with an unlimited number of people? What is the smallest number of
+with an unlimited number of people? What’s the smallest number of
 people needed to achieve this minimum time?</p>
 </div>
 </li>
@@ -2699,7 +2835,7 @@ people needed to achieve this minimum time?</p>
 <p>If we assume that these two snippets of code are running on separate
 threads but that <code>x</code> is a shared variable, what are the possible values
 <code>x</code> could have after both snippets have run? Remember that the execution
-of these snippets can be interleaved in any way.</p>
+of these snippets can be interleaved in <strong>any</strong> way.</p>
 </div>
 </li>
 </ol>
@@ -2713,8 +2849,7 @@ of these snippets can be interleaved in any way.</p>
 <p><a id="pollingArraySumExercise"></a> Re-implement the array summing problem from
 <a href="#arraySummationExample">Example 13.10</a> using polling instead of <code>join()</code>
 calls. Your program should not use a single call to <code>join()</code>. Polling is
-not an ideal way to solve this problem, but it is worth experimenting
-with the technique.</p>
+not an ideal way to solve this problem, but it’s worth thinking about the technique.</p>
 </li>
 <li>
 <p><a id="parallelAudioProcessingExercise"></a> Composers often work with multiple tracks
@@ -2732,20 +2867,20 @@ the delay can produce long and short echoes.</p>
 </div>
 <div class="paragraph">
 <p>If the samples are stored in array <code>in</code> and the delay parameter is
-stored in variable <code>delay</code>, the following code snippet can be used to
+stored in variable <code>delay</code> (measured in number of samples), the following code snippet can be used to
 create array <code>out</code> which contains the sound with an echo.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span><span class="o">[]</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="o">[</span><span class="n">in</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="n">delay</span><span class="o">];</span>
-<span class="c1">//sound before echo starts</span>
-<span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">delay</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+<span class="c1">// Sound before echo starts</span>
+<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">delay</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
     <span class="n">out</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">in</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
-<span class="c1">//sound with echo</span>
-<span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">delay</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">in</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+<span class="c1">// Sound with echo</span>
+<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">delay</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">in</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
     <span class="n">out</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">in</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">in</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">delay</span><span class="o">];</span>
-<span class="c1">//echo after sound is over</span>
-<span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">out</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+<span class="c1">// Echo after sound is over</span>
+<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">out</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
     <span class="n">out</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">b</span><span class="o">*</span><span class="n">in</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">delay</span><span class="o">];</span></code></pre>
 </div>
 </div>
@@ -2768,21 +2903,24 @@ screen. How accurate is your timer?</p>
 </li>
 <li>
 <p><a id="parallelPiApproximationExercise"></a> As you know,
-\(\pi\approx
-3.1416\). A more precise value can be found by writing a program which
+<em>π</em> ≈ 3.1416. A more precise value can be found by writing a program which
 approximates the area of a circle. The area of a circle can be
 approximated by summing up the area of rectangles filling curve of the
 arc of the circle. As the width of the rectangle goes to zero, the
-approximation becomes closer and closer to the true area. Recall that
-that height \(y\) of a circle centered at the origin at any
-distance \(x\) is given by \(y = \sqrt{r^2 - x^2}\)
-where \(r\) is the radius of the circle.</p>
+approximation becomes closer and closer to the true area. If a circle with radius
+<em>r</em> is centered at the origin, its height <em>y</em> at a particular
+distance <em>x</em> is given by the following formula.</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/13-concurrency/images/circleHeight.svg" alt="circleHeight" width="15%">
+</div>
+</div>
 <div class="paragraph">
 <p>Write a parallel implementation of this problem which divides up
 portions of the arc of the circle among several threads and then sums
-the results after they all finish. By setting \(r = 2\), you
-need only sum one quadrant of a circle to get \(\pi\). You
-will need to use a very small rectangle width to get an accurate answer.
+the results after they all finish. By setting <em>r</em> = 2, you
+need only sum one quadrant of a circle to get <em>π</em>. You’ll need to
+use a very small rectangle width to get an accurate answer.
 When your program finishes running, you can compare your value against
 <code>Math.PI</code> for accuracy.</p>
 </div>
@@ -2797,7 +2935,7 @@ When your program finishes running, you can compare your value against
 <li>
 <p><a id="executionVariationExercise"></a> Use the <code>currentTimeMillis()</code> method
 to measure the time taken to execute a relatively long-running piece of
-Java code you have written. Execute your program several times and
+Java code you’ve written. Execute your program several times and
 compare the execution time you obtain during different executions. Why
 do you think the execution times are different?</p>
 </li>
@@ -2821,7 +2959,7 @@ the speedup performance changes. If possible, run your tests on machines
 with different numbers of cores or processors.</p>
 </li>
 <li>
-<p>Given a machine with \(k&gt;1\) cores, what is the maximum
+<p>Given a machine with <em>k</em> &gt; 1 cores, what is the maximum
 speedup you can expect to obtain?</p>
 </li>
 </ol>
@@ -2855,9 +2993,9 @@ of each pair of neighboring partitions should be merged into a single
 sum. The process can be repeated until the final sum has been computed.
 At each step, half of the remaining threads will have nothing left to do
 and will stop. The pattern of summing is like a tree which starts with
-\(k\) threads working at the first stage,
-\(\frac{k}{2}\) working at the second stage,
-\(\frac{k}{4}\) working at the third, and so on, until a
+<em>k</em> threads working at the first stage,
+<em>k</em>/2 working at the second stage,
+<em>k</em>/4 working at the third, and so on, until a
 single thread completes the summing process.</p>
 </div>
 <div id="figure-tree_summation" class="imageblock">
@@ -2868,7 +3006,7 @@ single thread completes the summing process.</p>
 </div>
 <div class="paragraph">
 <p>Update the <code>run()</code> method in the <code>SumThread</code> class so that it adds its
-assigned elements as before and then adds its neighbors sum to its own.
+assigned elements as before and then adds its neighbor’s sum to its own.
 To do so, it must use the <code>join()</code> method to wait for the neighboring
 thread. It should perform this process repeatedly. After summing their
 own values, each even numbered thread should add in the partial sum from
@@ -2882,7 +3020,7 @@ be a static field. <a href="#figure-tree_summation">Figure 13.8</a> illustrates 
 process.</p>
 </div>
 <div class="paragraph">
-<p>Once you have implemented this design, test it against the original
+<p>Once you’ve implemented this design, test it against the original
 <code>SumThread</code> class to see how it performs. Restrict the number of threads
 you create to a power of 2 to make it easier to determine which threads
 wait and which threads terminate.</p>

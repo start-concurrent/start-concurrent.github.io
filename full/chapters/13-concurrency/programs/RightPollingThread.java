@@ -2,13 +2,13 @@ public class RightPollingThread extends Thread {
     private LeftThread left;
     private boolean done = false;   
     
-    public void setLeft( LeftPollingThread left ) {
+    public void setLeft(LeftPollingThread left) {
         this.left = left;
     }
     
     public void run() { 
-        for( int i = 0; i < 10; i++ ) {             
-            while( !left.isDone() );            
+        for(int i = 0; i < 10; i++) {             
+            while(!left.isDone());            
             left.setDone(false);            
             System.out.print("Right ");         
             done = true;
@@ -16,5 +16,5 @@ public class RightPollingThread extends Thread {
     }
     
     public boolean isDone() { return done; }    
-    public void setDone( boolean value ) { done = value; }
+    public void setDone(boolean value) { done = value; }
 }

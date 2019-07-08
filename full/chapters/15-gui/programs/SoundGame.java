@@ -55,8 +55,8 @@ public class SoundGame {
             soundGame.dispose();
       }
     });
-    soundGame.setSize(175,175); //Set size in pixels
+    soundGame.setSize(175,175); // Set size in pixels
     soundGame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    soundGame.setVisible(true); //Display it      
+    soundGame.setVisible(true); // Display it      
   }
 }

@@ -1,5 +1,5 @@
 public class MilitaryMarching {
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
         LeftThread left = new LeftThread();
         RightThread right = new RightThread();
         left.start();
@@ -8,7 +8,7 @@ public class MilitaryMarching {
             left.join();
             right.join();
         }
-        catch( InterruptedException e ) {
+        catch(InterruptedException e) {
             e.printStackTrace();
         }       
     }

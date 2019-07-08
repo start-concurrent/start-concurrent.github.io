@@ -12,21 +12,20 @@ ____
 
 === Introduction
 
-So far we have focused mostly on writing sequential programs. Such
-programs are executed sequentially by a computer. Sequential execution
-implies that program statements are executed one at a time in a sequence
-determined by program logic and input data. While it is common for
+So far we've focused mostly on writing sequential programs. Sequential execution
+means that program statements are executed one at a time in a sequence
+determined by program logic and input data. However, more than
+one program statement can be executed independently by a multicore
+processor. While it's common for
 programmers to write sequential programs, the widespread availability of
 multicore processors in a single computer has led to an increase in the
-demand for programmers who can write _concurrent_ programs. More than
-one program statement can be executed independently by a multicore
-processor.
+demand for programmers who can write _concurrent_ programs. 
 
 A concurrent program is one in which several statements can be executed
 simultaneously by two or more cores. In this chapter we show how to
 write simple concurrent programs in Java that exploit the power of a
-multicore computer. We begin with an example in which the fate of the
-planet is in grave danger!
+multicore computer. We begin with a problem where the fate of the
+planet's in grave danger!
 
 === Problem: Deadly virus
 
@@ -34,21 +33,21 @@ A deadly virus capable of wiping out the world's population is about to
 be released by an evil mastermind. Only he knows the security code that
 can stop the countdown. The world is doomed. The single hope for
 salvation lies with you and your Java programming skills. Through the
-investigations of a top secret, government-funded spy ring, it has been
+investigations of a top secret, government-funded spy ring, it's been
 revealed that the security code is tied to the number
 59,984,005,171,248,659. This large number is the product of two prime
 numbers, and the security code is their sum. All you need to do is
-factor the number 59,984,005,171,248,659 into its two prime factors.
+factor the number 59,984,005,171,248,659 into its two prime factors and add them.
 
-Of course, there is a catch. The deadly virus is going to be released
+Of course, there's a catch. The deadly virus is going to be released
 soon, so soon that there might not be enough time for your computer to
 search through all the numbers one by one. Instead, you must use
 concurrency to check more than one number at a time.
 
 Does this problem sound contrived? To keep information sent over the
-Internet private, some kinds of public key cryptography rely on the
+Internet private, many kinds of public key cryptography rely on the
 difficulty of factoring large numbers. Although factoring the number in
-this problem is not difficult, the numbers used for public key
+this problem isn't difficult, the numbers used for public key
 cryptography, typically more than 300 decimal digits long, have resisted
 factorization by even the fastest computers.
 
@@ -61,14 +60,14 @@ concurrent solution to a problem.
 
 In a multicore processor, each core is an independent worker. It takes
 some care to coordinate these workers. First of all, we still need to
-get the right answer. A concurrent solution is worthless if it is
+get the right answer. A concurrent solution is worthless if it's
 incorrect, and by reading and writing to the same shared memory, answers
 found by one core can corrupt answers found by other cores. Preventing
 that problem will be addressed in <<ch14-synchronization#ch14-synchronization>>.
-If we are sure the concurrent solution is correct, we also want to
-improve performance in some way. Perhaps we want the task to finish more
+Once we can guarantee the concurrent solution is correct, we also want to
+improve performance. Perhaps we want the task to finish more
 quickly. Perhaps we have an interactive system that should continue to
-handle user requests even though it is working on a solution in the
+handle user requests even though it's working on a solution in the
 background. Again, if the overhead of coordinating our workers takes
 more time than a sequential solution or makes the system less
 responsive, it's not useful.
@@ -77,13 +76,13 @@ responsive, it's not useful.
 <<sharedThreadVariableExercise>>
 ****
 
-There are two main ways to split up work. The first is called _task
-decomposition_. In this approach, each worker is given a different job
+There are two main ways to split up work. The first is called
+_task decomposition_. In this approach, each worker is given a different job
 to do. The second is called _domain decomposition_. In this approach,
-the workers do the same job, but to different data.
+the workers do the same job but to different data.
 
-It is possible to use both task and domain decomposition together to
-solve the same problem. With both kinds of decomposition, it is usually
+It's possible to use both task and domain decomposition together to
+solve the same problem. With both kinds of decomposition, it's usually
 necessary to coordinate the workers so that they can share information.
 In the next two subsections, we describe task decomposition and domain
 decomposition in greater depth. Then we discuss mapping tasks to threads
@@ -93,15 +92,15 @@ concurrent programming.
 ==== Task decomposition
 
 The idea of breaking a task down into smaller subtasks is a natural one.
-Imagine you are planning a dinner party. You need to buy supplies, cook
+Imagine you're planning a dinner party. You need to buy supplies, cook
 the dinner, clean your house, and set the table. If four of you were
 planning the party, each could perform a separate activity. The
 preparations could go much faster than if a single person was doing the
 work, but coordination is still important. Perhaps the person cooking
-the dinner couldn't finish until certain supplies had been bought.
+the dinner couldn't finish until certain supplies were bought.
 
 Task decomposition is often easier than domain decomposition because
-many tasks have natural divisions. Unfortunately, it is not always an
+many tasks have natural divisions. Unfortunately, it's not always an
 effective way to use multiple cores on a computer. If one task finishes
 long before the others, a core might sit idle.
 
@@ -119,11 +118,11 @@ programming.
 
 Consider a simple video game that consists of the following tasks.
 
-1.  start game
-2.  process move
-3.  update score
-4.  repaint screen
-5.  end game
+.  Start game
+.  Process move
+.  Update score
+.  Repaint screen
+.  End game
 
 [[figure-video_game_tasks]]
 [.text-center]
@@ -142,7 +141,7 @@ In a dual-core processor tasks B and C can execute on one core while
 task D is executing concurrently on another. Note from the figure that
 task C sends the score and any other data to task D which is
 continuously updating the screen. Having two cores can allow a faster
-refresh of the display as the processor does not have to wait for tasks
+refresh of the display since the processor doesn't have to wait for tasks
 B or C to complete.
 
 ====
@@ -151,16 +150,14 @@ B or C to complete.
 .Math expression tasks
 ====
 
-Suppose that the following mathematical expression is to be evaluated
-for parameters stem:[a] and stem:[K] at a given value of
-stem:[t].
-stem:[2\cdot K\cdot a\cdot t\cdot e^{-a\cdot t^2}] We can
-divide the expression into two terms:
-stem:[2\cdot K\cdot a\cdot t] and stem:[e^{-a\cdot t^2}].
+Suppose we need to evaluate the mathematical expression
+2__Kate__^-__at__²^ with parameters _a_ and _K_ at a given value of
+_t_.  We can divide the expression into two terms:
+2__Kat__ and _e_^-__at__²^.
 Each of these terms can be assigned to a different task for evaluation.
 On a dual-core processor, these two tasks can be executed on separate
-cores and the results from each combined to generate the value of the
-expression by the main task.
+cores and the results from each combined to find the value of the
+expression for the main task.
 
 [[figure-math_evaluation]]
 [.text-center]
@@ -171,14 +168,14 @@ image::mathematical-expression-evaluation.svg[scaledwidth=75%,pdfwidth=75%,width
 <<figure-math_evaluation>> shows how this expression can be
 evaluated on single core and dual-core processors. Sometimes, using
 multiple cores to evaluate an expression like this will take less time
-than a single core. However, there is no guarantee that using multiple
-cores will always be faster, because tasks take time to set up and to
+than a single core. However, there's no guarantee that using multiple
+cores will always be faster since tasks take time to set up and to
 communicate with each other.
 ====
 
 ****
 <<mathExpressionTimingExercise>> +
-<<quadcoreExercise>>
+<<quad-coreExercise>>
 ****
 
 These examples illustrate how a task can be divided into two or more
@@ -191,23 +188,23 @@ larger number of cores.
 In a computer program, every task performs operations on data. This data
 is called the _domain_ of that task. In domain decomposition, the data
 is divided into smaller chunks where each chunk is assigned to a
-different core, instead of dividing a task into subtasks. Each core
+different core, instead of dividing a task into subtasks. Thus, each core
 executes the same task but on different data.
 
 In the example of the dinner party, we could have used domain
 decomposition instead of (or in addition to) task decomposition. If you
 want to cook a massive batch of mashed potatoes, you could peel 24
-potatoes yourself. However, if there are four of you (and you each have
+potatoes yourself. However, if there are four people (and each has
 a potato peeler), each person would only need to peel 6 potatoes.
 
 The strategy of domain decomposition is very useful and is one of the
 major focuses of concurrency in this book. Problems in modern computing
-often use massive data, comprising millions of numbers or thousands of
+often use massive data, comprising millions of values or thousands of
 database records. Writing programs that can chop up data so that
 multiple cores can process smaller sections of it can greatly speed up
-the time it takes to finish computing a solution.
+the time it takes to finish computation.
 
-Domain decomposition can be more difficult than task decomposition. The
+In some ways, domain decomposition can be more difficult than task decomposition. The
 data must be divided evenly and fairly. Once each section of data has
 been processed, the results must be combined. Companies like Google that
 process massive amounts of information have developed terminology to
@@ -223,25 +220,38 @@ examples.
 .Array summation preview
 ====
 
-Suppose that we want to apply function stem:[f()] to each element
-of an array stem:[A] and sum the results. Mathematically, we want
+Suppose we want to apply function _f_ to each element
+of an array _a_ and sum the results. Mathematically, we want
 to compute the following sum.
 
-stem:[S=\sum_{i=1}^N f\left(a(i)\right)]
+//[stem]
+//++++
+//S = \sum_{i=1}^N f\left(a_i\right)
+//++++
 
-In this formula, stem:[a(i)] is the stem:[i]^th^ element
-of array stem:[A]. We want to perform the task of applying
-function stem:[f()] to each element in the array and summing the
-result. Let's assume that we have a dual-core processor available to
+[.text-center]
+image::oneCoreSum.svg[scaledwidth=15%,pdfwidth=15%,width=15%]
+
+
+
+In this formula, _a_~_i_~ is the _i_^th^ element
+of array _a_. Let's assume we have a dual-core processor available to
 compute the sum. We split up the array so that each core performs the
-task on half of the array. Let stem:[S_1] and stem:[S_2]
+task on half of the array. Let _S_~1~ and _S_~2~
 denote the sums computed by core 1 and core 2, respectively.
 
-stem:[S_1 =\sum_{i=1}^{\lfloor \frac{N}{2}\rfloor } f\left(a(i)\right)\hspace{.75in}
-S_2 =\sum_{i=\lfloor \frac{N}{2} \rfloor +1}^{N} f\left(a(i)\right)]
+//[stem]
+//++++
+//S_1 = \sum_{i=1}^{\lfloor \frac{N}{2}\rfloor } f\left(a_i\right)\hspace{.75in}
+//S_2 = \sum_{i=\lfloor \frac{N}{2} \rfloor +1}^{N} f\left(a_i\right)
+//++++
 
-Assuming that stem:[N] is even, both cores process exactly the
-same amount of data. For odd stem:[N], one of the cores processes
+[.text-center]
+image::twoCoreSum.svg[scaledwidth=50%,pdfwidth=50%,width=50%]
+
+
+Assuming that _N_ is even, both cores process exactly the
+same amount of data. For odd _N_, one of the cores processes
 one more data item than the other.
 
 [[figure-array_decomposition]]
@@ -249,8 +259,8 @@ one more data item than the other.
 .Computing the sum of a function of each element of an array.
 image::arrayDecomposition.svg[scaledwidth=60%,pdfwidth=60%,width=60%]
 
-After stem:[S_1] and stem:[S_2] have been computed, one of
-the cores can add these two numbers together to get stem:[S].
+After _S_~1~ and _S_~2~ have been computed, one of
+the cores can add these two numbers together to get _S_.
 This strategy is illustrated in <<figure-array_decomposition>>.
 After the two cores have completed their work on each half of the array,
 the individual sums are added together to produce the final sum.
@@ -261,54 +271,53 @@ the individual sums are added together to produce the final sum.
 ====
 
 The need to multiply matrices arises in many mathematical, scientific,
-and engineering applications. Suppose we are asked to write a program to
-multiply two square matrices stem:[A] and stem:[B], which
-are both stem:[n\times n] matrices. The product matrix
-stem:[C] will also be stem:[n\times n]. A sequential
-program will compute each element of matrix stem:[C] one at a
+and engineering applications. Suppose we're asked to write a program to
+multiply two square matrices _A_ and _B_, which
+are both _n_ × _n_ matrices. The product matrix
+_C_ will also be _n_ × _n_. A sequential
+program will compute each element of matrix _C_ one at a
 time. However, a concurrent program can compute more than one element of
-stem:[C] simultaneously using multiple cores.
+_C_ simultaneously using multiple cores.
 
 [[figure-matrix_decomposition]]
 [.text-center]
-.Data decomposition to multiply two stem:[4\times 4] matrices. The two cores perform the same multiplication tasks but on different data from matrix stem:[A]. The two cores compute the top and bottom two rows of stem:[C], respectively.
+.Data decomposition to multiply two 4 × 4 matrices. The two cores perform the same multiplication tasks but on different data from matrix _A_. The two cores compute the top two and bottom two rows of _C_, respectively.
 image::matrixDecomposition.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
 
 
-In this problem, the task is to multiply matrices stem:[A] and
-stem:[B]. Through domain decomposition, we can replicate this
+In this problem, the task is to multiply matrices _A_ and
+_B_. Through domain decomposition, we can replicate this
 task on each core. As shown in <<figure-matrix_decomposition>>,
-each core computes only a portion of stem:[C]. For example, if
-stem:[A] and stem:[B] are stem:[4\times 4]
+each core computes only a portion of _C_. For example, if
+_A_ and _B_ are 4 × 4
 matrices, we can ask one core to compute the product of the first two
-rows of stem:[A] with all four columns of stem:[B] to
-generate the first two rows of stem:[C]. The second core computes
-the remaining two rows of stem:[C]. Both cores can access
-matrices stem:[A] and stem:[B].
+rows of _A_ with all four columns of _B_ to
+generate the first two rows of _C_. The second core computes
+the remaining two rows of _C_. Both cores can access
+matrices _A_ and _B_.
 
 ====
 
 ==== Tasks and threads
 
-It is the programmer's responsibility to divide his or her solution into
+It's the programmer's responsibility to divide his or her solution into
 a number of tasks and subtasks which will run on one or more cores on a
 processor. In previous sections, we described concurrent programs as if
-specific tasks could be assigned specific cores, but Java does not
+specific tasks could be assigned specific cores, but Java doesn't
 provide a direct way to do so.
 
 Instead, a Java programmer must group together a set of tasks and
 subtasks into a _thread_. A thread is very much like a sequential
-program. In fact, all sequential programs have only one thread. A thread
-is a segment of executing code that runs through its instructions step
+program. In fact, all sequential programs are made up of a single thread.
+A thread is a segment of executing code that runs through its instructions step
 by step. Each thread can run independently. If you have a single core
 processor, only one thread can run at a time, and all the threads will
 take turns. If you have a multicore processor, as many threads as there
-are cores can execute at the same time. You cannot pick which core a
-given thread will run on. In most cases, you will not even be able to
+are cores can execute at the same time. You can't pick which core a
+given thread will run on. In most cases, you won't even be able to
 tell which core a given thread is using.
 
-Even though you cannot control which core a thread will use to execute,
-it takes care to package up the right set of tasks into a single thread
+It takes care to package up the right set of tasks into a single thread
 of execution. Recall the previous examples of concurrent programming in
 this chapter.
 
@@ -321,30 +330,32 @@ Tasks to evaluate different subexpressions in <<mathExpressionTasksExample>> can
 <<figure-tasks_in_threads>>(b). In many problems there are
 several reasonable ways of dividing a set of subtasks into threads.
 
-Note that these figures look exactly like the earlier figures, except
-that the tasks are grouped as threads instead of cores. This grouping is
-matches reality better, since we can control how the tasks are packaged
-into threads but not how they are assigned to cores.
-
-In both examples, we have two threads. It is possible that some other
-thread started these threads running. Every Java program, concurrent or
-sequential, starts with one thread. We will refer to this thread as the
-_main_ thread since it contains the `main()` method.
-
-<<arraySummationPreviewExample>> and <<matrixMultiplicationPreviewExample>> use multiple identical tasks. But these tasks
-operate on different data. Nevertheless, in <<arraySummationPreviewExample>>, the two tasks can be assigned two threads that
-operate on different portions of the input array. The task of summing
-the results from the two threads can either be a separate thread or a
-subtask included in one of the other threads. In
-<<matrixMultiplicationPreviewExample>>, the two tasks can
-again be assigned to two distinct threads that operate on different
-parts of the input matrix stem:[A] to generate the corresponding
-portions of the output matrix stem:[C].
 
 [[figure-tasks_in_threads]]
 .(a) Tasks in a video game shown packaged into two threads. (b) Tasks to evaluate a mathematical expression shown packaged into two threads. Each thread may or may not run on the same core as the other.
 image::task-thread-packaging.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
+
+Note that these figures look exactly like the earlier figures, except
+that the tasks are grouped as threads instead of cores. This grouping 
+matches reality better, since we can control how the tasks are packaged
+into threads but not how they are assigned to cores.
+
+In both examples, we have two threads. It's possible that some other
+thread started these threads running. Every Java program, concurrent or
+sequential, starts with one thread. We'll refer to this thread as the
+_main_ thread since it contains the `main()` method.
+
+<<arraySummationPreviewExample>> and <<matrixMultiplicationPreviewExample>> use multiple identical tasks,
+but these tasks operate on different data. In <<arraySummationPreviewExample>>,
+the two tasks can be assigned to two threads that
+operate on different portions of the input array. The task of summing
+the results from the two threads can either be a separate thread or a
+subtask included in one of the other threads. In
+<<matrixMultiplicationPreviewExample>>, the two tasks can
+again be assigned to two distinct threads that operate on different
+parts of the input matrix _A_ to generate the corresponding
+portions of the output matrix _C_.
 
 There can be many ways to package tasks into threads. There can also be
 many ways to decompose data into smaller chunks. The best ways to
@@ -356,30 +367,31 @@ executed.
 
 The two most important paradigms for concurrent programming are message
 passing and shared memory systems. Each paradigm handles communication
-between the various pieces of code running in parallel in a different
-way. Message passing systems such as MPI and PVM approach this problem
-by sending messages between otherwise independent pieces of code called
+between the various units of code running in parallel in a different
+way. Message passing systems such as MPI approach this problem
+by sending messages between otherwise independent units of code called
 processes. A process which is executing a task may have to wait until it
 receives a message from another process before it knows how to proceed.
-Messages can be sent from a single process to a single other or
+Messages can be sent from a single process to one other or
 broadcast to many. Message passing systems are especially useful when
 the processors doing the work do not share memory.
 
-In contrast, Java uses the shared memory paradigm. In Java, a programmer
+In contrast, the built-in system for conurrencey in Java uses the shared
+memory paradigm. In Java, a programmer
 can create a number of threads which share the same memory space. Each
 thread is an object which can perform work. We described threads as a
 way to package up a group of tasks, and processes are another. People
-use the term _processes_ to describe executing sections of code with
-separate memory and _threads_ to describe executing sections of code
+use the term _processes_ to describe units of code executing with
+separate memory and _threads_ to describe units of code executing
 with shared memory.
 
 When you first learned to program, one of the biggest challenges was
 probably learning to solve a problem step by step. Each line of the
 program had to be executed one at a time, logically and
-deterministically. Human beings do not naturally think that way. We tend
+deterministically. Human beings don't naturally think that way. We tend
 to jump from one thing to another, making inferences and guesses,
-thinking about two unrelated things at once, and so on. As you know well
-by now, it is only possible to write and debug programs because of the
+thinking about two unrelated things at once, and so on. As you know
+now, it's only possible to write and debug programs because of the
 methodical way they work.
 
 You can imagine the execution of a program as an arrow that points to
@@ -390,18 +402,18 @@ execution in the program currently is. The code can move the arrow
 forward, it can do basic arithmetic, it can decide between choices with
 `if` statements, it can do things repeatedly with loops, it can jump
 into a method and then come back. A single thread of execution can do
-all of these things, but it cannot be two places at once. It cannot both
+all of these things, but its arrow can't be two places at once. It can't
 be dividing two numbers in one part of the program and evaluating an
-`if` statement in another. However, there is a way to split this thread
+`if` statement in another. However, there's a way to split this thread
 of execution so that two or more threads are executing different parts
-of the program, and the next section will show you how it is done in
+of the program, and the next section will show you how this is done in
 Java.
 
 === Syntax: Threads in Java
 
 ==== The `Thread` class
 
-Java, like many programming languages, provides the necessary features
+Java, like many programming languages, includes the necessary features
 to package tasks and subtasks into threads. The `Thread` class and its
 subclasses provide the tools for creating and managing threads. For
 example, the following class definition allows objects of type
@@ -415,7 +427,7 @@ public class ThreadedTask extends Thread {
 }
 ----
 
-The constructor is written just like any other constructor, but there is
+The constructor is written just like any other constructor, but there's
 a special `run()` method in `Thread` that can be overridden by any of
 its subclasses. This method is the starting point for the thread of
 execution associated with an instance of the class. Most Java
@@ -430,7 +442,7 @@ each evaluating a separate subexpression as in <<figure-tasks_in_threads>>(b).
 .Thread samples
 ====
 
-We will create `Thread1` and `Thread2` classes. The threads of execution
+We'll create `Thread1` and `Thread2` classes. The threads of execution
 created by instances of these classes compute, respectively, the two
 subexpressions in <<figure-tasks_in_threads>>(b) and save the
 computed values.
@@ -463,11 +475,11 @@ class above to create an object called `thread1`.
 
 [source,java]
 ----
-Thread1 thread1 = new Thread1( 15.1, 2.8, 7.53 );
+Thread1 thread1 = new Thread1(15.1, 2.8, 7.53);
 ----
 
 Using the `new` keyword to invoke the constructor creates a `Thread1`
-object, but it does not start executing it as a new thread. As with all
+object, but it doesn't start executing it as a new thread. As with all
 other classes, the constructor initializes the values inside of the new
 object. A subclass of `Thread` can have many different constructors with
 whatever parameters its designer thinks appropriate.
@@ -480,11 +492,13 @@ as follows.
 
 [source,java]
 ----
-    thread1.start();
+thread1.start();
 ----
 
-Once started, a thread executes independently. When a thread needs to
-share data with another thread, it might have to wait.
+Once started, a thread executes independently.  Calling the `start()`
+method automatically calls the object's `run()` method behind the
+scenes. When a thread needs to share data with another thread, it
+might have to wait.
 
 ==== Waiting for a thread
 
@@ -495,26 +509,26 @@ thread executes the following code will wait for `thread1` to complete.
 
 [source,java]
 ----
-    thread1.join();
+thread1.join();
 ----
 
 Calling `join()` is a _blocking_ call, meaning that the code calling
 this method will wait until it returns. Since it can throw a a checked
-`InterruptedException`. while the code is waiting, the `join()` method
+`InterruptedException` while the code's waiting, the `join()` method
 is generally used within a `try`-`catch` block. We can add a
 `try`-`catch` block to the `thread1` example so that we can recover from
 being interrupted while waiting for `thread1` to finish.
 
 [source,java]
 ----
-    try {
-        System.out.println("Waiting for thread 1...");
-        thread1.join();
-        System.out.println("Thread 1 finished!");
-    }
-    catch (InterruptedException e) {
-        System.out.println("Thread 1 didn't finish!");
-    }
+try {
+	System.out.println("Waiting for thread 1...");
+	thread1.join();
+	System.out.println("Thread 1 finished!");
+}
+catch (InterruptedException e) {
+	System.out.println("Thread 1 didn't finish!");
+}
 ----
 
 Note that the `InterruptedException` is thrown because the main thread
@@ -524,8 +538,9 @@ If an `InterruptedException` is thrown, some outside thread must have
 interrupted the main thread, forcing it to stop waiting for `thread1`.
 
 In earlier versions of Java, there was a `stop()` method which would
-stop an executing thread. Although this method still exists, it has been
-deprecated and should not be used.
+stop an executing thread. Although this method still exists, it's been
+deprecated and shouldn't be used because it can make a program behave
+in an unexpected way.
 
 ****
 <<threadMethodsExercise>>
@@ -536,7 +551,8 @@ deprecated and should not be used.
 ====
 
 Now that we have the syntax to start threads and wait for them to
-finish, we can use the threads defined in <<threadSamplesExample>> with a main thread to make our first complete concurrent
+finish, we can use the threads defined in <<threadSamplesExample>> with a
+main thread to make our first complete concurrent
 program. The main thread in class `MathExpression` creates and starts
 the worker threads `thread1` and `thread2` and waits for their
 completion. When the two threads complete their execution, we can ask
@@ -561,7 +577,7 @@ for real Java code.
 In the code above, execution starts with the `main()` method in
 `MathExpression`. It creates `Thread1` and `Thread2` objects and waits
 for them to finish. Then, it reads the values from the objects after
-they have stopped executing. We could have put the `main()` method in
+they've stopped executing. We could have put the `main()` method in
 the `Thread1` class, omitting the `MathExpression` class entirely. Doing
 so would make the execution match <<figure-tasks_in_threads>>
 more closely, but it would make the two `Thread` subclasses less
@@ -576,18 +592,17 @@ image::thread-lifecycle.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
 
 
 <<figure-thread_execution>> shows the execution of `thread1` and
-`thread2` and the main thread. Note that the creation and start of the
-main thread is done implicitly by the JVM while `thread1` and `thread2`
-are created explicitly and started by the main thread. Even after the
-threads associated with `thread1` and `thread2` have stopped running,
-the objects continue to exist. Methods and fields can continue to be
+`thread2` and the main thread. Note that the JVM implicitly creates and starts
+the main thread which explicitly creates and starts `thread1` and `thread2`.
+Even after the threads associated with `thread1` and `thread2` have stopped running,
+the objects associated with them continue to exist. Their methods and fields can still be
 accessed.
 
 ====
 
 ==== The `Runnable` interface
 
-Although it is possible to create Java threads by inheriting from the
+Although it's possible to create Java threads by inheriting from the
 `Thread` class directly, the Java API allows the programmer to use an
 interface instead.
 
@@ -616,19 +631,19 @@ the two styles. The familiar way of creating and running a thread from a
 
 [source,java]
 ----
-Summer summer = new Summer( array, lower, upper );
+Summer summer = new Summer(array, lower, upper);
 summer.start();
 ----
 
-Since `Summer` does not inherit from `Thread`, it does not have a
-`start()` method, and this code will not compile. When a class only
-implements `Runnable`, it is still necessary to create a `Thread` object
+Since `Summer` doesn't inherit from `Thread`, it doesn't have a
+`start()` method, and this code won't compile. When a class only
+implements `Runnable`, it's still necessary to create a `Thread` object
 and call its `start()` method. Thus, an extra step is needed.
 
 [source,java]
 ----
-Summer summer = new Summer( array, lower, upper );
-Thread thread = new Thread( summer );
+Summer summer = new Summer(array, lower, upper);
+Thread thread = new Thread(summer);
 thread.start();
 ----
 
@@ -637,8 +652,8 @@ cumbersome than inheriting directly from `Thread`, since you have to
 instantiate a separate `Thread` object. However, most developers prefer
 to design classes that implement `Runnable` instead of inheriting from
 `Thread`. Why? Java only allows for single inheritance. If your class
-implements `Runnable`, it is free to inherit from another parent class
-with the features you want.
+implements `Runnable`, it's free to inherit from another parent class
+with features you might want.
 
 ****
 <<extendingThreadExercise>>
@@ -659,35 +674,34 @@ include::{programsdir}/NumberedThread.java[]
 ----
 
 
-Now suppose that we want to create 10 thread objects of type
+Now, suppose we want to create 10 thread objects of type
 `NumberedThread`, start them, and then wait for them to complete.
 
 [source,java]
 ----
-NumberedThread[] threads = new NumberedThread[10];
-for( int i = 0; i < threads.length; i++ ) {
-    threads[i] = new NumberedThread(i);
-    threads[i].start();
+NumberedThread[] threads = new NumberedThread[10]; //<.>
+for(int i = 0; i < threads.length; i++) {
+    threads[i] = new NumberedThread(i); //<.>
+    threads[i].start(); //<.>
 }
 try {
-    for( int i = 0; i < threads.length; i++ )
-        threads[i].join();
+    for(int i = 0; i < threads.length; i++)
+        threads[i].join(); //<.>
 }
-catch( InterruptedException e ) {
+catch(InterruptedException e) {
     System.out.println("A thread didn't finish!");
 }
 ----
-
-First, we declare an array to hold references to `NumberedThread`
+<.> First, we declare an array to hold references to `NumberedThread`
 objects. Like any other type, we can make an array to hold objects that
-inherit from `Thread`. The first line of the `for` loop instantiates a
-new `NumberedThread` objects, invoking the constructor which stores the
+inherit from `Thread`.
+<.> The first line of the `for` loop instantiates a
+new `NumberedThread` object, invoking the constructor which stores the
 current iteration of the loop into the `value` field. The reference to
 each `NumberedThread` object is stored in the array. Remember that the
-constructor does *not* start a new thread running. The second line of
-the `for` loop does that.
-
-We are also interested in when the threads stop. Calling the `join()`
+constructor does *not* start a new thread running.
+<.> The second line of the `for` loop does that.
+<.> We're also interested in when the threads stop. Calling the `join()`
 method forces the main thread to wait for each thread to finish.
 
 The entire second `for` loop is nested inside of a `try` block. If the
@@ -702,23 +716,20 @@ waiting for.
 
 === Examples: Concurrency and speedup
 
-Speedup is one of the classic motivations for writing concurrent
+Speedup is one of the strongest motivations for writing concurrent
 programs. To understand speedup, let's assume we have a problem to
-solve. We write two programs to solve this problem, one that is
-sequential and another that is concurrent and, hence, able to exploit
-the multiple cores. Let stem:[t_s] be the average time to execute
-the sequential program and stem:[t_c] the average time to execute
-the concurrent program. Sometimes we will use the notation
-stem:[t_c^k] to refer to the execution time of a concurrent
-program with stem:[k] threads. So that the comparison is
+solve. We write two programs to solve this problem, one that's
+sequential and another that's concurrent and, hence, able to exploit
+multiple cores. Let _t_~_s_~ be the average time to execute
+the sequential program and _t_~_c_~ the average time to execute
+the concurrent program. So that the comparison is
 meaningful, assume that both programs are executed on the same computer.
-The speedup obtained from concurrent programming is defined as follows.
-stem:[\mbox{speedup}=\frac{t_s}{t_c}]
+The speedup obtained from concurrent programming is defined as _t_~_s_~/_t_~_c_~.
 
 Speedup measures how much faster the concurrent program executes
 relative to the sequential program. Ideally, we expect
-stem:[t_c<t_s], making the speedup greater than 1. However,
-simply writing a concurrent program does not necessarily make it faster
+_t_~_c_~ < _t_~_s_~, making the speedup greater than 1. However,
+simply writing a concurrent program doesn't guarantee that it's faster
 than the sequential version.
 
 ****
@@ -726,8 +737,8 @@ than the sequential version.
 <<AmdahlLawExercise>>
 ****
 
-To determine speedup, we need to measure stem:[t_s] and
-stem:[t_c]. Time in a Java program can easily be measured with
+To determine speedup, we need to measure _t_~_s_~ and
+_t_~_c_~. Time in a Java program can easily be measured with
 the following two static methods in the `System` class.
 
 [source,java]
@@ -739,10 +750,10 @@ public static long nanoTime()
 The first of these methods returns the current time in milliseconds
 (ms). A _millisecond_ is 0.001 seconds. This method gives the difference
 between the current time on your computer's clock and midnight of
-January 1, 1970 coordinated universal time (UTC). This point in time is
+January 1, 1970 Coordinated Universal Time (UTC). This point in time is
 used for many timing features on many computer platforms and is called
-the _Unix epoch_. The second method returns the current time in
-nanoseconds (ns). A _nanosecond_ is 0.000001 seconds. This method also
+the _Unix epoch_. The other method returns the current time in
+nanoseconds (ns). A _nanosecond_ is 0.000000001 or 10^-9^ seconds. This method also
 gives the difference between the current time and some fixed time, which
 is system dependent and not necessarily the Unix epoch. The
 `System.nanoTime()` method can be used when you want timing precision
@@ -789,14 +800,21 @@ computer with an Intel Core 2 Duo running at 2.16 Ghz. The execution
 time was measured at 1,660,000 nanoseconds. We also wrote a simple
 sequential program to evaluate the same expression. It took 4,100
 nanoseconds to execute this program on the same computer. Plugging in
-these values for stem:[t_c] and stem:[t_s], we can find
+these values for _t_~_c_~ and _t_~_s_~, we can find
 the speedup.
 
-stem:[\mbox{speedup}=\frac{t_s}{t_c} = \frac{4,100}{1,660,000}= 0.00246] +
-This speedup is much less than 1. Although the result may be surprising,
-the concurrent program with two threads executes much slower than the
+//[stem]
+//++++
+//\mbox{speedup}=\frac{t_s}{t_c} = \frac{4,100}{1,660,000} = 0.00246
+//++++
+
+[.text-center]
+image::speedup.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
+
+This speedup is much less than 1. Although this result might be surprising,
+the concurrent program with two threads executes slower than the
 sequential program. In this example, the cost of creating, running, and
-joining threads outweighed the benefits of concurrent calculation on two
+joining threads outweighs the benefits of concurrent calculation on two
 cores.
 ====
 
@@ -825,57 +843,56 @@ elements of the array in its assigned partition.
 
 [source, java]
 ----
-include::{programsdir}/SumThread.java[lines=1..14]
+include::{programsdir}/SumThread.java[lines=1..15]
 ----
-
-
-First, we set up all the fields that the class will need. We fix the
+<.> First, we set up all the fields that the class will need.
+<.> Note that every `SumThread` object will have its own reference to the array of data.
+<.> We fix the
 array size at 1,000,000 and the number of threads at 8, but these values
-could easily be changed or read as input instead. In its constructor, a
-`SumThread` takes the lower and upper bounds of its partition. Like most
+could easily be changed or read as input instead.
+<.> In its constructor, a `SumThread` takes a reference to the array of data
+and the lower and upper bounds of its partition. Like most
 ranges we discuss, the lower bound is inclusive though the upper bound
 is exclusive.
 
 [source, java]
 ----
-include::{programsdir}/SumThread.java[lines=16..21]
+include::{programsdir}/SumThread.java[lines=17..22]
 ----
-
-
-In the `for` loop of the `run()` method, the `SumThread` finds the sine
+<.> In the `for` loop of the `run()` method, the `SumThread` finds the sine
 of each number in its array partition and adds that value to its running
-sum. The `getSum()` method is an accessor that allows the running sum to
+sum.
+<.> The `getSum()` method is an accessor that allows the running sum to
 be retrieved.
 
 [source, java]
 ----
-include::{programsdir}/SumThread.java[lines=23..39]
+include::{programsdir}/SumThread.java[lines=24..40]
 ----
-
-
-The `main()` method begins by instantiating the array and filling it
-with random values. Note that the array is a static field so that it can
-be shared by all instances of `SumThread`. Then each thread is created
-with lower and upper bounds that mark its array partition. If the
+<.> The `main()` method begins by instantiating the array.
+<.> It fills it with random values.
+<.> Then, each thread is created by passing in a reference to the array and
+lower and upper bounds that mark the thread's partition of the array. If the
 process using the array length and the number of threads to determine
 upper and lower bounds doesn't make sense, refer to
 <<Concurrency: Arrays>> which describes the fair division of work
 to threads. If the length of the array is not divisible by the number of
-threads, simple division isn't enough. After creating each thread, its
-`start()` method is called.
+threads, simple division isn't enough.
+<.> After each thread is created, its `start()` method is called.
 
 [source, java]
 ----
-include::{programsdir}/SumThread.java[lines=41..53]
+include::{programsdir}/SumThread.java[lines=42..54]
 ----
-
-
-After the threads have started working, the main thread creates its own
-running total and iterates through each thread waiting for it to
-complete. When each thread is done, the main thread adds its value to
-the running total. If the main thread is interrupted while waiting for a
-thread to complete, the stack trace is printed. Otherwise, the final sum
-is printed out.
+<.> Once the threads have started working, the main thread creates its own
+running total.
+<.> It iterates through each thread waiting for it to
+complete. 
+<.> When each thread is done, its value is added to
+the running total.
+<.> Finally, the sum is printed out.
+<.> If the main thread is interrupted while waiting for a
+thread to complete, the stack trace is printed. 
 ====
 
 ****
@@ -891,15 +908,20 @@ is printed out.
 In <<matrixMultiplicationPreviewExample>>, we discussed the
 importance of matrix operations in many applications. Now that we know
 the necessary Java syntax, we can write a concurrent program to multiply
-two square matrices stem:[A] and stem:[B] and compute the
-resultant matrix stem:[C]. If these matrices have stem:[n]
-rows and stem:[n] columns, the value at the stem:[i]^th^
-row and stem:[j]^th^ column of stem:[C] is
+two square matrices _A_ and _B_ and compute the
+resultant matrix _C_. If these matrices have _n_
+rows and _n_ columns, the value at the _i_^th^
+row and _j_^th^ column of _C_ is
 
-stem:[C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \ldots +
-A_{in}B_{nj}]
+//[stem]
+//++++
+//C_{ij} = \sum_{k = 1}^n A_{ik}B_{kj} = A_{i1}B_{1j} + A_{i2}B_{2j} + \ldots + A_{in}B_{nj}
+//++++
 
-In Java, it is natural for us to store matrices as 2-dimensional arrays.
+[.text-center]
+image::matrixValue.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
+
+In Java, it's natural for us to store matrices as 2-dimensional arrays.
 To do this multiplication sequentially, the simplest approach uses three
 nested `for` loops. The code below is a direct translation of the
 mathematical notation, but we do have to be careful about bookkeeping.
@@ -909,9 +931,9 @@ names with lowercase letters.
 
 [source,java]
 ----
-for( int i = 0; i < c.length; i++ )
-    for( int j = 0; j < c[i].length; j++ )
-        for( int k = 0; k < b.length; k++ )
+for(int i = 0; i < c.length; i++)
+    for(int j = 0; j < c[i].length; j++)
+        for(int k = 0; k < b.length; k++)
             c[i][j] += a[i][k] * b[k][j];
 ----
 
@@ -925,18 +947,17 @@ number of rows in the answer matrix `c`.
 ----
 include::{programsdir}/MatrixThread.java[]
 ----
-
-
-The constructor for `MatrixThread` stores references to the arrays
-corresponding to matrices stem:[A], stem:[B], and
-stem:[C] as well as lower and upper bounds on the rows of
-stem:[C] to compute. The body of the `run()` method is identical
+<.> The constructor for `MatrixThread` stores references to the arrays
+corresponding to matrices _A_, _B_, and
+_C_ as well as lower and upper bounds on the rows of
+_C_ to compute.
+<.> The body of the `run()` method is identical
 to the sequential solution except that its outermost loop runs only from
-`lower` to `upper` instead of through all the rows of the result. It is
+`lower` to `upper` instead of through all the rows of the result. It's
 critical that each thread is assigned a set of rows that does not
 overlap with the rows another thread has. Not only would having multiple
-threads compute the same row be inefficient, it could very likely lead
-to an incorrect result, as we will see in
+threads compute the same row be inefficient, it would very likely lead
+to an incorrect result, as we'll see in
 <<ch14-synchronization#ch14-synchronization>>.
 
 The following client code uses an array of `MatrixThread` objects to
@@ -950,56 +971,56 @@ MatrixThread[] threads = new MatrixThread[THREADS];
 int quotient = c.length / THREADS;
 int remainder = c.length % THREADS;
 int start = 0;
-for( int i = 0; i < THREADS; i++ ) {
+for(int i = 0; i < THREADS; i++) {
     int rows = quotient;
-    if( i < remainder )
+    if(i < remainder)
         rows++;
-    threads[i] = new MatrixThread( a, b, c, start, start + rows );
-    threads[i].start();
+    threads[i] = new MatrixThread(a, b, c, start, start + rows); //<.>
+    threads[i].start(); //<.>
     start += rows;
 }
 try {
-    for( int i = 0; i < THREADS; i++ )
+    for(int i = 0; i < THREADS; i++) //<.>
         threads[i].join();
 }
-catch( InterruptedException e ) {
+catch(InterruptedException e) {
     e.printStackTrace();
 }
 ----
-
-We loop through the array, creating a `MatrixThread` object for each
+<.> We loop through the array, creating a `MatrixThread` object for each
 location. As in the previous example, we use the approach described in
 <<Concurrency: Arrays>> to allocate rows to each thread fairly.
 Each new `MatrixThread` object is given a reference to each of the three
 matrices as well as an inclusive starting and an exclusive ending row.
-After the `MatrixThread` objects are created, we start them running with
+<.> After the `MatrixThread` objects are created, we start them running with
 the next line of code.
+<.> Next, there's a familiar `for` loop with the `join()` calls that force
+the main thread to wait for the other threads to finish.
 
-Next, there is a familiar `for` loop with the `join()` calls that force
-the main thread to wait for the other threads to finish. Presumably,
+Presumably,
 code following this snippet will print the values of the result matrix
-or use it for some other calculations. If we don't use the `join()`
+or use it for other calculations. If we didn't use the `join()`
 calls to be sure the threads have finished, we might print out a result
-matrix that has only been partially filled in.
+matrix that's only been partially filled in.
 
 We completed the code for threaded matrix multiplication and executed it
-on an iMac computer running on an Intel running at 2.16 Ghz. The program
-was executed for matrices of different sizes (stem:[n \times n]).
+on an iMac computer with an Intel Core 2 Duo running at 2.16 Ghz. The program
+was executed for matrices of different sizes (_n_ × _n_).
 For each size, the sequential and concurrent execution times in seconds
 and the corresponding speedup are listed in the following table.
 
 [.center%autowidth%header,cols="4*<",]
 |=======================================================================
-|Size (stem:[n]) |stem:[t_s] (s) |stem:[t_c] (s)
+|Size (_n_) |_t_~_s_~ (s) |_t_~_c_~ (s)
 |Speedup
 |100 |0.013 |0.9 |0.014
 
 |500 |1.75 |4.5 |0.39
 
-|1000 |15.6 |10.7 |1.45^*^
+|1,000 |15.6 |10.7 |1.45^*^
 |=======================================================================
 
-Only with stem:[1000\times1000] matrices did we see improved
+Only with 1,000 × 1,000 matrices did we see improved
 performance when using two threads. In that case, we achieved a speedup
 of 1.45, marked with an asterisk. In the other two cases, performance
 became worse.
@@ -1012,19 +1033,19 @@ became worse.
 
 === Concepts: Thread scheduling
 
-Now that we have seen how multiple threads can be used together, a
-number of questions should be coming to the forefront. Who decides when
+Now that we've seen how multiple threads can be used together, a
+number of questions arise: Who decides when
 these threads run? How is processor time shared between threads? Can we
-make any assumptions about the order in which the threads will run? Can
+make any assumptions about the order in which the threads run? Can
 we affect this order?
 
 These questions focus on thread scheduling. Because different concurrent
-systems handle scheduling differently, we will only describe scheduling
+systems handle scheduling differently, we'll only describe scheduling
 in Java. Although sequential programming is all about precise control
 over what happens *next*, concurrency takes much of this control away
 from the programmer. When threads are scheduled and which processor they
 run on is handled by a combination of the JVM and the OS. With normal
-JVMs, there is no explicit way to access the scheduling and alter it to
+JVMs, there's no explicit way to access the scheduling and alter it to
 your liking.
 
 Of course, there are a number of implicit ways a programmer can affect
@@ -1033,35 +1054,35 @@ systems, threads have _priorities_. Higher priority threads run more
 often than lower priority threads. Some threads are performing
 mission-critical operations which must be carried out as quickly as
 possible, and some threads are just doing periodic tasks in the
-background. A programmer can set the priorities accordingly.
+background. A programmer can set thread priorities accordingly.
 
 Setting priorities gives only a very general way of controlling which
 thread will run. The threads themselves might have more specific
-information about when they will and will not need processor time. A
-thread may need to wait for a specific event and will not need to run
+information about when they will and won't need processor time. A
+thread may need to wait for a specific event and won't need to run
 until then. Java allows threads to interact with the scheduler through
-`Thread.sleep()` and `Thread.yield()`, which we will discuss in
+`Thread.sleep()` and `Thread.yield()`, which we'll discuss in
 <<Syntax: Thread states>>, and through the `wait()`, method which
-we will discuss in <<ch14-synchronization#ch14-synchronization>>.
+we'll discuss in <<ch14-synchronization#ch14-synchronization>>.
 
 ==== Nondeterminism
 
 In Java, the mapping of a thread inside the JVM to a thread in the OS
 varies. Some implementations give each Java thread an OS thread, some
 put all Java threads on a single OS thread (with the side effect of
-preventing concurrency), and some allow for the possibility of changing
+preventing parallel execution), and some allow for the possibility of changing
 which OS thread a Java thread uses. Thus, the performance and, in some
 cases, the correctness of your program might vary, depending on which
-system you are running. This is, yet again, one of those times when Java
-is platform independent... but not entirely.
+system you're running. This is, yet again, one of those times when Java
+is platform independent...but not entirely.
 
 Unfortunately, the situation is even more complicated. Making threads
 part of your program means that the same program could run differently
 on the *same* system. The JVM and the OS have to cooperate to schedule
 threads, and both programs are complex mountains of code which try to
-balance many factors. If you create three threads, there is no guarantee
+balance many factors. If you create three threads, there's no guarantee
 that the first will run first, the second second, and the third third,
-not even if it happens that way the first 10 times you run the program.
+even if it happens that way the first 10 times you run the program.
 <<executionOrderExercise>> shows that the pattern of thread
 execution can vary a lot.
 
@@ -1074,11 +1095,11 @@ would always produce the same sequence of output. Perhaps the biggest
 hurdle created by this nondeterminism is that programmers must shift
 their paradigm considerably. The processor can switch between executions
 of threads at any time, even in the middle of operations. Every possible
-interleaving of thread execution can crop up at some point. Unless you
-can be sure that your program behaves properly for all of them, you may
-never be able to debug your code completely. What is so insidious about
-some nondeterministic bugs is that they can occur rarely and be almost
-impossible to reproduce. In this chapter, we introduce how to create and
+interleaving of thread execution could crop up at some point. Unless you
+can be sure that your program behaves properly for all of them, you might
+never be able to debug your code completely. What's so insidious about
+nondeterministic bugs is that they can occur rarely and be almost
+impossible to reproduce. In this chapter, we've introduced how to create and
 run threads, but making these threads interact properly is a major
 problem we tackle in subsequent chapters.
 
@@ -1096,7 +1117,7 @@ them to get it.
 
 ==== Polling
 
-So far the only mechanism we have introduced for coordinating different
+So far the only mechanism we've introduced for coordinating different
 threads is using the `join()` method to wait for a thread to end.
 Another technique is _polling_, or _busy waiting_. The idea is to keep
 checking the state of one thread until it changes.
@@ -1105,9 +1126,9 @@ There are a number of problems with this approach. The first is that it
 wastes CPU cycles. Those cycles spent by the waiting thread continually
 checking could have been used productively by some other thread in the
 system. The second problem is that we have to be certain that the state
-of the thread we are waiting for won't change back to the original state
+of the thread we're waiting for won't change back to the original state
 or to some other state. Because of the unpredictability of scheduling,
-there is no guarantee that the waiting thread will read the state of the
+there's no guarantee that the waiting thread will read the state of the
 other thread when it has the correct value.
 
 We bring up polling partly because it has a historical importance to
@@ -1124,7 +1145,7 @@ the reasons why we need better techniques for thread communication.
 A widely used Java tool for manipulating scheduling is the
 `Thread.sleep()` method. This method can be called any time you want a
 thread to do nothing for a set period of time. Until the sleep timer
-expires, the thread will not be scheduled for any CPU time, unless it is
+expires, the thread will not be scheduled for any CPU time, unless it's
 interrupted. To make a thread of execution sleep, call `Thread.sleep()`
 in that thread of execution with a number of milliseconds as a
 parameter. For example, calling `Thread.sleep(2000)` will make the
@@ -1132,10 +1153,10 @@ calling thread sleep for two full seconds.
 
 Another useful tool is the `Thread.yield()` method. It gives up use of
 the CPU so that the next waiting thread can run. To use it, a thread
-calls `Thread.yield()`. This method is very useful in practice, but
-according to official documentation, the JVM does not *have* to do to
+calls `Thread.yield()`. This method is useful in practice, but
+according to official documentation, the JVM doesn't *have* to do to
 anything when a `Thread.yield()` call happens. The Java specification
-does not demand a particular implementation. A JVM could ignore a
+doesn't demand a particular implementation. A JVM could ignore a
 `Thread.yield()` call completely, but most JVMs will move on to the next
 thread in the schedule.
 
@@ -1155,7 +1176,7 @@ thread begins its life in the New Thread state, after the constructor is
 called. When the `start()` method is called, the thread begins to run
 and transitions to the Runnable state. Being Runnable doesn't
 necessarily mean that the thread is executing at any given moment but
-that it is ready to run at any time. When in the Runnable state, a
+that it's ready to run at any time. When in the Runnable state, a
 thread may call `Thread.yield()`, relinquishing use of the processor,
 but it will still remain Runnable.
 
@@ -1168,7 +1189,7 @@ Terminated. A thread becomes Terminated when its `run()` method
 finishes. A Terminated thread cannot become Runnable again and is no
 longer a separate thread of execution.
 
-Any object with a type that is a subclass of `Thread` can tell you its
+Any object with a type that's a subclass of `Thread` can tell you its
 current state using the `getState()` method. This method returns an
 _enum_ type, whose value must come from a fixed list of constant
 objects. These objects are `Thread.State.NEW`, `Thread.State.RUNNABLE`,
@@ -1176,13 +1197,13 @@ objects. These objects are `Thread.State.NEW`, `Thread.State.RUNNABLE`,
 `Thread.State.TIMED_WAITING`, and `Thread.State.TERMINATED`. Although
 the others are self explanatory, we lump the `Thread.State.BLOCKED`,
 `Thread.State.WAITING`, and `Thread.State.TIMED_WAITING` values into
-the Not Runnable state, since the distinction between the three is not
+the Not Runnable state, since the distinction between the three isn't
 important for us.
 
-Threads also have priorities in Java. When an object that is a subclass
+Threads also have priorities in Java. When an object that's a subclass
 of `Thread` is created in Java, its priority is initially the same as
 the thread that creates it. Usually, this priority is
-`Thread.NORM_PRIORITY`, but there are some special cases when it is a
+`Thread.NORM_PRIORITY`, but there are some special cases when it's a
 good idea to raise or lower this priority. Avoid changing thread
 priorities because it increases platform dependence and because the
 effects are not always predictable. Be aware that priorities exist, but
@@ -1196,7 +1217,7 @@ might be familiar with sound of soldiers marching: "`Left, Left, Left,
 Right, Left!`" We can design a thread that prints `Left` and another
 thread that prints `Right`. We can combine the two to print the correct
 sequence for marching and loop the whole thing 10 times so that we can
-see how accurately place the words. We want to use the scheduling tools
+see how accurately we can place the words. We want to use the scheduling tools
 discussed above to get the timing right. Let's try `Thread.sleep()`
 first.
 
@@ -1205,21 +1226,20 @@ first.
 ----
 include::{programsdir}/LeftThread.java[]
 ----
-
-
-Class `LeftThread` has a `for` loop which prints out `Left` three times,
-waits for 10 milliseconds, prints out `Left` again, then repeats.
+<.> Inside, the `for` loop, this thread prints out `Left` three times.
+<.> The, it waits for 10 milliseconds.
+<.> Finally, it prints out `Left` again and repeats the loop.
 
 [source, java]
 [[RightThreadProgram]]
 ----
 include::{programsdir}/RightThread.java[]
 ----
+<.> This thread waits for 5 milliseconds to get synchronized.
+<.> Inside its `for` loop, it prints out `Right`.
+<.> Then, it waits for 10 milliseconds and repeats the loop.
 
-
-Class `RightThread` waits for 5 milliseconds to get synchronized, then
-has a `for` loop which prints out `Right`, waits for 10 milliseconds,
-and repeats. The driver program below creates a thread for each of these
+The driver program below creates a thread for each of these
 classes and then starts them. If you run this program, you should see 10
 lines of `Left Left Left Right Left`, but there are a few problems.
 
@@ -1234,9 +1254,9 @@ The first problem is that we have to wait some amount of time between
 calls. We could shorten the `Thread.sleep()` calls, but there are limits
 on the resolution of the timer. The bigger problem is that the two
 threads can sometimes get out of sync. If you run the program many
-times, you may see a `Right` out of place once in a while. If you
+times, you might see a `Right` out of place once in a while. If you
 increase the repetitions of the `for` loops to a larger number, the
-errors are more likely. Whether or not you see errors is somewhat system
+errors will become more likely. Whether or not you see errors is somewhat system
 dependent. We can try `Thread.yield()` instead of `Thread.sleep()`.
 
 [source, java]
@@ -1255,20 +1275,20 @@ include::{programsdir}/RightYieldThread.java[]
 
 These new versions of the two classes have essentially replaced calls to
 `Thread.sleep()` with calls to `Thread.yield()`. Without the need for
-exception handling, the code is simpler, but we have traded one set of
+exception handling, the code is simpler, but we've traded one set of
 problems for another. If there are other threads operating in the same
-application, they will be scheduled in ways that will interfere with the
-pattern of yielding. Also, if you are running this code on a machine
+application, they'll be scheduled in ways that will interfere with the
+pattern of yielding. If you're running this code on a machine
 with a single processor and a single core, you have a good chance of
-seeing something which matches the expected output. If you are running
-this on multiple cores, everything will be jumbled. It is likely that
+seeing something which matches the expected output. However, if you're running
+it on multiple cores, everything will be jumbled. It's likely that
 the `LeftYieldThread` will be running on one processor with the
 `RightYieldThread` on another. In that case, neither has any competition
 to yield to.
 
-Finally, let us look at a polling solution which still falls short of
+Finally, let's look at a polling solution which still falls short of
 the mark. To do this, we need state variables inside of each class to
-keep track of whether or not it is done. Each thread needs a reference
+keep track of whether or not it's done. Each thread needs a reference
 to the other thread to make queries, and the driver program must be
 updated to add these in before starting the threads.
 
@@ -1288,7 +1308,7 @@ include::{programsdir}/RightPollingThread.java[]
 
 Whether single core or multicore, this solution will always give the
 right output. Or it should. Java experts will point out that we are
-violating a technicality of the Java Memory Model. Because we are not
+violating a technicality of the Java Memory Model. Because we're not
 using synchronization tools, we have no guarantee that the change of the
 `done` variable will even be *visible* from one thread to another. In
 practice, this problem should affect you rarely, but to be safe, both of
@@ -1296,12 +1316,12 @@ the `done` variables should be declared with the keyword `volatile`.
 This keyword makes Java aware that the value may be accessed at any time
 from arbitrary threads.
 
-Another issue is that there is *no* concurrency. Each thread must wait
+Another issue is that there's *no* parallel execution. Each thread must wait
 for the other to complete. Of course, this problem does not benefit from
-a concurrent solution, but applying this solution to problems which can
-benefit from concurrency might cause performance problems. Each thread
+a parallelism, but applying this solution to problems which can
+benefit from parallelism might cause performance problems. Each thread
 wastes time busy waiting in a `while` loop for the other to be done,
-consuming CPU cycles while it does so. You will notice that the code
+consuming CPU cycles while it does so. You'll notice that the code
 must still be carefully written. Each thread must set the other thread's
 `done` value to `false`. If threads were responsible for setting their
 own `done` values to `false`, one thread might print its information and
@@ -1319,7 +1339,7 @@ introduce better tools for coordination and synchronization in
 
 Finally, we give the solution to the deadly virus problem. By this
 point, the threaded part of this problem should not seem very difficult.
-It is simpler than some of the examples, such as matrix multiplication.
+It's simpler than some of the examples, such as matrix multiplication.
 We begin with the worker class `FactorThread` that can be spawned as a
 thread.
 
@@ -1338,7 +1358,7 @@ one of the factors, making the other factor easy to find, sum, and print
 out. We have to add a couple of extra lines of code to make sure that we
 only search the odd numbers in the range. This solution is tuned for
 efficiency for this specific security problem. A program to find general
-prime factors would have to be more flexible. Next let us examine the
+prime factors would have to be more flexible. Next, let's examine the
 driver program `Factor`.
 
 .Driver class which creates threads to lower the average search time for the factors of a large odd composite.
@@ -1347,44 +1367,44 @@ driver program `Factor`.
 ----
 include::{programsdir}/Factor.java[]
 ----
-
-Static constants hold both the number to be factored and the number of
-threads. In the `main()` method, we create an array of threads for
-storage. Then, we create each `FactorThread` object, assigning upper and
+<.> Static constants hold both the number to be factored and the number of
+threads.
+<.> In the `main()` method, we create an array of threads for
+storage.
+<.> Then, we create and start each `FactorThread` object, assigning upper and
 lower bounds at the same time, using the standard technique from
 <<Concurrency: Arrays>> to divide the work fairly. Because we
 know the number we're dividing isn't even, we start with 3. By only
 going up to the square root of the number, we know that we will only
 find the smaller of the two factors. In that way we can avoid having one
 thread find the smaller while another is finds the larger.
-
-Afterwards, we have the usual `join()` calls to make sure that all the
+<.> Afterwards, we have the usual `join()` calls to make sure that all the
 threads are done. In this problem, these calls are unnecessary. One
 thread will print out the correct security code, and the others will
 search fruitlessly. If the program went on to do other work, we might
 need to let the other threads finish or even interrupt them. Don't
-forget `join()` calls since they are usually very important.
+forget `join()` calls since they're usually very important.
 
 === Summary
 
-In this chapter we have examined tasks and domains. We have explained
-two strategies to obtain a concurrent solution to a programming problem.
+In this chapter we've explored
+two strategies to obtain a concurrent solution to programming problems.
 One strategy, task decomposition, splits a task into two or more
 subtasks. These subtasks can then be packaged as Java threads and
 executed on different cores of a multicore processor. Another strategy,
 domain decomposition, partitions input data into smaller chunks and
 allows different threads to work concurrently on each chunk of data.
 
-A concurrent solution to a programming problem can execute more quickly
+A concurrent solution to a programming problem can sometimes execute more quickly
 than a sequential solution. Speedup measure how effective a concurrent
 solution is at exploiting the architecture of a multicore processor.
 Note that not all concurrent programs lead to speedup as some run slower
 than their sequential counterparts. Writing a concurrent program is a
-challenge that forces us to discover solutions that best exploit a given
-processor and OS.
+challenge that forces us to divide up work and data in a
+way that best exploits the available processors and OS.
 
 Java provides a rich set of primitives and syntactic elements to write
-concurrent programs. Only a few of these have been introduced in this
+concurrent programs, but only a few of these were introduced in this
 chapter. Subsequent chapters give additional tools to code more complex
 concurrent programs.
 
@@ -1394,7 +1414,7 @@ concurrent programs.
 .  [[threadMethodsExercise]] The `start()`, `run()`, and `join()`
 methods are essential parts of the process of using threads in Java.
 Explain the purpose of each method.
-.  [[extendingThreadExercise]] What is the difference between
+.  [[extendingThreadExercise]] What's the difference between
 extending the `Thread` class and implementing the `Runnable` interface?
 When should you use one over the other?
 .  [[sleepAndYieldMethodsExercise]] How do the `Thread.sleep()` method and
@@ -1404,28 +1424,28 @@ the `Thread.yield()` method each affect thread scheduling?
 exponentiation operations require 1 and 10 time units, respectively.
 Compute the number of time units required to evaluate the expression as
 in <<figure-math_evaluation>>(a) and (b).
-.  [[quadcoreExercise]] Suppose that a computer has one
-quadcore processor. Can the tasks in <<videoGameTasksExample>> and <<mathExpressionTasksExample>> be further subdivided to
+.  [[quad-coreExercise]] Suppose that a computer has one
+quad-core processor. Can the tasks in <<videoGameTasksExample>> and <<mathExpressionTasksExample>> be further subdivided to
 improve performance on four cores? Why or why not?
 .  [[speedupExercise]] Consider the definition of speedup from
 <<Examples: Concurrency and speedup>>. Let's assume you have a
 job 1,000,000 units in size. A thread can process 10,000 units of work
 every second. It takes an additional 100 units of work to create a new
-thread. What is the speedup if you have a dual-core processor and create
-2 threads? What if you have a quadcore processor and create 4 threads?
+thread. What's the speedup if you have a dual-core processor and create
+2 threads? What if you have a quad-core processor and create 4 threads?
 Or an 8-core processor and create 8 threads? You may assume that a
-thread does not need to communicate after it has been created.
+thread does not need to communicate after it's been created.
 .  [[speedupLimitationsExercise]] In which situations can speedup be
 smaller than the number of processors? Is it ever possible for speedup
 to be greater than the number of processors?
 .  [[AmdahlLawExercise]] Amdahl's Law is a mathematical description of
 the maximum amount you can improve a system by only improving a part of
 it. One form of it states that the maximum speedup attainable in a
-parallel program is stem:[\frac{1}{1 - P}] where stem:[P]
+parallel program is 1/(1 - _P_) where _P_
 is the fraction of the program which can be parallelized to an arbitrary
 degree. If 30% of the work in a program can be fully parallelized but
-the rest is completely serial, what is the speedup with 2 processors? 4?
-8? What implications does Amdahl's Law have?
+the rest is completely serial, what's the speedup with two processors? Four?
+Eight? What implications does Amdahl's Law have?
 .  [[minimumTimeForTasksExercise]] Consider the following table of
 tasks:
 +
@@ -1442,13 +1462,13 @@ tasks:
 In this table, the *Time* column gives the number of minutes a task
 takes to perform with a single person, the *Concurrency* column gives
 the maximum number of people who can be assigned to a task, and the
-*Dependency* column shows which tasks cannot start until other tasks
+*Dependency* column shows which tasks can't start until other tasks
 have been finished. Assume that people assigned to a given task can
 perfectly divide the work. In other words, the time a task takes is the
-single person time divided by the number of people assigned. What is the
+single person time divided by the number of people assigned. What's the
 minimum amount of time needed to perform all tasks with only a single
 person? What is the minimum amount of time needed to perform all tasks
-with an unlimited number of people? What is the smallest number of
+with an unlimited number of people? What's the smallest number of
 people needed to achieve this minimum time?
 . [[sharedThreadVariableExercise]] Consider the following code snippet.
 +
@@ -1469,15 +1489,14 @@ x = x + x;
 If we assume that these two snippets of code are running on separate
 threads but that `x` is a shared variable, what are the possible values
 `x` could have after both snippets have run? Remember that the execution
-of these snippets can be interleaved in any way.
+of these snippets can be interleaved in *any* way.
 
 *Programming Practice*
 
 . [[pollingArraySumExercise]] Re-implement the array summing problem from
 <<arraySummationExample>> using polling instead of `join()`
 calls. Your program should not use a single call to `join()`. Polling is
-not an ideal way to solve this problem, but it is worth experimenting
-with the technique.
+not an ideal way to solve this problem, but it's worth thinking about the technique.
 . [[parallelAudioProcessingExercise]] Composers often work with multiple tracks
 of music. One track might contain solo vocals, another drums, a third
 one violins, and so on. After recording the entire take, a mix engineer
@@ -1492,20 +1511,20 @@ fixed time earlier. This time is called the _delay_ parameter. Varying
 the delay can produce long and short echoes.
 +
 If the samples are stored in array `in` and the delay parameter is
-stored in variable `delay`, the following code snippet can be used to
+stored in variable `delay` (measured in number of samples), the following code snippet can be used to
 create array `out` which contains the sound with an echo.
 +
 [source,java]
 ----
 double[] out = new double[in.length + delay];
-//sound before echo starts
-for( int i = 0; i < delay; i++ )
+// Sound before echo starts
+for(int i = 0; i < delay; i++)
     out[i] = in[i];
-//sound with echo
-for( int i = delay; i < in.length; i++ )
+// Sound with echo
+for(int i = delay; i < in.length; i++)
     out[i] = a*in[i] + b*in[i - delay];
-//echo after sound is over
-for( int i = in.length; i < out.length; i++ )
+// Echo after sound is over
+for(int i = in.length; i < out.length; i++)
     out[i] = b*in[i - delay];
 ----
 +
@@ -1521,21 +1540,26 @@ minutes and seconds as input. In this program, implement a timer using
 `Thread.sleep()` calls. Each second, print the remaining time to the
 screen. How accurate is your timer?
 . [[parallelPiApproximationExercise]] As you know,
-stem:[\pi\approx
-3.1416]. A more precise value can be found by writing a program which
+_π_ ≈ 3.1416. A more precise value can be found by writing a program which
 approximates the area of a circle. The area of a circle can be
 approximated by summing up the area of rectangles filling curve of the
 arc of the circle. As the width of the rectangle goes to zero, the
-approximation becomes closer and closer to the true area. Recall that
-that height stem:[y] of a circle centered at the origin at any
-distance stem:[x] is given by stem:[y = \sqrt{r^2 - x^2}]
-where stem:[r] is the radius of the circle.
+approximation becomes closer and closer to the true area. If a circle with radius
+_r_ is centered at the origin, its height _y_ at a particular  
+distance _x_ is given by the following formula. 
+//[stem]
+//++++
+//y = \sqrt{r^2 - x^2}
+//++++
++
+[.text-center]
+image::circleHeight.svg[scaledwidth=15%,pdfwidth=15%,width=15%]
 +
 Write a parallel implementation of this problem which divides up
 portions of the arc of the circle among several threads and then sums
-the results after they all finish. By setting stem:[r = 2], you
-need only sum one quadrant of a circle to get stem:[\pi]. You
-will need to use a very small rectangle width to get an accurate answer.
+the results after they all finish. By setting _r_ = 2, you
+need only sum one quadrant of a circle to get _π_. You'll need to
+use a very small rectangle width to get an accurate answer.
 When your program finishes running, you can compare your value against
 `Math.PI` for accuracy.
 
@@ -1543,7 +1567,7 @@ When your program finishes running, you can compare your value against
 
 . [[executionVariationExercise]] Use the `currentTimeMillis()` method
 to measure the time taken to execute a relatively long-running piece of
-Java code you have written. Execute your program several times and
+Java code you've written. Execute your program several times and
 compare the execution time you obtain during different executions. Why
 do you think the execution times are different?
 . [[threadOverheadExercise]] Thread creation overhead is an
@@ -1558,7 +1582,7 @@ implementations of matrix multiplication like those described in
 ..  Experiment with different matrix sizes and thread counts to see how
 the speedup performance changes. If possible, run your tests on machines
 with different numbers of cores or processors.
-..  Given a machine with stem:[k>1] cores, what is the maximum
+..  Given a machine with _k_ > 1 cores, what is the maximum
 speedup you can expect to obtain?
 . [[executionOrderExercise]] Repeatedly run the code in
 <<arrayOfThreadsExample>> which creates several
@@ -1583,9 +1607,9 @@ of each pair of neighboring partitions should be merged into a single
 sum. The process can be repeated until the final sum has been computed.
 At each step, half of the remaining threads will have nothing left to do
 and will stop. The pattern of summing is like a tree which starts with
-stem:[k] threads working at the first stage,
-stem:[\frac{k}{2}] working at the second stage,
-stem:[\frac{k}{4}] working at the third, and so on, until a
+_k_ threads working at the first stage,
+_k_/2 working at the second stage,
+_k_/4 working at the third, and so on, until a
 single thread completes the summing process.
 +
 [[figure-tree_summation]]
@@ -1594,7 +1618,7 @@ image::treesummation.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
 +
 Update the `run()` method in the `SumThread` class so that it adds its
-assigned elements as before and then adds its neighbors sum to its own.
+assigned elements as before and then adds its neighbor's sum to its own.
 To do so, it must use the `join()` method to wait for the neighboring
 thread. It should perform this process repeatedly. After summing their
 own values, each even numbered thread should add in the partial sum from
@@ -1607,7 +1631,7 @@ each thread can wait for other threads, the `threads` array will need to
 be a static field. <<figure-tree_summation>> illustrates this
 process.
 +
-Once you have implemented this design, test it against the original
+Once you've implemented this design, test it against the original
 `SumThread` class to see how it performs. Restrict the number of threads
 you create to a power of 2 to make it easier to determine which threads
 wait and which threads terminate.

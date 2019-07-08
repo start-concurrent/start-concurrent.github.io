@@ -7,26 +7,26 @@ public class GenericTree<T extends Comparable<T>> {
     
     private Node<T> root = null;
         
-    //proxy add
+    // Proxy add
     public void add(T value) {
         root = add( value, root );
     }
     
     private Node<T> add(T value, Node<T> tree) {
-        if( tree == null ) {    //base case
+        if( tree == null ) {    // Base case
             tree = new Node<T>();
             tree.value = value;
         }
-        //left recursive case
+        // Left recursive case
         else if( value.compareTo(tree.value) < 0 )
             tree.left = add( value, tree.left );
-        //right recursive case
+        // Right recursive case
         else if( value.compareTo(tree.value) > 0 )
             tree.right = add( value, tree.right );
         return tree;        
     }
     
-    //proxy print
+    // Proxy print
     public void print() {
         print( root );
     }

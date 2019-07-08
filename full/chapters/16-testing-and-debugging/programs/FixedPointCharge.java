@@ -1,9 +1,9 @@
 public class FixedPointCharge {  
   private double charge;  // C
-  private double x;       // m
-  private double y;       // m
-  private double z;       // m
-  public static final double K = 8.9875517873681764e9; //N m^2 C^-2  
+  private double x;
+  private double y;
+  private double z;
+  public static final double K = 8.9875517873681764e9; // N m^2 C^-2  
   
   public FixedPointCharge( double charge, double x, double y, double z ) {
     this.charge = charge;    
