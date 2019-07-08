@@ -44,7 +44,7 @@ public class MathTutorApplet extends JApplet
         menuBar.add(type);
         menuBar.add(operations);        
         setJMenuBar(menuBar);
-        //Add widgets to applet content
+        // Add widgets to applet content
         add(score, BorderLayout.NORTH);
         add(label, BorderLayout.WEST);
         add(field, BorderLayout.EAST);

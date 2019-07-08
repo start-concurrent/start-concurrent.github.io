@@ -14,15 +14,15 @@ public class TwentyQuestions {
                 response = in.next().toLowerCase();
                 if(response.equals("y"))
                     System.out.println("It's a human.");                
-                else //assume "n"
+                else // Assume "n"
                     System.out.println("It's a dolphin.");              
             }
-            else { //assume "n"
+            else { // Assume "n"
                 System.out.print("Does it fly? (y or n): ");
                 response = in.next().toLowerCase();
                 if(response.equals("y"))
                     System.out.println("It's an eagle.");               
-                else //assume "n"
+                else // Assume "n"
                     System.out.println("It's a lizard.");
             }
         }
@@ -35,25 +35,25 @@ public class TwentyQuestions {
                 response = in.next().toLowerCase();
                 if(response.equals("y"))
                     System.out.println("It's a tomato.");               
-                else //assume "n"
+                else // Assume "n"
                     System.out.println("It's a peach.");                
             }
-            else { //assume "n"
+            else { // Assume "n"
                 System.out.print("Is it a tree? (y or n): ");
                 response = in.next().toLowerCase();
                 if(response.equals("y"))
                     System.out.println("It's a maple tree.");
-                else //assume "n"
+                else // Assume "n"
                     System.out.println("It's a potato.");
             }
         }
-        else { //assume "m"
+        else { // Assume "m"
                 System.out.print(
                     "Is it the hardest mineral? (y or n): ");
                 response = in.next().toLowerCase();
                 if(response.equals("y"))
                     System.out.println("It's a diamond.");              
-                else //assume "n"
+                else // Assume "n"
                     System.out.println("It's lead.");
         }       
     }

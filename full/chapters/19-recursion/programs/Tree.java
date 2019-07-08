@@ -7,26 +7,26 @@ public class Tree {
     
     private Node root = null;
         
-    //proxy add
+    // Proxy add
     public void add(String value) {
         root = add( value, root );
     }
     
     private static Node add(String value, Node tree) {
-        if( tree == null ) {    //base case
+        if( tree == null ) {    // Base case
             tree = new Node();
             tree.value = value;
         }
-        //left recursive case
+        // Left recursive case
         else if( value.compareTo(tree.value) < 0 )
             tree.left = add( value, tree.left );
-        //right recursive case
+        // Right recursive case
         else if( value.compareTo(tree.value) > 0 )
             tree.right = add( value, tree.right );
         return tree;        
     }
     
-    //proxy print
+    // Proxy print
     public void print() {
         print( root );
     }
