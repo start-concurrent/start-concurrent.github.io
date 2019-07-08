@@ -1,5 +1,5 @@
 public class RightPollingThread extends Thread {
-    private LeftThread left;
+    private LeftPollingThread left;
     private boolean done = false;   
     
     public void setLeft(LeftPollingThread left) {
