@@ -6,6 +6,7 @@ public class RightThread extends Thread {
 				System.out.print("Right "); //<.>
 				Thread.sleep(10); //<.>
 			}
+		}
         catch(InterruptedException e) {
             e.printStackTrace();
         }

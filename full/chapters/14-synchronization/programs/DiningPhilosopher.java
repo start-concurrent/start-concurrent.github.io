@@ -1,83 +1,76 @@
+import java.util.Random;
+
 public class DiningPhilosopher extends Thread {
     public static final int SEATS = 5; 
     private static boolean[] chopsticks = new boolean[SEATS];   
     private int seat;
     
-    public DiningPhilosopher( int seat ) {
+    public DiningPhilosopher(int seat) {
         this.seat = seat;       
     }
     
     public static void main(String args[]) {        
-        for( int i = 0; i < SEATS; i++ )
-            chopsticks[i] = false;
-        DiningPhilosopher[] philosophers =
-            new DiningPhilosopher[SEATS];       
-        for( int i = 0; i < SEATS; i++ ) {
-            philosophers[i] = new DiningPhilosopher( i );
-            philosophers[i].start();
+        DiningPhilosopher[] philosophers = new DiningPhilosopher[SEATS];
+        for(int i = 0; i < SEATS; i++) {
+            philosophers[i] = new DiningPhilosopher(i);
+            philosophers[i].start();    //<.>
         }
         try {
-            for( int i = 0; i < SEATS; i++ )                        
-                philosophers[i].join();         
+            for(int i = 0; i < SEATS; i++)                        
+                philosophers[i].join(); //<.>      
         }
-        catch( InterruptedException e ) {
+        catch(InterruptedException e) {
             e.printStackTrace();
         }       
         System.out.println("All philosophers done.");
     }
     
-    public void run() {         
-        for( int i = 0; i < 100; i++ ) {
-            think();
-            getChopsticks();
+    public void run() {               	//<.>       
+        for(int i = 0; i < 100; i++) {	//<.>
+            think();				   
+            getChopsticks();           
             eat();
         }
     }
     
-    private void think() {
+    private void think() {			  	//<.>
         Random random = new Random();
         try {
-            sleep( random.nextInt(20) + 10 );
+            sleep(random.nextInt(20) + 10);
         }
-        catch( InterruptedException e ) {
+        catch(InterruptedException e) {
             e.printStackTrace();
         }
     }
     
-    private void getChopsticks() {
+    private void getChopsticks() {	  	//<.>
         int location1 = seat;
-        int location2;              
-        if( seat == 0 )
-            location2 = SEATS - 1;
-        else 
-            location2 = seat - 1;               
-        synchronized( chopsticks ) {
-            while( chopsticks[location1] 
-                || chopsticks[location2] ) {
+        int location2 = (seat + 1) % SEATS;              
+        synchronized(chopsticks) {	  	//<.>
+            while(chopsticks[location1] || chopsticks[location2]) { //<.>
                 try {
-                    chopsticks.wait();          
+                    chopsticks.wait();	//<.>         
                 }
-                catch( InterruptedException e ) {
+                catch(InterruptedException e) {
                     e.printStackTrace();
                 }                               
             }           
             chopsticks[location1] = true;
             chopsticks[location2] = true;
         }       
-        System.out.println("Philosopher " + seat + 
-            " picked up chopsticks " + location1 + " and "
-            + location2 + ".");
+        System.out.println("Philosopher " + seat + " picked up chopsticks " +
+			location1 + " and " + location2 + ".");
     }
     
-    private void eat() {
-        //eat rice first
-        synchronized( chopsticks ) {
+    private void eat() { 			  	//<.>
+        // Done eating, put back chopsticks
+        synchronized(chopsticks) {	  	//<.>
             chopsticks[seat] = false;           
-            if( seat == 0)
+            if(seat == 0)
                 chopsticks[SEATS - 1] = false;
             else
                 chopsticks[seat - 1] = false;               
-            chopsticks.notifyAll();
+            chopsticks.notifyAll();   	//<.>
         }
     }
 }
