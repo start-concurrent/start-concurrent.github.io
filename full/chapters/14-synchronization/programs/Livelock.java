@@ -1,8 +1,8 @@
 public class Livelock extends Thread {
-    private static int totalReady = 0;
-    private static Object lock = new Object();  
+    private static int totalReady = 0; 		   //<.>
+    private static Object lock = new Object(); //<.>
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {   //<.>
         Livelock friend1 = new Livelock();
         Livelock friend2 = new Livelock();
         Livelock friend3 = new Livelock();
@@ -18,7 +18,7 @@ public class Livelock extends Thread {
             friend2.join();
             friend3.join();
         }
-        catch( InterruptedException e ) {
+        catch(InterruptedException e) {
             e.printStackTrace();
         }       
         System.out.println("All ready!");
@@ -28,21 +28,21 @@ public class Livelock extends Thread {
         boolean done = false;
     
         try {       
-            while( !done ) {
-                Thread.sleep(75); //prepare for party       
-                synchronized( lock ) {
-                    totalReady++;               
+            while(!done) { //<.>
+                Thread.sleep(75); // Prepare for party <.>      
+                synchronized(lock) {
+                    totalReady++;       //<.>
                 }                   
-                Thread.sleep(75); //wait for friends
-                synchronized( lock ) {
-                    if( totalReady >= 3 )
+                Thread.sleep(75); // Wait for friends  <.>
+                synchronized(lock) {
+                    if(totalReady >= 3) //<.>
                         done = true;
                     else
-                        totalReady--;
+                        totalReady--;   //<.>
                 }
             }
         }
-        catch( InterruptedException e ) {
+        catch(InterruptedException e) {
             e.printStackTrace();
         }
     }
