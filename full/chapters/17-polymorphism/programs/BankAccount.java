@@ -1,6 +1,6 @@
-import java.util.Calendar;
+import java.util.Calendar; //<.>
 
-public abstract class BankAccount extends SynchronizedAccount {
+public abstract class BankAccount extends SynchronizedAccount { //<.>
     private String name;
     private Calendar lastAccess;
     private int monthsPassed = 0;
