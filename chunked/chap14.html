@@ -4,18 +4,17 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.5">
+<meta name="generator" content="Asciidoctor 2.0.9">
 <meta name="author" content="Barry Wittman, Tim Korb, Aditya Mathur">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
-/* Uncomment @import statement when using as custom stylesheet */
+/* Uncomment @import statement to use as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
-audio,canvas,video{display:inline-block}
+audio,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
-script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:none}
 a:focus{outline:thin dotted}
@@ -220,8 +219,8 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
-.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .listingblock>.content{position:relative}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
@@ -264,7 +263,8 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
@@ -612,10 +612,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#ch15-gui">15. Constructing Graphical User Interfaces</a>
 <ul class="sectlevel2">
-<li><a href="#_problem_math_applet">15.1. Problem: Math applet</a></li>
+<li><a href="#_problem_math_tutor">15.1. Problem: Math tutor</a></li>
 <li><a href="#_concepts_graphical_user_interfaces">15.2. Concepts: Graphical user interfaces</a></li>
 <li><a href="#_syntax_guis_in_java">15.3. Syntax: GUIs in Java</a></li>
-<li><a href="#_solution_math_applet">15.4. Solution: Math applet</a></li>
+<li><a href="#_solution_math_tutor">15.4. Solution: Math tutor</a></li>
 <li><a href="#_concurrency_guis">15.5. Concurrency: GUIs</a></li>
 <li><a href="#_summary_6">15.6. Summary</a></li>
 <li><a href="#_exercises_15">15.7. Exercises</a></li>
@@ -707,46 +707,39 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_problem_math_applet">15.1. Problem: Math applet</h3>
+<h3 id="_problem_math_tutor">15.1. Problem: Math tutor</h3>
 <div class="paragraph">
-<p>An <em>applet</em> is a graphical Java program that runs inside of a special
-environment, usually a web browser. The beauty of an applet is that
-anyone with a Java-enabled web browser can run the program without any
-special knowledge or computer skills. Most users don’t even realize they
-are running a program.</p>
-</div>
-<div id="mathTutorAppletFigure" class="imageblock">
-<div class="content">
-<img src="chapters/15-gui/images/mathTutorAppletFigure.svg" alt="mathTutorAppletFigure" width="100%">
-</div>
-<div class="title">Figure 15.1 The <code>MathTutorApplet</code> as seen through the Google Chrome browser. (a) Initial applet. (b) Selecting an operation to practice. (c) After some practice.</div>
-</div>
-<div class="paragraph">
-<p>Let’s write an applet that will allow young math students to practice
+<p>Let’s write a GUI program that will allow young math students to practice
 their arithmetic. Specifically, we are interested in addition,
 subtraction, multiplication, and division with small, positive integers.
 For this program, we will consider addition and subtraction basic and
-multiplication and division advanced. Our applet should allow the user
+multiplication and division advanced. Our program should allow the user
 to select a check box in a menu setting the mode to advanced or basic.
 The user should then be able to select one of the four operations from
-another menu. Once the operation is selected, the applet should generate
+another menu. Once the operation is selected, the program should generate
 a random problem testing that operation. The problem should be displayed
-as a label on the applet with a text field to one side. The user should
+as a label on the program with a text field to one side. The user should
 be able to enter an answer in the text field and hit a button to submit
-it. The applet should check the answer and display the updated number of
+it. The program should check the answer and display the updated number of
 correct and incorrect answers.</p>
 </div>
+<div id="MathTutorFigure" class="imageblock">
+<div class="content">
+<img src="chapters/15-gui/images/mathTutorFigure.svg" alt="mathTutorFigure" width="100%">
+</div>
+<div class="title">Figure 15.1 GUI for the <code>MathTutor</code>. (a) No menu selected. (b) Type selected. (c) Operations selected.</div>
+</div>
 <div class="paragraph">
-<p><a href="#mathTutorAppletFigure">Figure 15.1</a> shows the final applet in three
-different states. The screen to the left appears when the applet is
+<p><a href="#MathTutorFigure">Figure 15.1</a> shows the final program in three
+different states. The screen to the left appears when the program is
 first initialized, and the Submit button is disabled until a problem is generated.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_concepts_graphical_user_interfaces">15.2. Concepts: Graphical user interfaces</h3>
 <div class="paragraph">
-<p>The applet shown above with its menus, labels, buttons, and other
-interactive components is called a graphical user interface, or GUI. A
+<p>The program shown above with its menus, labels, buttons, and other
+interactive components is called a graphical user interface or GUI. A
 GUI is a means of communication between a computer program and a
 (usually human) user. (Although it is possible for some programs such as
 scripts to interact with a GUI, most program to program communication is
@@ -838,8 +831,7 @@ screen.</p>
 <div class="sect3">
 <h4 id="_creating_a_frame">15.3.1. Creating a frame</h4>
 <div class="paragraph">
-<p>A frame is the Java terminology for a window. Except when programming an
-applet, GUI components in Java will usually be found on a frame. In
+<p>A frame is the Java terminology for a window. GUI components in Java will usually be found on a frame. In
 Swing, a frame is an object whose type is derived from the <code>JFrame</code>
 class. Here is a line of code that creates a <code>JFrame</code> object.</p>
 </div>
@@ -1165,8 +1157,7 @@ we will see how to add multiple panels to a frame.</p>
 could click a button labeled “Chirp,” causing the program to play a
 bird chirp sound. Clicking a button generates an <em>event</em>. In Java, an
 event is processed by one or more <em>listeners</em>. Java provides various
-types of listeners, some of which are introduced here and a few others
-in <a href="#_applets">Section 15.3.7</a>. Next we show you how to handle action
+types of listeners, some of which are introduced here. Next we show you how to handle action
 events generated by a few different kinds of widgets.</p>
 </div>
 <div class="sect4">
@@ -1715,7 +1706,7 @@ handle mouse movement with or without the button pressed.</p>
 <div class="paragraph">
 <p>An <code>ItemListener</code> can be attached to a widget such as a check box or a
 radio button to listen for a check box to be selected. This listener is
-illustrated in <a href="#_applets">Section 15.3.7</a>.</p>
+illustrated in <a href="#_menus">Section 15.3.6</a>.</p>
 </div>
 <div class="paragraph">
 <p>Java provides several other listeners to handle a variety of events. For
@@ -1766,7 +1757,7 @@ files can be retrieved. A <code>URL</code> object can be defined as follows.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">URL</span> <span class="n">chirpURL</span> <span class="o">=</span>
-    <span class="k">new</span> <span class="nf">URL</span><span class="o">(</span><span class="s">&quot;http://users.etown.edu/w/wittmanb/chirp.wav&quot;</span><span class="o">);</span></code></pre>
+    <span class="k">new</span> <span class="nf">URL</span><span class="o">(</span><span class="s">&quot;http://faculty.otterbein.edu/wittman1/chirp.wav&quot;</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2713,27 +2704,21 @@ generated. When you select an already checked check box, the sign
 disappears and another <code>ItemEvent</code> is generated. Although an
 <code>ActionEvent</code> and an <code>ItemEvent</code> are very similar, Java differentiates
 between them because an <code>ItemEvent</code> has more information: By using the
-<code>getStateChange()</code> method, it is possible to tell whether the widget
+<code>getStateChange()</code> method, it’s possible to tell whether the widget
 that fired the <code>ItemEvent</code> is now selected or deselected.</p>
 </div>
-<div class="exampleblock">
-<div class="title">Example 15.14 Math tutor</div>
-<div class="content">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_solution_math_tutor">15.4. Solution: Math tutor</h3>
 <div class="paragraph">
 <p>Here we give the code to generate the GUI shown in
-<a href="#MathTutorFigure">Figure 15.13</a> which displays basic (addition and
-subtraction) as well as advanced (multiplication and division) problems.
-In <a href="#_applets">Section 15.3.7</a> we transform this GUI into an applet
-like the one described in <a href="#_problem_math_applet">Section 15.1</a>.</p>
-</div>
-<div id="MathTutorFigure" class="imageblock">
-<div class="content">
-<img src="chapters/15-gui/images/mathTutorFigure.svg" alt="mathTutorFigure" width="100%">
-</div>
-<div class="title">Figure 15.13 GUI for the <code>MathTutor</code>. (a) No menu selected. (b) Type selected. (c) Operations selected.</div>
+<a href="#MathTutorFigure">Figure 15.1</a> which displays basic (addition and
+subtraction) as well as advanced (multiplication and division) problems.</p>
 </div>
 <div class="paragraph">
-<p>As shown in <a href="#MathTutorFigure">Figure 15.13</a>, this GUI has a menu bar
+<p>As shown in <a href="#MathTutorFigure">Figure 15.1</a>, this GUI has a menu bar
 consisting of two menus labeled “Type” and “Operations.” The
 “Type” menu contains a check box labeled “Advanced” while the
 “Operations” menu contains four menu items labeled “Add,”
@@ -2796,7 +2781,7 @@ symbols.</p>
 </div>
 <div class="paragraph">
 <p><a href="#MathTutorProgram">Program 15.15</a> generates the GUI in
-<a href="#MathTutorFigure">Figure 15.13</a>.</p>
+<a href="#MathTutorFigure">Figure 15.1</a>.</p>
 </div>
 <div id="MathTutorProgram" class="listingblock">
 <div class="title">Program 15.15 Uses menus to generate math problems.</div>
@@ -2929,426 +2914,11 @@ created.</td>
 </table>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_applets">15.3.7. Applets</h4>
-<div class="paragraph">
-<p>An applet is a Java program that is written to run inside a web browser.
-A normal Java application is stored on disk and runs on the command line
-or as a window on your desktop (or both), but an applet exists inside of
-a webpage. This means that the code that launches an applet is usually
-embedded in HTML code.</p>
-</div>
-<div class="paragraph">
-<p>Almost all of the GUI tools we discuss are useful for writing an applet.
-For example, you can write an applet that has menus, buttons, text
-fields, and any other widget that Swing offers. You can also add
-listeners to various objects for the applet to respond to events.</p>
-</div>
-<div class="paragraph">
-<p>A Swing applet is derived from the <code>JApplet</code> class, which is a subclass
-of the older AWT class <code>Applet</code>.</p>
-</div>
-<div class="paragraph">
-<p>An applet differs from a stand-alone Java application in several
-important ways. The first is that applets are sent across the Internet.
-Unless you have increased security settings on your browser, they will
-generally run as soon as you visit a page with an applet embedded in it,
-without even asking your permission. This poses a huge security risk,
-but the designers of Java have worked to protect us. Unsigned applets
-(which are the ones we will talk about creating) cannot read, write, or
-execute files, make network connections to servers other than the one
-they come from, or interact with most other local system settings.
-However, applets loaded from a local directory (instead of downloaded
-over the Internet) do not have these restrictions. Be sure to remember
-these restrictions when you design applets for distribution over the
-Internet.</p>
-</div>
-<div class="paragraph">
-<p>Another important and concrete difference from normal Java classes is
-that an applet should not define a constructor. Instead, an applet uses
-the <code>init()</code> method. When the applet is executed, often through a
-browser, its <code>init()</code> method is called first. You can use this method to
-set up the applet GUI by adding various widgets and event listeners.</p>
-</div>
-<div id="rainbowAppletExample" class="exampleblock">
-<div class="title">Example 15.15 <code>RainbowApplet</code></div>
-<div class="content">
-<div class="paragraph">
-<p>We can create a simple applet with a button and a label. Clicking this
-button sets the text on the label to contain some information about the
-colors in a rainbow. This applet is shown in
-<a href="#rainbowAppletFigure">Figure 15.14</a>. <a href="#RainbowAppletProgram">Program 15.16</a>
-defines the applet.</p>
-</div>
-<div id="rainbowAppletFigure" class="imageblock text-center">
-<div class="content">
-<img src="chapters/15-gui/images/rainbowAppletFigure.png" alt="rainbowAppletFigure" width="40%">
-</div>
-<div class="title">Figure 15.14 A simple applet containing one button.</div>
-</div>
-<div id="RainbowAppletProgram" class="listingblock">
-<div class="title">Program 15.16 Applet with a button and a label.</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">javax.swing.*</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.awt.*</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.awt.event.*</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RainbowApplet</span> <span class="kd">extends</span> <span class="n">JApplet</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">JLabel</span> <span class="n">label</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JLabel</span><span class="o">();</span>
-
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(){</span>
-        <span class="n">JButton</span> <span class="n">button</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JButton</span><span class="o">(</span><span class="s">&quot;Rainbows&quot;</span><span class="o">);</span>
-        <span class="n">add</span><span class="o">(</span><span class="n">button</span><span class="o">,</span> <span class="n">BorderLayout</span><span class="o">.</span><span class="na">NORTH</span><span class="o">);</span>
-        <span class="n">add</span><span class="o">(</span><span class="n">label</span><span class="o">,</span> <span class="n">BorderLayout</span><span class="o">.</span><span class="na">SOUTH</span><span class="o">);</span>
-        <span class="n">button</span><span class="o">.</span><span class="na">addActionListener</span><span class="o">(</span><span class="k">new</span> <span class="n">ActionListener</span><span class="o">(){</span>
-            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">actionPerformed</span> <span class="o">(</span> <span class="n">ActionEvent</span> <span class="n">e</span><span class="o">){</span>
-                <span class="n">label</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">&quot;Have the colors ROYGBIV.&quot;</span><span class="o">);</span>
-            <span class="o">}</span>
-        <span class="o">});</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note that class <code>RainbowApplet</code> extends <code>JApplet</code>, as will most applets
-you write. The label is declared as a field, so that the event handler
-can access it. The <code>init()</code> method creates a <code>JButton</code> with the label
-“Rainbows,” adds both the label and the button to the applet, and adds
-an action listener to the button with an anonymous inner class event
-handler.</p>
-</div>
-<div class="paragraph">
-<p>Note that the button and the label were added to the applet just as it
-would have been done inside of a <code>JFrame</code> constructor. They were added
-with the <code>BorderLayout.WEST</code> and <code>BorderLayout.EAST</code> constants because a
-<code>JApplet</code> uses a <code>BorderLayout</code> manager by default.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>As you can see, creating an applet is very similar to creating a GUI
-based on a <code>JFrame</code>. In fact, it may be easier. However, we need to
-create an HTML file for the applet to be accessible via a browser. HTML
-stands for <em>hypertext markup language</em>. HTML is the core language for
-writing webpages. HTML is designed for marking up text and images to be
-displayed within a browser. It is not as complicated as Java, but we do
-not have time or space to describe the language deeply.</p>
-</div>
-<div class="paragraph">
-<p>HTML is a language made up of <em>tags</em> that mark parts of a document with
-formatting instructions. All of the tags we will need to embed an applet
-will start with the name of the tag in angle brackets and then end with
-the same name in angle brackets but preceded by a slash. For example, to
-mark text as bold in HTML, you can use the <code>&lt;strong&gt;</code> tag as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="html"><span class="nt">&lt;strong&gt;</span>Here is text that will appear in a bold font.<span class="nt">&lt;/strong&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To run <code>RainbowApplet</code> we need to create an HTML file that includes the
-applet’s class file inside the <code>&lt;applet&gt;</code> tag.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 15.16 RainbowApplet HTML</div>
-<div class="content">
-<div class="paragraph">
-<p>We want to make <code>RainbowApplet</code> executable via a browser. In addition,
-we would like the source code of the applet to be linked from the same
-webpage. The following HTML code embeds the <code>RainbowApplet</code> and links to
-its source.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="html"><span class="nt">&lt;html&gt;</span>
-    <span class="nt">&lt;head&gt;</span>
-        <span class="nt">&lt;title&gt;</span>Rainbow Applet<span class="nt">&lt;/title&gt;</span>
-    <span class="nt">&lt;/head&gt;</span>
-    <span class="nt">&lt;body&gt;</span>
-        <span class="nt">&lt;applet</span> <span class="na">code=</span><span class="s">&quot;RainbowApplet.class&quot;</span> <span class="na">width=</span><span class="s">&quot;200&quot;</span> <span class="na">height=</span><span class="s">&quot;100&quot;</span><span class="nt">&gt;&lt;/applet&gt;</span>
-        <span class="nt">&lt;hr</span> <span class="nt">/&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;RainbowApplet.java&quot;</span><span class="nt">&gt;</span>The source.<span class="nt">&lt;/a&gt;</span>
-    <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span></code></pre>
-</div>
-</div>
-<div id="rainbowAppletInBrowserFigure" class="imageblock text-center">
-<div class="content">
-<img src="chapters/15-gui/images/rainbowAppletInBrowserFigure.png" alt="rainbowAppletInBrowserFigure" width="60%">
-</div>
-<div class="title">Figure 15.15 The <code>RainbowApplet</code> as seen through a web browser. Clicking on the link displays the Java source code of the applet in <a href="#RainbowAppletProgram">Program 15.16</a>.</div>
-</div>
-<div class="paragraph">
-<p>An <code>&lt;html&gt;</code> tag encloses an entire HTML document. Inside is the <code>&lt;head&gt;</code>
-tag, followed by the <code>&lt;body&gt;</code> tag. The <code>&lt;head&gt;</code> tag contains information
-about the page such as its title, which is given in the <code>&lt;title&gt;</code> tag.
-The <code>&lt;body&gt;</code> tag contains the viewable content of the web page. In this
-case, there is an <code>&lt;applet&gt;</code> tag, a <code>&lt;hr/&gt;</code> tag, and an <code>&lt;a&gt;</code> tag in the
-body.</p>
-</div>
-<div class="paragraph">
-<p>The <code>&lt;applet&gt;</code> tag is used to embed our applet. The name of the applet
-class must be given as the argument, in double quotes, to the <code>code</code>
-attribute. The <code>width</code> and <code>height</code> attributes specify the size of the
-applet on the screen. The <code>&lt;hr/&gt;</code> tag puts the horizontal line between
-the applet and the link. It is the only tag in our example that does not
-have both an opening and closing half. Finally, the <code>&lt;a&gt;</code> tag is used to
-make a clickable link. On a web page, it will display “The source,”
-but it will navigate to the file <code>RainbowApplet.java</code> when clicked.</p>
-</div>
-<div class="paragraph">
-<p>Put this code in an HTML file named <code>RainbowApplet.html</code>. (Note that the
-name of your HTML file should be descriptive, but it does not have to
-match the name of the applet class.) If your browser is Java compatible
-and has the appropriate plug-in installed, you should be able to run the
-applet by double-clicking on the HTML file. Of course, if you are able
-to upload the HTML file and the class file to a web server, you can view
-the applet and share it with anyone with an Internet connection.</p>
-</div>
-</div>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="paragraph">
-<p><a href="#appletExercise">Exercise 15.22</a></p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>Applets can be much more complex than <code>RainbowApplet</code>. We now solve the
-problem posed at the beginning of the chapter with an applet with a
-fully functional GUI designed to be an arithmetic tutor.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_solution_math_applet">15.4. Solution: Math applet</h3>
-<div class="paragraph">
-<p>The applet that meets the specification given at the beginning of the
-chapter is similar to <a href="#MathTutorProgram">Program 15.15</a>. Modifications must
-be made to convert that program into an applet and add full
-functionality to the event handlers. We now go through this rather long
-Java program step by step. GUI programs in Java tend to be longer than
-their command line versions because of the code needed to set up all the
-widgets.</p>
-</div>
-<div id="menusInArithPracticeFigure" class="imageblock text-center">
-<div class="content">
-<img src="chapters/15-gui/images/menusInArithPracticeFigure.svg" alt="menusInArithPracticeFigure" width="80%">
-</div>
-<div class="title">Figure 15.16 The Type (a) and Operations (b) menus in the <code>MathTutorApplet</code>. Note that the “Multiply” and “Divide” operations are disabled because the “Advanced” option is not checked.</div>
-</div>
-<div class="paragraph">
-<p>The <code>MathTutorApplet.java</code> file begins with the usual Swing imports and
-the class declaration, followed by a list of its fields.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">javax.swing.*</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.awt.*</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.awt.event.*</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MathTutorApplet</span> <span class="kd">extends</span> <span class="n">JApplet</span>
-    <span class="kd">implements</span> <span class="n">ActionListener</span><span class="o">,</span> <span class="n">ItemListener</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="n">JMenuItem</span> <span class="n">add</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JMenuItem</span><span class="o">(</span><span class="s">&quot;Addition&quot;</span><span class="o">);</span>
-    <span class="kd">private</span> <span class="n">JMenuItem</span> <span class="n">subtract</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JMenuItem</span><span class="o">(</span><span class="s">&quot;Subtraction&quot;</span><span class="o">);</span>
-    <span class="kd">private</span> <span class="n">JMenuItem</span> <span class="n">multiply</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JMenuItem</span><span class="o">(</span><span class="s">&quot;Multiply&quot;</span><span class="o">);</span>
-    <span class="kd">private</span> <span class="n">JMenuItem</span> <span class="n">divide</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JMenuItem</span> <span class="o">(</span><span class="s">&quot;Divide&quot;</span><span class="o">);</span>
-    <span class="kd">private</span> <span class="n">JLabel</span> <span class="n">score</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JLabel</span><span class="o">(</span><span class="s">&quot;Score: 0 Correct 0 Incorrect&quot;</span><span class="o">);</span>
-    <span class="kd">private</span> <span class="n">JLabel</span> <span class="n">label</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JLabel</span><span class="o">();</span>
-    <span class="kd">private</span> <span class="n">JTextField</span> <span class="n">field</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JTextField</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
-    <span class="kd">private</span> <span class="n">JButton</span> <span class="n">submit</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JButton</span><span class="o">(</span><span class="s">&quot;Submit&quot;</span><span class="o">);</span>
-    <span class="kd">private</span> <span class="kt">int</span> <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kt">int</span> <span class="n">incorrect</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note that the <code>int</code> variables <code>correct</code>, <code>incorrect</code>, and <code>answer</code> have
-been added to the fields to keep track of the correct and incorrect
-answers and the current answer that the user is trying to find.</p>
-</div>
-<div class="paragraph">
-<p>Following the field declarations is the definition of the <code>init()</code>
-method. As you can see, this method is almost identical to the
-constructor in the <code>MathTutor</code> stand-alone application. Indeed, the
-<code>init()</code> method is very much like the constructor for an applet.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">JMenuBar</span> <span class="n">menuBar</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JMenuBar</span><span class="o">();</span>
-        <span class="n">JMenu</span> <span class="n">type</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JMenu</span><span class="o">(</span><span class="s">&quot;Type&quot;</span><span class="o">);</span>
-        <span class="n">JMenu</span> <span class="n">operations</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JMenu</span><span class="o">(</span><span class="s">&quot;Operations&quot;</span><span class="o">);</span>
-        <span class="n">JCheckBoxMenuItem</span> <span class="n">advanced</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JCheckBoxMenuItem</span><span class="o">(</span><span class="s">&quot;Advanced&quot;</span><span class="o">);</span>
-        <span class="c1">// Add ActionListeners to menu items and buttons</span>
-        <span class="n">add</span><span class="o">.</span><span class="na">addActionListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-        <span class="n">subtract</span><span class="o">.</span><span class="na">addActionListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-        <span class="n">multiply</span><span class="o">.</span><span class="na">addActionListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-        <span class="n">divide</span><span class="o">.</span><span class="na">addActionListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-        <span class="n">submit</span><span class="o">.</span><span class="na">addActionListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-        <span class="c1">// Add ItemListener to checkbox menu item</span>
-        <span class="n">advanced</span><span class="o">.</span><span class="na">addItemListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-        <span class="c1">// Fill menu for problem type</span>
-        <span class="n">type</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">advanced</span><span class="o">);</span>
-        <span class="c1">// Fill menu for operations</span>
-        <span class="n">operations</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">add</span><span class="o">);</span>
-        <span class="n">operations</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">subtract</span><span class="o">);</span>
-        <span class="n">operations</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">multiply</span><span class="o">);</span>
-        <span class="n">operations</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">divide</span><span class="o">);</span>
-        <span class="c1">// Disable advanced operations and submit</span>
-        <span class="n">multiply</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-        <span class="n">divide</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-        <span class="n">submit</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-        <span class="c1">// Fill menu bar and set on applet</span>
-        <span class="n">menuBar</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">type</span><span class="o">);</span>
-        <span class="n">menuBar</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">operations</span><span class="o">);</span>
-        <span class="n">setJMenuBar</span><span class="o">(</span><span class="n">menuBar</span><span class="o">);</span>
-        <span class="c1">// Add widgets to applet content</span>
-        <span class="n">add</span><span class="o">(</span><span class="n">score</span><span class="o">,</span> <span class="n">BorderLayout</span><span class="o">.</span><span class="na">NORTH</span><span class="o">);</span>
-        <span class="n">add</span><span class="o">(</span><span class="n">label</span><span class="o">,</span> <span class="n">BorderLayout</span><span class="o">.</span><span class="na">WEST</span><span class="o">);</span>
-        <span class="n">add</span><span class="o">(</span><span class="n">field</span><span class="o">,</span> <span class="n">BorderLayout</span><span class="o">.</span><span class="na">EAST</span><span class="o">);</span>
-        <span class="n">add</span><span class="o">(</span><span class="n">submit</span><span class="o">,</span> <span class="n">BorderLayout</span><span class="o">.</span><span class="na">SOUTH</span><span class="o">);</span>
-    <span class="o">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Just like the <code>MathTutor</code> constructor, this method creates the menu bar,
-the menus, and the menu items. Then, it adds action listeners to the
-menu items and the button and an item listener to the check box menu
-item. Next it adds <code>advanced</code> to the “Type” menu and the four
-operation menu items to the “Operations” menu. It disables the
-advanced menu items (since the applet starts in basic mode) and the
-button (since it is impossible to submit an answer before a problem has
-been given). Finally, it puts the menus on the menu bar, sets the menu
-bar on the applet, and adds the two text fields, the label, and the
-button to the applet content area using appropriate <code>BorderLayout</code>
-constants.</p>
-</div>
-<div class="paragraph">
-<p>One big difference between the <code>MathTutor</code> constructor and the
-<code>MathTutorApplet</code> <code>init()</code> method is that the <code>MathTutor</code> constructor
-creates a <code>JFrame</code> object. In <code>MathTutorApplet</code> no <code>JFrame</code> is necessary
-because the class itself is a child of <code>JApplet</code> and thus is a GUI
-container.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">itemStateChanged</span><span class="o">(</span><span class="n">ItemEvent</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getStateChange</span><span class="o">()</span> <span class="o">==</span> <span class="n">ItemEvent</span><span class="o">.</span><span class="na">SELECTED</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">add</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-            <span class="n">subtract</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-            <span class="n">multiply</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
-            <span class="n">divide</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
-        <span class="o">}</span>
-        <span class="k">else</span> <span class="o">{</span>
-            <span class="n">add</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
-            <span class="n">subtract</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
-            <span class="n">multiply</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-            <span class="n">divide</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-        <span class="o">}</span>
-    <span class="o">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>itemStateChanged()</code> method is the same as its counterpart in
-<code>MathTutor</code>. If the state change is <code>ItemEvent.SELECTED</code>, we enable the
-advanced menus and disable the basic ones. Otherwise, we do the reverse.
-Note that this method would be more complicated if we were listening to
-more than one object. Since we are only listening to the <code>advanced</code>
-check box menu item, we know that it is what is being selected or
-deselected.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">actionPerformed</span><span class="o">(</span><span class="n">ActionEvent</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">getSource</span><span class="o">();</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">object</span> <span class="o">==</span> <span class="n">submit</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="kt">int</span> <span class="n">response</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">field</span><span class="o">.</span><span class="na">getText</span><span class="o">());</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">response</span> <span class="o">==</span> <span class="n">answer</span> <span class="o">)</span>
-                <span class="n">correct</span><span class="o">++;</span>
-            <span class="k">else</span>
-                <span class="n">incorrect</span><span class="o">++;</span>
-            <span class="n">label</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
-            <span class="n">score</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">&quot;Score: &quot;</span> <span class="o">+</span> <span class="n">correct</span> <span class="o">+</span> <span class="s">&quot; Correct &quot;</span> <span class="o">+</span>
-                <span class="n">incorrect</span> <span class="o">+</span> <span class="s">&quot; Incorrect&quot;</span><span class="o">);</span>
-            <span class="n">submit</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-        <span class="o">}</span>
-        <span class="k">else</span> <span class="o">{</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">object</span> <span class="o">==</span> <span class="n">add</span> <span class="o">)</span>
-                <span class="n">answer</span> <span class="o">=</span> <span class="n">ProblemGenerator</span><span class="o">.</span><span class="na">addPractice</span><span class="o">(</span><span class="n">label</span><span class="o">);</span>
-            <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">object</span> <span class="o">==</span> <span class="n">subtract</span> <span class="o">)</span>
-                <span class="n">answer</span> <span class="o">=</span> <span class="n">ProblemGenerator</span><span class="o">.</span><span class="na">subtractPractice</span><span class="o">(</span><span class="n">label</span><span class="o">);</span>
-            <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">object</span> <span class="o">==</span> <span class="n">multiply</span> <span class="o">)</span>
-                <span class="n">answer</span> <span class="o">=</span> <span class="n">ProblemGenerator</span><span class="o">.</span><span class="na">multiplyPractice</span><span class="o">(</span><span class="n">label</span><span class="o">);</span>
-            <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">object</span> <span class="o">==</span> <span class="n">divide</span> <span class="o">)</span>
-                <span class="n">answer</span> <span class="o">=</span> <span class="n">ProblemGenerator</span><span class="o">.</span><span class="na">dividePractice</span><span class="o">(</span><span class="n">label</span><span class="o">);</span>
-            <span class="n">submit</span><span class="o">.</span><span class="na">setEnabled</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
-        <span class="o">}</span>
-        <span class="n">field</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Finally, the <code>actionPerformed()</code> method deals with the menu item and
-button clicks. If <code>submit</code> was clicked, we parse the text in the text
-field to get an <code>int</code> value and compare it to the answer. Depending on
-its correctness, we update the correct and incorrect counts, clear the
-problem label, and update the <code>score</code> label. Finally, we disable the
-<code>submit</code> button so that the user can’t submit an answer until another
-problem has been given.</p>
-</div>
-<div class="paragraph">
-<p>The next part of the <code>actionPerformed()</code> method has the same
-functionality as the <code>actionPerformed()</code> method from <code>MathTutor</code>. It
-updates <code>label</code> to contain a randomly generated problem with an
-operation that matches whichever menu item was picked. It also saves the
-answer into the <code>answer</code> field so that we can check the user’s response
-later. Then, it enables the <code>submit</code> button since there is a problem to
-answer. No matter what object triggered the action, the last line of the
-method clears the text field.</p>
-</div>
-<div class="paragraph">
-<p>We need some HTML to test the applet. Here is a suitable HTML file
-similar to the <code>RainbowApplet.html</code> file presented before.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="html"><span class="nt">&lt;html&gt;</span>
-    <span class="nt">&lt;head&gt;</span>
-        <span class="nt">&lt;title&gt;</span>Math Tutor Applet<span class="nt">&lt;/title&gt;</span>
-    <span class="nt">&lt;/head&gt;</span>
-    <span class="nt">&lt;body&gt;</span>
-        <span class="nt">&lt;applet</span> <span class="na">code=</span><span class="s">&quot;MathTutorApplet.class&quot;</span> <span class="na">width=</span><span class="s">&quot;250&quot;</span> <span class="na">height=</span><span class="s">&quot;125&quot;</span><span class="nt">&gt;&lt;/applet&gt;</span>
-        <span class="nt">&lt;hr</span> <span class="nt">/&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;MathTutorApplet.java&quot;</span><span class="nt">&gt;</span>The source code.<span class="nt">&lt;/a&gt;</span>
-    <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In the stand-alone <code>MathTutor</code> application, we created a <code>JFrame</code> and
-set its size to 250 × 125 pixels. The <code>width</code> and
-<code>height</code> attributes in the HTML allow us to accomplish something
-similar. Note that the widgets in the applet have more room than in the
-<code>JFrame</code> version because the size of the <code>JFrame</code> includes the title bar
-and window borders.</p>
-</div>
-<div class="paragraph">
-<p>The functionality of this applet is limited, but it still shows off
-menus, buttons, labels, text fields, applet creation, and two different
-kinds of event listeners.</p>
-</div>
-</div>
 <div class="sect2">
 <h3 id="_concurrency_guis">15.5. Concurrency: GUIs</h3>
 <div class="paragraph">
 <p>Stand-alone Java programs have at least one thread, the main thread.
-Applets have a similar thread that calls its <code>init()</code> and <code>start()</code>
-methods. Applications with GUIs (including applets) create additional
+Applications with GUIs create additional
 threads to manage the GUI behind the scenes.</p>
 </div>
 <div class="paragraph">
@@ -3391,7 +2961,7 @@ the square root of 2). When the other button is pressed, it increments
 a counter and displays the value in the second label.</p>
 </div>
 <div id="UnresponsiveGUIProgram" class="listingblock">
-<div class="title">Program 15.17 GUI that becomes unresponsive when the “Compute” button is pressed.</div>
+<div class="title">Program 15.16 GUI that becomes unresponsive when the “Compute” button is pressed.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">javax.swing.*</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.awt.*</span><span class="o">;</span>
@@ -3443,7 +3013,7 @@ a counter and displays the value in the second label.</p>
 <div class="content">
 <img src="chapters/15-gui/images/unresponsiveGUIFigure.png" alt="unresponsiveGUIFigure" width="40%">
 </div>
-<div class="title">Figure 15.17 GUI generated by <a href="#UnresponsiveGUIProgram">Program 15.17</a>.</div>
+<div class="title">Figure 15.13 GUI generated by <a href="#UnresponsiveGUIProgram">Program 15.16</a>.</div>
 </div>
 <div class="paragraph">
 <p>If you click the “Compute” button, the GUI becomes unresponsive.
@@ -3457,8 +3027,8 @@ will shoot up in value unpredictably.</p>
 <div class="sidebarblock">
 <div class="content">
 <div class="paragraph">
-<p><a href="#unresponsiveGUIExercise">Exercise 15.23</a><br>
-<a href="#calculatingGUIExercise">Exercise 15.24</a></p>
+<p><a href="#unresponsiveGUIExercise">Exercise 15.22</a><br>
+<a href="#calculatingGUIExercise">Exercise 15.23</a></p>
 </div>
 </div>
 </div>
@@ -3476,10 +3046,10 @@ work. The second specifies the type that the worker will return
 periodically in the process of doing work (which can be useful for
 updating progress bars). Examine the following program which has added a
 <code>SwingWorker</code> to its <code>actionPerformed()</code> method but is otherwise the
-same as <a href="#UnresponsiveGUIProgram">Program 15.17</a>.</p>
+same as <a href="#UnresponsiveGUIProgram">Program 15.16</a>.</p>
 </div>
 <div id="WorkerGUIProgram" class="listingblock">
-<div class="title">Program 15.18 GUI that uses <code>SwingWorker</code> to avoid becoming unresponsive.</div>
+<div class="title">Program 15.17 GUI that uses <code>SwingWorker</code> to avoid becoming unresponsive.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">javax.swing.*</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.awt.*</span><span class="o">;</span>
@@ -3565,7 +3135,7 @@ plan on writing industrial-strength GUIs.</p>
 <div class="sidebarblock">
 <div class="content">
 <div class="paragraph">
-<p><a href="#SwingWorkerExercise">Exercise 15.25</a></p>
+<p><a href="#SwingWorkerExercise">Exercise 15.24</a></p>
 </div>
 </div>
 </div>
@@ -3578,9 +3148,7 @@ plan on writing industrial-strength GUIs.</p>
 users to interact with an application. We show how to add widgets such
 as buttons and text boxes and use layout managers to organize their
 appearance. We show how you can add action listeners and other event
-handlers so that user actions can perform useful tasks. Finally, we show
-how these techniques can be applied to GUIs on stand-alone applications
-as well as applets that run inside of a web browser.</p>
+handlers so that user actions can perform useful tasks.</p>
 </div>
 <div class="paragraph">
 <p>While Java offers a large variety of widgets and listeners, this
@@ -3693,8 +3261,8 @@ listen for mouse click events though an <code>ActionListener</code> cannot. As i
 the Internet.</p>
 </li>
 <li>
-<p>Modify the applet from
-<a href="#_solution_math_applet">Section 15.4</a> to display the problem number the user
+<p>Modify the GUI from
+<a href="#_solution_math_tutor">Section 15.4</a> to display the problem number the user
 is working on. The first problem is numbered “Problem 1” with
 subsequent problems 2, 3, and so on. The number should increase each
 time the user hits the Submit button. Find a suitable place on the GUI
@@ -3703,15 +3271,15 @@ the GUI.</p>
 </li>
 <li>
 <p>Remove the <code>actionPerformed()</code> and
-<code>itemStateChanged()</code> methods from the <code>MathTutorApplet</code> class given in
-<a href="#_solution_math_applet">Section 15.4</a>. Move the code from these methods into
+<code>itemStateChanged()</code> methods from the <code>MathTutor</code> class given in
+<a href="#_solution_math_tutor">Section 15.4</a>. Move the code from these methods into
 individual anonymous inner classes added to the <code>add</code>, <code>subtract</code>,
 <code>multiply</code>, <code>divide</code>, <code>submit</code>, and <code>advanced</code> objects.</p>
 <div class="paragraph">
-<p>Note that you are now able to remove <code>ActionListener</code> and <code>ItemListener</code>
-from the list of implemented interfaces for the <code>MathTutorApplet</code> class.
+<p>Note that you’re now able to remove <code>ActionListener</code> and <code>ItemListener</code>
+from the list of implemented interfaces for the <code>MathTutor</code> class.
 Reorganizing the code this way should have no impact on the
-functionality of the applet. Is doing so a good idea or not? Why?</p>
+functionality of the program. Is doing so a good idea or not? Why?</p>
 </div>
 </li>
 <li>
@@ -3767,31 +3335,22 @@ method, to add the menu bar to the frame. What is the difference between
 using the <code>add()</code> method and the <code>setJMenuBar()</code> method to add a menu
 bar to a <code>JFrame</code>?</p>
 </li>
-<li>
-<p><a id="appletExercise"></a> Use the example from the book to
-create a suitable HTML file that embeds the <code>RainbowApplet</code> class from
-<a href="#rainbowAppletExample">Example 15.15</a> and links to the Java source code. Now
-upload the class file, the source code, and the HTML file to a web
-server so that you can run the applet over the Internet. Have a friend
-test out your code on a computer in another location to make sure that
-it works.</p>
-</li>
 </ol>
 </div>
 <div class="paragraph">
 <p><strong>Experiments</strong></p>
 </div>
 <div class="olist arabic">
-<ol class="arabic" start="23">
+<ol class="arabic" start="22">
 <li>
 <p><a id="unresponsiveGUIExercise"></a> Recall that
-<a href="#UnresponsiveGUIProgram">Program 15.17</a> is unresponsive because the event
+<a href="#UnresponsiveGUIProgram">Program 15.16</a> is unresponsive because the event
 dispatch thread goes to sleep for 5 seconds (5,000 milliseconds). Experiment with this value to determine
 what is a reasonable amount of time for the EDT to be blocked before the
 GUI feels unresponsive.</p>
 </li>
 <li>
-<p><a id="calculatingGUIExercise"></a> <a href="#UnresponsiveGUIProgram">Program 15.17</a> is
+<p><a id="calculatingGUIExercise"></a> <a href="#UnresponsiveGUIProgram">Program 15.16</a> is
 unrealistic because the EDT simply goes to sleep. Normally, a GUI
 becomes unresponsive because the EDT is performing extensive
 calculations or doing slow I/O operations. Replace the line that sleeps with a short loop that performs significant calculations. One
@@ -3801,8 +3360,8 @@ unresponsive for 5 seconds?</p>
 </li>
 <li>
 <p><a id="SwingWorkerExercise"></a> Take the computationally expensive loop
-from <a href="#calculatingGUIExercise">Exercise 15.24</a> and use it to replace
-the line that sleeps in <a href="#WorkerGUIProgram">Program 15.18</a>, the
+from <a href="#calculatingGUIExercise">Exercise 15.23</a> and use it to replace
+the line that sleeps in <a href="#WorkerGUIProgram">Program 15.17</a>, the
 <code>SwingWorker</code> version of the program. Does the program become
 unresponsive if you run it? If possible, run the program on Windows,
 Mac, and Linux environments. If it is unresponsive in some environments
@@ -3815,11 +3374,7 @@ but not others, why do you think that might be?</p>
 </div></div>
 <div id="footer">
 <div id="footer-text">
-<<<<<<< HEAD
 Last updated 2019-07-09 18:07:19 UTC
-=======
-Last updated 2019-06-10 15:11:25 -0400
->>>>>>> master
 </div>
 </div>
 <style>

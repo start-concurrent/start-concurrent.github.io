@@ -4,18 +4,17 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.5">
+<meta name="generator" content="Asciidoctor 2.0.9">
 <meta name="author" content="Barry Wittman, Tim Korb, Aditya Mathur">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
-/* Uncomment @import statement when using as custom stylesheet */
+/* Uncomment @import statement to use as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
-audio,canvas,video{display:inline-block}
+audio,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
-script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:none}
 a:focus{outline:thin dotted}
@@ -220,8 +219,8 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
-.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .listingblock>.content{position:relative}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
@@ -264,7 +263,8 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
@@ -612,10 +612,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="chap14.html#ch15-gui">15. Constructing Graphical User Interfaces</a>
 <ul class="sectlevel2">
-<li><a href="chap14.html#_problem_math_applet">15.1. Problem: Math applet</a></li>
+<li><a href="chap14.html#_problem_math_tutor">15.1. Problem: Math tutor</a></li>
 <li><a href="chap14.html#_concepts_graphical_user_interfaces">15.2. Concepts: Graphical user interfaces</a></li>
 <li><a href="chap14.html#_syntax_guis_in_java">15.3. Syntax: GUIs in Java</a></li>
-<li><a href="chap14.html#_solution_math_applet">15.4. Solution: Math applet</a></li>
+<li><a href="chap14.html#_solution_math_tutor">15.4. Solution: Math tutor</a></li>
 <li><a href="chap14.html#_concurrency_guis">15.5. Concurrency: GUIs</a></li>
 <li><a href="chap14.html#_summary_6">15.6. Summary</a></li>
 <li><a href="chap14.html#_exercises_15">15.7. Exercises</a></li>
@@ -1556,6 +1556,38 @@ If an exception occurred, the value of <code>color</code> would remain unchanged
 because the execution would have jumped to a <code>catch</code> block before the
 assignment could happen.</p>
 </div>
+<div class="paragraph">
+<p>Note that when catching the <code>ColorOverflowException</code> or the <code>ColorUnderflowException</code>
+in the above code, we do the same thing in either case: print the exception.
+To reduce the amount of code, we could have caught <code>Exception</code>
+instead of those two specific exceptions, but doing so would catch <strong>all</strong>
+exceptions, not just the two related to color that we care about.</p>
+</div>
+<div class="paragraph">
+<p>In Java 7 and higher, there’s special syntax to deal with situations like the
+one above where several specific exceptions are handled in the same way.  The
+exception types are listed in a <code>catch</code> block with pipe symbols (<code>|</code>) between
+them.  There’s still only a single reference to the exception (often named
+<code>e</code>).  Using this updated syntax, we could have written the <code>try</code>-<code>catch</code> above
+as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java">    <span class="k">try</span> <span class="o">{</span>
+        <span class="k">switch</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">trim</span><span class="o">().</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">case</span> <span class="sc">'R'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseRed</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'G'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseGreen</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">increaseBlue</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'r'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseRed</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'g'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseGreen</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'b'</span><span class="o">:</span> <span class="n">color</span> <span class="o">=</span> <span class="n">decreaseBlue</span><span class="o">(</span><span class="n">color</span><span class="o">);</span> <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">catch</span><span class="o">(</span><span class="n">ColorOverflowException</span> <span class="o">|</span> <span class="n">ColorUnderflowException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span></code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -2053,11 +2085,7 @@ implications for code that routinely throws thousands of exceptions?</p>
 </div></div>
 <div id="footer">
 <div id="footer-text">
-<<<<<<< HEAD
 Last updated 2019-07-09 18:07:19 UTC
-=======
-Last updated 2019-06-10 15:11:25 -0400
->>>>>>> master
 </div>
 </div>
 <style>
