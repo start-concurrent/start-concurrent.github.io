@@ -2,21 +2,21 @@ import javax.swing.*;
 
 public class FrameWithPanel {
     public static void main(String[] args){
-        // Create frame
-        JFrame soundCheck = new JFrame("Sound Check"); // <1>
-        JPanel soundPanel = new JPanel(); // <2>
-        // Create three buttons
-        JButton chirp = new JButton("Chirp"); // <3>
-        JButton bark = new JButton("Bark");
-        JButton exit = new JButton("Exit");
-        JTextField message = new JTextField("Listen to nature!");
-        soundPanel.add(chirp); // <4>
-        soundPanel.add(bark); 
-        soundPanel.add(message); 
-        soundPanel.add(exit); 
-        soundCheck.add(soundPanel); // <5>
-        soundCheck.setSize(350,150); // Set size in pixels
-        soundCheck.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        soundCheck.setVisible(true); // <6>
+        JFrame frame = new JFrame("Button Example"); // <.>
+        JPanel panel = new JPanel(); // <.>
+		
+        JButton thisButton = new JButton("This"); // <.>
+        JButton thatButton = new JButton("That");
+        JButton exitButton = new JButton("Exit");
+        JTextField field = new JTextField("Text input and output area");
+        
+		panel.add(thisButton); // <.>
+        panel.add(thatButton); 
+        panel.add(field); 
+        panel.add(exitButton); 
+        frame.add(panel); // <.>
+        frame.setSize(350,200);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true); // <.>
     }  
 }

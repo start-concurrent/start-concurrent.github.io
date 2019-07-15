@@ -2,13 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class UnresponsiveGUI extends JFrame
-    implements ActionListener {
-    JLabel label = new JLabel("Answer:");
-    JButton compute = new JButton("Compute");
-    JLabel counter = new JLabel("0");
-    JButton increment = new JButton("Increment");
-    int count = 0;
+public class UnresponsiveGUI extends JFrame implements ActionListener {
+    private JLabel answerLabel = new JLabel("Answer:");
+    private JButton computeButton = new JButton("Compute");
+    private JLabel countLabel = new JLabel("0");
+    private JButton incrementButton = new JButton("Increment");
+    private int count = 0;
     
     public static void main(String args[]) {
         UnresponsiveGUI frame = new UnresponsiveGUI();      
@@ -20,25 +19,25 @@ public class UnresponsiveGUI extends JFrame
     public UnresponsiveGUI() {
         setLayout(new GridLayout(4,1));
         setTitle("Unresponsive GUI");               
-        add(label);     
-        compute.addActionListener(this);
-        add(compute);       
-        add(counter);
-        increment.addActionListener(this);
-        add(increment);     
+        add(answerLabel);     
+        computeButton.addActionListener(this);
+        add(computeButton);       
+        add(countLabel);
+        incrementButton.addActionListener(this);
+        add(incrementButton);     
     }   
     
     public void actionPerformed(ActionEvent e) {
-        if( e.getSource() == compute ) {            
-            label.setText("Computing...");
+        if(e.getSource() == computeButton) {            
+            answerLabel.setText("Computing...");
             try {
                 Thread.sleep(5000);
-            } catch( InterruptedException ignore ) { }
-            label.setText("Answer: " + Math.sqrt(2.0));
+            } catch(InterruptedException ignore) { }
+            answerLabel.setText("Answer: " + Math.sqrt(2.0));
         }
         else {
             count++;
-            counter.setText("" + count);
+            countLabel.setText("" + count);
         }
     }
 }

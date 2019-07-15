@@ -3,37 +3,39 @@ import java.awt.event.*;
 
 public class FrameWithPanelAndActions {
     public static void main(String[] args){
-        final JFrame soundCheck = new JFrame("Sound Check"); 
-        JPanel soundPanel = new JPanel();
-        JButton chirp = new JButton("Chirp"); 
-        JButton bark = new JButton("Bark"); 
-        JButton exit = new JButton("Exit"); 
-        final JTextField message = new JTextField(
-            "Listen to nature!");
-        soundPanel.add(chirp); 
-        soundPanel.add(bark);
-        soundPanel.add(message);
-        soundPanel.add(exit);
+        JFrame frame = new JFrame("Button Example"); 
+        JPanel panel = new JPanel();
+		
+        JButton thisButton = new JButton("This"); 
+        JButton thatButton = new JButton("That"); 
+        JButton exitButton = new JButton("Exit"); 
+        JTextField field = new JTextField("Text input and output area");
+		
+        panel.add(thisButton); 
+        panel.add(thatButton);
+        panel.add(field);
+        panel.add(exitButton);
+		
         // Add action listeners to various buttons
-        chirp.addActionListener(new ActionListener() { 
+        thisButton.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e){
-                message.setText("Chirp requested.");
+                field.setText("You can get with this.");
             }
         });
-        bark.addActionListener(new ActionListener(){
+        thatButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                message.setText("Bark requested.");
+                field.setText("Or you can get with that.");
             }
         });
-        exit.addActionListener(new ActionListener(){
+        exitButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 System.out.println("Exit");
-                soundCheck.dispose();
+                frame.dispose();
             }
         });
-        soundCheck.add(soundPanel);
-        soundCheck.setSize(350,150);
-        soundCheck.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        soundCheck.setVisible(true);       
+        frame.add(panel);
+        frame.setSize(350,200);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);       
     }  
 }

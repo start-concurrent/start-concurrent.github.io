@@ -1,12 +1,10 @@
-import javax.swing.*;
+import javax.swing.*; //<.>
 
 public class EmptyFrame {
     public static void main(String[] args){
-        // Create frame
-        JFrame soundCheck = new JFrame("Sound Check");
-        soundCheck.setSize(350,150); // Set size in pixels
-        soundCheck.setDefaultCloseOperation(
-                JFrame.DISPOSE_ON_CLOSE);
-        soundCheck.setVisible(true); // Display it       
+        JFrame frame = new JFrame("Empty Frame"); //<.>
+        frame.setSize(350,200); //<.>
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //<.>
+        frame.setVisible(true); //<.>       
     }  
 }

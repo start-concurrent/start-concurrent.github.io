@@ -2,40 +2,42 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class AlternateActionListener implements ActionListener {
-  JFrame soundCheck = new JFrame("Sound Check"); 
-  JPanel soundPanel = new JPanel();
-  JButton chirpButton = new JButton("Bird"); 
-  JButton barkButton = new JButton("Dog"); 
-  JButton exitButton = new JButton("Exit"); 
-  JTextField message = new JTextField("Listen to nature!");
+	private JFrame frame = new JFrame("Button Example"); 
+	private JPanel panel = new JPanel();	
+	private JButton thisButton = new JButton("This"); 
+	private JButton thatButton = new JButton("That"); 
+	private JButton exitButton = new JButton("Exit"); 
+	private JTextField field = new JTextField("Text input and output area");
   
-  public AlternateActionListener (){ // <1>
-    chirpButton.addActionListener(this); 
-    barkButton.addActionListener(this);
-    exitButton.addActionListener(this);
-    soundPanel.add(chirpButton);
-    soundPanel.add(barkButton);
-    soundPanel.add(message);
-    soundPanel.add(exitButton);    
-    soundCheck.add(soundPanel);
-    soundCheck.setSize(200,125);
-    soundCheck.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    soundCheck.setVisible(true);       
-  }     
-  
-  public void actionPerformed(ActionEvent e){ // <2>
-    Object button = e.getSource(); // <3>
-    if(button == chirpButton) // <4>
-        message.setText("Chirp requested."); 
-    else if(button == barkButton) 
-        message.setText("Bark requested.");
-    else {
-        System.out.println("Exit");
-        soundCheck.dispose();
-    }
-  }
-  
-  public static void main(String[] args){ // <5>
-    new AlternateActionListener(); 
-  }   
+	public AlternateActionListener (){ //<.>
+		thisButton.addActionListener(this); 
+		thatButton.addActionListener(this);
+		exitButton.addActionListener(this);
+
+		panel.add(thisButton);
+		panel.add(thatButton);
+		panel.add(field);
+		panel.add(exitButton);    
+		frame.add(panel);
+
+		frame.setSize(350,200);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setVisible(true);       
+	}     
+
+	public void actionPerformed(ActionEvent e){ //<.>
+		Object button = e.getSource(); //<.>
+		if(button == thisButton) //<.>
+			field.setText("You can get with this."); 
+		else if(button == thatButton) 
+			field.setText("Or you can get with that.");
+		else {
+			System.out.println("Exit");
+			frame.dispose();
+		}
+	}
+
+	public static void main(String[] args){ //<.>
+		new AlternateActionListener(); 
+	}   
 }

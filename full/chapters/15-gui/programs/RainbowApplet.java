@@ -10,7 +10,7 @@ public class RainbowApplet extends JApplet{
         add(button, BorderLayout.NORTH);
         add(label, BorderLayout.SOUTH);
         button.addActionListener(new ActionListener(){
-            public void actionPerformed ( ActionEvent e){
+            public void actionPerformed (ActionEvent e){
                 label.setText("Have the colors ROYGBIV.");
             }
         });
