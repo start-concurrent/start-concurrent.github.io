@@ -18,8 +18,8 @@ public class MathTutorApplet extends JApplet
 
     public void init() {        
         JMenuBar menuBar = new JMenuBar();
-        JMenu type = new JMenu("Type");
-        JMenu operations = new JMenu("Operations");    
+        JMenu typeMenu = new JMenu("Type");
+        JMenu operationsMenu = new JMenu("Operations");    
         JCheckBoxMenuItem advanced = new JCheckBoxMenuItem("Advanced");
         // Add ActionListeners to menu items and buttons        
         add.addActionListener(this);
@@ -30,19 +30,19 @@ public class MathTutorApplet extends JApplet
         // Add ItemListener to checkbox menu item       
         advanced.addItemListener(this);
         // Fill menu for problem type         
-        type.add(advanced);
+        typeMenu.add(advanced);
         // Fill menu for operations
-        operations.add(add);
-        operations.add(subtract);
-        operations.add(multiply);
-        operations.add(divide);  
+        operationsMenu.add(add);
+        operationsMenu.add(subtract);
+        operationsMenu.add(multiply);
+        operationsMenu.add(divide);  
         // Disable advanced operations and submit 
         multiply.setEnabled(false);
         divide.setEnabled(false);
         submit.setEnabled(false);
         // Fill menu bar and set on applet
-        menuBar.add(type);
-        menuBar.add(operations);        
+        menuBar.add(typeMenu);
+        menuBar.add(operationsMenu);        
         setJMenuBar(menuBar);
         // Add widgets to applet content
         add(score, BorderLayout.NORTH);
@@ -68,9 +68,9 @@ public class MathTutorApplet extends JApplet
     
     public void actionPerformed(ActionEvent e) {
         Object object = e.getSource(); 
-        if( object == submit ) {
+        if(object == submit) {
             int response = Integer.parseInt(field.getText());
-            if( response == answer )
+            if(response == answer)
                 correct++;
             else
                 incorrect++;                        
@@ -80,13 +80,13 @@ public class MathTutorApplet extends JApplet
             submit.setEnabled(false);
         }
         else {          
-            if( object == add )
+            if(object == add)
                 answer = ProblemGenerator.addPractice(label);
-            else if( object == subtract )
+            else if(object == subtract)
                 answer = ProblemGenerator.subtractPractice(label);
-            else if( object == multiply )
+            else if(object == multiply)
                 answer = ProblemGenerator.multiplyPractice(label);
-            else if( object == divide )
+            else if(object == divide)
                 answer = ProblemGenerator.dividePractice(label);
             submit.setEnabled(true);
         }

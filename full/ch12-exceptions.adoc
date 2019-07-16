@@ -663,6 +663,37 @@ If an exception occurred, the value of `color` would remain unchanged
 because the execution would have jumped to a `catch` block before the
 assignment could happen.
 
+Note that when catching the `ColorOverflowException` or the `ColorUnderflowException`
+in the above code, we do the same thing in either case: print the exception.
+To reduce the amount of code, we could have caught `Exception`
+instead of those two specific exceptions, but doing so would catch *all*
+exceptions, not just the two related to color that we care about.
+
+In Java 7 and higher, there's special syntax to deal with situations like the
+one above where several specific exceptions are handled in the same way.  The
+exception types are listed in a `catch` block with pipe symbols (`|`) between
+them.  There's still only a single reference to the exception (often named
+`e`).  Using this updated syntax, we could have written the `try`-`catch` above
+as follows. 
+
+[source,java]
+----
+    try {
+        switch(in.next().trim().charAt(0)) {
+            case 'R': color = increaseRed(color); break;
+            case 'G': color = increaseGreen(color); break;
+            case 'B': color = increaseBlue(color); break;
+            case 'r': color = decreaseRed(color); break;
+            case 'g': color = decreaseGreen(color); break;
+            case 'b': color = decreaseBlue(color); break;
+        }
+    }
+    catch(ColorOverflowException | ColorUnderflowException e) {
+        System.out.println(e);
+    }
+----
+
+
 ====
 
 === Solution: Bank burglary
