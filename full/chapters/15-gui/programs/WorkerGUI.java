@@ -2,54 +2,55 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class WorkerGUI extends JFrame implements ActionListener {
+public class WorkerGUI implements ActionListener {
     private JLabel answerLabel = new JLabel("Answer:");
     private JButton computeButton = new JButton("Compute");
     private JLabel countLabel = new JLabel("0");
     private JButton incrementButton = new JButton("Increment");
     private int count = 0;  
-    
-    public static void main(String args[]) {
-        WorkerGUI frame = new WorkerGUI();      
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(250,150);
-        frame.setVisible(true);
-    }
-    
+       
     public WorkerGUI() {
-        setLayout(new GridLayout(4,1));
-        setTitle("Worker GUI");             
-        add(answerLabel);     
+		JFrame frame = new JFrame("Worker GUI");
+        frame.setLayout(new GridLayout(4,1));
         computeButton.addActionListener(this);
-        add(computeButton);       
-        add(countLabel);
         incrementButton.addActionListener(this);
-        add(incrementButton);     
+        frame.add(answerLabel);     
+        frame.add(computeButton);       
+        frame.add(countLabel);
+        frame.add(incrementButton);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(300,150);
+        frame.setVisible(true);		
     }
     
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == computeButton) {
-            SwingWorker worker = new SwingWorker<String, Void>() {          
-                public String doInBackground() {
+            SwingWorker worker = new SwingWorker<String, Void>() { //<.>         
+                public String doInBackground() { //<.>
                     try {
                         Thread.sleep(5000);
-                    } catch(Exception ignore) {}
-                    return "Answer: " + Math.sqrt(2.0);
+                    }
+					catch(Exception ignore) {}
+                    return "Answer: " + Math.sqrt(2.0); //<.>
                 }
                 
-                public void done() {
+                public void done() { //<.>
                     try {
                         answerLabel.setText(get());
-                    } catch (Exception ignore) {}              
+                    }
+					catch (Exception ignore) {}              
                 }
-            };
-            
-            worker.execute();
+            };            
+            worker.execute(); //<.>
             answerLabel.setText("Computing...");
         }
         else {
             count++;
             countLabel.setText("" + count);
         }
+    }
+	
+	public static void main(String args[]) {
+		new WorkerGUI();
     }
 }

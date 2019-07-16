@@ -32,9 +32,12 @@ correct and incorrect answers.
 .GUI for the `MathTutor`. (a) No menu selected. (b) Type selected. (c) Operations selected. (d) Attemping to answer an addition problem.
 image::mathTutorFigure.svg[scaledwidth=80%,pdfwidth=80%,width=80%]
 
-<<MathTutorFigure>> shows the final program in three
-different states. The screen to the left appears when the program is
-first initialized, and the Submit button is disabled until a problem is generated.
+<<MathTutorFigure>> shows the final program in four
+different states. The window on the top left appears when the program is
+first initialized, with the "`Submit`" button disabled until a problem is
+generated.  The top right and the bottom left show each of the two menus
+open. The bottom right shows the program when an addition problem has been
+generated and the user is about to answer.
 
 === Concepts: Graphical user interfaces
 
@@ -90,7 +93,7 @@ helps you understand Java GUIs better.
 
 ==== Swing and AWT
 
-Most of the components you will use to create GUIs are defined in
+Most of the components you'll use to create GUIs are defined in
 classes that belong to the Java Swing library. This library contains
 many interfaces and classes. In earlier chapters, you have seen and
 used one class from the Swing library, the `JOptionPane` class.
@@ -1288,7 +1291,8 @@ old component with the new one.
 ====
 
 At first glance, `BorderLayout` seems that it would rarely be useful.
-However, this layout is frequently used because it establishes a spatial relationship between different parts of a GUI. A
+However, this layout is frequently used because it establishes a spatial
+relationship between different parts of a GUI. A
 container with a `BorderLayout` generally has other containers with
 their own layouts added to its regions, as shown in the following
 example.
@@ -1333,8 +1337,20 @@ not the functionality.
 ****
 
 There's no limit to how deeply you can nest containers within each
-other. Sometimes you must use many `BorderLayout` managers to achieve the appearance you want.  The value of establishing these spatial relationships
-is that they're still valid even when the GUI is resized.
+other. Sometimes you must use many `BorderLayout` managers to achieve the
+appearance you want.  The value of establishing these spatial relationships
+is that they're still valid even when the GUI is resized. Even so, it's
+challenging to make a usable GUI that looks attractive no matter how
+the user resizes it or what the resolution of the user's screen is.
+
+Although there's not enough space here to discuss strategies for
+developing attractive GUIs, it's worth noting the value of the
+`setPreferredSize()` method that all components have. This method is
+one of the best ways to suggest a size for particular components,
+especially if other components and containers are going to stretch
+as needed.  When key components have their sizes set using
+`setPreferredSize()`, the entire frame can be packed using the
+`pack()` method, which sizes the frame to fit its components.
 
 The three layout managers discussed in this section are the simplest,
 but there are others. The `BoxLayout` manager is a useful tool for
@@ -1429,7 +1445,8 @@ unusable.setEnabled(false);
 
 These statements create a menu item named `unusable` and disable it.
 A disabled menu item shows as a gray item and doesn't respond to
-attempts to select it. As we showed in <<animalSoundsExample>>, `JButton` objects, like many other components, can be disabled in the same way.
+attempts to select it. As we showed in <<animalSoundsExample>>, `JButton`
+objects, like many other components, can be disabled in the same way.
 
 ===== Adding events to menus
 
@@ -1438,7 +1455,9 @@ An action listener can be added to each menu item, just like a
 event is generated. A `JCheckBoxMenuItem` object can be added to a
 `JMenu` as well. This object will have a check box which can be selected
 or unselected. A regular `JMenuItem` object generates an `ActionEvent`
-which is handled by an `ActionListener`. Like a `JCheckBox`, a `JCheckBoxMenuItem` can also generate an `ItemEvent` handled by an `ItemListener`. Here are examples of both situations.
+which is handled by an `ActionListener`. Like a `JCheckBox`, a
+`JCheckBoxMenuItem` can also generate an `ItemEvent` handled by an
+`ItemListener`. Here are examples of both situations.
 
 [source,java]
 ----
@@ -1524,17 +1543,23 @@ include::{programsdir}/MathTutor.java[lines=45..64]
 include::{programsdir}/MathTutor.java[lines=66..79]
 ----
 
-The `itemStateChanged()` method enables the `multiply` and `divide` menus and disables the `add` and `subtract` menus if the `advanced` check box is selected and does the reverse if it has been unselected.
+The `itemStateChanged()` method enables the `multiply` and `divide` menus and
+disables the `add` and `subtract` menus if the `advanced` check box is
+selected and does the reverse if it's been unselected.
 
 [source, java]
 ----
 include::{programsdir}/MathTutor.java[lines=81..93]
 ----
 
-`actionPerformed()`Depending on which menu item fired the event, the `actionPerformed()` calls the appropriate method from the `ProblemGenerator` object to create and then display a math problem on `label`.  The correct answer is stored in `answer`.  Note that this `actionPerformed()` method doesn't
-handle the submit button because it has its own anonymous class handler.  We use both styles of listener
-to keep the code simpler: Handling the submit button separately makes sense because it's different, but
-handling the operations menu items together makes sense because they're similar.
+Depending on which menu item fired the event, the `actionPerformed()` method calls the
+appropriate method from the `ProblemGenerator` object to create and then
+display a math problem on `label`.  The correct answer is stored in `answer`.
+Note that this `actionPerformed()` method doesn't handle the submit button
+because it has its own anonymous class handler.  We use both styles of listener
+to keep the code simpler: Handling the submit button separately makes sense
+because it's different, but handling the operations menu items together makes
+sense because they're similar.
 
 [source, java]
 ----
@@ -1550,11 +1575,10 @@ Stand-alone Java programs have at least one thread, the main thread.
 Applications with GUIs create additional
 threads to manage the GUI behind the scenes.
 
-Although a GUI will create several threads, the most important for the
-programmer to worry about is called the _event dispatch thread_ (EDT).
-This thread handles events like button clicks. When you write your
-`actionPerformed()` method, remember that the EDT is the one that will
-actually execute the code inside.
+Although a GUI will create several threads, the most relevant of these
+is the _event dispatch thread_ (EDT). This thread handles events like
+button clicks. When you write `actionPerformed()` methods, remember
+that the EDT is the one that will actually execute the code inside.
 
 If you're writing a complex program, the EDT may interact with many
 other threads, and the synchronization issues discussed in
@@ -1566,9 +1590,9 @@ and violates the design of Swing.
 ==== Worker threads
 
 Thread safety is not the most common multi-threaded GUI problem,
-however. Unresponsive GUIs can be found on almost every platform, as you
-have no doubt experienced. In Java, unresponsive GUIs usually happen
-because the programmer is using the event dispatch thread to do some
+however. Unresponsive GUIs can be found on almost every platform, as you've
+no doubt experienced. In Java, unresponsive GUIs usually happen
+when the programmer uses the event dispatch thread to perform some
 task that takes too long. Because the EDT is responsible for updating
 the GUI, the GUI freezes, and the user has to wait.
 
@@ -1593,15 +1617,14 @@ include::{programsdir}/UnresponsiveGUI.java[]
 [[unresponsiveGUIFigure]]
 [.text-center]
 .GUI generated by <<UnresponsiveGUIProgram>>.
-image::unresponsiveGUIFigure.png[scaledwidth=40%,pdfwidth=40%,width=40%]
-
+image::unresponsiveGUIFigure.png[scaledwidth=35%,pdfwidth=35%,width=35%]
 
 If you click the "`Compute`" button, the GUI becomes unresponsive.
-Specifically, you cannot click on the "`Increment`" button, but you
+Specifically, nothing will happen when you click the "`Increment`" button, but you
 should still be able to move the frame around the desktop on most
 systems. Furthermore, some thread in the GUI is registering the clicks
-you do on the "`Increment`" button, but events triggered by those clicks
-are not handled until after the EDT wakes up. At that point, the counter
+you do on the "`Increment`" button, though events triggered by those clicks
+aren't handled until *after* the EDT wakes up. At that point, the counter
 will shoot up in value unpredictably.
 
 ****
@@ -1610,15 +1633,16 @@ will shoot up in value unpredictably.
 ****
 
 One solution is to create an anonymous inner class that extends
-`SwingWorker`. The `SwingWorker` class is abstract, but it is also
+`SwingWorker`. The `SwingWorker` class is abstract, but it's also
 _generic_, meaning that it has type parameters (given in angle brackets)
 which specify what type of objects it interacts with. Generic classes
 are often containers like `LinkedList` where the type parameter says
-what kind of objects will be kept in the list. <<ch18-dynamic-data-structures#ch18-dynamic-data-structures>> covers generics in some depth. The reason we need
-generics for `SwingWorker` is so that it can specify what kind of object
-it will return when it finishes its work. The first type parameter
-specifies the type that the worker will return when it completes its
-work. The second specifies the type that the worker will return
+what kind of objects will be kept in the list.
+<<ch18-dynamic-data-structures#ch18-dynamic-data-structures>> covers generics
+in some depth. The reason we need generics for `SwingWorker` is so that it
+can specify what kinds of answers it produces.
+The first type parameter specifies the type that the worker will return when
+it completes its work. The second specifies the type that the worker will return
 periodically in the process of doing work (which can be useful for
 updating progress bars). Examine the following program which has added a
 `SwingWorker` to its `actionPerformed()` method but is otherwise the
@@ -1630,27 +1654,30 @@ same as <<UnresponsiveGUIProgram>>.
 ----
 include::{programsdir}/WorkerGUI.java[]
 ----
-
-In this program, the first type parameter for the `SwingWorker` is
-`String` because we are going to set the text in a `JLabel` with its
-result. The second parameter is `Void`, meaning that we do not intend to
+<.> In this program, the first type parameter for the `SwingWorker` is
+`String` because we're going to set the text in a `JLabel` with its
+result. The second parameter is `Void`, meaning that we don't intend to
 return any values periodically. Most child classes of `SwingWorker`
 should override the `doInBackground()` and `done()` methods.
-
-The `doInBackground()` method performs the time-consuming work that we
-want done on another thread. In our example, the "`work`" is going to
+<.> The `doInBackground()` method performs the time-consuming work we
+want done on another thread. In our example, the "`work`" is just going to
 sleep, but it will generally be some CPU or I/O intensive process.
-Afterwards, it returns the answer it found. The `done()` method is
-called automatically by the EDT after `doInBackground()` finishes. After
-the `SwingWorker` object has been created, the `execute()` method starts
-it working. The GUI will look identical to the unresponsive version
+<.> Afterwards, it returns the answer it found.
+<.> The `done()` method is
+called automatically by the EDT after `doInBackground()` finishes. Note that
+the `get()` method automatically returns whatever answer was produced by
+the `doInBackground()` method.
+<.> Once the `SwingWorker` object has been created, the `execute()` method starts
+it running.
+
+This GUI will look identical to the unresponsive version
 (except for the title), but it will remain responsive.
 
 This syntax is not particularly elegant, but it accomplishes a complex
-task. It spawns a thread transparently, and then the EDT is given work
-when the thread gives back its answer. Using a `SwingWorker` is not
-always required, but it is a useful tool to have in your arsenal if you
-plan on writing industrial-strength GUIs.
+task. It spawns a thread transparently and then notifies the EDT when the
+thread has its answer ready. Using a `SwingWorker` isn't
+always required, but it's a useful tool to have in your arsenal if you
+plan on writing industrial-strength, responsive GUIs.
 
 ****
 <<SwingWorkerExercise>>
@@ -1659,11 +1686,11 @@ plan on writing industrial-strength GUIs.
 
 === Summary
 
-In this chapter we introduce the basics of constructing a GUI to allow
+This chapter covers the fundamentals of constructing a GUI to allow
 users to interact with an application. We show how to add components such
 as buttons and text boxes and use layout managers to organize their
 appearance. We show how you can add action listeners and other event
-handlers so that user actions can perform useful tasks.
+handlers so that user interactions like button clicks can trigger useful tasks.
 
 While Java offers a large variety of components and listeners, this
 introduction is limited to a few of the most commonly used. Once you
@@ -1675,98 +1702,77 @@ reference sources.
 === Exercises
 *Conceptual Problems*
 
-.  In
-<<FrameWithPanelAndActionsProgram>>, why have we declared the
-buttons and the text box to be `final`?
-.  Note that both `ActionListener`
-and `MouseListener` interfaces can be used to process button clicks.
-Under which circumstances is `ActionListener` better? Under which is
-`MouseListener` better?
-.  [[MouseAdaptorExercise]] Why is the `MouseAdapter`
-abstract class useful?
-.  [[JMenuBarExercise]] What do you expect will happen if you
-used `setJMenuBar()` to set two different menu bars on a single `JFrame`
-object?
-.  Describe the situations that the
-following event listeners are useful for: `ActionListener`,
-`MouseListener`, `ItemListener`, and `KeyListener`
+. Both `ActionListener` and `MouseListener` interfaces can be used to process
+button clicks. Under which circumstances is `ActionListener` better? Under
+which is `MouseListener` better?
+. [[MouseAdaptorExercise]] Why is the `MouseAdapter` abstract class useful?
+. [[JMenuBarExercise]] What do you expect will happen if you used
+`setJMenuBar()` to set two different menu bars on a single `JFrame` object?
+. Describe the situations that the following event listeners are useful for: `ActionListener`,
+`MouseListener`, and `ItemListener`.
 
 *Programming Practice*
 
-.  Remove the two
-instances of the keyword `final` from
-<<FrameWithPanelAndActionsProgram>> and try to compile it. Why
-does the compiler complain? What do you conclude regarding the use of
-`final` with respect to local variables used in the `actionPerformed()`
-method of an anonymous inner class? Why is this not a concern for
-top-level, named classes used as an `ActionListener`?
-.  Write a program that creates a
+. Write a program that creates a
 GUI containing two buttons labeled "`Start`" and "`Done.`" The GUI frame
-should be labeled "`Start and Done.`"
-.  [[mouseEventsExercise]] Modify
-<<SimpleMouseEventsProgram>> by implementing the
-`mouseExited()`, `mousePressed()`, and `mouseReleased()` methods. Each
-method must display a suitable message in the text box when the
-corresponding event occurs. For example, when the mouse exits button
-`one`, the text box should display "`Mouse exits One.`"
-.  [[iconSoundsExercise]] Modify
-<<IconExampleProgram>> such that clicking the icon-decorated
-button generates a roaring sound. Note that this will require you to add
+should be titled "`Start and Done.`"
+. [[mouseEventsExercise]] Modify <<SimpleMouseEventsProgram>> by implementing
+the `mouseExited()`, `mousePressed()`, and `mouseReleased()` methods. Each
+method must display a suitable message in the text box when the corresponding
+event occurs. For example, when the mouse exits button `one`, the text box
+should display "`Mouse exits One.`"
+. [[iconSoundsExercise]] Modify <<IconExampleProgram>> such that clicking the
+icon-decorated button plays the sound of a bat squeaking. You will need to add
 an `ActionListener` to the button, create an audio clip for the desired
-sound, and then play this click when the button is clicked. Consider
-visiting http://www.freesound.org[freesound^] for free sound files.
+sound, and then play this clip when the button is clicked. Consider
+visiting http://www.freesound.org[Freesound.org^] to find free sound files.
 . [[selfieExercise]] Write a Java program that
 creates a GUI containing a label with a picture of yourself.
 . [[animalSoundsExercise]] Extend the `AnimalSounds` class
 developed in <<animalSoundsExample>> to include sounds for
-various animals. You may find a variety of publicly available sounds
+various animals. There are many publicly available sounds
 files for use in your program. The Freesound link above is only one
 source.
-+
-Note that some sites explicitly ask you not to embed the sound file URL
-into your program. In those cases, download the sound file into your
-local directory and load it from there into your application.
-. [[stopPlayingSoundExercise]] In <<animalSoundsExample>> we stopped both the chirp and the bark sounds because the action
-listener corresponding to the "`Stop Playing`" button does not know
-which sound is playing. Modify <<AnimalSoundsProgram>> so that
-only the sound that is playing is stopped. You may need to declare
-another variable to keep track of which is playing.
-. [[hoverSoundExercise]] Modify
-<<AnimalIdentifierProgram>> so that it plays a sound associated
-with an animal when the mouse is clicked over its label. Note that this
-is an example of a situation where a `MouseListener` can be used to
-listen for mouse click events though an `ActionListener` cannot. As in
-<<iconSoundsExercise>> and <<animalSoundsExercise>>, you may need to download sounds from
-the Internet.
-. Modify the GUI from
-<<Solution: Math tutor>> to display the problem number the user
-is working on. The first problem is numbered "`Problem 1`" with
+. [[stopPlayingSoundExercise]] In <<animalSoundsExample>> we stopped both the
+chirp and the bark sounds because the action listener corresponding to the
+"`Stop Playing`" button didn't know which sound was playing. Modify
+<<AnimalSoundsProgram>> so that only the sound that's playing is stopped.
+You may need to declare another variable to keep track of which is playing.
+. [[hoverSoundExercise]] Modify <<AnimalIdentifierProgram>> so that it plays
+a sound associated with an animal when the mouse is clicked over its label.
+Note that this is an example of a situation where a `MouseListener` can be
+used to listen for mouse click events though an `ActionListener` cannot. As in
+<<iconSoundsExercise>> and <<animalSoundsExercise>>, you may need to download
+sounds from the Internet.
+. Modify the GUI from <<Solution: Math tutor>> to display the problem number
+the user's working on. The first problem will be numbered "`Problem 1`" with
 subsequent problems 2, 3, and so on. The number should increase each
-time the user hits the Submit button. Find a suitable place on the GUI
+time the user hits the "`Submit`" button. Find a suitable place on the GUI
 to display this information. You may need to add a panel to reorganize
 the GUI.
 . Remove the `actionPerformed()` and
 `itemStateChanged()` methods from the `MathTutor` class given in
 <<Solution: Math tutor>>. Move the code from these methods into
 individual anonymous inner classes added to the `add`, `subtract`,
-`multiply`, `divide`, `submit`, and `advanced` objects.
+`multiply`, `divide`, and `advanced` objects.
 +
-Note that you're now able to remove `ActionListener` and `ItemListener`
+Note that you can now remove `ActionListener` and `ItemListener`
 from the list of implemented interfaces for the `MathTutor` class.
 Reorganizing the code this way should have no impact on the
-functionality of the program. Is doing so a good idea or not? Why?
+functionality of the program. Is doing so a good idea? Why or why not?
 . [[componentAddingOrderExercise]] In
 <<FrameWithPanelAndActionsProgram>> exchange the first two
-`add()` method calls on the `soundPanel` so that `bark` is added to the
-panel before the `chirp`. Explain how the appearance of the GUI is
+`add()` method calls on the `panel` so that `thatButton` is added to the
+panel before `thisButton`. Explain how the appearance of the GUI is
 changed.
 . [[multipleAddsExercise]] Modify
 <<FrameWithPanelProgram>> by adding a second panel named
-`secondPanel`. Create a new button named `train` with the label
-"`Train.`" Add `train` to `secondPanel`. Now add `secondPanel` to
-`soundCheck` and look at the GUI generated. Can you explain why only one
-panel is visible?
-. [[resizingGUIExercise]] Remove the line `frame.setResizable(false);` from <<FlowLayoutExampleProgram>>. Run the modified program and
+`secondPanel`. Create a new button named `otherButton` with the label
+"`The Other.`" Add `otherButton` to `secondPanel`. Now add `secondPanel` to
+`frame` and look at the GUI generated. Can you explain why only components
+from one of the panels is visible?
+. [[resizingGUIExercise]] Remove the line `frame.setResizable(false);` from
+<<FlowLayoutExampleProgram>>. Run the modified program and
 resize the frame to various sizes. How does the placement of the buttons
 change?
 . [[packedGUIExercise]] Modify
@@ -1776,51 +1782,51 @@ code just before the line `frame.setResizable(false);`:
 +
 [source,java]
 ----
-demo.pack();
+frame.pack();
 ----
 +
-When you run the modified program, what is the impact of using the
+When you run the modified program, what's the impact of using the
 `pack()` method?
 . [[GridLayoutExercise]] Create a GUI with a frame that uses
 `GridLayout` and has a suitable size. Use a 3 × 2
 layout with a horizontal and vertical spacing of 5 pixels each. Use a
 loop to add eight buttons to your frame, labeled 1 through 8. Observe
 how the frame expands to include all the buttons even though the
-initially specified `GridLayout` had only 6 cells. Depending on the
+`GridLayout` only specified 6 cells. Depending on the
 frame size, you might have to resize the window to see all cells and
 buttons. What happens if you add fewer than 6?
 . [[calculatorFunctionalityExercise]] Consider the calculator layout from
 <<CalculatorLayoutProgram>>.  Add listeners to all of its buttons so that
 clicking on the number buttons, the plus and minus buttons, and the "`Enter`"
-button will make it perform like a calculator capable of addition and subtraction. Note that you will need to add some additional fields to keep
+button will make it perform like a calculator capable of addition and
+subtraction. Note that you'll need to add some additional fields to keep
 track of the current value and whether or not the user has just pressed
 the plus or minus buttons.
 . [[addMenuBarExercise]] Write a Java program that creates
 a GUI with a frame and a menu bar containing a single menu. Add a menu
 item to this menu. Use the `add()` method, not the `setJMenuBar()`
-method, to add the menu bar to the frame. What is the difference between
+method, to add the menu bar to the frame. What's the difference between
 using the `add()` method and the `setJMenuBar()` method to add a menu
 bar to a `JFrame`?
 
 
 *Experiments*
 
-. [[unresponsiveGUIExercise]] Recall that
-<<UnresponsiveGUIProgram>> is unresponsive because the event
-dispatch thread goes to sleep for 5 seconds (5,000 milliseconds). Experiment with this value to determine
-what is a reasonable amount of time for the EDT to be blocked before the
-GUI feels unresponsive.
+. [[unresponsiveGUIExercise]] Recall that <<UnresponsiveGUIProgram>> is
+unresponsive because the event dispatch thread goes to sleep for 5 seconds
+(5,000 milliseconds). Experiment with this value to determine how much time
+you can block the EDT before the GUI feels unresponsive.
 . [[calculatingGUIExercise]] <<UnresponsiveGUIProgram>> is
 unrealistic because the EDT simply goes to sleep. Normally, a GUI
 becomes unresponsive because the EDT is performing extensive
-calculations or doing slow I/O operations. Replace the line that sleeps with a short loop that performs significant calculations. One
-simple way to spend a lot of computational time is by summing the sines
-of random numbers, similar to the work done in <<arraySummationExample>>. How many sines do you need to compute to make the GUI
-unresponsive for 5 seconds?
+calculations or doing slow I/O operations. Replace the line that sleeps with
+a short loop that performs significant calculations. One simple way to spend
+a lot of computational time is by summing the sines of random numbers, similar
+to the work done in <<arraySummationExample>>. How many sines do you need to
+compute to make the GUI unresponsive for 5 seconds?
 . [[SwingWorkerExercise]] Take the computationally expensive loop
-from <<calculatingGUIExercise>> and use it to replace
-the line that sleeps in <<WorkerGUIProgram>>, the
-`SwingWorker` version of the program. Does the program become
-unresponsive if you run it? If possible, run the program on Windows,
-Mac, and Linux environments. If it is unresponsive in some environments
+from <<calculatingGUIExercise>> and use it to replace the line that sleeps in
+<<WorkerGUIProgram>>, the `SwingWorker` version of the program. Does the
+program become unresponsive if you run it? If possible, run the program on Windows,
+macOS, and Linux environments. If it's unresponsive in some environments
 but not others, why do you think that might be?
