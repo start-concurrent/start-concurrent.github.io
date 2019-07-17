@@ -1,9 +1,9 @@
 public class Bodybuilder {
     public int strength = 8;
 
-    public boolean isStrongEnough( int strengthNeeded ) {
+    public boolean isStrongEnough(int strengthNeeded) {
         return strength >= strengthNeeded;
     }   
 
-    public void setStrength( int value ) { strength = value; }
+    public void setStrength(int value) { strength = value; }
 }

@@ -9,16 +9,16 @@ public class MathTest {
   
   @Test
   public void ceil() { 
-    assertTrue( 4 == Math.ceil(3.1) );
+    assertTrue(4 == Math.ceil(3.1));
   }
   
   @Test
   public void pow() { 
-    assertEquals( 2, Math.pow( sqrt2, 2 ), 0.000001 );
+    assertEquals(2, Math.pow(sqrt2, 2), 0.000001);
   }
   
   @Test
   public void sin() { 
-    assertEquals( sqrt2/2.0, Math.sin(Math.PI / 4.0), 0.000001 );
+    assertEquals(sqrt2/2.0, Math.sin(Math.PI / 4.0), 0.000001);
   } 
 }
