@@ -11,23 +11,23 @@ ____
 === Fixing bugs
 
 This chapter is about finding, fixing, and, more importantly, preventing
-bugs in software. This chapter is unique in that it is not based on
-clearly stated concrete problems with straightforward solutions. As it
-stands now, finding and fixing bugs in software, especially concurrent
-software, is a problem which no one has solved completely. The first
+bugs in software. For this book, this chapter is unique in that it's not based
+on clearly stated concrete problems with straightforward solutions. Finding
+and fixing bugs in software, especially concurrent
+software, is a problem no one has solved completely. The first
 half of this chapter will focus on common bugs and how to fix them. The
 second half will focus on design techniques for preventing bugs and
-testing to see if any hidden bugs remain in your code.
+testing for bugs hidden in your code.
 
 ==== Common sequential bugs
 
-We will begin with bugs commonly found in sequential programs, some of
+We'll begin with bugs commonly found in sequential programs, some of
 which have already been mentioned as common mistakes in previous
-chapters. We will not discuss syntax errors or any other errors which
+chapters. We won't discuss syntax errors or any other errors which
 can be caught at compile time. Instead, all bugs discussed in this
 chapter are run-time bugs.
 
-There are an infinite number of possible bugs and so they cannot all be
+There are an infinite number of possible bugs, so they can't all be
 listed. Below are a few of the most common categories of bugs to affect
 beginner (and occasionally veteran) programmers.
 
@@ -36,15 +36,15 @@ Precision Errors:::
   Programs that assume infinite precision may break when real results
   are slightly larger or smaller than expected.
 Overflow and Underflow:::
-  In some sense the cousin of precision in floating-point types is the
-  limited range of values that integer types can take on. If the value
+  The cousin of limited precision in floating-point types is the
+  limited range of values that integer types can take on. If a value
   goes too high, it wraps back around and becomes a negative number. If
-  the values becomes too low, the opposite can happen.
+  a value becomes too low, the opposite can happen.
 Casting Errors:::
   Casting can have many subtle effects in a program. Sometimes
   programmers divide two integers and forget that the result is an
-  integer. Incorrectly casting objects can lead to
-  ``ClassCastException``s.
+  integer. Incorrectly casting objects can also lead to a
+  `ClassCastException`.
 Loop Errors:::
   Loops are a favorite place for bugs to hide. Three of the most common
   loop mistakes are:
@@ -52,31 +52,30 @@ Loop Errors:::
   expected.
   * Infinite loop: A classic. The loop continues executing until the
   program runs out of memory or a user stops the program externally.
-  * Zero loop: The loop does not execute even once, even though the
+  * Zero loop: The loop doesn't execute even once, though the
   programmer expected it to.
 Equivalence Testing Errors:::
   If a programmer uses the `==` operator to compare two references, it
   will be true only if the two references point at the same object.
-  Although doing so is occasionally necessary, the `equals()` method
-  should usually be used to compare the attributes of the objects
-  pointed at by the references.
+  Instead, the `equals()` method should usually be used to compare the
+  attributes of the objects pointed at by the references.
 Array Errors:::
   Arrays are often involved with loop errors. Two problems specific to
   arrays are:
   * Out of bounds: A math mistake or an off-by-one error could lead to
-  trying to access an element of an array that comes before element 0 or
-  after the last element.
+  an attempt to access an element of an array that comes before index 0 or
+  after the last index.
   * Uninitialized object arrays: Arrays of primitive data types can be
-  created and used instantly; however, arrays of object types are filled
-  with nulls until each element is assigned an object, often a new
+  created and used immediately; however, arrays of object types are filled
+  with `null` values until each element is assigned an object, often a new
   object.
 Scope Errors:::
   Some errors can be caused by a programmer's misunderstanding about the
   visibility of a variable.
   * Shadowing variables: If a local variable is declared with the same
   name as a field or class variable, changes within a method will be
-  made to that local variable. This principle is straightforward, but,
-  if a programmer does not notice the shadow declaration, the behavior
+  made to that local variable. This principle is straightforward, but
+  if a programmer doesn't notice the shadow declaration, the behavior
   of the code can be very confusing.
   * Reference vs. value: When primitive data is passed as an argument
   into a method, its value is copied into the method, and the original
@@ -84,16 +83,16 @@ Scope Errors:::
   method, the reference is unchanged, but methods called on the object
   can still affect it.
 Null Pointer Errors:::
-  By this point in your programming experience, you have almost
-  certainly experienced a `NullPointerException`. This is, in many ways,
-  a catch-all category, because a null reference is generally not due to
-  a simple typographical error. In the simplest case, a reference simply
-  has not been initialized with some default constructor, but more often
-  there is a logical error in the design of the code.
+  By this point in your programming experience, you've almost
+  certainly experienced a `NullPointerException`. This last kind of bug is,
+  in many ways, a catch-all category, because a null reference is generally
+  not due to a simple typographical error. In the simplest case, a reference
+  simply hasn't been initialized with some default constructor, but more often
+  there's a logical error in the design of the code.
 
 === Concepts: Approaches to debugging
 
-When you have discovered the existence of a bug, pinning down its cause
+When you've discovered the existence of a bug, pinning down its cause
 can be difficult. There are a number of different techniques that are
 useful for narrowing down the possible problems.
 
@@ -102,39 +101,38 @@ useful for narrowing down the possible problems.
 A common cause of program errors is an incorrect assumption by a
 programmer. A programmer can assume that the user will only enter
 positive numbers, that a library call will not throw any exceptions, or
-that a linked list is not empty. Some assumptions are reasonable, but it
-is important to make sure that they are correct.
+that a linked list is never empty. Some assumptions are reasonable, but
+it's important to make sure that they're correct.
 
 Using _assertions_ is a way to check some of your assumptions, often
 those surrounding a method call. In most languages, an assertion tests a
-condition. If that condition is true, nothing happens, but, if it is
+condition. If that condition is true, nothing happens, but if it's
 false, the program shuts down or an error or exception is thrown. Using
 assertion statements is particularly important with methods because you
 want to be sure that both your input and output are in the ranges you
 expect them to be.
 
-Java supports assertions natively, as we will discuss in the next
+Java supports assertions natively, as we'll discuss in the next
 section. However, virtually every language allows you to create your own
 assertions should they not be present as a language construct.
 
 ==== Print statements
 
 Computer programs execute quickly. Even if they executed a million times
-more slowly no human is sensitive enough to decipher the flow of
+slower, no human is sensitive enough to decipher the flow of
 electrons inside the processor as a program executes. The simple truth
-is that we have no idea what is happening when our programs execute. We
+is that we have no idea what's really happening when our programs execute. We
 believe that we understand our programs well, and the output usually
-confirms that our program is doing what we imagine that it should be
-doing.
+confirms that our program is doing what we imagine it should be doing.
 
-If the output does not match what is expected, we may not have enough
-data to understand the problem. Since there have been programmers, they
+If the output doesn't match our expectations, we may not have enough
+data to understand the problem. As long as there have been programmers, they
 have been printing out additional debug information to find their
 errors. This technique can go a step beyond simple assertion statements
 because you can print out the values of the variables rather than just
-test to see if they are in a range.
+test to see if they're in a range.
 
-Once you have found the error in your code, it can be tedious to remove
+Once you've found the error in your code, it can be tedious to remove
 all of your debug statements. Some programmers use a special print
 command that can be turned off using a global variable or compiler
 option. Others send their output to `stderr` so that it doesn't
@@ -145,7 +143,7 @@ the system, the language, and the individual tastes of the programmer.
 
 With the rise of modern debugging environments, using print statements
 has lost some of its appeal. Most languages allow the programmer to run
-his or her program in a special debug mode in which it is possible to
+his or her program in a special debug mode where it's possible to
 execute a single line of code at a time. These tools usually give the
 option of stepping over method calls or stepping into them, on a case by
 case basis.
@@ -157,22 +155,22 @@ pace he or she desires. Pinpointing problems becomes trivial if you know
 which variables you need to watch.
 
 Despite the power of this technique, it has critics. Some older
-programmers look down on these tools because they make beginning
+programmers look down on these tools because they make new
 programmers lazier and, in some cases, less careful about writing code
 correctly in the first place. It should be noted that step-through
-execution modes are not available for every language and for every
+execution modes are not available for every language or for every
 system. Some embedded software or operating system programming cannot be
 debugged on the real hardware in this way. Of course, most of these
 systems can be run in virtual environments that do allow step-through
 debugging.
 
-Even when step through debugging is available, there are difficulties
+Even when step-through debugging is available, there are difficulties
 that can limit its effectiveness. If the bug occurs sporadically,
-perhaps due to race conditions, a programmer may not know where to start
-looking. Certain data structures such as the `list` template in {cpp} may
+perhaps due to race conditions, a programmer might not know where to start
+looking. Certain data structures such as the `list` template in {cpp} might
 not be easily traversable using the inspection facilities of the
 debugger. Likewise, the bug or the source of the unexplained behavior
-could be buried in library code. The debugger does not always have
+could be buried in library code. The debugger doesn't always have
 access to library code for stepping through.
 
 ==== Breakpoints
@@ -185,9 +183,9 @@ to skip all the preliminary parts of the code and skip straight to the
 perceived trouble spot.
 
 Sometimes an error will predictably crop up after many thousands of
-iterations of a loop or unpredictably in the case of bugs dependent on
-race conditions or user input. For either of these cases, conditional
-breakpoints can be used to save the debugger a great deal of time.
+iterations of a loop or unpredictably due to race conditions or user input.
+For either of these cases, conditional breakpoints can be used to save the
+a programmer a great deal of time.
 Rather than always pausing execution on a given line, a conditional
 breakpoint will only pause if a certain condition is met.
 
@@ -204,7 +202,7 @@ simpler can be done by typing the following.
 assert condition;
 ----
 
-In this case, `condition` is a boolean value that is expected to be true
+In this case, `condition` is a `boolean` value that's expected to be true
 for the program to function properly. The more complicated form of the
 feature can be used as follows.
 
@@ -218,8 +216,8 @@ user more information about the problem. This value can be any primitive
 data type, any object type, or a statement that evaluates to one of the
 two.
 
-If you have never used an `assert` statement before, you might want to
-test it out by forcing an assertion to fail. You might try
+If you've never used an `assert` statement before, you might want to
+test it out by forcing an assertion to fail. You might try the following.
 
 [source,java]
 ----
@@ -227,16 +225,16 @@ int x = 5;
 assert (x < 4) : "x is too large!";
 ----
 
-Then, if you compile your program and run it through the JVM, you will
+Then, if you compile your program and run it through the JVM, you'll
 be shocked when *absolutely nothing happens*. Actually, some of you with
-older Java compilers may have heard complaints when you tried to
-compile. If you have a Java 1.3 compiler or earlier, it will treat
-`assert` like an identifier. Some old Java 1.4 compilers may also give
-warnings or require special flags to be set to compile. However, if you
-have an up to date compiler, the problem is that the JVM must have
+older Java compilers might have heard complaints when you tried to
+compile this code. If you have a Java 1.3 compiler or earlier, it'll treat
+`assert` like an identifier. Some old Java 1.4 compilers might also give
+warnings or require special flags to compile. However, if you
+have an up-to-date compiler, the problem is that the JVM must have
 assertions enabled at runtime. Assertions are intended to be a special
 debugging tool and ignored otherwise. To turn run program
-`AssertionTest` with assertions enabled, type
+`AssertionTest` with assertions enabled, type the following.
 
 ....
 java -ea AssertionTest
@@ -248,16 +246,19 @@ With this option, an exception should be thrown at runtime.
 Exception in thread "main" java.lang.AssertionError: x is too large!
 ....
 
-There are other options allowing you to enable or disable assertions for
-specific packages or classes.
+If you're using an IDE like Eclipse or IntelliJ, you'll need to enable
+assertions on the run configuration for the program, usually by putting `-ea`
+in the field for VM arguments. There are other options allowing you to
+enable or disable assertions for specific packages or classes.
 
 ****
 <<assertExercise>>
 ****
 
-Now that you know how to use assertions, you need to know when they are
-a good idea. The Java Tutorials on the Oracle website suggest five
-situations where assertions are useful: internal invariants,
+Now that you know how to use assertions, you need to know when they're
+a good idea. The https://docs.oracle.com/javase/8/docs/technotes/guides/language/assert.html[Java Tutorials^]
+on the https://www.oracle.com[Oracle^] website suggest five situations
+where assertions are useful: internal invariants,
 control-flow invariants, preconditions for methods, postconditions for
 methods, and class invariants. _Internal invariants_ are those
 situations when you assume that reaching a certain place in your code,
@@ -280,16 +281,16 @@ is fine, since they reflect an error on the part of whoever wrote the
 method. _Class invariants_ are conditions about the state of every
 instance of a class that should be true as long as the class is in a
 consistent state. Perhaps a method call rearranges the innards of an
-object, but, by the end of the method call, the object should be
+object, but by the end of the method call, the object should be
 consistent again. You should use assertions to check class invariants at
 the end of every method that could make the object violate the
 invariants.
 
-Wonderful as assertions are, there are times when they should not be
-used. The key danger of assertions is that they are usually turned off.
-Thus, any statement that is part of an assertion should not have
+Wonderful as assertions are, there are times when they shouldn't be
+used. The key danger of assertions is that they're usually turned off.
+Thus, any statement that's part of an assertion must not have
 side-effects that are necessary for the normal operation of the program.
-For example, imagine that you have a object called `bacteria` that
+For example, imagine you have an object called `bacteria` that
 mutates periodically. The mutation returns `true` if successful and
 `false` if there was an unexpected error. You should *not* test for that
 failure inside an assert, as follows.
@@ -299,7 +300,8 @@ failure inside an assert, as follows.
 assert bacteria.mutate() : "Mutation failed!";
 ----
 
-With assertions disabled, the `bacteria` object will no longer mutate.
+With assertions disabled, the entire assertion is skipped, and the 
+`bacteria` object won't mutate.
 Instead, your assertion should test only the result of the computation.
 
 [source,java]
@@ -309,7 +311,7 @@ assert success : "Mutation failed!";
 ----
 
 As stated above, checking for bad input coming into `public` methods
-should not be done with assertions because turning off assertions will
+shouldn't be done with assertions because turning off assertions will
 remove your error checking.
 
 ==== Print statements
@@ -317,17 +319,17 @@ remove your error checking.
 Print statements are one of the most time-honored methods of debugging
 and remain a quick, dirty, yet effective means of finding errors. Java
 does not provide any special tools to make print statements easier to
-use for debugging. Some purists might argue that all of this kind of
-debugging which focuses on progressively narrowing own the location of a
-problem until the bad assumption, logical error, or typographical error
+use for debugging. Some purists might argue that this kind of
+debugging which focuses on progressively narrowing down the location of a
+problem until the bad assumption, logical mistake, or typographical error
 can be found should be done only with assertions.
 
 Nevertheless, there are a few tips to make print statements a better
 debugging tool in Java. The first is the use of `System.err`. By now,
-you have used `System.out.print()` and `System.out.println()` so many
-times, you are probably tired of them. Any output method that can be
+you've used `System.out.print()` and `System.out.println()` so many
+times that you're probably tired of them. Any output method that can be
 used with `System.out` can also be used with `System.err`. For example,
-there is a `System.err.print()` and a `System.err.println()` method. If
+there's a `System.err.print()` and a `System.err.println()` method. If
 you simply run a program from the command line and watch the output, you
 should see no difference between using `System.out` and `System.err`.
 However, if you redirect the output of your program to a file using the
@@ -336,14 +338,14 @@ Anything printed with `System.err` will be sent to the screen.
 Alternatively, you can redirect `System.err` to a file by using the `2>`
 operator. Using `System.err` makes it easier to separate legitimate
 output from error messages, but it also makes it easier to comment out
-your debug code by doing a find and replace on your code.
+your debug code by doing a find and replace.
 
 A more extensive method for using print statements to debug is by
 defining your own class for printing. Every method in it can call a
 corresponding method in `System.out` or `System.err`. You can define a
 `boolean` value at the class level that determines whether or not
 methods in your debug printing class print or stay silent. When you want
-to change from debugging to your submission or retail version of the
+to change from debugging to your production or retail version of the
 code, you can simply switch this value to `false`.
 
 A "`modernized`" method of using print statements is creating a simple
@@ -351,57 +353,41 @@ GUI instead. In preparing materials for this textbook, we were
 occasionally frustrated by the fact that multiple threads can interfere
 with each other while printing on the screen: You can't always tell
 which thread is printing which characters. By displaying the output of
-each thread in separate `JTextArea` or `JLabel` widgets on a simple GUI,
+each thread in separate `JTextArea` or `JLabel` components on a simple GUI,
 you can disentangle the output of each thread.
 
 ==== Step-through debugging in Java
 
-Since DrJava is a great educational tool and Eclipse is so widely used,
-we are going to review the step-through debugging features of each
-program. Similar tools are available with other IDE's and for most
+Since the Eclipse and IntelliJ IDEs are so widely used,
+we're going to review the step-through debugging features of each
+environment. Similar tools are available with other IDEs and for most
 languages.
 
-The debugger in DrJava is very simple. To enable the debugger, check the
-Debug Mode checkbox in the Debugger menu. Doing so should bring up a
-debugging pane in the DrJava window. In or out of debug mode, it should
-be possible to set breakpoints on any executable line of code, either by
-choosing the Toggle Breakpoint on Current Line command from the Debugger
-menu or by typing `Ctrl+B`. Once you have set at least one breakpoint,
-you can run the program. If a line with a breakpoint on it is reached,
-then the execution of the program will pause.
+In Eclipse, you can set set breakpoints either by right clicking on the shaded bar
+immediately to the left of the line you're interested in or by
+selecting Toggle Breakpoint from the Run menu.  If you try to set a breakpoint
+on an empty or ineligible line of code, Eclipse will set it on the next legal
+one.
 
-In the debugging pane, there should now be a list of threads, with the
-one that hit the breakpoint highlighted. Having reached this point, the
-debugging pane has four buttons you can use to move through code:
-*Resume*, *Step Into*, *Step Over*, and *Step Out*. The *Resume* button
-allows the program to continue execution, until it hits another
-breakpoint. The *Step Into* button advances the execution of the program
-by one statement, moving into a method is there is a method call. The
-*Step Over* button also advances the execution of the program by one
-statement, but it skips over method calls. The *Step Out* button
-advances the execution of the program to the end of the current method
-and returns, popping the current method off the stack.
-
-In the debugging pane, there will be a Watches tab that allows you to
-find out the value of a given variable in local scope. All you need to
-do is type the variable's name, and its value and type should be
-displayed. Next to the Threads tab, there should also be a Stack tab,
-showing the current method call stack.
-
-The Eclipse tools are similar but much more advanced. You can set
-breakpoints in Eclipse either by right clicking on the shaded bar
-immediately to the left of the line you are interested in or by
-selecting Toggle Breakpoint from the Run menu. To debug a program in
+To debug a program in
 Eclipse, right click on the file you wish to run in the Package Explorer
 and select Debug As Java Application. If your program is already set up
 to run, you can simply click the Debug button in the toolbar. Whenever
-you hit a breakpoint, Eclipse will switch to the Debug perspective if it
-is not already there. Once execution is suspended on a breakpoint, you
-can use commands nearly identical to the ones in DrJava. The commands
-Resume, Step Into, and Step Over from the Run menu are the same as
-DrJava versions, and Step Return is the equivalent of Step Out. Eclipse
-adds the useful command Run to Line, which will execute code until it
-reaches the specified line.
+you hit a breakpoint, Eclipse will switch to the Debug perspective if it's
+not already there.
+
+Once execution is suspended on a breakpoint, you
+can use the commands Resume, Step Into, Step Over, and Step Return,
+either from the Run menu or from the toolbar. The Resume command (or F8)
+allows the program to continue execution, until it hits another
+breakpoint. The Step Into command (or F5) advances the execution of the program
+by one statement, moving into a method is there is a method call. The
+Step Over command (or F6) also advances the execution of the program by one
+statement, but it skips over method calls. The Step Return command
+advances the execution of the program to the end of the current method
+and returns, popping the current method off the stack. In the Run menu,
+there's also a useful Run to Line command, which will run code until
+execution reaches the specified line.
 
 By right-clicking on a breakpoint in Eclipse, you can access its
 properties. Though properties, you can specify that a breakpoint only
