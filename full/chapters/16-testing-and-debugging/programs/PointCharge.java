@@ -1,8 +1,8 @@
 public class PointCharge {  
     private double charge;  // C
-    private double x;
-    private double y;
-    private double z;
+	private double x;		// m
+	private double y;		// m
+	private double z;		// m
     public static final double K = 8.9875517873681764e9; // N m^2 C^-2  
       
     public PointCharge(double charge, double x, double y, double z) {

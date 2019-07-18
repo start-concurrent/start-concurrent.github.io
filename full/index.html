@@ -4,18 +4,17 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.5">
+<meta name="generator" content="Asciidoctor 2.0.9">
 <meta name="author" content="Barry Wittman, Tim Korb, Aditya Mathur">
 <title>Start Concurrent: A Gentle Introduction to Concurrent Programming</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
-/* Uncomment @import statement when using as custom stylesheet */
+/* Uncomment @import statement to use as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
-audio,canvas,video{display:inline-block}
+audio,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
-script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:none}
 a:focus{outline:thin dotted}
@@ -220,8 +219,8 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
-.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .listingblock>.content{position:relative}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
@@ -264,7 +263,8 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
@@ -14770,7 +14770,7 @@ time. However, if you increase the values of all three loops too much,
 you may have to wait a long while.</p>
 </li>
 <li>
-<p>In <a href="#_common_pitfalls_2">Section 6.7.4</a>, one of the common loop
+<p>In <a href="#_common_pitfalls">Section 5.3.5</a>, one of the common loop
 mistakes we discuss is an almost infinite loop. Create your own almost
 infinite loop that runs from <code>10</code> to <code>0</code>, incrementing instead of
 decrementing. Time the execution of your program. Unlike our example, do
@@ -34192,25 +34192,25 @@ but not others, why do you think that might be?</p>
 <h3 id="_fixing_bugs">16.1. Fixing bugs</h3>
 <div class="paragraph">
 <p>This chapter is about finding, fixing, and, more importantly, preventing
-bugs in software. This chapter is unique in that it is not based on
-clearly stated concrete problems with straightforward solutions. As it
-stands now, finding and fixing bugs in software, especially concurrent
-software, is a problem which no one has solved completely. The first
+bugs in software. For this book, this chapter is unique in that it&#8217;s not based
+on clearly stated concrete problems with straightforward solutions. Finding
+and fixing bugs in software, especially concurrent
+software, is a problem no one has solved completely. The first
 half of this chapter will focus on common bugs and how to fix them. The
 second half will focus on design techniques for preventing bugs and
-testing to see if any hidden bugs remain in your code.</p>
+testing for bugs hidden in your code.</p>
 </div>
 <div class="sect3">
 <h4 id="_common_sequential_bugs">16.1.1. Common sequential bugs</h4>
 <div class="paragraph">
-<p>We will begin with bugs commonly found in sequential programs, some of
+<p>We&#8217;ll begin with bugs commonly found in sequential programs, some of
 which have already been mentioned as common mistakes in previous
-chapters. We will not discuss syntax errors or any other errors which
+chapters. We won&#8217;t discuss syntax errors or any other errors which
 can be caught at compile time. Instead, all bugs discussed in this
 chapter are run-time bugs.</p>
 </div>
 <div class="paragraph">
-<p>There are an infinite number of possible bugs and so they cannot all be
+<p>There are an infinite number of possible bugs, so they can&#8217;t all be
 listed. Below are a few of the most common categories of bugs to affect
 beginner (and occasionally veteran) programmers.</p>
 </div>
@@ -34219,22 +34219,22 @@ beginner (and occasionally veteran) programmers.</p>
 <dt class="hdlist1">Precision Errors</dt>
 <dd>
 <p>Floating-point numbers have limited precision inside of a computer.
-Programs that assume infinite precision may break when real results
+Programs that assume infinite precision might break when real results
 are slightly larger or smaller than expected.</p>
 </dd>
 <dt class="hdlist1">Overflow and Underflow</dt>
 <dd>
-<p>In some sense the cousin of precision in floating-point types is the
-limited range of values that integer types can take on. If the value
+<p>The cousin of limited precision in floating-point types is the
+limited range of values that integer types can take on. If a value
 goes too high, it wraps back around and becomes a negative number. If
-the values becomes too low, the opposite can happen.</p>
+a value becomes too low, the opposite can happen.</p>
 </dd>
 <dt class="hdlist1">Casting Errors</dt>
 <dd>
 <p>Casting can have many subtle effects in a program. Sometimes
 programmers divide two integers and forget that the result is an
-integer. Incorrectly casting objects can lead to
-<code>ClassCastException</code>s.</p>
+integer. Incorrectly casting objects can also lead to a
+<code>ClassCastException</code>.</p>
 </dd>
 <dt class="hdlist1">Loop Errors</dt>
 <dd>
@@ -34251,7 +34251,7 @@ expected.</p>
 program runs out of memory or a user stops the program externally.</p>
 </li>
 <li>
-<p>Zero loop: The loop does not execute even once, even though the
+<p>Zero loop: The loop doesn&#8217;t execute even once, though the
 programmer expected it to.</p>
 </li>
 </ul>
@@ -34261,9 +34261,8 @@ programmer expected it to.</p>
 <dd>
 <p>If a programmer uses the <code>==</code> operator to compare two references, it
 will be true only if the two references point at the same object.
-Although doing so is occasionally necessary, the <code>equals()</code> method
-should usually be used to compare the attributes of the objects
-pointed at by the references.</p>
+Instead, the <code>equals()</code> method should usually be used to compare the
+attributes of the objects pointed at by the references.</p>
 </dd>
 <dt class="hdlist1">Array Errors</dt>
 <dd>
@@ -34273,13 +34272,13 @@ arrays are:</p>
 <ul>
 <li>
 <p>Out of bounds: A math mistake or an off-by-one error could lead to
-trying to access an element of an array that comes before element 0 or
-after the last element.</p>
+an attempt to access an element of an array that comes before index 0 or
+after the last index.</p>
 </li>
 <li>
 <p>Uninitialized object arrays: Arrays of primitive data types can be
-created and used instantly; however, arrays of object types are filled
-with nulls until each element is assigned an object, often a new
+created and used immediately; however, arrays of object types are filled
+with <code>null</code> values until each element is assigned an object, often a new
 object.</p>
 </li>
 </ul>
@@ -34294,8 +34293,8 @@ visibility of a variable.</p>
 <li>
 <p>Shadowing variables: If a local variable is declared with the same
 name as a field or class variable, changes within a method will be
-made to that local variable. This principle is straightforward, but,
-if a programmer does not notice the shadow declaration, the behavior
+made to that local variable. This principle is straightforward, but
+if a programmer doesn&#8217;t notice the shadow declaration, the behavior
 of the code can be very confusing.</p>
 </li>
 <li>
@@ -34310,12 +34309,12 @@ can still affect it.</p>
 </dd>
 <dt class="hdlist1">Null Pointer Errors</dt>
 <dd>
-<p>By this point in your programming experience, you have almost
-certainly experienced a <code>NullPointerException</code>. This is, in many ways,
-a catch-all category, because a null reference is generally not due to
-a simple typographical error. In the simplest case, a reference simply
-has not been initialized with some default constructor, but more often
-there is a logical error in the design of the code.</p>
+<p>By this point in your programming experience, you&#8217;ve almost
+certainly experienced a <code>NullPointerException</code>. This last kind of bug is,
+in many ways, a catch-all category, because a null reference is generally
+not due to a simple typographical error. In the simplest case, a reference
+simply hasn&#8217;t been initialized with some default constructor, but more often
+there&#8217;s a logical error in the design of the code.</p>
 </dd>
 </dl>
 </div>
@@ -34324,7 +34323,7 @@ there is a logical error in the design of the code.</p>
 <div class="sect2">
 <h3 id="_concepts_approaches_to_debugging">16.2. Concepts: Approaches to debugging</h3>
 <div class="paragraph">
-<p>When you have discovered the existence of a bug, pinning down its cause
+<p>When you&#8217;ve discovered the existence of a bug, pinning down its cause
 can be difficult. There are a number of different techniques that are
 useful for narrowing down the possible problems.</p>
 </div>
@@ -34334,20 +34333,20 @@ useful for narrowing down the possible problems.</p>
 <p>A common cause of program errors is an incorrect assumption by a
 programmer. A programmer can assume that the user will only enter
 positive numbers, that a library call will not throw any exceptions, or
-that a linked list is not empty. Some assumptions are reasonable, but it
-is important to make sure that they are correct.</p>
+that a linked list is never empty. Some assumptions are reasonable, but
+it&#8217;s important to make sure that they&#8217;re correct.</p>
 </div>
 <div class="paragraph">
 <p>Using <em>assertions</em> is a way to check some of your assumptions, often
 those surrounding a method call. In most languages, an assertion tests a
-condition. If that condition is true, nothing happens, but, if it is
+condition. If that condition is true, nothing happens, but if it&#8217;s
 false, the program shuts down or an error or exception is thrown. Using
 assertion statements is particularly important with methods because you
 want to be sure that both your input and output are in the ranges you
 expect them to be.</p>
 </div>
 <div class="paragraph">
-<p>Java supports assertions natively, as we will discuss in the next
+<p>Java supports assertions natively, as we&#8217;ll discuss in the next
 section. However, virtually every language allows you to create your own
 assertions should they not be present as a language construct.</p>
 </div>
@@ -34356,23 +34355,22 @@ assertions should they not be present as a language construct.</p>
 <h4 id="_print_statements">16.2.2. Print statements</h4>
 <div class="paragraph">
 <p>Computer programs execute quickly. Even if they executed a million times
-more slowly no human is sensitive enough to decipher the flow of
+slower, no human is sensitive enough to decipher the flow of
 electrons inside the processor as a program executes. The simple truth
-is that we have no idea what is happening when our programs execute. We
+is that we have no idea what&#8217;s really happening when our programs execute. We
 believe that we understand our programs well, and the output usually
-confirms that our program is doing what we imagine that it should be
-doing.</p>
+confirms that our program is doing what we imagine it should be doing.</p>
 </div>
 <div class="paragraph">
-<p>If the output does not match what is expected, we may not have enough
-data to understand the problem. Since there have been programmers, they
+<p>If the output doesn&#8217;t match our expectations, we might not have enough
+data to understand the problem. As long as there have been programmers, they
 have been printing out additional debug information to find their
 errors. This technique can go a step beyond simple assertion statements
 because you can print out the values of the variables rather than just
-test to see if they are in a range.</p>
+test to see if they&#8217;re in a range.</p>
 </div>
 <div class="paragraph">
-<p>Once you have found the error in your code, it can be tedious to remove
+<p>Once you&#8217;ve found the error in your code, it can be tedious to remove
 all of your debug statements. Some programmers use a special print
 command that can be turned off using a global variable or compiler
 option. Others send their output to <code>stderr</code> so that it doesn&#8217;t
@@ -34385,7 +34383,7 @@ the system, the language, and the individual tastes of the programmer.</p>
 <div class="paragraph">
 <p>With the rise of modern debugging environments, using print statements
 has lost some of its appeal. Most languages allow the programmer to run
-his or her program in a special debug mode in which it is possible to
+his or her program in a special debug mode where it&#8217;s possible to
 execute a single line of code at a time. These tools usually give the
 option of stepping over method calls or stepping into them, on a case by
 case basis.</p>
@@ -34399,23 +34397,23 @@ which variables you need to watch.</p>
 </div>
 <div class="paragraph">
 <p>Despite the power of this technique, it has critics. Some older
-programmers look down on these tools because they make beginning
+programmers look down on these tools because they make new
 programmers lazier and, in some cases, less careful about writing code
 correctly in the first place. It should be noted that step-through
-execution modes are not available for every language and for every
+execution modes are not available for every language or for every
 system. Some embedded software or operating system programming cannot be
 debugged on the real hardware in this way. Of course, most of these
 systems can be run in virtual environments that do allow step-through
 debugging.</p>
 </div>
 <div class="paragraph">
-<p>Even when step through debugging is available, there are difficulties
+<p>Even when step-through debugging is available, there are difficulties
 that can limit its effectiveness. If the bug occurs sporadically,
-perhaps due to race conditions, a programmer may not know where to start
-looking. Certain data structures such as the <code>list</code> template in C&#43;&#43; may
+perhaps due to race conditions, a programmer might not know where to start
+looking. Certain data structures such as the <code>list</code> template in C&#43;&#43; might
 not be easily traversable using the inspection facilities of the
 debugger. Likewise, the bug or the source of the unexplained behavior
-could be buried in library code. The debugger does not always have
+could be buried in library code. The debugger doesn&#8217;t always have
 access to library code for stepping through.</p>
 </div>
 </div>
@@ -34431,9 +34429,9 @@ perceived trouble spot.</p>
 </div>
 <div class="paragraph">
 <p>Sometimes an error will predictably crop up after many thousands of
-iterations of a loop or unpredictably in the case of bugs dependent on
-race conditions or user input. For either of these cases, conditional
-breakpoints can be used to save the debugger a great deal of time.
+iterations of a loop or unpredictably due to race conditions or user input.
+For either of these cases, conditional breakpoints can be used to save the
+a programmer a great deal of time.
 Rather than always pausing execution on a given line, a conditional
 breakpoint will only pause if a certain condition is met.</p>
 </div>
@@ -34454,7 +34452,7 @@ simpler can be done by typing the following.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In this case, <code>condition</code> is a boolean value that is expected to be true
+<p>In this case, <code>condition</code> is a <code>boolean</code> value that&#8217;s expected to be true
 for the program to function properly. The more complicated form of the
 feature can be used as follows.</p>
 </div>
@@ -34470,8 +34468,8 @@ data type, any object type, or a statement that evaluates to one of the
 two.</p>
 </div>
 <div class="paragraph">
-<p>If you have never used an <code>assert</code> statement before, you might want to
-test it out by forcing an assertion to fail. You might try</p>
+<p>If you&#8217;ve never used an <code>assert</code> statement before, you might want to
+test it out by forcing an assertion to fail. You might try the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -34480,16 +34478,16 @@ test it out by forcing an assertion to fail. You might try</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Then, if you compile your program and run it through the JVM, you will
+<p>Then, if you compile your program and run it through the JVM, you&#8217;ll
 be shocked when <strong>absolutely nothing happens</strong>. Actually, some of you with
-older Java compilers may have heard complaints when you tried to
-compile. If you have a Java 1.3 compiler or earlier, it will treat
-<code>assert</code> like an identifier. Some old Java 1.4 compilers may also give
-warnings or require special flags to be set to compile. However, if you
-have an up to date compiler, the problem is that the JVM must have
+older Java compilers might have heard complaints when you tried to
+compile this code. If you have a Java 1.3 compiler or earlier, it&#8217;ll treat
+<code>assert</code> like an identifier. Some old Java 1.4 compilers might also give
+warnings or require special flags to compile. However, if you
+have an up-to-date compiler, the problem is that the JVM must have
 assertions enabled at runtime. Assertions are intended to be a special
 debugging tool and ignored otherwise. To turn run program
-<code>AssertionTest</code> with assertions enabled, type</p>
+<code>AssertionTest</code> with assertions enabled, type the following.</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -34505,8 +34503,10 @@ debugging tool and ignored otherwise. To turn run program
 </div>
 </div>
 <div class="paragraph">
-<p>There are other options allowing you to enable or disable assertions for
-specific packages or classes.</p>
+<p>If you&#8217;re using an IDE like Eclipse or IntelliJ, you&#8217;ll need to enable
+assertions on the run configuration for the program, usually by putting <code>-ea</code>
+in the field for VM arguments. There are other options allowing you to
+enable or disable assertions for specific packages or classes.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -34516,9 +34516,10 @@ specific packages or classes.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now that you know how to use assertions, you need to know when they are
-a good idea. The Java Tutorials on the Oracle website suggest five
-situations where assertions are useful: internal invariants,
+<p>Now that you know how to use assertions, you need to know when they&#8217;re
+a good idea. The <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/language/assert.html" target="_blank" rel="noopener">Java Tutorials</a>
+on the <a href="https://www.oracle.com" target="_blank" rel="noopener">Oracle</a> website suggest five situations
+where assertions are useful: internal invariants,
 control-flow invariants, preconditions for methods, postconditions for
 methods, and class invariants. <em>Internal invariants</em> are those
 situations when you assume that reaching a certain place in your code,
@@ -34542,17 +34543,17 @@ is fine, since they reflect an error on the part of whoever wrote the
 method. <em>Class invariants</em> are conditions about the state of every
 instance of a class that should be true as long as the class is in a
 consistent state. Perhaps a method call rearranges the innards of an
-object, but, by the end of the method call, the object should be
+object, but by the end of the method call, the object should be
 consistent again. You should use assertions to check class invariants at
 the end of every method that could make the object violate the
 invariants.</p>
 </div>
 <div class="paragraph">
-<p>Wonderful as assertions are, there are times when they should not be
-used. The key danger of assertions is that they are usually turned off.
-Thus, any statement that is part of an assertion should not have
+<p>Wonderful as assertions are, there are times when they shouldn&#8217;t be
+used. The key danger of assertions is that they&#8217;re usually turned off.
+Thus, any statement that&#8217;s part of an assertion must not have
 side-effects that are necessary for the normal operation of the program.
-For example, imagine that you have a object called <code>bacteria</code> that
+For example, imagine you have an object called <code>bacteria</code> that
 mutates periodically. The mutation returns <code>true</code> if successful and
 <code>false</code> if there was an unexpected error. You should <strong>not</strong> test for that
 failure inside an assert, as follows.</p>
@@ -34563,7 +34564,8 @@ failure inside an assert, as follows.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>With assertions disabled, the <code>bacteria</code> object will no longer mutate.
+<p>With assertions disabled, the entire assertion is skipped, and the
+<code>bacteria</code> object won&#8217;t mutate.
 Instead, your assertion should test only the result of the computation.</p>
 </div>
 <div class="listingblock">
@@ -34574,7 +34576,7 @@ Instead, your assertion should test only the result of the computation.</p>
 </div>
 <div class="paragraph">
 <p>As stated above, checking for bad input coming into <code>public</code> methods
-should not be done with assertions because turning off assertions will
+shouldn&#8217;t be done with assertions because turning off assertions will
 remove your error checking.</p>
 </div>
 </div>
@@ -34584,18 +34586,18 @@ remove your error checking.</p>
 <p>Print statements are one of the most time-honored methods of debugging
 and remain a quick, dirty, yet effective means of finding errors. Java
 does not provide any special tools to make print statements easier to
-use for debugging. Some purists might argue that all of this kind of
-debugging which focuses on progressively narrowing own the location of a
-problem until the bad assumption, logical error, or typographical error
+use for debugging. Some purists might argue that this kind of
+debugging which focuses on progressively narrowing down the location of a
+problem until the bad assumption, logical mistake, or typographical error
 can be found should be done only with assertions.</p>
 </div>
 <div class="paragraph">
 <p>Nevertheless, there are a few tips to make print statements a better
 debugging tool in Java. The first is the use of <code>System.err</code>. By now,
-you have used <code>System.out.print()</code> and <code>System.out.println()</code> so many
-times, you are probably tired of them. Any output method that can be
+you&#8217;ve used <code>System.out.print()</code> and <code>System.out.println()</code> so many
+times that you&#8217;re probably tired of them. Any output method that can be
 used with <code>System.out</code> can also be used with <code>System.err</code>. For example,
-there is a <code>System.err.print()</code> and a <code>System.err.println()</code> method. If
+there&#8217;s a <code>System.err.print()</code> and a <code>System.err.println()</code> method. If
 you simply run a program from the command line and watch the output, you
 should see no difference between using <code>System.out</code> and <code>System.err</code>.
 However, if you redirect the output of your program to a file using the
@@ -34604,7 +34606,7 @@ Anything printed with <code>System.err</code> will be sent to the screen.
 Alternatively, you can redirect <code>System.err</code> to a file by using the <code>2&gt;</code>
 operator. Using <code>System.err</code> makes it easier to separate legitimate
 output from error messages, but it also makes it easier to comment out
-your debug code by doing a find and replace on your code.</p>
+your debug code by doing a find and replace.</p>
 </div>
 <div class="paragraph">
 <p>A more extensive method for using print statements to debug is by
@@ -34612,7 +34614,7 @@ defining your own class for printing. Every method in it can call a
 corresponding method in <code>System.out</code> or <code>System.err</code>. You can define a
 <code>boolean</code> value at the class level that determines whether or not
 methods in your debug printing class print or stay silent. When you want
-to change from debugging to your submission or retail version of the
+to change from debugging to your production or retail version of the
 code, you can simply switch this value to <code>false</code>.</p>
 </div>
 <div class="paragraph">
@@ -34621,87 +34623,130 @@ GUI instead. In preparing materials for this textbook, we were
 occasionally frustrated by the fact that multiple threads can interfere
 with each other while printing on the screen: You can&#8217;t always tell
 which thread is printing which characters. By displaying the output of
-each thread in separate <code>JTextArea</code> or <code>JLabel</code> widgets on a simple GUI,
+each thread in separate <code>JTextArea</code> or <code>JLabel</code> components on a simple GUI,
 you can disentangle the output of each thread.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_step_through_debugging_in_java">16.3.3. Step-through debugging in Java</h4>
 <div class="paragraph">
-<p>Since DrJava is a great educational tool and Eclipse is so widely used,
-we are going to review the step-through debugging features of each
-program. Similar tools are available with other IDE&#8217;s and for most
+<p>Since the Eclipse and IntelliJ IDEs are so widely used,
+we&#8217;re going to review the step-through debugging features of each
+environment. Similar tools are available with other IDEs and for most
 languages.</p>
 </div>
+<div class="sect4">
+<h5 id="_eclipse">Eclipse</h5>
 <div class="paragraph">
-<p>The debugger in DrJava is very simple. To enable the debugger, check the
-Debug Mode checkbox in the Debugger menu. Doing so should bring up a
-debugging pane in the DrJava window. In or out of debug mode, it should
-be possible to set breakpoints on any executable line of code, either by
-choosing the Toggle Breakpoint on Current Line command from the Debugger
-menu or by typing <code>Ctrl+B</code>. Once you have set at least one breakpoint,
-you can run the program. If a line with a breakpoint on it is reached,
-then the execution of the program will pause.</p>
+<p>In Eclipse, you can set set breakpoints either by right clicking or double clicking
+on the shaded bar immediately to the left of the line you&#8217;re interested in or by
+selecting Toggle Breakpoint from the Run menu.  If you try to set a breakpoint
+on an empty or ineligible line of code, Eclipse will set it on the next legal
+one.</p>
 </div>
 <div class="paragraph">
-<p>In the debugging pane, there should now be a list of threads, with the
-one that hit the breakpoint highlighted. Having reached this point, the
-debugging pane has four buttons you can use to move through code:
-<strong>Resume</strong>, <strong>Step Into</strong>, <strong>Step Over</strong>, and <strong>Step Out</strong>. The <strong>Resume</strong> button
-allows the program to continue execution, until it hits another
-breakpoint. The <strong>Step Into</strong> button advances the execution of the program
-by one statement, moving into a method is there is a method call. The
-<strong>Step Over</strong> button also advances the execution of the program by one
-statement, but it skips over method calls. The <strong>Step Out</strong> button
-advances the execution of the program to the end of the current method
-and returns, popping the current method off the stack.</p>
-</div>
-<div class="paragraph">
-<p>In the debugging pane, there will be a Watches tab that allows you to
-find out the value of a given variable in local scope. All you need to
-do is type the variable&#8217;s name, and its value and type should be
-displayed. Next to the Threads tab, there should also be a Stack tab,
-showing the current method call stack.</p>
-</div>
-<div class="paragraph">
-<p>The Eclipse tools are similar but much more advanced. You can set
-breakpoints in Eclipse either by right clicking on the shaded bar
-immediately to the left of the line you are interested in or by
-selecting Toggle Breakpoint from the Run menu. To debug a program in
+<p>To debug a program in
 Eclipse, right click on the file you wish to run in the Package Explorer
-and select Debug As Java Application. If your program is already set up
+and select Debug As Java Application. If your program&#8217;s already set up
 to run, you can simply click the Debug button in the toolbar. Whenever
-you hit a breakpoint, Eclipse will switch to the Debug perspective if it
-is not already there. Once execution is suspended on a breakpoint, you
-can use commands nearly identical to the ones in DrJava. The commands
-Resume, Step Into, and Step Over from the Run menu are the same as
-DrJava versions, and Step Return is the equivalent of Step Out. Eclipse
-adds the useful command Run to Line, which will execute code until it
-reaches the specified line.</p>
+you hit a breakpoint, Eclipse will switch to the Debug perspective if it&#8217;s
+not already there.</p>
+</div>
+<div class="paragraph">
+<p>Once execution is suspended on a breakpoint, you
+can use the commands Resume, Step Into, Step Over, and Step Return,
+either from the Run menu or from the toolbar. The Resume command (or F8)
+allows the program to continue execution, until it hits another
+breakpoint. The Step Into command (or F5) advances the execution of the program
+by one statement, moving into a method is there is a method call. The
+Step Over command (or F6) also advances the execution of the program by one
+statement, but it skips over method calls. The Step Return (or F7) command
+advances the execution of the program to the end of the current method
+and returns, popping the current method off the stack. In the Run menu,
+there&#8217;s also a useful Run to Line command, which will run code until
+execution reaches the line where your cursor is.</p>
 </div>
 <div class="paragraph">
 <p>By right-clicking on a breakpoint in Eclipse, you can access its
 properties. Though properties, you can specify that a breakpoint only
 halts execution when a specific condition is true or only for a specific
-thread. The more advanced debugging in Eclipse also provides more
-comprehensive variable watch and inspection options. Simply by hovering
+thread. Eclipse also provides variable watch and inspection options. Simply by hovering
 over a variable, its type and value are displayed. You can also inspect
-an object and traverse its fields. As with DrJava, you can explicitly
-watch variables, but local variables are also displayed by default.</p>
+an object and traverse its fields. The Variables pane will show the values
+of local variables, and the Breakpoints pane will show active and inactive
+breakpoints.</p>
 </div>
 <div class="paragraph">
-<p>The difference between a good programmer and a bad programmer is often
-just experience. Having seen a bug before means you know to expect it in
-the future. There is no substitute for pulling your hair out over a bug
-for hours before finally squashing it, but we will give a few examples
-corresponding to the common bugs listed in <a href="#_fixing_bugs">Section 16.1</a>.</p>
+<p>The Debug pane will show a view of the stack for each thread.  By moving up
+and down the stack, the local variables will change depending on which method
+call you&#8217;re currently inside of.  By default, the method call displayed will
+be wherever code most recently executed, but it&#8217;s useful to jump back to the
+method that called the current method (and the method that called that, and so
+on) to better understand the overall state of the program and why the current
+method call has the parameters that it does.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_intellij">IntelliJ</h5>
+<div class="paragraph">
+<p>The debugging facilities provided by IntelliJ are similar to those found
+in Eclipse, and many developers prefer them.  You can click in the space to
+the left of a line of code to set or remove a breakpoint, and you can edit its
+properties with a right-click.</p>
+</div>
+<div class="paragraph">
+<p>You can start your program running in debug mode by clicking
+the Debug button on the toolbar or selecting Debug (Shift+F9) from the Run
+menu.  When execution of your program reaches a breakpoint and pauses, you
+can use essentially the same tools to advance execution as you can in Eclipse.</p>
+</div>
+<div class="paragraph">
+<p>The Resume Program command (or F9) will continue execution.  The Step Into
+command (or F7) will advance execution by one line, moving into a method call
+if there is one. IntelliJ also has a Smart Step Into command (or Shift+F7) that
+allows you to pick which method call to step into if there&#8217;s more than one on
+the next line.  The Step Over command (or F8) advances execution by one line
+but does not move into a method call.  The Step Out command (or Shift+F8)
+returns from the current method.  IntelliJ also has a Run to Cursor command
+that will try to execute code until reaching the line where your cursor is.
+All of these commands can be found in the Run menu, and the most common ones
+appear on toolbars.</p>
+</div>
+<div class="paragraph">
+<p>In addition, IntelliJ has &#8220;force&#8221; versions of most of these commands which
+step over a line of code, step into a method call, or run to your cursor,
+ignoring breakpoints that might pause execution.</p>
+</div>
+<div class="paragraph">
+<p>IntelliJ has a Frames pane similar to the Debug pane in Eclipse.  It allows
+the user to select a given thread and jump to different method calls in the
+stack for that thread.  Likewise, IntelliJ has a Variables pane that shows the
+state of the local variables for the current method call.  One of the features
+that developers like the most about IntelliJ is that it displays the values that
+variables have on each line where they&#8217;re used.  In other words, a line of code
+that adds variables <code>x</code> and <code>y</code> will display their values off to the side of the
+line of code, updating the display each time the line&#8217;s executed.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_examples">16.3.4. Examples</h4>
+<div class="paragraph">
+<p>Experience is often the difference between a good programmer and a bad
+programmer. Having seen a bug before means you know to expect it in
+the future. Don&#8217;t be discouraged if it takes hours to find a bug and squash it.
+Although that time is stressful, spending hours poring over your program makes
+you better at reading code, a skill just as valuable as writing code. And when
+you&#8217;ve spent hours trying to fix a simple mistake, you&#8217;re unlikely to make the
+same mistake again. To make it easier to spot some of these mistakes, we give a
+few examples corresponding to the common bugs listed in <a href="#_fixing_bugs">Section 16.1</a>.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 16.1 Precision errors</div>
 <div class="content">
 <div class="paragraph">
-<p>Precision can cause some subtle errors, especially with <code>float</code> types.
-Here is an example of a program attributed to Cleve Moler that gives
+<p>Precision can cause subtle errors, especially with floating-point types.
+Here&#8217;s an example of a program attributed to Cleve Moler that gives
 some estimation of the threshold for floating-point precision. Note that
 <code>a</code> ≈ 4/3, making <code>b</code> ≈ 1/3, <code>c</code>
 ≈ 1, and <code>d</code> ≈ 0. Nevertheless,
@@ -34710,25 +34755,23 @@ evaluate to <code>false</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">,</span> <span class="n">d</span><span class="o">;</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="o">;</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="o">;</span>
+<span class="kt">double</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+<span class="kt">double</span> <span class="n">c</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span>
+<span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">d</span><span class="o">);</span>
 <span class="k">if</span><span class="o">(</span><span class="n">d</span> <span class="o">==</span> <span class="mf">0.0</span><span class="o">)</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Success!"</span><span class="o">);</span></code></pre>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Success!"</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The output for this fragment is <code>-2.220446049250313E-16</code>. Computer
-scientists who specialize in numerical analysis have tricks for
-minimizing the amount of floating-point error introduced, but awareness
-is an easy solution to these kinds of bugs. When testing for specific
-values of a floating-point number, it is wise to test for a range rather
-than a single value. For example, the condition <code>(d == 0.0)</code> could be
-replaced by <code>(Math.abs(d) &lt; 0.000001)</code>.</p>
+<p>The output for this fragment is <code>-2.220446049250313E-16</code>, and it would be
+much worse with <code>float</code> variables. Computer scientists who specialize in
+numerical analysis have tricks for minimizing the amount of floating-point
+error introduced, but awareness is an easy solution to these kinds of bugs.
+When testing for specific values of a floating-point number, it&#8217;s wise to
+test for a range rather than a single value. For example, the condition
+<code>d == 0.0</code> could be replaced by <code>Math.abs(d) &lt; 0.000001</code>.</p>
 </div>
 </div>
 </div>
@@ -34736,7 +34779,7 @@ replaced by <code>(Math.abs(d) &lt; 0.000001)</code>.</p>
 <div class="title">Example 16.2 Overflow and underflow</div>
 <div class="content">
 <div class="paragraph">
-<p>As you well know, the <code>int</code> and <code>long</code> types have limited bits for
+<p>As you know, the <code>int</code> and <code>long</code> types have limited bits for
 storage. If an arithmetic operation pushes the value of an <code>int</code>
 variable larger than <code>Integer.MAX_VALUE</code>, the variable will come full
 circle and become a negative number, usually with a large magnitude. The
@@ -34744,15 +34787,15 @@ converse happens when a variable is pushed lower than the smallest value
 it can hold. These situations are called overflow and underflow,
 respectively, and Java throws no exceptions when they occur. Programmers
 who deal with large magnitude values in <code>int</code> or <code>long</code> types get used
-to underflow and overflow, and, when unexpected values are output by
-their programs, they are usually quick to pin down the problem variable.</p>
+to underflow and overflow, and when unexpected values are output by
+their programs, they&#8217;re usually quick to pin down the problem variable.</p>
 </div>
 <div class="paragraph">
-<p>Overflow and underflow can cause much more subtle bugs when programmers
-forget the limited range of values for <code>byte</code> and <code>char</code> types. For
+<p>Overflow and underflow can cause more surprising bugs when programmers
+forget the sharply limited range of values for <code>byte</code> and <code>char</code> types. For
 example, a curious beginner programmer might want to print out a table
 of all of the possible values for <code>char</code>. Perhaps the programmer has
-forgotten the range of values a <code>char</code> can take. Perhaps surprisingly,
+forgotten the range of values a <code>char</code> can take and is stumped when
 the following loop does not terminate.</p>
 </div>
 <div class="listingblock">
@@ -34765,8 +34808,8 @@ the following loop does not terminate.</p>
 <p>Each time <code>letter</code> reaches <code>Character.MAX_VALUE</code> which is <code>'\uFFFF'</code> or
 <code>65535</code> as a numerical value, the next increment pushes its value back
 to 0. These kinds of errors with <code>byte</code> and <code>char</code> values are most
-common when variables of those types are being used as numbers. Some
-examples are cryptography, low level file operations, and manipulation
+common when they&#8217;re being used as numbers. Some
+possibilities are cryptography, low level file operations, and manipulation
 of multimedia data. The best solution is care and attention. It can help
 to store the values in variables with more bits such as <code>int</code> or <code>long</code>
 values, but care must still be taken to ensure that these values are
@@ -34776,11 +34819,11 @@ with a smaller number of bits.</p>
 <div class="paragraph">
 <p>For example, color values in many image formats are stored as red, green
 blue values with a <code>byte</code> used for each of the three colors. In this
-system, the darkest color, black, is represented as <code>(0,0,0)</code>, i.e. zero
-values for each of the three <code>byte</code>s. At the same time, the lightest
+system, the darkest color, black, is represented as <code>(0,0,0)</code>, zero
+values for each of the three <code>byte</code> values. At the same time, the lightest
 color, white, is represented conceptually as <code>(255,255,255)</code>. In
-principle, we can perform a very simple filter to increase contrast and
-lightness by simply doubling all the pixel values. Given red, green, and
+principle, we can perform a simple filter to increase contrast and
+lightness by doubling all the pixel values. Given red, green, and
 blue color values stored in three <code>byte</code> variables called <code>red</code>,
 <code>green</code>, and <code>blue</code>, a naive implementation of this filter might be as
 follows.</p>
@@ -34799,7 +34842,7 @@ Java <code>byte</code> values are <strong>signed</strong>. The web standard for 
 has red, green, and blue values of <code>(128,0,128)</code>. Since Java <code>byte</code>
 values are signed, printing the <code>byte</code> values for each component of
 purple directly will actually print <code>(-128,0,-128)</code>. Multiplying the
-green value by 2 is clearly still 0. However, multiplying -128 by 2 as a
+green value by 2 still gives 0. However, multiplying -128 by 2 as a
 <code>byte</code> value is -256 which underflows back to 0. Thus, &#8220;brightening&#8221;
 purple actually turns it into <code>(0,0,0)</code>, black. Properly applying the
 filter to a <code>byte</code> requires a conversion to the <code>int</code> type, masking out
@@ -34809,7 +34852,8 @@ too unwieldy.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">red</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="mi">255</span><span class="o">,</span> <span class="mi">2</span><span class="o">*(</span><span class="n">red</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="o">));</span> <span class="c1">// Bitwise AND automatically upcasts to int</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="c1">// Bitwise AND automatically upcasts to int</span>
+<span class="n">red</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="mi">255</span><span class="o">,</span> <span class="mi">2</span><span class="o">*(</span><span class="n">red</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="o">));</span>
 <span class="n">green</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="mi">255</span><span class="o">,</span> <span class="mi">2</span><span class="o">*(</span><span class="n">green</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="o">));</span>
 <span class="n">blue</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="mi">255</span><span class="o">,</span> <span class="mi">2</span><span class="o">*(</span><span class="n">blue</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="o">));</span></code></pre>
 </div>
@@ -34820,16 +34864,15 @@ too unwieldy.</p>
 <div class="title">Example 16.3 Casting errors</div>
 <div class="content">
 <div class="paragraph">
-<p>The previous example about scaling color component values is an
-excellent example of the dangers of casting. Someone can easily forget
-that the implicit cast to convert a <code>byte</code> to an <code>int</code> always uses a
-signed conversion. Likewise, the explicit cast needed to store an <code>int</code>
-into a <code>byte</code> will cheerfully convert any arbitrarily large <code>int</code> into a
-<code>byte</code>, even though the final value might not be expected by the
-programmer.</p>
+<p>The previous example about scaling color component values shows one of the
+dangers of casting. Someone can easily forget that the implicit cast to
+convert a <code>byte</code> to an <code>int</code> always uses a signed conversion. Likewise, the
+explicit cast needed to store an <code>int</code> into a <code>byte</code> will cheerfully convert
+any arbitrarily large <code>int</code> into a <code>byte</code>, even though the final value might
+not be expected by the programmer.</p>
 </div>
 <div class="paragraph">
-<p>Many other casting errors crop up commonly. The most classic example
+<p>Many other casting errors commonly crop up. The most classic example
 might be muddling floating-point and integer types.</p>
 </div>
 <div class="listingblock">
@@ -34840,7 +34883,7 @@ might be muddling floating-point and integer types.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Above, it is easy for a programmer to forget that the division of <code>x</code>
+<p>Above, it&#8217;s easy for a programmer to forget that the division of <code>x</code>
 and <code>y</code> is integer division. After all, the <code>2.0</code> is right there,
 causing an implicit cast to <code>double</code>. Of course, this cast happens after
 the division, and the answer stored into <code>value</code> is <code>2.0</code> and not the
@@ -34877,23 +34920,22 @@ the programmer thought that the only <code>Fruit</code> that would be pointed at
 a <code>snack</code> reference would be of type <code>Apple</code>. Instead of a mouth on
 fire, the programmer gets a <code>ClassCastException</code>. This two line example
 is so simple that it should never come up in serious programming. A much
-more common example is an array or linked-list whose type is some
-superclass of the item you generally expect to be in there. If a large
-team is working on a body of code which such a list in it, half of the
+more common example is an array or linked-list whose contents have a type
+that&#8217;s the parent class of the item you generally expect to be stored. If a large
+team is working on a body of code with such a list, half of the
 team might expect the list to contain only <code>Apple</code> objects while the
 other expected only <code>ChiliPepper</code> objects. The use of generics,
-discussed in <a href="#ch18-dynamic-data-structures">Chapter 18</a>, can reduce the
-number of casting errors of this kind, but some applications require a
+discussed in <a href="#ch18-dynamic-data-structures">Chapter 18</a>,
+can reduce the number of casting errors of this kind, but some applications require a
 list to hold many different types with a common superclass. In those
 cases, some amount of explicit (and therefore dangerous) casting will
-usually be necessary when retrieving the objects from the list.</p>
+usually be necessary when retrieving objects.</p>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>Loops give Java much of its expressive power and unsurprisingly give it
-much of its power to express incorrect as well as correct code. We are
-just going to mention a few of the most common loop errors.</p>
+<p>Loops give Java much of its expressive power, which includes the power to
+express incorrect code. We&#8217;re going to mention a few of the most common loop errors.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 16.4 Off-by-one errors</div>
@@ -34901,25 +34943,24 @@ just going to mention a few of the most common loop errors.</p>
 <div class="paragraph">
 <p>Computer scientists often use zero-based counting. This departure from
 &#8220;normal&#8221; practices is just one source of loops that iterate one time
-more or less than they should. A good rule of thumb is, if you want to
-iterate <em>n</em> times, start at 0 and go up to but not including
-<em>n</em>. Alternatively, if you have a reason not to be
-zero-based, you can start at 1 and go up to and including
-<em>n</em>.</p>
+more or less than they should. If you want to iterate <em>n</em> times, a good
+rule of thumb is to start at 0 and to go up to <strong>but not including</strong> <em>n</em>.
+Alternatively, if you have a reason not to be zero-based, you can start
+at 1 and go up to <strong>and including</strong> <em>n</em>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Question "</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="s">"."</span><span class="o">);</span></code></pre>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Question "</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="s">"."</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Perhaps you want to make a template for an exam. Instead of being
-zero-based, you start at 1 because most exams do not have a Question 0.
-Unfortunately, you have gotten so used to use a strictly less than for
-your ending condition, you forget to change it. You only get 49
-questions printed out. If your only purpose is making an exam, you can
-catch your mistake and move on. If you are writing a program that
+zero-based, you start at 1 because most exams don&#8217;t have a Question 0.
+Unfortunately, you&#8217;ve gotten so used to using strictly less than for
+your ending condition that you forget to change it. You only get 49
+questions printed out. If your purpose was making an exam, you can
+catch your mistake and move on. If you&#8217;re writing a program that
 dispenses a quantity of heart medication into a patient&#8217;s IV in a
 hospital, one iteration too few or too many could cause the patient to
 get too little of the drug to make a difference or too much of the drug
@@ -34954,10 +34995,10 @@ Unfortunately, the value of <code>count</code> is incremented for every turn of 
 loop, even the extra one for the negative number. To combat this
 problem, an <code>if</code> statement could be used inside of the loop or <code>count</code>
 could simply be initialized to <code>-1</code>. The mistake is a simple one, but it
-doesn&#8217;t jump out at you unless you trace a few executions. What is most
-insidious is that, especially for large sets of input numbers, the error
-is going to be small. Catching this kind of bug will be discussed more
-throughly in the second half of this chapter, dealing with testing.</p>
+doesn&#8217;t jump out at you unless you trace a few executions. What&#8217;s most
+insidious is that the error is going to be small, especially for large
+sets of input numbers. Catching this kind of bug will be discussed more
+throughly in the second half of this chapter which deals with testing.</p>
 </div>
 </div>
 </div>
@@ -34982,12 +35023,12 @@ the most classic is:</p>
 </div>
 <div class="paragraph">
 <p>It&#8217;s usually a beginning programmer who leaves a semicolon at the end of
-the <code>while</code> header, but even veterans can get a little enthusiastic
+the <code>while</code> header, but even veterans can get overly enthusiastic
 about semicolons. Often a programmer confronted with such a bug (which
-causes no ouput, in this case) will scour the body of the loop for some
-clue as to why it isn&#8217;t advancing yet never carefully scrutinizing the
-condition. An extra semicolon the end of a <code>for</code> loop header will
-usually cause an error but will usually <strong>not</strong> cause an infinite loop.</p>
+causes no ouput, in this case) will scour the body of the loop without
+carefully scrutinizing the condition. An extra semicolon at the end of
+a <code>for</code> loop header will usually cause an error but will usually <strong>not</strong>
+cause an infinite loop.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -35022,19 +35063,19 @@ statement:</p>
 <p>Those two small changes turn the method into a working but slightly
 inelegant solution. When debugging remember that index variables in
 <code>for</code> loops can get changed in the body of the loop and change the
-expected behavior. Generally it is a bad idea to change the value of an
+expected behavior. Generally, it&#8217;s a bad idea to change the value of an
 index variable anywhere other than the header of a <code>for</code> loop, but there
 are times when doing so gives the cleanest solution.</p>
 </div>
 <div class="paragraph">
-<p>Many loop errors are caused by a bad header. Getting the an inequality
+<p>Many loop errors are caused by a bad header. Getting the inequality
 backwards or switching increment and decrement will usually make a loop
 that runs a very long time or not at all. We&#8217;ll see the second
 possibility just a little later.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="k">for</span> <span class="o">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="k">for</span><span class="o">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
   <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">);</span>
 <span class="o">}</span>
 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Blast-off!"</span><span class="o">);</span></code></pre>
@@ -35073,11 +35114,11 @@ loop to execute.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We have just returned to our earlier example of averaging a set of
-numbers input by the user. This time we have intialized <code>count</code> to be -1
-to avoid the off-by-one error, but we have also changed the inequality
+<p>We&#8217;ve returned to our earlier example of averaging a set of
+numbers input by the user. This time we&#8217;ve intialized <code>count</code> to be -1
+to avoid the off-by-one error, but we&#8217;ve also changed the inequality
 of the <code>while</code> loop from greater than or equal to strictly greater. As a
-consequence, the loop is never entered because the zero, the initial
+consequence, the loop is never entered because 0, the initial
 value of <code>i</code>, is too small.</p>
 </div>
 <div class="listingblock">
@@ -35087,13 +35128,14 @@ value of <code>i</code>, is too small.</p>
         <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
             <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
     <span class="o">}</span>
+	<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Here is a simple method intended to test the number <code>n</code> for primality.
+<p>Here&#8217;s a simple method intended to test the number <code>n</code> for primality.
 Unfortunately, the programmer started the index <code>i</code> at 1 instead of 2.
-As a consequence, this loop will only run once before finding that every
+As a consequence, this loop will only run once before finding that any
 number is divisible by 1. True, this is not a loop that executes zero
 times, but only once is still just as wrong.</p>
 </div>
@@ -35110,7 +35152,7 @@ times, but only once is still just as wrong.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This example is very similar code, trying to solve the same problem.
+<p>This example is similar code trying to solve the same problem.
 Again, the loop only runs once because the programmer forgot that
 finding a single case when a number is not evenly divisible by another
 number does not make it prime. Many, many beginning programmers make
@@ -35118,9 +35160,9 @@ this mistake when asked to solve this problem. Perhaps some insight
 about the nature of bugs can be gained from this example. By the time a
 student writes a program of this kind, he or she should have a fair idea
 of how <code>for</code> loops and <code>if</code> statements work. Likewise, the student will
-have a fair understanding of the notion of primality. Yet, in the
-process of combining the ideas together, it is easy to get sloppy and
-write code that gives some semblance of being correct without being.</p>
+have a fair understanding of the notion of primality. Yet in the
+process of combining the ideas together, it&#8217;s easy to get sloppy and
+write incorrect code that gives some semblance of being correct.</p>
 </div>
 </div>
 </div>
@@ -35148,7 +35190,7 @@ object.</p>
 <div class="paragraph">
 <p>Because these two <code>String</code> references point to two different <code>String</code>
 objects, which happen to have identical contents, the <code>==</code> returns
-<code>false</code> and the output is <code>Different</code>. With <code>String</code> objects this matter
+<code>false</code>, and the output is <code>Different</code>. With <code>String</code> objects this matter
 is further confused by a Java optimization called <code>String</code> pooling.</p>
 </div>
 <div class="listingblock">
@@ -35166,21 +35208,21 @@ is further confused by a Java optimization called <code>String</code> pooling.</
 <code>"Test"</code> is in the pool, and both <code>string1</code> and <code>string2</code> point to it.
 Thus, this second fragment of code prints <code>Identical</code>. Because of
 <code>String</code> pooling, programmers can write code which can work in some
-situations and fail in other, if it is dependent on the <code>==</code> operator.</p>
+situations and fail in others, if it&#8217;s dependent on the <code>==</code> operator.</p>
 </div>
 <div class="paragraph">
-<p>For <code>String</code> objects as well as almost every reference type, it is
+<p>For <code>String</code> objects as well as every other reference type, it&#8217;s
 almost always the case that the <code>equals()</code> method should be used to test
 for comparison instead of the <code>==</code> operator. There are a few instances
-when it is necessary to know if two references really and truly do refer
-to the same location in memory, but these instances should be a tiny
+when it&#8217;s necessary to know if two references really and truly do refer
+to the same location in memory, but these instances are a tiny
 minority.</p>
 </div>
 <div class="paragraph">
 <p>That said, the <code>equals()</code> method is not bullet-proof. With <code>String</code>
-objects and most of the rest of the Java API, you can expect very good
+objects and most of the rest of the Java API, you can expect good
 behavior from the <code>equals()</code> method. However, if you create your own
-class, you are expected to implement the <code>equals()</code> method. By default,
+class, you&#8217;re expected to implement the <code>equals()</code> method. By default,
 the <code>equals()</code> method inherited from <code>Object</code> only does an equality test
 using <code>==</code>.</p>
 </div>
@@ -35189,24 +35231,26 @@ using <code>==</code>.</p>
 your class contains references to other custom classes, you must be
 certain that they also properly implement their own <code>equals()</code> methods.
 Likewise, to conform to Java standards, a custom <code>equals()</code> method
-should also imply that you implement a custom <code>hashCode()</code> method so
+implies that you have also implemented a custom <code>hashCode()</code> method so
 that objects that are equivalent with <code>equals()</code> give the same hash
-value. It seems nit-picky to mention this, but many real-world
+value. It seems nit-picky to mention this issue, but many real-world
 applications depend on the efficient and correct operation of hash
-tables.</p>
+tables.  Hash tables are data structures used to store and
+retrieve a key and an associated value.  We&#8217;ll discuss them briefly
+in <a href="#mapsExample">Example 18.4</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_array_errors">16.3.4. Array errors</h4>
+<h4 id="_array_errors">16.3.5. Array errors</h4>
 <div class="paragraph">
 <p>Any time you have a large collection of data, there are always
 opportunities for bugs. With catastrophic array bugs, Java usually gives
-very good exceptions that will point you to the line number. Once you
-have gotten to this point, the bug should be obvious. The biggest
-difficulties arise when some unusual course of events is responsible for
-the bug cropping up and you have to reconstruct what it is.</p>
+clear exceptions that point you to the line number. Once the exception is
+thrown, the bug should be obvious. The biggest difficulties arise when some
+unusual course of events is responsible for the bug cropping up and you have
+to reconstruct what it is.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 16.8 Out of bounds</div>
@@ -35214,16 +35258,17 @@ the bug cropping up and you have to reconstruct what it is.</p>
 <div class="paragraph">
 <p>We have all experienced an <code>ArrayIndexOutOfBoundsException</code>. Either a
 little carelessness with our indexes or a mistake about the size of the
-array can lead us to try to access an element that isn&#8217;t in the array.
-In the C language, a negative index is sometimes a legal location but
-never in Java. It is very common to go just slightly beyond the bounds
-of the array, particularly with a loop.</p>
+array can lead us to try to access an index that isn&#8217;t in the array.
+In the C language, a negative index is sometimes a legal location, but it
+never is in Java. Although negative indexes occur in code, the error is
+usually accessing an index slightly larger than the bounds of an array,
+particularly with a loop.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">100</span><span class="o">];</span>
 <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-    <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span></code></pre>
+	<span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -35232,27 +35277,29 @@ when <code>array</code> only goes up to index <code>99</code>.</p>
 </div>
 <div class="paragraph">
 <p>The causes for going out of bounds can be more subtle. We can imagine an
-array of linked lists used as a hashtable, perhaps for storing words in
-a dictionary. If we want to hash based on the first letter of the word,
-we could have an array of length 26. Consider the following helper
-method used to add a new <code>String</code> to the hashtable.</p>
+array of linked lists, perhaps for storing English words in a dictionary. If we
+want to pick the list based on the first letter of the word, we could have
+an array of length 26. Consider the following helper method used to add a
+new <code>String</code> to the correct list.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">word</span><span class="o">)</span> <span class="o">{</span>
     <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">().</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">-</span> <span class="sc">'a'</span><span class="o">;</span>
-    <span class="n">list</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">add</span><span class="o">(</span><span class="n">word</span><span class="o">);</span>
+    <span class="n">lists</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">add</span><span class="o">(</span><span class="n">word</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>We can assume that the <code>add()</code> method for a given linked list works
-properly, but we may already have caused other problems. For one thing,
-we assumed that <code>word</code> began with either an upper- or lowercase letter.
-We are depending on other code to check the input and throw out words
-like <code>"$1"</code> or <code>"-isms"</code>. Incidentally, we are also assuming that
-<code>word</code> has at least one character in it. Even if we expect the input to
-the method to be error free, the addition of error checking is rarely a bad idea.</p>
+properly, but we might have caused other problems already. For one thing,
+we assumed that <code>word</code> began with either an upper- or lowercase letter,
+corresponding to our array locations 0 through 25. We&#8217;re depending on
+other code to check the input and throw out <code>String</code> values
+like <code>"$1"</code> or <code>"-isms"</code>, which would map to indexes outside of the 0 to 25
+range. Incidentally, we&#8217;re also assuming that <code>word</code> has at least one character
+in it. Even if we expect the input to the method to be error free, the addition
+of error checking is rarely a bad idea.</p>
 </div>
 </div>
 </div>
@@ -35264,8 +35311,8 @@ the method to be error free, the addition of error checking is rarely a bad idea
 initialize an object array. With a primitive data type like <code>int</code>,
 creating an array with 1,000 elements automatically allocates enough
 space to hold those elements and even initializes each one to a default
-value, zero in the case of an <code>int</code>. With an object data type, however,
-each element of the array is just a reference to <code>null</code> until it is
+value, <code>0</code> in the case of an <code>int</code>. With an object data type, however,
+each element of the array is just a reference to <code>null</code> until it&#8217;s
 initialized.</p>
 </div>
 <div class="listingblock">
@@ -35276,13 +35323,11 @@ initialized.</p>
 </div>
 <div class="paragraph">
 <p>This example causes a <code>NullPointerException</code>. New programmers are often
-confused by this error because, if they are expecting an error, they are
-expecting the exception to say something about the array. For more
-experienced programmers, this kind of mistake is usually more of a
-forehead-slapping, how-silly-of-me-to-forget error than a mind-numbing
-puzzler that will take hours to debug. It is probably just a matter of
-instantiating each element in the array before you try to feed those
-hungry, hungry hippos.</p>
+confused by this error because they expect the exception to mention the array
+or its indexes. For more experienced programmers, this kind of mistake is
+more of a forehead-slapping oversight than a mind-numbing puzzler that&#8217;ll take
+hours to debug. It&#8217;s probably just a matter of instantiating each element in
+the array before you try to feed those hungry, hungry hippos.</p>
 </div>
 </div>
 </div>
@@ -35296,10 +35341,10 @@ hungry, hungry hippos.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_scope_errors">16.3.5. Scope errors</h4>
+<h4 id="_scope_errors">16.3.6. Scope errors</h4>
 <div class="paragraph">
-<p>We don&#8217;t have variables in real life, and, as a consequence, out
-intuition about them is sometimes wrong. Which variable you are
+<p>We don&#8217;t have variables in real life, and as a consequence, out
+intuition about them is sometimes wrong. Which variable you&#8217;re
 accessing at any given time can appear obvious, even if it really isn&#8217;t.</p>
 </div>
 <div class="exampleblock">
@@ -35307,7 +35352,7 @@ accessing at any given time can appear obvious, even if it really isn&#8217;t.</
 <div class="content">
 <div class="paragraph">
 <p>Java allows variables in different scopes to be declared with the same
-identifier. If the scopes are two separate methods, then they will never
+identifier. If the scopes are two separate methods, then they&#8217;ll never
 interfere with each other. However, if one scope encloses another, the
 inner variable will <em>shadow</em> or hide the outer variable.</p>
 </div>
@@ -35331,26 +35376,26 @@ inner variable will <em>shadow</em> or hide the outer variable.</p>
 variable <code>darkness</code> in the <code>deepen()</code> method. It appears that the
 programmer wanted to increase the field <code>darkness</code> by the amount passed
 into the parameter <code>darkness</code> and failed to notice that both variables
-had the same name. As a consequence, the parameter <code>darkness</code> will
+have the same name. As a consequence, the parameter <code>darkness</code> will
 double itself and then never be used again while the field <code>darkness</code>
 will never increase. This kind of bug could go uncaught for a long while
-until a programmer notices that the <code>Shadow</code> object is not increasing in
-darkness no matter how many times it is told to.</p>
+until a programmer notices that the <code>Shadow</code> object isn&#8217;t increasing in
+darkness no matter how many times it&#8217;s told to.</p>
 </div>
 <div class="paragraph">
-<p>This kind of mistake is also common in constructors, since it is
-reasonable to give a certain parameter a name similar to the field it is
+<p>This kind of mistake is also common in constructors, since it&#8217;s
+reasonable to give a certain parameter a name similar to the field it&#8217;s
 about to initialize. Some programmers explicitly prefix all fields with
-<code>this</code> even though it is often redundant. Three additions of <code>this</code> will
+<code>this</code> even though it&#8217;s often redundant. Three additions of <code>this</code> will
 fix the problem in the preceding example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deepen</span><span class="o">(</span><span class="kt">int</span> <span class="n">darkness</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">darkness</span> <span class="o">+=</span> <span class="n">darkness</span><span class="o">;</span>
-        <span class="k">if</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">darkness</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="o">)</span>
-            <span class="k">this</span><span class="o">.</span><span class="na">darkness</span> <span class="o">=</span> <span class="mi">100</span><span class="o">;</span>
-    <span class="o">}</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java">	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">deepen</span><span class="o">(</span><span class="kt">int</span> <span class="n">darkness</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">darkness</span> <span class="o">+=</span> <span class="n">darkness</span><span class="o">;</span>
+		<span class="k">if</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">darkness</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="o">)</span>
+			<span class="k">this</span><span class="o">.</span><span class="na">darkness</span> <span class="o">=</span> <span class="mi">100</span><span class="o">;</span>
+	<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -35384,13 +35429,12 @@ variable of the same name.</p>
 </div>
 <div class="paragraph">
 <p>This example looks like a simple case of inheritance, but whoever wrote
-the <code>BraggingBodybuilder</code> class seems to have mistakenly included the
+the <code>BraggingBodybuilder</code> class mistakenly included the
 field <code>strength</code> again. As a consequence, any <code>BraggingBodybuilder</code> will
 always brag that his or her strength is 10, even when code sets his or
-her strength to other values. When strength is tested, it will use the
+her strength to other values. When strength is tested, it&#8217;ll use the
 <code>strength</code> field from the superclass <code>Bodybuilder</code> which is set by the
-<code>setStrength()</code> method. Sometimes similar behavior is desired, but it
-seems to be accidental here. When classes have large numbers of fields,
+<code>setStrength()</code> method. When classes have large numbers of fields,
 making such a mistake becomes easier.</p>
 </div>
 <div class="paragraph">
@@ -35423,7 +35467,12 @@ will be set to 20 here.</td>
 </table>
 </div>
 <div class="paragraph">
-<p>Thus, the first call to <code>brag()</code> will print out <code>My strength is 10!</code>, but the second call will print out <code>My strength is 20!</code>.</p>
+<p>Thus, the first call to <code>brag()</code> will print out <code>My strength is 10!</code>, but the
+second call will print out <code>My strength is 20!</code>. Note that some of the
+confusion in this example is possible only because the field <code>strength is
+`public</code>. If the field was <code>private</code> and only changed through methods, at
+least there would no longer be two ways to set the <code>strength</code> field with
+two different outcomes.</p>
 </div>
 </div>
 </div>
@@ -35431,11 +35480,10 @@ will be set to 20 here.</td>
 <div class="title">Example 16.11 Reference vs. value</div>
 <div class="content">
 <div class="paragraph">
-<p>The final category of scope error we will talk about occurs because of
-confusion between passing by reference and passing by value when using
-methods. Everything variable in Java is passed by value. However, when
-that value is itself a reference, it is possible to change the values
-that it references.</p>
+<p>The final category of scope error we&#8217;ll talk about occurs when using
+methods because of confusion between passing by reference and passing by
+value. Every variable in Java is passed by value. However, when that value
+is itself a reference, it is possible to change the values that it references.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -35449,11 +35497,11 @@ that it references.</p>
 the value of <code>number</code> to increase by 10 in the calling code. Some
 languages like Perl use call by reference as default. Other languages
 like C&#43;&#43; and C# allow the user to mark certain parameters as call by
-reference. Programmers comfortable with such languages may be confused
+reference. Programmers comfortable with such languages might be confused
 about the workings of Java.</p>
 </div>
 <div class="paragraph">
-<p>On the other hand, becoming used to the pass by reference style of Java
+<p>On the other hand, becoming used to the pass-by-value style of Java
 can cause other errors.</p>
 </div>
 <div class="listingblock">
@@ -35464,42 +35512,44 @@ can cause other errors.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In this similar example, the 0 index element of <code>numbers</code> is increased
+<p>In this contrasting example, the 0 index element of <code>numbers</code> <strong>is</strong> increased
 by a factor of 10. Unlike the previous code, the increase in the value
-of that element will affect the array passed in by the calling code. The
+of that element <strong>will</strong> affect the array passed in by the calling code. The
 values in the array are shared by the <code>increaseMagnitude()</code> method and
-the calling code. The same phenomenon can be observed with the fields of
-objects whose references are passed into a method.</p>
+the calling code. As you can see, the variable <code>numbers</code> isn&#8217;t changing.
+Reassigning the array reference to a difference array reference would have
+no affect, but we&#8217;re changing an element in the array, not the array
+reference. The same phenomenon can occur with the fields of objects whose
+references are passed into a method.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_null_pointer_errors">16.3.6. Null pointer errors</h4>
+<h4 id="_null_pointer_errors">16.3.7. Null pointer errors</h4>
 <div class="paragraph">
 <p>Null pointer errors usually raise a <code>NullPointerException</code> in Java. This
 category of errors is something of a catch-all that could happen for
 many different reasons, some of which have already been mentioned.
-Because of loop errors, some variables might not be initialized. A
-<code>NullPointerException</code> could be raised because the elements of an object
-array have not be initialized. Scope problems could cause a reference to
-be null if the programmer was mistakenly updating another reference,
+A <code>NullPointerException</code> could be raised because the elements of an object
+array haven&#8217;t been initialized. Scope problems could cause a reference to
+be <code>null</code> if the programmer was mistakenly updating another reference,
 leaving the reference in question uninitialized.</p>
 </div>
 <div class="paragraph">
-<p>Though common, it is very difficult to give a blanket explanation for
-why most null pointer errors happen. Usually there is some fundamental
+<p>Though they are common, it&#8217;s difficult to give a blanket explanation for
+why most null pointer errors happen. Usually there&#8217;s some fundamental
 error in program logic. Linked lists and tree structures that rely on
-null references to mark the end of a list or an empty child node are
+<code>null</code> references to mark the end of a list or an empty child node are
 especially susceptible to these errors.</p>
 </div>
 <div class="paragraph">
 <p>One significant source of errors is careless usage of method parameters.
-A programmer may pass in objects that do not conform to the expectations
-of the method or even null references instead of objects. Well written
+A programmer might pass in objects that don&#8217;t conform to expectations
+or even <code>null</code> references instead of objects. Well written
 methods, particularly library calls, should be designed to throw an
-appropriate exception when this happens. Poorly designed code may
-blindly use a null reference without checking it first, causing a
+appropriate exception when this happens. Poorly designed code might
+blindly use a <code>null</code> reference without checking it first, causing a
 <code>NullPointerException</code>.</p>
 </div>
 </div>
@@ -35507,8 +35557,8 @@ blindly use a null reference without checking it first, causing a
 <div class="sect2">
 <h3 id="_concurrency_parallel_bugs">16.4. Concurrency: Parallel bugs</h3>
 <div class="paragraph">
-<p>We will only briefly discuss parallel bugs here because we have already
-gone into depth about the dangers of parallel programming in
+<p>We&#8217;ll only briefly discuss parallel bugs here because we&#8217;ve already
+spoken in depth about the dangers of parallel programming in
 <a href="#ch14-synchronization">Chapter 14</a>. Except in the case of deadlocks and
 livelocks, the real trouble with parallel bugs is that they make the
 appearance of ordinary sequential bugs become nondeterministic.</p>
@@ -35519,13 +35569,13 @@ appearance of ordinary sequential bugs become nondeterministic.</p>
 <p>A race condition describes the situation when the output of a program is
 dependent on the timing of the execution of two or more threads. Because
 of the complexity of the JVM and the OS and the fact that many other
-processes may be running and interacting, it is usually impossible to
+processes might be running and interacting, it&#8217;s usually impossible to
 determine how two threads will be scheduled. As a consequence, if the
 output of the program depends on unpredictable timing, the output will
 also be unpredictable.</p>
 </div>
 <div class="paragraph">
-<p>In Java, the way that race conditions usually impact the program is
+<p>In Java, the way that race conditions often impact the program is
 through some variable shared between multiple threads. When the schedule
 of threads becomes unpredictable, the changes made to this variable can
 come out of sequence, and its value becomes unpredictable. Incorrect
@@ -35533,10 +35583,10 @@ output means that your program has a bug, but the most frustrating
 aspect of race conditions is that they are nondeterministic. Your
 program could sometimes have the right answer and sometimes not. Your
 program could always have the wrong answer, but not always the same one.
-The truly insidious issue with race conditions is that they will usually
+The truly insidious issue with race conditions is that they&#8217;ll usually
 cause errors only a tiny percentage of the time. Thus, rigorous testing
-such as we will discuss in the second half of this chapter is necessary
-to even be aware that a race condition is occurring.</p>
+such as we&#8217;ll discuss in the second half of this chapter is necessary
+to be aware that a race condition is occurring.</p>
 </div>
 </div>
 <div class="sect3">
@@ -35544,15 +35594,15 @@ to even be aware that a race condition is occurring.</p>
 <div class="paragraph">
 <p>Both deadlocks and livelocks describe situations in which some part of
 your program will stop making progress because of thread interaction. In
-the case of deadlock, there will be some circular wait in which thread A
+the case of deadlock, there will be a circular wait in which thread A
 is waiting for thread B which is waiting, directly or indirectly, on
 thread A. In the case of livelock, some repetitive pattern of waiting
 for a condition that will never be satisfied is still going on, but the
-threads continue to use CPU time and are not simply waiting.</p>
+threads continue to use CPU time and aren&#8217;t simply waiting.</p>
 </div>
 <div class="paragraph">
-<p>If your program reaches a deadlock state, it will not terminate. If
-threads updating a GUI become deadlocked, your windows may freeze.
+<p>If your program reaches a deadlock state, it won&#8217;t terminate. If
+threads updating a GUI become deadlocked, your window might freeze.
 Typically, deadlocks are nondeterministic and occur only some of the
 time. Like all race conditions, they can be difficult to detect and
 duplicate. In fact, <code>Thread.stop()</code>, <code>Thread.suspend()</code>, and
@@ -35564,29 +35614,29 @@ because they are deadlock prone.</p>
 <div class="sect3">
 <h4 id="_sequential_execution_2">16.4.3. Sequential execution</h4>
 <div class="paragraph">
-<p>One bug which is impossible to achieve in non-parallel code is
+<p>One bug that isn&#8217;t even a bug in non-parallel code is
 sequential execution. This situation arises when, usually due to overuse
 of synchronization tools, parallel code runs sequentially. Each segment
 of code, instead of running in parallel, is forced to wait for another
 to complete. A certain amount of serial execution is necessary to
 maintain program correctness and avoid race conditions, but Amdahl&#8217;s Law
 gives a rigid, mathematical characterization of how easily speedup can
-be lost if the serial execution takes up large portions of the code.
-Because setting up threads and using other concurrency tools does have
-some overheard, a parallel program executing sequentially can even run
+be lost if serial execution makes up large portions of program execution.
+Because setting up threads and using other concurrency tools has
+some overheard, a parallel program executing sequentially often runs
 more slowly than a completely sequential version.</p>
 </div>
 <div class="paragraph">
-<p>Because programs are usually parallelized for the sake of speedup, it is
-possible to time sections of programs to see how well you have
+<p>Since programs are usually parallelized for the sake of speedup, it&#8217;s
+useful to time sections of programs to see how well you&#8217;ve
 parallelized them. Sequential execution due to synchronization tools is
 only one of the many problems that can cause slow execution. The threads
-may be competing for a limited resource such as an I/O device or may be
+might be competing for a limited resource such as an I/O device or might be
 fighting over a small section of memory, causing cache misses. Tuning
 applications for maximum performance requires an expert understanding of
 the concurrency issues within software as well as the underlying OS and
 hardware characteristics. For now, it&#8217;s enough to be aware of the risk
-of sequential execution and be as careful as possible when applying
+of sequential execution and to be as careful as possible when applying
 locks and other synchronization tools.</p>
 </div>
 </div>
@@ -35597,31 +35647,31 @@ locks and other synchronization tools.</p>
 <p>What would you do if you wanted to design a system for administering a
 dose of radiation to a specific location on a patient to help treat them
 for cancer? Depending on the specification of the problem, you might
-need to control various voltage sources, read data from various sensors,
-and create a terminal interface or a GUI. With a well designed
+need to control various voltage sources, read data from sensors,
+and create a terminal interface or a GUI. With a well-designed
 specification, you could probably apply your knowledge of loops and
-control structures to some API and provide a software solution that met
-requirements.</p>
+control structures to an API and develop a software solution that met
+requirements, provided that an appropriate hardware platform existed.</p>
 </div>
 <div class="paragraph">
-<p>But, how would you know that it worked? Sure, you could run a series of
+<p>But how would you know that it worked? Sure, you could run a series of
 tests, but how many tests would it take for you to be convinced that it
 worked perfectly? What if your grade was dependent on it working without
 a single error? Or your job? Or your life?</p>
 </div>
 <div class="paragraph">
-<p>You have probably already faced the stress of trying to get a program to
-work as well as possible for the sake of your grade. It is not such a
-far cry to imagine your job being on the line if you make a mistake as a
-professional programmer. But, what about your life? Perhaps you will
-never put your life in the hands of code you write, but odds are that
-you have already put your life in the hands of someone else&#8217;s code.
+<p>You&#8217;ve probably already faced the stress of trying to get a program to
+work as well as possible for the sake of your grade. It&#8217;s not such a
+far cry to imagine your job being on the line if you make a serious mistake
+as a professional programmer. But what about your life? Perhaps you&#8217;ll
+never put your own life into the hands of code you write, but odds are that
+you&#8217;ve already put your life into the hands of someone else&#8217;s code.
 Software controls airplanes, automobiles, medical equipment, and
-countless other applications where a bug in the code could actually
-result in loss of human life.</p>
+countless other applications where a bug in the code could result in loss
+of human life.</p>
 </div>
 <div class="paragraph">
-<p>Sadly, there have been cases when such bugs have surfaced with deadly
+<p>Sadly, there have already been cases when such bugs have surfaced with deadly
 consequences. One of the most famous examples of the dangers of badly
 written software is the Therac-25. The Therac-25 was a machine designed
 to deliver therapeutic radiation for medical purposes. Between 1985 and
@@ -35629,11 +35679,11 @@ to deliver therapeutic radiation for medical purposes. Between 1985 and
 radiation overdoses, leading to at least three deaths.</p>
 </div>
 <div class="paragraph">
-<p>Like most failures of this scope, there was more than a single cause
+<p>Like most failures of this magnitude, there was more than a single cause
 behind the Therac-25 tragedies. For one thing, the machines did give an
 error code. However, the user manual did not explain the error code, and
 the technicians were not trained to deal with the errors. Even when
-patients complained about pain caused by the machine, the technicians
+patients complained about pain caused by the machines, the technicians
 and even the manufacturers of the Therac-25 were confident that the
 machine was operating correctly because neither of the previous models,
 the Therac-6 and the Therac-20, had suffered any problems.
@@ -35657,7 +35707,7 @@ arithmetic overflow occasionally caused this flag to have the wrong
 value.</p>
 </div>
 <div class="paragraph">
-<p>In the remaining half of this chapter, we will discuss a number of
+<p>In the remaining half of this chapter, we&#8217;ll discuss a number of
 testing methodologies and design strategies to minimize errors in
 software.</p>
 </div>
@@ -35665,54 +35715,54 @@ software.</p>
 <div class="sect2">
 <h3 id="_concepts_design_implementation_and_testing">16.6. Concepts: Design, implementation, and testing</h3>
 <div class="paragraph">
-<p>Unfortunately, there is no foolproof way to design software. There are
+<p>Unfortunately, there&#8217;s no foolproof way to design software. There are
 many researchers who work to design new languages and new development
-tools that limit certain kinds of mistakes, but it is impossible to
-design a language as powerful as C or Java which will also prevent all
+tools to limit certain kinds of mistakes, but it&#8217;s impossible to
+design a language as powerful as Python or Java which will also prevent all
 software bugs. A consequence of the halting problem, a fundamental
-concept in the theory of computation, is that there is no way to design
+concept in the theory of computation, is that there&#8217;s no way to design
 a test that will detect all potential infinite loops (or infinite
 recursion) for all programs.</p>
 </div>
 <div class="paragraph">
-<p>With careful design, implementation, and testing, most errors can
-reduced almost to nothingness. In the following subsections, we will
+<p>With careful design, implementation, and testing, most errors can be
+reduced almost to nothing. In the following subsections, we&#8217;ll
 discuss these three aspects of programming and how you can apply them to
 writing better programs.</p>
 </div>
 <div class="sect3">
 <h4 id="_design">16.6.1. Design</h4>
 <div class="paragraph">
-<p>We have remarked in the past that good design pays off ten-fold in
+<p>We&#8217;ve remarked in the past that good design pays off ten-fold in
 implementation, and that payoff continues to increase by factors of ten
 as you move on to testing and eventually deployment.</p>
 </div>
 <div class="paragraph">
-<p>One of the first design decisions you may have to make is choice of
+<p>One of the first design decisions you might have to make is choice of
 language. Some languages are better designed for certain tasks than
 others. For example, languages like Ada have been carefully designed to
 minimize programming mistakes such as mis-matched <code>else</code> blocks. Many
 functional languages like ML are designed so that memory errors such as
 a <code>NullPointerException</code> are impossible. Even Java has taken clear steps
-to avoid some of the errors possible in C and other languages that allow
-pointer arithmetic, such as bus errors. However, many other factors such
+to avoid some of the errors possible, such as bus errors, in C and similar
+languages that allow pointer arithmetic. However, many other factors such
 as portability, compatibility, and speed will affect your language
-decision.</p>
+choice.</p>
 </div>
 <div class="paragraph">
-<p>If you are working in industry, you may be given a specification from
-your client or your supervisors. As you design the software needed to
-meet the specification, you may use UML diagrams to map out the classes
-and interactions you plan to implement in your program.</p>
+<p>If you&#8217;re working in the software development industry, you might be given a
+specification from your client or your supervisors. As you design the software
+needed to meet the specification, you might use UML diagrams to map out the
+classes and interactions you plan to implement in your program.</p>
 </div>
 <div class="paragraph">
-<p>There are many questions you may ask yourself as you design your
+<p>There are many questions you might ask yourself as you design your
 solution. Will your solution be compatible with the system and future
-changes made in the system? Is it easy to add features to your solution?
+changes made to the system? Is it easy to add features to your solution?
 Does your solution deal gracefully with mistakes in user input or
 external hardware and software failures? Is your code easy to maintain,
 particularly by future programmers who were not involved in its initial
-development. Are the components of the system modular? Can they be
+development? Are the components of the system modular? Can they be
 worked on, tested, and upgraded independently? Are the components of
 your system designed well enough to be reused for other applications?
 Are the elements of your system secure from malicious attacks? Finally,
@@ -35720,16 +35770,16 @@ is it easy for the user to work with your software?</p>
 </div>
 <div class="paragraph">
 <p>Each one of these questions is related to a separate sub-field in
-software engineering. It may be impossible to address them all
+software engineering. It might be impossible to address them all
 completely, but different applications will have different priorities.
 One method for OO software engineering uses <em>design patterns</em>. The idea
 behind design patterns is that most classes share some common design
-principles with a large category of classes. By naming and recognizing
+principles with a large category of other classes. By naming and recognizing
 each category, you can apply the same rules to designing new classes
-from a category you are already familiar with. Each category is called a
+from a category you&#8217;re already familiar with. Each category is called a
 design pattern. Java uses design patterns extensively in its API.
 Describing design patterns in greater depth is beyond the scope of this
-book, but you may want to consult the Gang of Four&#8217;s excellent book
+book, but you might want to consult the Gang of Four&#8217;s popular book
 <em>Design Patterns</em>.</p>
 </div>
 <div class="paragraph">
@@ -35738,7 +35788,7 @@ is also a rich, complex area of software engineering, the idea can be
 applied to methods in a straightforward way. For each method, you have a
 formal explanation of what its input should be, what its output should
 be, and what else can be changed in the process. For some languages and
-some segments of code, it is possible to prove that a given method does
+some segments of code, it&#8217;s possible to prove that a given method does
 exactly what it is supposed to do. Nevertheless, Donald Knuth, a giant
 in computer science, is famous for having said, "Beware of bugs in the
 above code; I have only proved it correct, not tried it."</p>
@@ -35747,48 +35797,48 @@ above code; I have only proved it correct, not tried it."</p>
 <div class="sect3">
 <h4 id="_implementation">16.6.2. Implementation</h4>
 <div class="paragraph">
-<p>When the time comes to actually implement your design, there are a
-number of other techniques you can use to minimize errors in this phase.
+<p>Once you have gotten your design to the implementation phase, there are a
+number of other techniques you can use to minimize errors.
 One interesting technique is <em>pair programming</em>, in which two
-programmers sit at a single computer and work together. Ideally, one
-programmer is thinking about the immediate problems posed by the next
-few lines of code while the other is thinking about the larger context
-of the program. Two sets of eyes is always beneficial when looking at
-something as detailed and confusing as a computer program.</p>
+programmers sit at a single computer and work together. Ideally, the programmer
+who is currently typing, often called the <em>driver</em>, is thinking about the
+immediate problems posed by the next few lines of code while the other
+programmer, often called the <em>navigator</em>, is thinking about the larger context
+of the program and watching for errors. Two sets of eyes is always beneficial
+when looking at something as detailed and confusing as a computer program.</p>
 </div>
 <div class="paragraph">
 <p>In keeping with the theme of having more than one set of eyes looking at
-a program, it is generally recognized that it is useful to have the
+a program, it&#8217;s generally recognized that it&#8217;s useful to have the
 individuals who test the software be independent from those who develop
-it. By keeping the testers separate, they are not infected by the
-assumptions and biases that the developers have made while writing the
+it. By keeping the testers separate, they&#8217;re not infected by the
+assumptions and biases that the developers made while writing the
 software. Some communication between the two groups is necessary, but
-there is a lot of value in black box testing, which we will explain in
-the next subsection.</p>
+there&#8217;s value in black-box testing, which we&#8217;ll explain in the next subsection.</p>
 </div>
 <div class="paragraph">
 <p>Another piece of general advice is to rely on standard libraries as much
 as possible. Reinventing your own libraries is partly a waste of time
-and partly dangerous because your own libraries have not undergone as
+and partly dangerous because your own libraries haven&#8217;t undergone as
 much testing as the standard ones. Likewise, it makes your code less
-portable. Some expert developers may need to write special libraries for
-speed or memory efficiency, but they are the exception, not the rule.</p>
+portable. Some expert developers might need to write special libraries for
+speed or memory efficiency, but they&#8217;re the exception, not the rule.</p>
 </div>
 <div class="paragraph">
 <p>There are a number of Java specific implementation guidelines. People
 have written entire books about good software engineering in Java, and
-so we will only give a few obvious pointers.</p>
+so we&#8217;ll only give a few obvious pointers.</p>
 </div>
 <div class="paragraph">
-<p>Although it is tempting to do so when working under time pressure, never
+<p>Although it&#8217;s tempting to do so when working under time pressure, <strong>never</strong>
 write empty exception handlers. Doing so swallows exceptions blindly,
-giving the user no idea what the errors in his or her program are. By
+giving the user no information about the errors in his or her program. By
 the same token, always make your exception handlers as narrow as
-possible. Simply putting a <code>catch(Exception e)</code> at the end of any
+possible. Simply putting <code>catch(Exception e)</code> at the end of any
 <code>try</code>-block has one of two possible outcomes: In one case your handler
 is vague and the user is informed that a general error of some kind has
-occurred. In the other your handler is more precise than it has a right
-to be. You might have assumed that a file I/O error was most likely to
+occurred. In the other your handler is more specific than it has a right
+to be. You might have assumed that a file I/O error was likely to
 occur and always report that failure. Instead, an
 <code>ArrayOutOfBoundsException</code> could happen and be mistakenly reported as a
 file I/O problem.</p>
@@ -35798,15 +35848,15 @@ file I/O problem.</p>
 pre-determined exception if the input is invalid. Never use assertions
 to test input to public methods. In fact, you should never depend on
 assertions to catch errors since they must be turned on in the JVM to
-have effect. Assertions are great for debugging code before it is
+have effect. Assertions are great for debugging code before it&#8217;s
 released but have little or no value in the field.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_testing">16.6.3. Testing</h4>
 <div class="paragraph">
-<p>Once you have designed and implemented your program (or perhaps even
-during the process of implementation), you should test it to see if it
+<p>Once you&#8217;ve designed and implemented your program (or ideally throughout the
+process of implementation), you should test it to see if it
 behaves as expected and required. The most common form of software
 testing done by students is a form of a <em>smoke test</em>. A smoke test is a
 basic test of functionality. Such a test should simply run through the
@@ -35816,53 +35866,54 @@ before the deadline and be unable to perform anything but the most basic
 tests.</p>
 </div>
 <div class="paragraph">
-<p>Smoke tests are useful because it is pointless to test the finer details
+<p>Smoke tests are useful because it&#8217;s pointless to test the finer details
 of a system that is clearly broken, but the software engineering
 industry uses many other kinds of testing to ensure that a given piece
-of software meets its specification. We will briefly cover three broad
-areas of testing: black box testing, white box testing, and regression
+of software meets its specification. We&#8217;ll briefly cover three broad
+areas of testing: black-box testing, white-box testing, and regression
 testing.</p>
 </div>
 <div class="sect4">
 <h5 id="_black_box_testing">Black-box testing</h5>
 <div class="paragraph">
-<p>Black box testing assumes that the tester knows nothing about the
+<p>Black-box testing assumes that the tester knows nothing about the
 internal mechanisms of the software he or she is testing. The software
-is viewed as a "black box" that only has inputs and outputs. The tester
-chooses some subset of the possible inputs and tests to see if the
-output matches the specification.</p>
+is viewed as a &#8220;black box&#8221; with inputs and outputs but otherwise unknown
+internals. The tester chooses some subset of the possible inputs and tests to
+see if the output matches the specification.</p>
 </div>
 <div class="paragraph">
-<p>For simple programs with very little input, it may be possible to test
+<p>For simple programs with very little input, it might be possible to test
 <strong>all</strong> possible input values, but doing so is impractical for most
 programs. A short list of techniques for determining the appropriate set
-of input values for black box testing follows.</p>
+of input values for black-box testing follows.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Equivalence Partitioning</dt>
 <dd>
-<p>The idea behind equivalence partitioning is that large ranges of data
-may be functionally equivalent from the point of view of causing
-errors. If a tester can run a test for one element from a range of
-data, then the entire range can be tested quickly. To perform this
-kind of testing, the tester must partition data into ranges that
-function differently. The partition created is usually not really a
-partition in a mathematical sense as the sub-domains are overlapping.
-This is one reason why equilvalence partitioning is also referred to
-as <em>subdomain</em> testing.<br>
-For example, a program controlling the temperature of the water in an
-aquarium may have legal input ranges between 32F and 212F. However, if
-the program warms the water when it is below 75F and cools it when it
-is above 90F, then values below 0, values from 0 to 74, values from 75
-to 90, values from 91 to 212, and values above 212 all constitute
-different partitions.</p>
+<p>  The idea behind equivalence partitioning is that large ranges of data
+  might be functionally equivalent from the point of view of causing
+  errors. If a tester can run a test for one element from a range of
+  data, then the entire range can be tested quickly. To perform this
+  kind of testing, the tester must partition data into ranges that
+  function differently. The partition created is usually not really a
+  partition in the mathematical sense as the sub-domains are overlapping.
+  For this reason equilvalence partitioning is also referred to as <em>subdomain</em>
+  testing.<br>
+<br>
+  For example, a program controlling the temperature of the water in an
+  aquarium might have legal input ranges between 32 °F and 212 °F. However, if
+  the program warms the water when it&#8217;s below 75 °F and cools it when it&#8217;s
+  above 90 °F, then values below 0, values from 0 to 74, values from 75
+  to 90, values from 91 to 212, and values above 212 all constitute
+  different partitions.</p>
 </dd>
 <dt class="hdlist1">Boundary Value Analysis</dt>
 <dd>
 <p>Once inputs have been partitioned into equivalent ranges, testers can
-focus on those values which are near the boundary of those ranges. For
-example, an input containing a person&#8217;s age may be allowed to range
+focus on values which are near the boundaries of those ranges. For
+example, an input containing a person&#8217;s age might be allowed to range
 between 0 and 150. The values -1, 0, 1, 149, 150, and 151 are good
 candidates for input from the perspective of boundary value analysis.
 As with equivalence partitioning, boundary value analysis is useful
@@ -35874,12 +35925,12 @@ for the aquarium thermostat program described above.</p>
 <dt class="hdlist1">All-Pairs Testing</dt>
 <dd>
 <p>Most software bugs are triggered by a single piece of input. Some
-harder to discover bug require two separate piece of input to have
+harder to discover bugs require <strong>two</strong> separate pieces of input to have
 specific values at the same time before they manifest. With each
 increase in the number of different inputs that must each have
 specific values at the same time to cause a bug, the bug becomes
 increasingly difficult to track down but also increasingly unlikely to
-exist. It may be possible to test all possible values for a given
+exist. It might be possible to test all possible values for a given
 input but impossible to test all possible values for all inputs at the
 same time. All-pairs testing is a compromise between these two
 extremes that tests all possible pairs of inputs.</p>
@@ -35890,10 +35941,12 @@ extremes that tests all possible pairs of inputs.</p>
 unlikely, or random data as input to a program. Although this kind of
 testing is used only to test the reliability and robustness of a
 program receiving unexpected input, it has a number of advantages. One
-significant advantage of fuzz testing is that it is quick and easy to
+significant advantage of fuzz testing is that it&#8217;s quick and easy to
 design test cases. Another is that it makes no assumptions about the
 program behavior, catching errors that might never occur to a human
-being.</p>
+being.  If fuzz testing is automated, it can also be used for
+stress testing, in which the program&#8217;s ability to process a large amount
+of data quickly or while remaining responsive is tested.</p>
 </dd>
 </dl>
 </div>
@@ -35901,19 +35954,19 @@ being.</p>
 <div class="sect4">
 <h5 id="_white_box_testing">White-box testing</h5>
 <div class="paragraph">
-<p>The philosophy of white box is the opposite of black box testing. When
-using white box testing techniques, the tester has access to the program
+<p>The philosophy of white-box testing is the opposite of black-box testing.
+When using white-box testing techniques, the tester has access to program
 internals. The tester should employ techniques to test every possible
 path that execution can take through the code. Traversing a particular
 path of execution through a program is called <em>exercising</em> that path.</p>
 </div>
 <div class="paragraph">
-<p>In order to exercise every possible path, it is necessary to force each
-conditional statement to be true and false on some path. Some
-combinations of true and false may be impossible, but, ignoring this
+<p>In order to exercise every possible path, it&#8217;s necessary to force each
+conditional statement to be true on some path and false on another. Some
+combinations of true and false might be impossible, but ignoring this
 fact, a program with <em>n</em> independent conditionals would
 require 2<sup><em>n</em></sup> runs to test them all. Because of the large
-number of possible execution paths, white box testing generally tries to
+number of possible execution paths, white-box testing generally tries to
 maximize coverage over metrics that are not quite so demanding.</p>
 </div>
 <div class="paragraph">
@@ -35926,9 +35979,9 @@ true and false branches. Getting total coverage here is difficult, but
 good testing can come close.</p>
 </div>
 <div class="paragraph">
-<p>As with black box testing, equivalence partitioning and boundary value
-methods can be used to reduce the total number of test cases. Also, it
-is important to test those parts of your programs reached only in error
+<p>As with black-box testing, equivalence partitioning and boundary value
+methods can be used to reduce the total number of test cases. Also, it&#8217;s
+important to test those parts of your programs reached only in error
 conditions in addition to normal operation.</p>
 </div>
 <div class="sidebarblock">
@@ -35942,9 +35995,9 @@ conditions in addition to normal operation.</p>
 <div class="sect4">
 <h5 id="_regression_testing">Regression testing</h5>
 <div class="paragraph">
-<p>Regression testing is a form of testing that is not often necessary for
-student code because they are small projects. The motivating idea behind
-this kind of testing is that, in the act of fixing a bug or adding a
+<p>Regression testing is a form of testing that&#8217;s not often necessary for
+student code, which is usually focused on small projects. The motivating idea
+behind regression testing is that, in the act of fixing a bug or adding a
 feature, existing code can be broken. Thus, even after a system has been
 thoroughly tested, small changes or additions require the entire system
 to be retested. As the size of a program grows, the chance of unintended
@@ -35952,14 +36005,14 @@ consequences increases, along with the value of performing regression
 testing.</p>
 </div>
 <div class="paragraph">
-<p>Regression testing can incorporate both black and white box testing.
+<p>Regression testing can incorporate both black- and white-box testing.
 Doing regression testing could simply mean running all the existing
-tests over again. At the very minimum, each time a test uncovers a bug,
-that test should be added to the test suite used after each build of the
-program. The use of regression testing also implies that regular testing
-is being done on your code. Regular testing gives developers the
+tests over after every major change. At the very minimum, each time a test
+uncovers a bug, that test should be added to the test suite used after each
+build of the program. The use of regression testing also implies that regular
+testing is being done on your code. Regular testing gives developers the
 opportunity to track changes in other aspects of their program such as
-memory usage, run time, and other non-functional issues.</p>
+memory usage, running time, responsiveness, and other non-functional issues.</p>
 </div>
 </div>
 </div>
@@ -35967,43 +36020,41 @@ memory usage, run time, and other non-functional issues.</p>
 <div class="sect2">
 <h3 id="_syntax_java_testing_tools">16.7. Syntax: Java testing tools</h3>
 <div class="paragraph">
-<p>There is an open-source tool for testing Java called JUnit testing.
-There are other testing tools for Java, and there are a wide array of
+<p>One open-source tool for testing Java is called JUnit.
+There are other testing tools for Java, and there&#8217;s a wide array of
 tools for testing software in virtually any language. We cover JUnit
-here because it is widely accepted as a standard Java testing tool and
-because it is open-source. First, we&#8217;ll explain how to use JUnit, and
-then we&#8217;ll discuss some of the tools available to help test concurrent
-software.</p>
+here because it&#8217;s widely accepted as a standard Java testing tool and
+because it&#8217;s open-source. First, we&#8217;ll explain how to use JUnit, and
+then we&#8217;ll discuss tools for testing concurrent software.</p>
 </div>
 <div class="sect3">
 <h4 id="_junit_testing">16.7.1. JUnit testing</h4>
 <div class="paragraph">
 <p>JUnit testing is used for unit testing Java. Unit testing is the process
-testing of separate software components that will eventually work
+of testing separate software components that will eventually work
 together. By testing them individually, debugging can be done before
 interactions between different components make it more difficult to find
-the underlying bug. After unit testing comes integration testing to test
+the underlying bugs. After unit testing comes integration testing to test
 how the components work together. Finally, system testing is the testing
 of the complete, integrated system against its specifications.</p>
 </div>
 <div class="sect4">
 <h5 id="_annotations">Annotations</h5>
 <div class="paragraph">
-<p>Our coverage of JUnit testing is based on JUnit 4. This version of JUnit
-simplifies the syntax of creating JUnit tests, but it also relies on
-<em>annotations</em>. Annotations are additional information written into Java
-code that affects how the compiler or run-time system treats the code.
-They are like comments, but they can affect code execution or
+<p>Our coverage of JUnit testing is based on JUnit 5. This version of JUnit
+has simple syntax for creating JUnit tests compared to JUnit 3 and earlier,
+but it also relies on <em>annotations</em>. Annotations are additional information
+written into Java code that affects how the compiler or run-time system treats
+the code. They are like comments, but they can affect code execution or
 compilation, though usually indirectly. Applying an annotation to a
 method is called <em>decorating</em>. A class, a method, a variable, a package,
 or even an individual method parameter can be decorated.</p>
 </div>
 <div class="paragraph">
-<p>Three annotations are built into the language: <code>@Deprecated</code>,
+<p>There are several annotations built into Java.  Here, we consider three: <code>@Deprecated</code>,
 <code>@Override</code>, and <code>@SuppressWarnings</code>. If a method is decorated with
-<code>@Deprecated</code>, it is deprecated and included only for backwards
-compatibility. The compiler will give a warning if you call deprecated
-code such as the following.</p>
+<code>@Deprecated</code>, it&#8217;s deprecated and included only for backwards compatibility.
+The compiler will give a warning if you call deprecated code such as the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -36015,11 +36066,11 @@ code such as the following.</p>
 </div>
 <div class="paragraph">
 <p>Many methods in the extensive Java API are deprecated, like
-<code>Thread.suspend()</code> due to its inherent deadlock risk. As of Java 5 when
+<code>Thread.suspend()</code>, due to its inherent deadlock risk. As of Java 5 when
 annotations were introduced, these methods were all decorated with
-<code>@Deprecated</code>. The <code>@Override</code> annotation marks a method that is
-overriding superclass method, causing a compiler error if the method is
-not correctly overriding some superclass method. The <code>@SuppressWarnings</code>
+<code>@Deprecated</code>. The <code>@Override</code> annotation marks a method that&#8217;s
+overriding a parent class method, causing a compiler error if the method
+isn&#8217;t correctly overriding some parent class method. The <code>@SuppressWarnings</code>
 annotation allows certain warning messages to be suppressed, like using
 deprecated code if you really have to.</p>
 </div>
@@ -36028,63 +36079,72 @@ deprecated code if you really have to.</p>
 <h5 id="_basic_junit_syntax">Basic JUnit syntax</h5>
 <div class="paragraph">
 <p>First of all, JUnit is not a part of the standard Java API. To use it,
-you should download the latest jar file from the <a href="http://www.junit.org" target="_blank" rel="noopener">JUnit site</a> and
-add the path to that jar file to your class path. To access the JUnit
-facilities in your code, you need the following import.</p>
+you should download the latest jar file from the
+<a href="https://junit.org/junit5/" target="_blank" rel="noopener">JUnit site</a> and add the path to that jar file
+to your class path. Because JUnit is so universal, Eclipse, IntelliJ, and
+many other IDEs provide a way to add the JUnit library to a project without
+the need to download the jar file separately.</p>
+</div>
+<div class="paragraph">
+<p>To access the JUnit facilities in your code, you need the following import.
+Note that this import is different from JUnit 4 and earlier versions which
+used classes from the <code>org.junit</code> package.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.*</span><span class="o">;</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.jupiter.api.*</span><span class="o">;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Then, you need to set up a testing class just like you would any other
 class. The key difference is that each method in the testing class is
 designed to test some functionality of a code component. For example,
-let&#8217;s imagine that we want to test certain functionality of the Java
-<code>Math</code> library such as the <code>ceil()</code>, <code>pow()</code>, and <code>sin()</code> methods.</p>
+let&#8217;s imagine that we want to test functionality within the Java
+<code>Math</code> class such as the <code>ceil()</code>, <code>pow()</code>, and <code>sin()</code> methods.</p>
 </div>
 <div class="paragraph">
 <p>To do so, we create a class called <code>MathTest</code> with three methods inside
-of it called <code>ceil()</code>, <code>pow()</code>, and <code>sin()</code>. We will use each method to
-test the functionality of the three methods that, respectively, have the
-same names. There is no requirement to name the methods any particular
+of it called <code>ceilTest()</code>, <code>powTest()</code>, and <code>sinTest()</code>. Note that it&#8217;s a
+common JUnit convention to end the names of the testing methods with <code>Test</code>.
+We&#8217;ll use each method to test the functionality of the three methods
+that, respectively, have matching names. Although ending with <code>Test</code> is
+a convention, there&#8217;s no requirement to name these methods any particular
 way. Tests in JUnit do not have to test single method calls. They could
 test any functional aspect of an object or class. Nevertheless, for
-documentation reasons it is wise to give the test methods names that
+documentation reasons it&#8217;s wise to give the test methods names that
 reflect what is being tested.</p>
 </div>
 <div class="paragraph">
-<p>So, where do annotations come in? The header for the <code>ceil()</code> method
-would be as follows.</p>
+<p>Where do annotations come in? The header for the <code>ceilTest()</code> method
+should be as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="nd">@Test</span>
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">ceil</span><span class="o">()</span></code></pre>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">ceilTest</span><span class="o">()</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The only thing necessary to use a method in a JUnit test is to annotate
-it with <code>@Test</code>. It is also necessary to make any function used for
+it with <code>@Test</code>. It&#8217;s also necessary to make any function used for
 testing <code>public</code> with a <code>void</code> return type and no parameters. Otherwise,
 the JUnit framework will crash when you try to run the tests. Each
-method with a <code>@Test</code> annotation is run once by JUnit, but JUnit cannot
+method with a <code>@Test</code> annotation is run once by JUnit, but JUnit can&#8217;t
 supply any arguments to them. They should be self-contained tests
 without any outside input.</p>
 </div>
 <div class="paragraph">
 <p>The exception to this rule is that you can perform some set up for the
 tests and then some clean up afterwards. Any method decorated with
-<code>@Before</code> will be run before <strong>every</strong> test, and any method decorated with
-<code>@After</code> will be run after <strong>every</strong> test. If you have some set up or
-clean up that is expensive to run, you can use the annotations
-<code>@BeforeClass</code> or <code>@AfterClass</code> to decorate a static method that is run
+<code>@BeforeEach</code> will be run before <strong>every</strong> test, and any method decorated with
+<code>@AfterEach</code> will be run after <strong>every</strong> test. If you have some set up or
+clean up that&#8217;s expensive to run, you can use the annotations
+<code>@BeforeAll</code> or <code>@AfterAll</code> to decorate a static method that&#8217;s run
 once before or after all the tests.</p>
 </div>
 <div class="paragraph">
 <p>So far we have talked about the major aspects of writing a JUnit test
-class except for the actual test. How does the JUnit test report a
+class except for the test itself. How does the JUnit test report a
 success or a failure to the tester? As you would expect in Java, we use
 the exception handling mechanism to indicate failures. If the test
 method returns normally, the test is considered a success. If an
@@ -36100,20 +36160,20 @@ assertions. Instead, use the following import.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.*;</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.*;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>With this static import, you will have access to many static methods
+<p>With this static import, you&#8217;ll have access to many static methods
 that provide useful assertion functionality. The simplest of these is
 <code>assertTrue()</code>, which is essentially equivalent to an <code>assert</code> without
 requiring assertions to be enabled. For example, we could code the body
-of the <code>ceil()</code> test method as follows.</p>
+of the <code>ceilTest()</code> method as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="nd">@Test</span>
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">ceil</span><span class="o">()</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">ceilTest</span><span class="o">()</span> <span class="o">{</span>
     <span class="n">assertTrue</span><span class="o">(</span><span class="mi">4</span> <span class="o">==</span> <span class="n">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="mf">3.1</span><span class="o">));</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -36121,66 +36181,76 @@ of the <code>ceil()</code> test method as follows.</p>
 <div class="paragraph">
 <p>Another useful method is <code>assertEquals()</code> (and its close cousin
 <code>assertArrayEquals()</code>) which takes two parameters and throws an
-<code>AssertionError</code> if the two are not equal. There are overloaded versions
-of this method for <code>long</code> and <code>Object</code> types. Note that the preferred
+<code>AssertionError</code> if the two aren&#8217;t equal. There are overloaded versions
+of this method for other primitive types and <code>Object</code>. Note that the preferred
 <code>assertEquals()</code> method for the <code>double</code> type takes three parameters,
-including an epsilon threshold in case the values don&#8217;t match exactly.</p>
+including an delta threshold in case the values don&#8217;t match exactly.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 16.12 JUnit math testing</div>
 <div class="content">
 <div class="paragraph">
-<p>Using these methods, we can finally write a complete (though very
-simple) implementation of <code>MathTest.java</code>.</p>
+<p>Using these methods, we can finally write a complete (though simple)
+implementation of <code>MathTest.java</code>.</p>
 </div>
 <div id="MathTestProgram" class="listingblock">
 <div class="title">Program 16.1 Simple testing suite.</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.*</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.*;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.jupiter.api.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.*;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MathTest</span> <span class="o">{</span>
-  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span> <span class="n">sqrt2</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span> <span class="n">sqrt2</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">THRESHOLD</span> <span class="o">=</span> <span class="mf">0.000001</span><span class="o">;</span>
 
-  <span class="nd">@BeforeClass</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span> <span class="n">sqrt2</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="mi">2</span><span class="o">);}</span>
+	<span class="nd">@BeforeAll</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span> <span class="n">sqrt2</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="mi">2</span><span class="o">);}</span>
 
-  <span class="nd">@Test</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">ceil</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">assertTrue</span><span class="o">(</span><span class="mi">4</span> <span class="o">==</span> <span class="n">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="mf">3.1</span><span class="o">));</span>
-  <span class="o">}</span>
+	<span class="nd">@Test</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">ceilTest</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">assertTrue</span><span class="o">(</span><span class="mi">4</span> <span class="o">==</span> <span class="n">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="mf">3.1</span><span class="o">));</span>
+	<span class="o">}</span>
 
-  <span class="nd">@Test</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pow</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="n">sqrt2</span><span class="o">,</span> <span class="mi">2</span><span class="o">),</span> <span class="mf">0.000001</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="nd">@Test</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">powTest</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="n">sqrt2</span><span class="o">,</span> <span class="mi">2</span><span class="o">),</span> <span class="n">THRESHOLD</span><span class="o">);</span>
+	<span class="o">}</span>
 
-  <span class="nd">@Test</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sin</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="n">sqrt2</span><span class="o">/</span><span class="mf">2.0</span><span class="o">,</span> <span class="n">Math</span><span class="o">.</span><span class="na">sin</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">PI</span> <span class="o">/</span> <span class="mf">4.0</span><span class="o">),</span> <span class="mf">0.000001</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="nd">@Test</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">sinTest</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="n">sqrt2</span><span class="o">/</span><span class="mf">2.0</span><span class="o">,</span> <span class="n">Math</span><span class="o">.</span><span class="na">sin</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">PI</span> <span class="o">/</span> <span class="mf">4.0</span><span class="o">),</span> <span class="n">THRESHOLD</span><span class="o">);</span>
+	<span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Note that the <code>setUp()</code> method is extremely trivial here, and no clean
-up is needed. JUnit has many other powerful features that allow you to
-run suites of tests or repeated tests with specific parameterized
-values, but we are only going to introduce one more feature here. In an
-ideal world, you are actually developing tests as you develop code.
-Sometimes, in fact, you might have completed a test for a specific
-feature before you have finished implementing it. Or, perhaps a feature
-in your program is broken at the moment, but you want to continue
-running tests on the rest of the features.</p>
+up is needed.</p>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>In these cases and others, it is useful to turn off a particular test
-temporarily. To do this, you add the annotation <code>@Ignore</code> before the
-<code>@Test</code> annotation. In parentheses after the <code>@Ignore</code> annotation, you
-should ideally put in parentheses a <code>String</code> giving the reason why the
-test is being ignored.</p>
+<p>JUnit has many other powerful features that allow you to
+run suites of tests or repeated tests with specific parameterized
+values, but we&#8217;re only going to introduce one more feature here. In an
+ideal world, you develop tests as you develop code.
+In fact, a popular software development methodology is called
+<em>test-driven development</em> (TDD).  The central idea behind TDD is writing
+your tests <strong>before</strong> you write your code.  Doing so provides clarity about
+what you want your code to do, a way to know when you&#8217;re done writing your
+code, a way to document your code, and a suite of tests that grows along with
+your program.</p>
+</div>
+<div class="paragraph">
+<p>Whether doing TDD or not, you might have completed a test for a specific
+feature before you&#8217;ve finished implementing it. Or perhaps a feature
+in your program is broken at the moment, but you want to continue
+running tests on the rest of the features. In these cases and others, it&#8217;s
+useful to turn off a particular test temporarily. To do this, you add the
+annotation <code>@Disabled</code> before the <code>@Test</code> annotation. In parentheses after the
+<code>@Disabled</code> annotation, you should ideally put in parentheses a <code>String</code> giving
+the reason why the test is being disabled.  There are even annotations that
+allow you to disable tests or run them only on particular platforms.</p>
 </div>
 </div>
 <div class="sect4">
@@ -36271,7 +36341,7 @@ using ConTest is that it cannot tell you where the problem happened or
 when it is likely to happen under normal circumstances. You are still
 dependent on your test design to reveal the source of the problem.
 Finally, ConTest cannot guarantee every possible ordering. Very rare
-bugs may not manifest even after thousands of runs with ConTest
+bugs might not manifest even after thousands of runs with ConTest
 instrumented code.</p>
 </div>
 </div>
@@ -36282,7 +36352,7 @@ instrumented code.</p>
 unit test your programs. Of course, JUnit has several limitations when
 it comes to concurrent programs. JUnit uses exceptions to report failed
 test cases. Unfortunately, JUnit only reports exceptions from the main
-thread, not from any child threads that may be spawned. ConcJUnit allows
+thread, not from any child threads that might be spawned. ConcJUnit allows
 exceptions thrown by child threads to be reported and also forces all
 child threads to join with the main thread.</p>
 </div>
@@ -36339,9 +36409,9 @@ Nevertheless, we have picked errors that are reasonable to make.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PointCharge</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">double</span> <span class="n">charge</span><span class="o">;</span>  <span class="c1">// C</span>
-    <span class="kd">private</span> <span class="kt">double</span> <span class="n">x</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kt">double</span> <span class="n">y</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kt">double</span> <span class="n">z</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kt">double</span> <span class="n">x</span><span class="o">;</span>		<span class="c1">// m</span>
+	<span class="kd">private</span> <span class="kt">double</span> <span class="n">y</span><span class="o">;</span>		<span class="c1">// m</span>
+	<span class="kd">private</span> <span class="kt">double</span> <span class="n">z</span><span class="o">;</span>		<span class="c1">// m</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">K</span> <span class="o">=</span> <span class="mf">8.9875517873681764e9</span><span class="o">;</span> <span class="c1">// N m^2 C^-2</span>
 
     <span class="kd">public</span> <span class="nf">PointCharge</span><span class="o">(</span><span class="kt">double</span> <span class="n">charge</span><span class="o">,</span> <span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
@@ -36538,41 +36608,41 @@ JUnit test method stops once a failure has happened.</p>
 <div class="title">Program 16.3 Corrected version of <code>PointCharge</code>.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FixedPointCharge</span> <span class="o">{</span>
-  <span class="kd">private</span> <span class="kt">double</span> <span class="n">charge</span><span class="o">;</span>  <span class="c1">// C</span>
-  <span class="kd">private</span> <span class="kt">double</span> <span class="n">x</span><span class="o">;</span>
-  <span class="kd">private</span> <span class="kt">double</span> <span class="n">y</span><span class="o">;</span>
-  <span class="kd">private</span> <span class="kt">double</span> <span class="n">z</span><span class="o">;</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">K</span> <span class="o">=</span> <span class="mf">8.9875517873681764e9</span><span class="o">;</span> <span class="c1">// N m^2 C^-2</span>
+	<span class="kd">private</span> <span class="kt">double</span> <span class="n">charge</span><span class="o">;</span>  <span class="c1">// C</span>
+	<span class="kd">private</span> <span class="kt">double</span> <span class="n">x</span><span class="o">;</span>		<span class="c1">// m</span>
+	<span class="kd">private</span> <span class="kt">double</span> <span class="n">y</span><span class="o">;</span>		<span class="c1">// m</span>
+	<span class="kd">private</span> <span class="kt">double</span> <span class="n">z</span><span class="o">;</span>		<span class="c1">// m</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">K</span> <span class="o">=</span> <span class="mf">8.9875517873681764e9</span><span class="o">;</span> <span class="c1">// N m^2 C^-2</span>
 
-  <span class="kd">public</span> <span class="nf">FixedPointCharge</span><span class="o">(</span><span class="kt">double</span> <span class="n">charge</span><span class="o">,</span> <span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">this</span><span class="o">.</span><span class="na">charge</span> <span class="o">=</span> <span class="n">charge</span><span class="o">;</span>
-    <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
-    <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
-    <span class="k">this</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">;</span>
-  <span class="o">}</span>
+	<span class="kd">public</span> <span class="nf">FixedPointCharge</span><span class="o">(</span><span class="kt">double</span> <span class="n">charge</span><span class="o">,</span> <span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">charge</span> <span class="o">=</span> <span class="n">charge</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">;</span>
+	<span class="o">}</span>
 
-  <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCharge</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">charge</span><span class="o">;</span> <span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">double</span> <span class="nf">getCharge</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">charge</span><span class="o">;</span> <span class="o">}</span>
 
-  <span class="kd">public</span> <span class="kt">double</span> <span class="nf">distance</span><span class="o">(</span><span class="n">FixedPointCharge</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="nf">distance</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">y</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">z</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">double</span> <span class="nf">distance</span><span class="o">(</span><span class="n">FixedPointCharge</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="nf">distance</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">y</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">z</span><span class="o">);</span>
+	<span class="o">}</span>
 
-  <span class="kd">private</span> <span class="kt">double</span> <span class="nf">distance</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kt">double</span> <span class="n">deltaX</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">;</span>
-    <span class="kt">double</span> <span class="n">deltaY</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">;</span>
-    <span class="kt">double</span> <span class="n">deltaZ</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">z</span> <span class="o">-</span> <span class="n">z</span><span class="o">;</span>
-    <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">deltaX</span><span class="o">*</span><span class="n">deltaX</span> <span class="o">+</span> <span class="n">deltaY</span><span class="o">*</span><span class="n">deltaY</span> <span class="o">+</span> <span class="n">deltaZ</span><span class="o">*</span><span class="n">deltaZ</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="kd">private</span> <span class="kt">double</span> <span class="nf">distance</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kt">double</span> <span class="n">deltaX</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">;</span>
+		<span class="kt">double</span> <span class="n">deltaY</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">;</span>
+		<span class="kt">double</span> <span class="n">deltaZ</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">z</span> <span class="o">-</span> <span class="n">z</span><span class="o">;</span>
+		<span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">deltaX</span><span class="o">*</span><span class="n">deltaX</span> <span class="o">+</span> <span class="n">deltaY</span><span class="o">*</span><span class="n">deltaY</span> <span class="o">+</span> <span class="n">deltaZ</span><span class="o">*</span><span class="n">deltaZ</span><span class="o">);</span>
+	<span class="o">}</span>
 
-  <span class="kd">public</span> <span class="kt">double</span> <span class="nf">scalarForce</span><span class="o">(</span><span class="n">PointCharge</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kt">double</span> <span class="n">r</span> <span class="o">=</span> <span class="n">distance</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">K</span><span class="o">*</span><span class="n">charge</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="na">charge</span><span class="o">/(</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">double</span> <span class="nf">scalarForce</span><span class="o">(</span><span class="n">FixedPointCharge</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kt">double</span> <span class="n">r</span> <span class="o">=</span> <span class="n">distance</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
+		<span class="k">return</span> <span class="n">K</span><span class="o">*</span><span class="n">charge</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="na">charge</span><span class="o">/(</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">);</span>
+	<span class="o">}</span>
 
-  <span class="kd">public</span> <span class="kt">double</span> <span class="nf">fieldMagnitude</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kt">double</span> <span class="n">r</span> <span class="o">=</span> <span class="n">distance</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">K</span><span class="o">*</span><span class="n">charge</span><span class="o">/(</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">double</span> <span class="nf">fieldMagnitude</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kt">double</span> <span class="n">r</span> <span class="o">=</span> <span class="n">distance</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+		<span class="k">return</span> <span class="n">K</span><span class="o">*</span><span class="n">charge</span><span class="o">/(</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">);</span>
+	<span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -36585,45 +36655,45 @@ class.</p>
 <div id="TestPointChargeProgram" class="listingblock">
 <div class="title">Program 16.4 Class for testing <code>PointCharge</code>.</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.*</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.*;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.jupiter.api.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.*;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestPointCharge</span> <span class="o">{</span>
-  <span class="kd">private</span> <span class="n">PointCharge</span> <span class="n">charge1</span><span class="o">;</span>
-  <span class="kd">private</span> <span class="n">PointCharge</span> <span class="n">charge2</span><span class="o">;</span>
-  <span class="kd">private</span> <span class="n">PointCharge</span> <span class="n">charge3</span><span class="o">;</span>
-  <span class="kd">private</span> <span class="n">PointCharge</span> <span class="n">charge4</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">PointCharge</span> <span class="n">charge1</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">PointCharge</span> <span class="n">charge2</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">PointCharge</span> <span class="n">charge3</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">PointCharge</span> <span class="n">charge4</span><span class="o">;</span>
 
-  <span class="nd">@Before</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">charge1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointCharge</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
-    <span class="n">charge2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointCharge</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
-    <span class="n">charge3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointCharge</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
-    <span class="n">charge4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointCharge</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="nd">@BeforeEach</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">charge1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointCharge</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+		<span class="n">charge2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointCharge</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+		<span class="n">charge3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointCharge</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+		<span class="n">charge4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PointCharge</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+	<span class="o">}</span>
 
-  <span class="nd">@Test</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">distance</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="mf">1.0</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">distance</span><span class="o">(</span><span class="n">charge2</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="mf">1.0</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">distance</span><span class="o">(</span><span class="n">charge3</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="mf">1.0</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">distance</span><span class="o">(</span><span class="n">charge4</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="mf">2.0</span><span class="o">),</span> <span class="n">charge2</span><span class="o">.</span><span class="na">distance</span><span class="o">(</span><span class="n">charge3</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="nd">@Test</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">distanceTest</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="mf">1.0</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">distance</span><span class="o">(</span><span class="n">charge2</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="mf">1.0</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">distance</span><span class="o">(</span><span class="n">charge3</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="mf">1.0</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">distance</span><span class="o">(</span><span class="n">charge4</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="mf">2.0</span><span class="o">),</span> <span class="n">charge2</span><span class="o">.</span><span class="na">distance</span><span class="o">(</span><span class="n">charge3</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+	<span class="o">}</span>
 
-  <span class="nd">@Test</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">scalarForce</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="mi">2</span><span class="o">*</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">scalarForce</span><span class="o">(</span><span class="n">charge2</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-    <span class="n">assertEquals</span><span class="o">(-</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">scalarForce</span><span class="o">(</span><span class="n">charge3</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="mf">0.0</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">scalarForce</span><span class="o">(</span><span class="n">charge4</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-    <span class="n">assertEquals</span><span class="o">((</span><span class="kt">double</span><span class="o">)-</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="o">(</span><span class="kt">double</span><span class="o">)</span><span class="n">charge2</span><span class="o">.</span><span class="na">scalarForce</span><span class="o">(</span><span class="n">charge3</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="nd">@Test</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">scalarForceTest</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="mi">2</span><span class="o">*</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">scalarForce</span><span class="o">(</span><span class="n">charge2</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+		<span class="n">assertEquals</span><span class="o">(-</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">scalarForce</span><span class="o">(</span><span class="n">charge3</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="mf">0.0</span><span class="o">,</span> <span class="n">charge1</span><span class="o">.</span><span class="na">scalarForce</span><span class="o">(</span><span class="n">charge4</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+		<span class="n">assertEquals</span><span class="o">((</span><span class="kt">double</span><span class="o">)-</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="o">(</span><span class="kt">double</span><span class="o">)</span><span class="n">charge2</span><span class="o">.</span><span class="na">scalarForce</span><span class="o">(</span><span class="n">charge3</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+	<span class="o">}</span>
 
-  <span class="nd">@Test</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">fieldMagnitude</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="mi">2</span><span class="o">*</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge2</span><span class="o">.</span><span class="na">fieldMagnitude</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge2</span><span class="o">.</span><span class="na">fieldMagnitude</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-    <span class="n">assertEquals</span><span class="o">(</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge2</span><span class="o">.</span><span class="na">fieldMagnitude</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
-  <span class="o">}</span>
+	<span class="nd">@Test</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">fieldMagnitudeTest</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="mi">2</span><span class="o">*</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge2</span><span class="o">.</span><span class="na">fieldMagnitude</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge2</span><span class="o">.</span><span class="na">fieldMagnitude</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+		<span class="n">assertEquals</span><span class="o">(</span><span class="n">PointCharge</span><span class="o">.</span><span class="na">K</span><span class="o">,</span> <span class="n">charge2</span><span class="o">.</span><span class="na">fieldMagnitude</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="mf">0.001</span><span class="o">);</span>
+	<span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -40783,7 +40853,7 @@ nothing left in the original list. Be sure to reset the <code>head</code> and
 <code>tail</code> references correctly after the reversal.</p>
 </li>
 <li>
-<p>In <a href="#_linked_lists_2">Section 18.3.2</a>, we use two kinds of linked
+<p>In <a href="#_linked_lists">Section 18.2.2</a>, we use two kinds of linked
 lists to store data, but copy all of that data back into an array before
 sorting it. We use third linked list class (<code>SortedLinkedList</code>) to
 insert data and maintain a sorted order. However, it is possible to add
@@ -45189,7 +45259,7 @@ multi-threaded versions?</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-06-10 15:11:25 -0400
+Last updated 2019-07-09 18:07:19 UTC
 </div>
 </div>
 <style>
