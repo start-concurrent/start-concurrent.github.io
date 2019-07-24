@@ -10,24 +10,24 @@ ____
 
 === Fixing bugs
 
-This chapter is about finding, fixing, and, more importantly, preventing
-bugs in software. For this book, this chapter is unique in that it's not based
-on clearly stated concrete problems with straightforward solutions. Finding
+This chapter is about finding, fixing, and preventing
+bugs in software. Within this book, this chapter is unique in that it's not based
+on concrete problems with straightforward solutions. Finding
 and fixing bugs in software, especially concurrent
-software, is a problem no one has solved completely. The first
+software, is a problem no one's solved completely. The first
 half of this chapter will focus on common bugs and how to fix them. The
 second half will focus on design techniques for preventing bugs and
-testing for bugs hidden in your code.
+testing techniques for finding bugs hidden in your code.
 
 ==== Common sequential bugs
 
 We'll begin with bugs commonly found in sequential programs, some of
-which have already been mentioned as common mistakes in previous
-chapters. We won't discuss syntax errors or any other errors which
+which have been mentioned in previous chapters as common mistakes.
+We won't discuss syntax errors or any other errors which
 can be caught at compile time. Instead, all bugs discussed in this
 chapter are run-time bugs.
 
-There are an infinite number of possible bugs, so they can't all be
+There's an infinite number of possible bugs, so they can't all be
 listed. Below are a few of the most common categories of bugs to affect
 beginner (and occasionally veteran) programmers.
 
@@ -85,7 +85,7 @@ Scope Errors:::
 Null Pointer Errors:::
   By this point in your programming experience, you've almost
   certainly experienced a `NullPointerException`. This last kind of bug is,
-  in many ways, a catch-all category, because a null reference is generally
+  in many ways, a catch-all category because a null reference is generally
   not due to a simple typographical error. In the simplest case, a reference
   simply hasn't been initialized with some default constructor, but more often
   there's a logical error in the design of the code.
@@ -100,7 +100,7 @@ useful for narrowing down the possible problems.
 
 A common cause of program errors is an incorrect assumption by a
 programmer. A programmer can assume that the user will only enter
-positive numbers, that a library call will not throw any exceptions, or
+positive numbers, that a library call won't throw any exceptions, or
 that a linked list is never empty. Some assumptions are reasonable, but
 it's important to make sure that they're correct.
 
@@ -123,7 +123,7 @@ slower, no human is sensitive enough to decipher the flow of
 electrons inside the processor as a program executes. The simple truth
 is that we have no idea what's really happening when our programs execute. We
 believe that we understand our programs well, and the output usually
-confirms that our program is doing what we imagine it should be doing.
+confirms that our programs are doing what we imagine they should be doing.
 
 If the output doesn't match our expectations, we might not have enough
 data to understand the problem. As long as there have been programmers, they
@@ -145,7 +145,7 @@ With the rise of modern debugging environments, using print statements
 has lost some of its appeal. Most languages allow the programmer to run
 his or her program in a special debug mode where it's possible to
 execute a single line of code at a time. These tools usually give the
-option of stepping over method calls or stepping into them, on a case by
+option of stepping over method calls or stepping into them on a case by
 case basis.
 
 As the program executes, the programmer can inspect the values of the
@@ -182,7 +182,7 @@ execution. Debuggers typically rely on at least one breakpoint in order
 to skip all the preliminary parts of the code and skip straight to the
 perceived trouble spot.
 
-Sometimes an error will predictably crop up after many thousands of
+Sometimes an error will crop up predictably after many thousands of
 iterations of a loop or unpredictably due to race conditions or user input.
 For either of these cases, conditional breakpoints can be used to save the
 a programmer a great deal of time.
@@ -283,7 +283,7 @@ instance of a class that should be true as long as the class is in a
 consistent state. Perhaps a method call rearranges the innards of an
 object, but by the end of the method call, the object should be
 consistent again. You should use assertions to check class invariants at
-the end of every method that could make the object violate the
+the end of every method that could make the object violate these
 invariants.
 
 Wonderful as assertions are, there are times when they shouldn't be
@@ -418,7 +418,7 @@ properties with a right-click.
 You can start your program running in debug mode by clicking
 the Debug button on the toolbar or selecting Debug (Shift+F9) from the Run
 menu.  When execution of your program reaches a breakpoint and pauses, you
-can use essentially the same tools to advance execution as you can in Eclipse.
+can use essentially the same tools to advance execution as you would in Eclipse.
 
 The Resume Program command (or F9) will continue execution.  The Step Into
 command (or F7) will advance execution by one line, moving into a method call
@@ -458,12 +458,12 @@ few examples corresponding to the common bugs listed in <<Fixing bugs>>.
 .Precision errors
 ====
 
-Precision can cause subtle errors, especially with floating-point types.
+Floating-point precision can cause subtle errors.
 Here's an example of a program attributed to Cleve Moler that gives
 some estimation of the threshold for floating-point precision. Note that
 `a` ≈ 4/3, making `b` ≈ 1/3, `c`
 ≈ 1, and `d` ≈ 0. Nevertheless,
-the comparison `(d == 0.0)` in the `if` statement in this code will
+the comparison `d == 0.0` in the `if` statement in this code will
 evaluate to `false`.
 
 [source,java]
@@ -543,7 +543,7 @@ green *= 2;
 blue *= 2;
 ----
 
-In Java, this code would not work. The first problem is that, even
+In Java, this code would not function correctly. The first problem is that, even
 though image standards are written with color values between 0 and 255,
 Java `byte` values are *signed*. The web standard for the color purple
 has red, green, and blue values of `(128,0,128)`. Since Java `byte`
@@ -589,7 +589,7 @@ double value = 2.0*(x/y);
 
 Above, it's easy for a programmer to forget that the division of `x`
 and `y` is integer division. After all, the `2.0` is right there,
-causing an implicit cast to `double`. Of course, this cast happens after
+causing an implicit cast to `double`. Of course, this cast happens *after*
 the division, and the answer stored into `value` is `2.0` and not the
 `3.3333333333333335` that the programmer might have expected.
 
@@ -634,7 +634,8 @@ usually be necessary when retrieving objects.
 ====
 
 Loops give Java much of its expressive power, which includes the power to
-express incorrect code. We're going to mention a few of the most common loop errors.
+express incorrect code. Here are examples of a few of the most common loop
+errors.
 
 .Off-by-one errors
 ====
@@ -655,8 +656,8 @@ for(int i = 1; i < 50; i++)
 Perhaps you want to make a template for an exam. Instead of being
 zero-based, you start at 1 because most exams don't have a Question 0.
 Unfortunately, you've gotten so used to using strictly less than for
-your ending condition that you forget to change it. You only get 49
-questions printed out. If your purpose was making an exam, you can
+your ending condition that you forget to change it and only get 49
+questions printed out. If your purpose was making an exam, you could
 catch your mistake and move on. If you're writing a program that
 dispenses a quantity of heart medication into a patient's IV in a
 hospital, one iteration too few or too many could cause the patient to
@@ -738,12 +739,12 @@ public double average(int[] array) {
 }
 ----
 
-This example is the kind that might be too confusing to appear in a
+This example might be too absurd to appear in a
 textbook, but nearly everyone has written worse code while learning to
 program. We could suppose that this method is meant to average the
-values in an array, but, for some reason, zero valued entries are not to
+values in an array, but for some reason, zero valued entries are not to
 be counted. The student probably meant to have the following `if`
-statement:
+statement.
 
 [source,java]
 ----
@@ -765,9 +766,9 @@ possibility just a little later.
 
 [source,java]
 ----
-for(i = 10; i > 0; i++) {
-  System.out.println(i + "!");
-}
+for(i = 10; i > 0; i++)
+	System.out.println(i + "!");
+	
 System.out.println("Blast-off!");
 ----
 
@@ -840,7 +841,8 @@ public static boolean isPrime(int n) {
 This example is similar code trying to solve the same problem.
 Again, the loop only runs once because the programmer forgot that
 finding a single case when a number is not evenly divisible by another
-number does not make it prime. Many, many beginning programmers make
+number does not make it prime: a large range of possible factors must be
+checked before we can be sure. Many, many beginning programmers make
 this mistake when asked to solve this problem. Perhaps some insight
 about the nature of bugs can be gained from this example. By the time a
 student writes a program of this kind, he or she should have a fair idea
@@ -890,7 +892,7 @@ Because Java keeps a pool of existing `String` values, only one copy of
 `"Test"` is in the pool, and both `string1` and `string2` point to it.
 Thus, this second fragment of code prints `Identical`. Because of
 `String` pooling, programmers can write code which can work in some
-situations and fail in others, if it's dependent on the `==` operator.
+situations and fail in others, if it depends on the `==` operator.
 
 For `String` objects as well as every other reference type, it's
 almost always the case that the `equals()` method should be used to test
@@ -936,9 +938,9 @@ We have all experienced an `ArrayIndexOutOfBoundsException`. Either a
 little carelessness with our indexes or a mistake about the size of the
 array can lead us to try to access an index that isn't in the array.
 In the C language, a negative index is sometimes a legal location, but it
-never is in Java. Although negative indexes occur in code, the error is
-usually accessing an index slightly larger than the bounds of an array,
-particularly with a loop.
+never is in Java. Although errors involving negative indexes sometimes occur
+in code, a more common error is accessing an index slightly larger than the
+bounds of an array, particularly with a loop.
 
 [source,java]
 ----
@@ -952,15 +954,15 @@ when `array` only goes up to index `99`.
 
 The causes for going out of bounds can be more subtle. We can imagine an
 array of linked lists, perhaps for storing English words in a dictionary. If we
-want to pick the list based on the first letter of the word, we could have
+want to select a list based on the first letter of the word, we could use
 an array of length 26. Consider the following helper method used to add a
 new `String` to the correct list.
 
 [source,java]
 ----
 public void add(String word) {
-    int index = word.toLowerCase().charAt(0) - 'a';
-    lists[index].add(word);
+	int index = word.toLowerCase().charAt(0) - 'a';
+	lists[index].add(word);
 }
 ----
 
@@ -984,7 +986,7 @@ initialize an object array. With a primitive data type like `int`,
 creating an array with 1,000 elements automatically allocates enough
 space to hold those elements and even initializes each one to a default
 value, `0` in the case of an `int`. With an object data type, however,
-each element of the array is just a reference to `null` until it's
+each element of the array is a reference to `null` until it's
 initialized.
 
 [source,java]
@@ -1000,8 +1002,6 @@ more of a forehead-slapping oversight than a mind-numbing puzzler that'll take
 hours to debug. It's probably just a matter of instantiating each element in
 the array before you try to feed those hungry, hungry hippos.
 
-====
-
 [source,java]
 ----
 Hippopotamus[] hippos = new Hippopotamus[15];
@@ -1009,10 +1009,12 @@ for(int i = 0; i < hippos.length; i++)
     hippos[i] = new Hippopotamus();
 hippos[3].feed();
 ----
+====
+
 
 ==== Scope errors
 
-We don't have variables in real life, and as a consequence, out
+We don't have variables in real life, and as a consequence, our
 intuition about them is sometimes wrong. Which variable you're
 accessing at any given time can appear obvious, even if it really isn't.
 
@@ -1040,7 +1042,7 @@ will never increase. This kind of bug could go uncaught for a long while
 until a programmer notices that the `Shadow` object isn't increasing in
 darkness no matter how many times it's told to.
 
-This kind of mistake is also common in constructors, since it's
+This mistake is also common in constructors, since it's
 reasonable to give a certain parameter a name similar to the field it's
 about to initialize. Some programmers explicitly prefix all fields with
 `this` even though it's often redundant. Three additions of `this` will
@@ -1102,7 +1104,7 @@ will be set to 20 here.
 
 Thus, the first call to `brag()` will print out `My strength is 10!`, but the
 second call will print out `My strength is 20!`. Note that some of the
-confusion in this example is possible only because the field `strength is
+confusion in this example is possible only because the field `strength` is
 `public`. If the field was `private` and only changed through methods, at
 least there would no longer be two ways to set the `strength` field with
 two different outcomes. 
@@ -1114,7 +1116,7 @@ two different outcomes.
 The final category of scope error we'll talk about occurs when using
 methods because of confusion between passing by reference and passing by
 value. Every variable in Java is passed by value. However, when that value
-is itself a reference, it is possible to change the values that it references.
+is itself a reference, it's possible to change the values that it references.
 
 [source,java]
 ----
@@ -1178,11 +1180,11 @@ blindly use a `null` reference without checking it first, causing a
 
 === Concurrency: Parallel bugs
 
-We'll only briefly discuss parallel bugs here because we've already
+We'll discuss parallel bugs briefly here because we've already
 spoken in depth about the dangers of parallel programming in
-<<ch14-synchronization#ch14-synchronization>>. Except in the case of deadlocks and
-livelocks, the real trouble with parallel bugs is that they make the
-appearance of ordinary sequential bugs become nondeterministic.
+<<ch14-synchronization#ch14-synchronization>>. Beyond deadlocks and
+livelocks, a key difficulty with parallel bugs is that they can make the
+appearance of sequential bugs nondeterministic and unpredictable.
 
 ==== Race conditions
 
@@ -1199,13 +1201,13 @@ through some variable shared between multiple threads. When the schedule
 of threads becomes unpredictable, the changes made to this variable can
 come out of sequence, and its value becomes unpredictable. Incorrect
 output means that your program has a bug, but the most frustrating
-aspect of race conditions is that they are nondeterministic. Your
+aspect of race conditions is that they're nondeterministic. Your
 program could sometimes have the right answer and sometimes not. Your
-program could always have the wrong answer, but not always the same one.
+program could always have the wrong answer but not always the same one.
 The truly insidious issue with race conditions is that they'll usually
 cause errors only a tiny percentage of the time. Thus, rigorous testing
 such as we'll discuss in the second half of this chapter is necessary
-to be aware that a race condition is occurring.
+to show that a race condition is occurring.
 
 ==== Deadlocks and livelocks
 
@@ -1254,11 +1256,11 @@ locks and other synchronization tools.
 
 === Finding and avoiding bugs
 
-What would you do if you wanted to design a system for administering a
-dose of radiation to a specific location on a patient to help treat them
-for cancer? Depending on the specification of the problem, you might
+What would you do if you wanted to design software for a system that
+administers a dose of radiation to a specific location on a patient to help
+treat them for cancer? Depending on the specification of the problem, you might
 need to control various voltage sources, read data from sensors,
-and create a terminal interface or a GUI. With a well-designed
+and create a command-line interface or a GUI. With a well-designed
 specification, you could probably apply your knowledge of loops and
 control structures to an API and develop a software solution that met
 requirements, provided that an appropriate hardware platform existed.
@@ -1305,8 +1307,8 @@ the beam spreader that was necessary for its safe operation. The
 designers ignored the possibility that this series of keystrokes would
 happen. Also, a race condition was involved in this bug since it
 depended on one task that set up the equipment and another that received
-input from the technician. This race condition was never caught because
-only technicians with long practice could work fast enough to cause the
+input from the technician. This race condition wasn't caught during testing
+because only technicians with long practice could work fast enough to cause the
 bug. Finally, a counter was incremented for use as a flag variable, but
 arithmetic overflow occasionally caused this flag to have the wrong
 value.
@@ -1384,7 +1386,7 @@ applied to methods in a straightforward way. For each method, you have a
 formal explanation of what its input should be, what its output should
 be, and what else can be changed in the process. For some languages and
 some segments of code, it's possible to prove that a given method does
-exactly what it is supposed to do. Nevertheless, Donald Knuth, a giant
+exactly what it's supposed to do. Nevertheless, Donald Knuth, a giant
 in computer science, is famous for having said, "Beware of bugs in the
 above code; I have only proved it correct, not tried it."
 
@@ -1397,16 +1399,16 @@ programmers sit at a single computer and work together. Ideally, the programmer
 who is currently typing, often called the _driver_, is thinking about the
 immediate problems posed by the next few lines of code while the other
 programmer, often called the _navigator_, is thinking about the larger context
-of the program and watching for errors. Two sets of eyes is always beneficial
+of the program and watching for errors. Two sets of eyes are always beneficial
 when looking at something as detailed and confusing as a computer program.
 
 In keeping with the theme of having more than one set of eyes looking at
-a program, it's generally recognized that it's useful to have the
-individuals who test the software be independent from those who develop
-it. By keeping the testers separate, they're not infected by the
-assumptions and biases that the developers made while writing the
-software. Some communication between the two groups is necessary, but
-there's value in black-box testing, which we'll explain in the next subsection.
+a program, it's also useful to have the individuals who test the software be
+independent from those who develop it. By keeping the testers separate, they're
+not infected by the assumptions and biases that the developers made while
+writing the software. Some communication between the two groups is necessary,
+but there's value in black-box testing, which we'll explain in the next
+subsection.
 
 Another piece of general advice is to rely on standard libraries as much
 as possible. Reinventing your own libraries is partly a waste of time
@@ -1444,7 +1446,7 @@ released but have little or no value in the field.
 Once you've designed and implemented your program (or ideally throughout the
 process of implementation), you should test it to see if it
 behaves as expected and required. The most common form of software
-testing done by students is a form of a _smoke test_. A smoke test is a
+testing done by students is a form of _smoke test_. A smoke test is a
 basic test of functionality. Such a test should simply run through the
 major features of a program and verify that they seem to work under
 ordinary circumstances. Often a student will barely finish the program
@@ -1452,7 +1454,7 @@ before the deadline and be unable to perform anything but the most basic
 tests.
 
 Smoke tests are useful because it's pointless to test the finer details
-of a system that is clearly broken, but the software engineering
+of a system that's clearly broken, but the software engineering
 industry uses many other kinds of testing to ensure that a given piece
 of software meets its specification. We'll briefly cover three broad
 areas of testing: black-box testing, white-box testing, and regression
@@ -1505,7 +1507,7 @@ All-Pairs Testing:::
   specific values at the same time before they manifest. With each
   increase in the number of different inputs that must each have
   specific values at the same time to cause a bug, the bug becomes
-  increasingly difficult to track down but also increasingly unlikely to
+  increasingly difficult to detect but also increasingly unlikely to
   exist. It might be possible to test all possible values for a given
   input but impossible to test all possible values for all inputs at the
   same time. All-pairs testing is a compromise between these two
@@ -1519,8 +1521,12 @@ Fuzz Testing:::
   design test cases. Another is that it makes no assumptions about the
   program behavior, catching errors that might never occur to a human
   being.  If fuzz testing is automated, it can also be used for
-  stress testing, in which the program's ability to process a large amount
+  _stress testing_, in which the program's ability to process a large amount
   of data quickly or while remaining responsive is tested.
+
+****
+<<zuneExercise>>
+****  
 
 ===== White-box testing
 
@@ -1581,8 +1587,7 @@ One open-source tool for testing Java is called JUnit.
 There are other testing tools for Java, and there's a wide array of
 tools for testing software in virtually any language. We cover JUnit
 here because it's widely accepted as a standard Java testing tool and
-because it's open-source. First, we'll explain how to use JUnit, and
-then we'll discuss tools for testing concurrent software.
+because it's open source.
 
 ==== JUnit testing
 
@@ -1598,10 +1603,10 @@ of the complete, integrated system against its specifications.
 
 Our coverage of JUnit testing is based on JUnit 5. This version of JUnit
 has simple syntax for creating JUnit tests compared to JUnit 3 and earlier,
-but it also relies on _annotations_. Annotations are additional information
+but it also relies on _annotations_. An annotation is additional information
 written into Java code that affects how the compiler or run-time system treats
 the code. They are like comments, but they can affect code execution or
-compilation, though usually indirectly. Applying an annotation to a
+compilation, usually indirectly. Applying an annotation to a
 method is called _decorating_. A class, a method, a variable, a package,
 or even an individual method parameter can be decorated.
 
@@ -1620,8 +1625,9 @@ public void oldMethod() {
 
 Many methods in the extensive Java API are deprecated, like
 `Thread.suspend()`, due to its inherent deadlock risk. As of Java 5 when
-annotations were introduced, these methods were all decorated with
-`@Deprecated`. The `@Override` annotation marks a method that's
+annotations were introduced, existing deprecated methods were decorated with
+`@Deprecated`.  Before that, the only way to know that a method was deprecated
+was by reading the documentation. The `@Override` annotation marks a method that's
 overriding a parent class method, causing a compiler error if the method
 isn't correctly overriding some parent class method. The `@SuppressWarnings`
 annotation allows certain warning messages to be suppressed, like using
@@ -1653,14 +1659,14 @@ let's imagine that we want to test functionality within the Java
 
 To do so, we create a class called `MathTest` with three methods inside
 of it called `ceilTest()`, `powTest()`, and `sinTest()`. Note that it's a 
-common JUnit convention to end the names of the testing methods with `Test`.
+common JUnit convention to end the names of the testing methods with "`Test.`"
 We'll use each method to test the functionality of the three methods
-that, respectively, have matching names. Although ending with `Test` is
+that, respectively, have matching names. Although ending with "`Test`" is
 a convention, there's no requirement to name these methods any particular
-way. Tests in JUnit do not have to test single method calls. They could
+way. Tests in JUnit don't have to test single method calls. They could
 test any functional aspect of an object or class. Nevertheless, for
 documentation reasons it's wise to give the test methods names that
-reflect what is being tested.
+reflect what's being tested.
 
 Where do annotations come in? The header for the `ceilTest()` method
 should be as follows.
@@ -1671,7 +1677,7 @@ should be as follows.
 public void ceilTest()
 ----
 
-The only thing necessary to use a method in a JUnit test is to annotate
+The only thing necessary to use a method for a JUnit test is to annotate
 it with `@Test`. It's also necessary to make any function used for
 testing `public` with a `void` return type and no parameters. Otherwise,
 the JUnit framework will crash when you try to run the tests. Each
@@ -1725,7 +1731,7 @@ Another useful method is `assertEquals()` (and its close cousin
 `AssertionError` if the two aren't equal. There are overloaded versions
 of this method for other primitive types and `Object`. Note that the preferred
 `assertEquals()` method for the `double` type takes three parameters,
-including an delta threshold in case the values don't match exactly.
+including a delta threshold in case the values don't match exactly.
 
 .JUnit math testing
 ====
@@ -1752,9 +1758,9 @@ ideal world, you develop tests as you develop code.
 In fact, a popular software development methodology is called
 _test-driven development_ (TDD).  The central idea behind TDD is writing
 your tests *before* you write your code.  Doing so provides clarity about
-what you want your code to do, a way to know when you're done writing your
-code, a way to document your code, and a suite of tests that grows along with
-your program.
+what you want your code to do, a way to know that you've written your
+code correctly, a way to document your code, and a suite of tests that
+grows along with your program.
 
 Whether doing TDD or not, you might have completed a test for a specific
 feature before you've finished implementing it. Or perhaps a feature
@@ -1764,140 +1770,171 @@ useful to turn off a particular test temporarily. To do this, you add the
 annotation `@Disabled` before the `@Test` annotation. In parentheses after the
 `@Disabled` annotation, you should ideally put in parentheses a `String` giving
 the reason why the test is being disabled.  There are even annotations that
-allow you to disable tests or run them only on particular platforms.
+allow you to run tests or disable them for particular platforms.
 
 ===== Running JUnit
 
-Once you have created your JUnit test classes, you will want to run
-them. There are tools built into IDE's like Eclipse to make this easier,
+Once you've created your JUnit test classes, you'll want to run
+them. There are tools built into IDEs like Eclipse to make running easier,
 but the command line is always an option. As we said before, you need to
 include the JUnit jar file in your classpath. You can either do this
 permanently, by adding it to a `CLASSPATH` environment variable in a way
 dependent on your OS, or for a particular run of a Java tool. Assuming
 that you haven't added the jar file to your classpath permanently, let's
-say that you are using JUnit 4.5 from a jar file called `junit-4.5.jar`
-that can be found in `C:\Utilities\Java\JUnit\`. To compile `MathTest`,
-you would type:
-
-
-....
-javac -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar MathTest.java
-....
-
-To actually run the code, you still need to include `junit-4.5.jar` in
-your classpath, but you also need to invoke the test runner called
-`org.junit.runner.JUnitCore` as follows:
+say that you're using the JUnit Platform 1.5.1 that's included with JUnit
+5.5.1 from a jar file called `junit-platform-console-standalone-1.5.1.jar`
+that can be found in `C:\Java\JUnit\`. If `MathTest.java` is in the current
+directory, you would type the following.
 
 ....
-java -classpath .;C:\Utilities\Java\JUnit\junit-4.5.jar
-    org.junit.runner.JUnitCore MathTest
+javac -classpath .;C:\Java\JUnit\junit-platform-console-standalone-1.5.1.jar MathTest.java
 ....
 
-If you had multiple test classes, you could just list them all after
-`org.junit.runner.JUnitCore` and all the methods marked `@Test` in them
-would be run. Note that methods without an `@Test` decoration will not
-be run as tests, but there is no rule against having them. In this way,
-you can use un-decorated methods as helper methods for your test
-methods.
+To actually run the tests, you need to tell the platform where to
+look for tests to run.  Thus, you run the platform from its jar file, specifying that the class
+path is the current directory (`.`), and then scan that directory for tests.  Note that it's
+unnecessary to mention `MathTest` at this point since all tests in the specified class path will
+be run.
 
-When you run JUnit tests, you should see the version number of JUnit
-used, a dot printed out for each test, the amount of time taken, and
-then something like `OK (3 tests)` if all of your tests ran without an
-error. If there is an error, it will list each error, probably with a
-long stack trace showing the propagation of the exception.
+....
+java -jar C:\Java\JUnit\junit-platform-console-standalone-1.5.1.jar --class-path . --scan-class-path
+....
+
+The output should include something like the following, showing that all three tests passed.
+
+....
+╷
+├─ JUnit Jupiter ✔
+│  └─ MathTest ✔
+│     ├─ ceilTest() ✔
+│     ├─ powTest() ✔
+│     └─ sinTest() ✔
+└─ JUnit Vintage ✔
+....
+
+For the command line, this output is impressive, yet the commands listed above
+to run JUnit are complex.  These commands have many additional options,
+allowing you to include or exclude additional paths, directories, and file
+names.  While it's possible to run JUnit commands from the command
+line, the process is smoother through an IDE.
 
 === Concurrency: Testing tools
 
-In this section, we describe some tools that exist specifically to help
-you catch those bugs that are present as a direct result of concurrency.
-You have probably noticed that this section is quite short, and that
-shortness reflects the shortage of good tools available. The design of
-concurrent debugging and testing tools is still an open research topic.
-As always, the nondeterminism of concurrency makes bugs difficult to pin
-down. You could run a JUnit test 1,000,000 times and never see a
-peculiar race condition bug. From a brute force perspective, we could
-try to test all possible interleavings of thread execution, but this
-approach is not practical for large programs because the number of
-interleavings grows exponentially. Nevertheless, some research has
+In this section, we describe some tools that exist specifically to help catch
+those bugs that crop up as a direct result of concurrency. This
+section is short, and that shortness reflects the fewness of good tools
+available. The design of concurrent debugging and testing tools is still an
+open research topic. The heart of the problem is that the nondeterminism
+present in concurrency makes bugs difficult to pin down. You could run a JUnit
+test 1,000,000 times and never see a peculiar race condition. From a brute
+force perspective, we could try to test all possible interleavings of thread
+execution, but this approach is not practical for large programs because the
+number of interleavings grows exponentially. Nevertheless, some research has
 focused on attacking the problem from this direction.
 
-==== ConTest
+==== IBM ConTest
 
-One tool that uses this idea is ConTest from IBM. The way the JVM
-normally works makes some interleavings more likely than others. If the
-correct output is very likely and the incorrect is very unlikely, it is
-easy for you to believe that your program works correctly. ConTest is a
-tool that _instruments_ class files after they have been compiled by
-Java. When it instruments these files, it adds extra method calls into
+One tool that used this idea was ConTest from IBM. Normal JVM
+operation makes some interleavings more likely than others. If the
+correct output is very likely and the incorrect is very unlikely, it's
+easy for a tester to believe that the program works correctly. ConTest was a
+tool that _instrumented_ class files after they'd been compiled by
+Java. When it instrumented these files, it added extra method calls into
 concurrent code designed to introduce some randomness into the system.
 By introducing `sleep()` and `yield()` methods in random places, the JVM
-can be forced into producing interleavings that would otherwise be
-unusual. The designers of ConTest have used heuristics so that ConTest
-adds this randomness in "`smart`" locations designed to maximize unusual
+could be forced into producing interleavings that would otherwise be
+unusual. The designers of ConTest used heuristics so that ConTest
+added this randomness in "`smart`" locations designed to maximize unusual
 interleavings and catch bugs.
 
-ConTest is not a panacea. Although it can reveal bugs that are very
-rare, it still must be combined with strong testing methodologies so
-that those bugs can be caught when they appear. Another difficulty with
-using ConTest is that it cannot tell you where the problem happened or
-when it is likely to happen under normal circumstances. You are still
+ConTest was not a panacea. Although it revealed bugs that were 
+rare, it still had to be combined with strong testing methodologies so
+that those bugs could be caught when they appeared. Another difficulty with
+using ConTest was that it couldn't tell you where the problem happened or
+when it was likely to happen under normal circumstances. You were still
 dependent on your test design to reveal the source of the problem.
-Finally, ConTest cannot guarantee every possible ordering. Very rare
-bugs might not manifest even after thousands of runs with ConTest
-instrumented code.
+ConTest also didn't guarantee every possible ordering. Very rare
+bugs might not have manifested even after thousands of runs with ConTest
+instrumented code.  Although ConTest was one of the most promising tools
+taking this approach, it is no longer available.
 // This site no longer works...
-// For more information about ConTest, visit the IBM
 // http://www.ibm.com/developerworks/java/library/j-contest.html[ConTest site^].
 
-==== Concutest
+==== Devexperts tools
 
-We hope we have convinced you of the value of using JUnit testing to
-unit test your programs. Of course, JUnit has several limitations when
-it comes to concurrent programs. JUnit uses exceptions to report failed
-test cases. Unfortunately, JUnit only reports exceptions from the main
+The open-source https://github.com/Devexperts/lin-check[Lin-check^] framework
+has some similarities to ConTest.  It was designed by
+https://devexperts.com[Devexperts^] specifically to test data structures such
+as those we will discuss in
+<<ch18-dynamic-data-structures#ch18-dynamic-data-structures>>.  Like ConTest,
+Lin-check executes tests in parallel many times in an effort to find a
+concurrent interleaving that causes an error condition.
+
+The https://github.com/Devexperts/dlcheck[Dl-check^] tool was also designed by
+Devexperts.  Its goal is to find deadlocks that could happen in concurrent
+programs.
+
+==== ConcJUnit and ConcurrentUnit
+
+We hope we've convinced you of the value of using JUnit testing to
+unit test your programs. Of course, JUnit has limitations, especially when
+testing concurrent programs. JUnit uses exceptions to report failed
+test cases, but JUnit only reports exceptions from the main
 thread, not from any child threads that might be spawned. ConcJUnit allows
 exceptions thrown by child threads to be reported and also forces all
 child threads to join with the main thread.
 
 In this way, it will be clear if any errors happened while a child
 thread was being executed, either causing an exception to be thrown or
-causing a child thread to fail to rejoin the main thread.
+causing a child thread to fail to rejoin the main thread.  ConcJUnit is
+intended as a drop-in replacement for JUnit, but only for JUnit 3 and 4.
+ConcJUnit is no longer under active development and is unlikely to have
+a version compatible with JUnit 5. ConcJUnit is part of a larger suite of
+open-source tools called *Concutest* maintained at the 
+http://www.concutest.org[Concutest site^].
 
-ConcJUnit is part of a larger suite of tools called *Concutest*
-maintained at the +
-http://www.concutest.org[Concutest site^]. Concutest includes
-Thread Checker, a tool that allows programmers to use annotations to
-test thread invariants. The Concutest project is also developing a
-Schedule-Based Execution environment to allow programmers to test
-programs using specific sets of concurrent interleavings.
+https://github.com/jhalterman/concurrentunit[ConcurrentUnit^] is another
+testing framework with annotations similar to those found in JUnit.  Although
+it's not intended as a replacement for JUnit, it has facilities like ConcJUnit
+that allow testers to discover when an exception occurs on child threads.
 
-==== Intel tools
 
-There are many other industry tools for debugging and optimizing
-threaded programs. Intel produces software such as the Intel Thread
-Checker to find concurrent errors as well as the Intel Vtune Performance
-Analyzer and Intel Thread Profiler to help tune threaded programs. These
-products from Intel, like many concurrency tools, are focused on C/{cpp}
-and Fortran platforms. Historically, concurrency has been centered in
-the high performance and scientific computing markets. Java, in
-contrast, has been perceived as a slow language, more suited for desktop
-applications. As the role of concurrency continues to evolve, so will
-the tools to help programmers.
+==== SpotBugs
+
+https://spotbugs.github.io[SpotBugs^] (previously called FindBugs), is a static
+analysis tool that examines programs for a long list of errors.  SpotBugs looks
+for patterns that match known errors.  Most of the errors that SpotBugs looks
+for have nothing to do with concurrency, but a whole section of its bug list is
+devoted to multithreaded correctness.  SpotBugs can help you find incorrect
+usage of synchronization tools as well as unsafe concurrent library usage.
+
+
+==== Intel^®^ tools
+
+There are industry tools for debugging and optimizing threaded programs outside
+of Java. Intel^®^ produces software such as the Intel^®^ Inspector to find
+concurrent errors as well as the Intel^®^ Vtune™ Amplifier to help tune threaded
+programs. These products from Intel^®^, like many concurrency tools, are focused
+on C/{cpp} and Fortran platforms. Historically, concurrency has been centered
+in the high performance and scientific computing markets. Java, in contrast,
+has been perceived as a slow language, better suited to desktop applications.
+As the role of concurrency continues to evolve, so will the tools to help
+programmers.
 
 === Examples: Testing a class
 
-The larger the system, the more critical testing becomes. We do not have
-the space to give or explain a complex testing example, but we can give
-you another example of JUnit testing.
+The larger the system, the more critical testing becomes. We don't have
+the space to explain a complex testing example, but we can provide another
+example of JUnit testing.
 
 .A broken class
 ====
 
-We are going to rely on an example from physics and create a
-`PointCharge` class that has a certain charge and a specific location in
-3D space. We are also going to introduce some errors into the class.
-Because the class is so simple, the errors should be obvious.
-Nevertheless, we have picked errors that are reasonable to make.
+Using an example from physics, we can create a `PointCharge` class that has
+a certain charge and a specific location in 3D space. We're also going to
+introduce some errors into the class. Because the class is so simple, the
+errors should be obvious. Nevertheless, we've picked reasonable errors that
+might come up in real development.
 
 .Physics class with errors.
 [source, java]
@@ -1905,16 +1942,18 @@ Nevertheless, we have picked errors that are reasonable to make.
 ----
 include::{programsdir}/PointCharge.java[]
 ----
+<.> The `PointCharge` class has a straightforward constructor followed by an
+accessor.
+<.> Then, it has a method to determine distance to another `PointCharge`.
+<.> This method in turn relies on a private helper method that can compute
+distance from an arbitrary _x_, _y_, and _z_ location.
+<.> Some of the harder work done by the class can be found in a method to
+determine the scalar force between two charges.
+<.> Another method finds the magnitude of the electric field due to the charge
+at some location.
 
-The `PointCharge` class has the expected constructor and then a method
-to determine distance to another `PointCharge`. This method in turn
-relies on a private helper method that can compute distance to an
-arbitrary _x_, _y_, and _z_
-location. Finally, the "`important`" work done by the class are in
-determining the scalar force between two charges and the magnitude of
-the electric field due to the charge at some location. Recall from
-physics that the force _F_ between two charges
-_q_~1~ and _q_~2~ is given by:
+Recall from physics that the force _F_ between two charges _q_~1~ and _q_~2~
+is given by the following equation.
 
 //[stem]
 //++++
@@ -1928,7 +1967,7 @@ In this equation, _k_~e~ is the proportionality constant
 8.9875517873681764 × 10^9^ N⋅m^2^⋅C^-2^
 and _r_ is the distance between the charges. Likewise, the
 electric field _E_ at a given location due to a charge
-_q_ is:
+_q_ is given below.
 
 //[stem]
 //++++
@@ -1946,23 +1985,23 @@ image::field.svg[scaledwidth=12%,pdfwidth=12%,width=12%]
 ====
 
 Let's come up with a test for the `distance()` methods first. We're
-going to need some other ``PointCharge``s. Let's make 4 altogether: one at
-the origin and three one meter along each positive axis. We can create
+going to need some other `PointCharge` objects. Let's make four altogether:
+one at the origin and three one meter along each positive axis. We can create
 these charges in a set up method. While we're at it, we'll give them a
 variety of positive and negative charges.
 
 [source,java]
 ----
-@Before
+@BeforeEach
 public void setUp() {
-    charge1 = new PointCharge(1, 0, 0, 0);
-    charge2 = new PointCharge(2, 1, 0, 0);
-    charge3 = new PointCharge(-1, 0, 1, 0);
-    charge4 = new PointCharge(0, 0, 0, 1);
+	charge1 = new PointCharge(1, 0, 0, 0);
+	charge2 = new PointCharge(2, 1, 0, 0);
+	charge3 = new PointCharge(-1, 0, 1, 0);
+	charge4 = new PointCharge(0, 0, 0, 1);
 }
 ----
 
-To test the `distance()` method thoroughly, we will check the distance
+To test the `distance()` method thoroughly, we'll check the distance
 from `charge1` to all the other charges as well as `charge2` to
 `charge3`.
 
@@ -1970,40 +2009,40 @@ from `charge1` to all the other charges as well as `charge2` to
 ----
 @Test
 public void distance() {
-    assertEquals(1.0, charge1.distance(charge2), 0.001);
-    assertEquals(1.0, charge1.distance(charge3), 0.001);
-    assertEquals(1.0, charge1.distance(charge4), 0.001);
-    assertEquals(Math.sqrt(2.0), charge2.distance(charge3), 0.001);
+    assertEquals(1.0, charge1.distance(charge2), 0.000001);
+    assertEquals(1.0, charge1.distance(charge3), 0.000001);
+    assertEquals(1.0, charge1.distance(charge4), 0.000001);
+    assertEquals(Math.sqrt(2.0), charge2.distance(charge3), 0.000001);
 }
 ----
 
 The distances between `charge1` and the other three should be 1, and the
 distance between `charge2` and `charge3` should be around the square root of two.
-Yet, when we run this test with JUnit, the test
-fails. We get:
+Yet when we run this test with JUnit, the test
+fails with the following error.
 
 ....
 java.lang.AssertionError: expected:<1.0> but was:<1.4142135623730951>
 ....
 
-for the second assertion in the method. But why? If we comb through the
+This error happens on the second assertion in the method. But why? If we comb through the
 `distance()` methods in `PointCharge`, they all look correct. The
-problem must be deeper. `PointCharge` does not have accessor methods for
-its location, and so we can't test those. Checking the constructor, we
+problem must be deeper. `PointCharge` doesn't have accessor methods for
+its location, so we can't test those. Checking the constructor, we
 find the culprit: `this.z = y;`, a simple cut and paste error.
 
-With the `distance()` methods working, we can test other things. We are
-going to run a similar test for `scalarForce()` generated by plugging in
-appropriate values into the equation for _F_.
+With the `distance()` methods working, we can run a similar test for
+`scalarForce()` generated by plugging in appropriate values into the
+equation for _F_.
 
 [source,java]
 ----
 @Test
 public void scalarForce() {
-    assertEquals(2*PointCharge.K, charge1.scalarForce(charge2), 0.001);
-    assertEquals(-PointCharge.K, charge1.scalarForce(charge3), 0.001);
-    assertEquals(0.0, charge1.scalarForce(charge4), 0.000001);
-    assertEquals(-PointCharge.K, charge2.scalarForce(charge3), 0.001);
+	assertEquals(2*PointCharge.K, charge1.scalarForce(charge2), 0.000001);
+	assertEquals(-PointCharge.K, charge1.scalarForce(charge3), 0.000001);
+	assertEquals(0.0, charge1.scalarForce(charge4), 0.000001);
+	assertEquals(-PointCharge.K, charge2.scalarForce(charge3), 0.000001);
 }
 ----
 
@@ -2011,8 +2050,7 @@ When we run this test with JUnit, the last assertion fails. We get the
 following output.
 
 ....
-java.lang.AssertionError: expected:<-8.987551787368176E9>
-    but was:<-1.797510357473635E10>
+java.lang.AssertionError: expected:<-8.987551787368176E9> but was:<-1.797510357473635E10>
 ....
 
 A close inspection reveals that the actual value is about twice the
@@ -2024,7 +2062,7 @@ was `return K*charge*p.charge/(r*r);`
 
 The most striking thing about this example is that three test cases
 passed! Perhaps that means that we were choosing values that were too
-simple, but it also illustrates the importance of serious testing.
+simple, but it also illustrates the importance of thorough testing.
 
 ====
 
@@ -2042,12 +2080,11 @@ java.lang.AssertionError: expected:<1.797510357473635E10> but was:<2.0>
 ....
 
 `2.0` seems like a very strange result when we were expecting a value
-with an order of magnitude 10 times larger. Perhaps the constant was
+with an order of magnitude 10 times larger. Perhaps a constant was
 omitted? Yes, our version of `fieldMagnitude()` left off a factor of
-`K`. Once we fix that, our code finally produces the `OK (3 tests)` we
-have been waiting to see from JUnit. Why didn't we fail the assertions
-after the first one? Because of the exception handling mechanism, each
-JUnit test method stops once a failure has happened.
+`K`. Once we fix that, our code finally passes all three tests. Why didn't
+we fail the assertions after the first one? Because of the exception handling
+mechanism, each JUnit test method stops once a failure has happened.
 
 ====
 
@@ -2061,7 +2098,7 @@ Here is the fully corrected version of `PointCharge` renamed
 include::{programsdir}/FixedPointCharge.java[]
 ----
 
-And, for easy readability, here is the full JUnit test class
+And, for easy readability, here's the full JUnit test class
 `TestPointCharge`. Note that you will have to change the name
 `PointCharge` to `FixedPointCharge` if you want to test the corrected
 class.
@@ -2076,9 +2113,9 @@ include::{programsdir}/TestPointCharge.java[]
 === Exercises
 *Conceptual Problems*
 
-. [[assertExercise]] What is the purpose of the `assert` keyword in Java? What steps must
+. [[assertExercise]] What's the purpose of the `assert` keyword in Java? What steps must
 be taken for it to be active?
-. What is the value of `j` after the following statements are
+. What's the value of `j` after the following statements are
 executed?
 +
 [source,java]
@@ -2086,19 +2123,19 @@ executed?
 int j = 1;
 int i;
 for(i = 0; i < 10; i++);
-    j += i;
+	j += i;
 ----
 +
 Assuming the programmer made an error, what category of programming
 error does it fall under?
 . The following loop is intended to print out all possible `byte`
-values. What is the conceptual error made in the following loop? How
+values. What's the conceptual error made in the following loop? How
 many times will it execute?
 +
 [source,java]
 ----
 for(byte value = 0; value < 256; ++value)
-    System.out.println("Byte: " + value);
+	System.out.println("Byte: " + value);
 ----
 . What are all the possible run-time errors that could occur in this
 method that reverses a section of an array?
@@ -2119,8 +2156,8 @@ public void reverse(Object[] array, int start, int end) {
 ----
 +
 What checks could be added to catch these errors?
-. Consider the following definition of a stack that holds `int`
-values.
+. Recall the idea of a stack mentioned in <<Problem: Nested expressions>>.
+Consider the following definition of a stack designed to hold `int` values.
 +
 [source,java]
 ----
@@ -2141,26 +2178,25 @@ public class IntegerStack {
 
     public void pop() { head = head.next; }
     public int top() { return head.data; }
-    public boolean empty() { return head == null; }
+    public boolean isEmpty() { return head == null; }
 }
 ----
 +
 What exceptions could be thrown when using this class? Where could they
 be thrown?
-. This question sometimes comes up in job interviews. Imagine that you
-have a simple singly linked list such as the one described in
-<<ch18-dynamic-data-structures#ch18-dynamic-data-structures>>. What if there is a loop in
-the list such that the last element in the list points to an earlier
-element in the list? For this reason, a simple traversal of the list
+. Imagine that you have a simple linked list such as the ones described
+in <<Linked lists>>. What if
+there's a loop in the list such that the last element in the list points to an
+earlier element in the list? For this reason, a simple traversal of the list
 will go on forever. How could you detect such a problem during program
-execution?
-. [[blackBoxTestingExercise]] What is the difference between black box testing and white box
-testing? What kinds of bugs are more likely to be caught by black box
-testing? By white box testing?
-. The Microsoft Zune was a portable media player in competition with
+execution? Note that this question sometimes comes up in job interviews. 
+. [[blackBoxTestingExercise]] What's the difference between black-box testing
+and white-box testing? What kinds of bugs are more likely to be caught by
+black-box testing? By white-box testing?
+. [[zuneExercise]] The Microsoft Zune was a portable media player in competition with
 the Apple iPod. The first generation Zune 30 received negative publicity
 because many of them froze on December 31, 2008 due to a leap year bug.
-It is possible to find segments of the source code that caused this
+It's possible to find segments of the source code that caused this
 problem on the Internet. Essentially, the clock code for the Zune
 behaved correctly on any day of the year numbered 365 or lower.
 Likewise, when the day was greater than 366, it would correctly move to
@@ -2176,7 +2212,7 @@ What bugs did you uncover?
 *Experiments*
 
 . James Gosling's original specification for Java contained
-assertions, but they were not included until Java 1.4. One of the
+assertions, but they weren't included until Java 1.4. One of the
 concerns about an assertion mechanism is the additional time required to
 process the assertions. Time a program of at least moderate length
 before adding `assert` statements to its methods. If you use `assert`
@@ -2188,10 +2224,12 @@ number of branches based on `if` and `switch` statements and compute 2
 raised to that power. Time your program executing once under normal
 circumstances. Multiply that time by the number of different
 possibilities you would need to exercise every possible combination of
-branches in your program. How long would it take?
-. Take a concurrent program you have written that relies on explicit
+branches in your program. How much total time would it take to run all of those
+different executions of your program?
+. Take a concurrent program you've written that relies on explicit
 synchronization mechanisms for correctness. Remove all synchronization
-tools and run the code many times, testing for race conditions. Then,
-instrument the code with ConTest and run it many more times. Do you see
-increased variety in output with ConTest? Was it easier to find race
-conditions?
+tools and run the code many times, testing for race conditions. How many runs
+does it take before a race condition causes an error?  If you can, run your
+program on systems with different numbers of cores.  Using a larger number of
+cores should make race conditions more evident since more processors can
+execute contentious code in parallel.
