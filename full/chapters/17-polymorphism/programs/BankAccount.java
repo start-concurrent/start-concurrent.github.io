@@ -5,10 +5,9 @@ public abstract class BankAccount extends SynchronizedAccount { //<.>
     private Calendar lastAccess;
     private int monthsPassed = 0;
 
-    public BankAccount( String name, double balance )
-        throws InterruptedException {
+    public BankAccount(String name, double balance) throws InterruptedException {
         this.name = name;
-        changeBalance( balance );
+        changeBalance(balance);
         lastAccess = Calendar.getInstance();        
     }
     
@@ -23,14 +22,12 @@ public abstract class BankAccount extends SynchronizedAccount { //<.>
         return super.getBalance();
     }
     
-    public final void deposit( double amount )
-        throws InterruptedException {
+    public final void deposit(double amount) throws InterruptedException {
         update();
-        super.deposit( amount );        
+        super.deposit(amount);        
     }
     
-    public final boolean withdraw( double amount )
-        throws InterruptedException {
+    public final boolean withdraw(double amount) throws InterruptedException {
         update();       
         return super.withdraw(amount);
     }
@@ -38,12 +35,11 @@ public abstract class BankAccount extends SynchronizedAccount { //<.>
     protected synchronized void update() throws InterruptedException {
         Calendar current = Calendar.getInstance();
         int months = 12*(current.get(Calendar.YEAR) -
-        getLastAccess().get(Calendar.YEAR)) +
-        (current.get(Calendar.MONTH) -
-        getLastAccess().get(Calendar.MONTH));
-        if( months > 0 ) {
-                lastAccess = current;
-                monthsPassed = months;
+			lastAccess.get(Calendar.YEAR)) + (current.get(Calendar.MONTH) -
+			lastAccess.get(Calendar.MONTH));
+        if(months > 0) {
+			lastAccess = current;
+			monthsPassed = months;
         }
     }
 }   

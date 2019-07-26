@@ -1,15 +1,15 @@
 public abstract class Animal {
     private boolean alive = true;
     private boolean happy = true;
-    private final boolean warmblooded;
+    private final boolean warmBlooded;
     
-    public Animal( boolean warmblooded ) {      
-        this.warmblooded = warmblooded;
+    public Animal(boolean warmBlooded) {      
+        this.warmBlooded = warmBlooded;
     }   
         
     public boolean isHappy() { return happy; }  
     
-    public void setHappy( boolean value ) { happy = value; }        
+    public void setHappy(boolean value) { happy = value; }        
     
     public boolean isAlive() { return alive; }  
     

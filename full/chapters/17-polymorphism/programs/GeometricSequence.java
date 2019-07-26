@@ -1,5 +1,9 @@
 public class GeometricSequence extends Sequence {
-    public abstract int getNextValue() {
+	public GeometricSequence(int firstTerm, int ratio) {
+		super(firstTerm, ratio);
+	}
+	
+    public int getNextValue() {
         number *= CONSTANT;
         return number;
     }
