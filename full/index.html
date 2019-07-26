@@ -5759,7 +5759,7 @@ access a shared resource, such as a file, at the same time.</p>
 <div class="paragraph">
 <p>An example of concurrency without parallelism is a program with multiple
 threads of execution running on a single-core system. These threads will
-not execute at the same time as each other. However, the OS or runtime
+not execute at the same time as each other. However, the OS or run-time
 system will interleave the execution of these threads, switching back
 and forth between them whenever it wants to. Since these threads can
 share memory, they can still interact with each other in complicated and
@@ -16907,7 +16907,7 @@ multidimensional arrays.</p>
 <td class="content">
 <div class="title">Pitfall: Array out of bounds</div>
 <div class="paragraph">
-<p>The length of an array is determined at runtime. Sometimes the number is
+<p>The length of an array is determined at run time. Sometimes the number is
 specified in the source code, but it&#8217;s always possible for an array to
 be instantiated based on user input. The Java compiler doesn&#8217;t do any
 checking to see if you&#8217;re in the right range. If your program tries to
@@ -29970,7 +29970,7 @@ controls.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">private</span> <span class="kd">synchronized</span> <span class="kt">boolean</span> <span class="nf">changeBalance</span><span class="o">(</span><span class="kt">double</span> <span class="n">amount</span><span class="o">)</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">protected</span> <span class="kd">synchronized</span> <span class="kt">boolean</span> <span class="nf">changeBalance</span><span class="o">(</span><span class="kt">double</span> <span class="n">amount</span><span class="o">)</span> <i class="conum" data-value="1"></i><b>(1)</b>
         <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
         <span class="kt">boolean</span> <span class="n">success</span><span class="o">;</span>
         <span class="k">while</span><span class="o">(</span><span class="n">readers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <i class="conum" data-value="2"></i><b>(2)</b>
@@ -29987,7 +29987,9 @@ controls.</p>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>The <code>changeBalance()</code> method is synchronized so that it can have
-exclusive access to the <code>readers</code> variable.</td>
+exclusive access to the <code>readers</code> variable. It&#8217;s also marked <code>protected</code>
+because <code>SynchronizedAccount</code> will be used as a parent class in
+<a href="#ch17-polymorphism">Chapter 17</a>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -34485,7 +34487,7 @@ compile this code. If you have a Java 1.3 compiler or earlier, it&#8217;ll treat
 <code>assert</code> like an identifier. Some old Java 1.4 compilers might also give
 warnings or require special flags to compile. However, if you
 have an up-to-date compiler, the problem is that the JVM must have
-assertions enabled at runtime. Assertions are intended to be a special
+assertions enabled at run time. Assertions are intended to be a special
 debugging tool and ignored otherwise. To turn run program
 <code>AssertionTest</code> with assertions enabled, type the following.</p>
 </div>
@@ -34495,7 +34497,7 @@ debugging tool and ignored otherwise. To turn run program
 </div>
 </div>
 <div class="paragraph">
-<p>With this option, an exception should be thrown at runtime.</p>
+<p>With this option, an exception should be thrown at run time.</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -36949,8 +36951,8 @@ execute contentious code in parallel.</p>
 <p>In <a href="#ch14-synchronization">Chapter 14</a>, we introduced the
 <code>SynchronizedAccount</code> class that guarantees that checking the balance,
 making deposits, and making withdrawals will all be safe even in a
-multi-threaded environment. Unfortunately, <code>SynchronizedAccount</code> gives
-very few of the options a full bank account should have. The problem we
+multi-threaded environment. Unfortunately, <code>SynchronizedAccount</code> provides
+few of the options a full bank account should have. The problem we
 present to you now is to create an entire line of bank accounts which
 all inherit from <code>SynchronizedAccount</code>. Because of inheritance, all
 accounts will at least have <code>getBalance()</code>, <code>deposit()</code>, and
@@ -36959,7 +36961,7 @@ accounts will at least have <code>getBalance()</code>, <code>deposit()</code>, a
 <div class="paragraph">
 <p>You must create three new account classes. The constructor for each
 class must take a <code>String</code> which gives the name of the person opening
-the account and <code>double</code> which gives the starting balance of the
+the account and a <code>double</code> which gives the starting balance of the
 account. The first of these classes is <code>CheckingAccount</code>. The rules for
 the checking account implemented by this class are simply that the
 customer is charged $10 every month that the account is open. The second
@@ -36975,28 +36977,29 @@ a name and a starting balance, the constructor for a <code>SavingsAccount</code>
 takes a <code>double</code> which gives the annual interest rate the account earns.
 Each month the balance is checked. If the balance of the account is
 greater than $0, the account earns interest corresponding to
-\(\frac{1}{12}\) of the annual rate. However, if the balance
-is below $1000, a $25 service fee is charged each month, regardless of
+1/12 of the annual rate. However, if the balance
+is below $1,000, a $25 service fee is charged each month, regardless of
 how low the balance becomes.</p>
 </div>
 <div class="paragraph">
-<p>In <a href="#ch11-inheritance">Chapter 11</a> you were exposed to concepts in
-inheritance. We are now returning to these concepts and exploring them
-further. In the first place, concurrency is on the table now, and you
-must be careful to keep your derived classes thread-safe. In the second,
-we will discuss the full breadth of inheritance. The tools we discuss
-are intended to allow you to solve this extended bank account problem
-and indeed many other problems with as little code as possible.</p>
+<p>In <a href="#ch11-inheritance">Chapter 11</a> you were exposed to concepts
+surrounding inheritance in object-oriented programming. We now return
+to these concepts and explore them further. In the first place, concurrency
+is on the table now, and you must be careful to keep your derived classes
+thread safe. In the second, we&#8217;ll discuss the full breadth of inheritance.
+The tools we describe here are intended to allow you to solve this extended
+bank account problem (and indeed many other problems) with as little code as
+possible.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_concepts_polymorphism">17.2. Concepts: Polymorphism</h3>
 <div class="paragraph">
-<p>Perhaps the most important use for inheritance is code reuse. When you
-can successfully reuse existing code, you are not just saving the time
-of writing new code: You are also leveraging the quality and correctness
+<p>Perhaps the most important reason for inheritance is code reuse. When you
+can successfully reuse existing code, you&#8217;re not just saving the time
+of writing new code. You&#8217;re also leveraging the quality and correctness
 of the existing code. For example, when you create your own class which
-extends <code>Thread</code>, you are confident that all the thread mechanisms work
+extends <code>Thread</code>, you&#8217;re confident that all the thread mechanisms work
 properly.</p>
 </div>
 <div class="paragraph">
@@ -37005,16 +37008,16 @@ the <code>Racecar</code> class, and enhance it in some way, perhaps so that it
 becomes the <code>TurboRacecar</code> class. If you use the <code>TurboRacecar</code> class on
 its own, your code reuse is through simple inheritance. If you use
 <code>TurboRacecar</code> objects with a <code>RaceTrack</code> class, which was written to
-take <code>Racecar</code> objects as input, you have entered the realm of
+take <code>Racecar</code> objects as input, you&#8217;ve entered the realm of
 <em>polymorphism</em>. Polymorphism means that the same method can be used on
 different types of objects without being rewritten. In Java,
-polymorphism works by allowing the programmer to use a derived class in
-any place where a base class could have been used.</p>
+polymorphism works by allowing the programmer to use a child class in
+any place where a parent class could have been used.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_is_a_relationship">17.2.1. The is-a relationship</h4>
 <div class="paragraph">
-<p>Consider the two following class definitions:</p>
+<p>Consider the two following class definitions.</p>
 </div>
 <div id="RacecarProgram" class="listingblock">
 <div class="content">
@@ -37040,7 +37043,7 @@ horsepower they have. A <code>Racecar</code> object will return 700 when
 <code>getHorsepower()</code> is called, but a <code>TurboRacecar</code> will return 1100.</p>
 </div>
 <div class="paragraph">
-<p>Even through the <code>TurboRacecar</code> does not have an explicit
+<p>Even through the <code>TurboRacecar</code> doesn&#8217;t have an explicit
 <code>getTopSpeed()</code> method, it inherits one from <code>Racecar</code>. Like all derived
 classes in Java, <code>TurboRacecar</code> has all the methods and fields that
 <code>Racecar</code> does. This relationship is called an <em>is-a</em> relationship
@@ -37051,10 +37054,10 @@ use a <code>TurboRacecar</code> whenever a <code>Racecar</code> is required.</p>
 <div class="sect3">
 <h4 id="_dynamic_binding">17.2.2. Dynamic binding</h4>
 <div class="paragraph">
-<p>There is a little bit of magic that makes polymorphism work. When you
+<p>There&#8217;s a little bit of magic that makes polymorphism work. When you
 compile your code, the <code>RaceTrack</code> doesn&#8217;t know which <code>getHorsePower()</code>
 method will eventually get called. Only at run time does it query the
-object in question and, if it is a <code>TurboRacecar</code>, use the overridden
+object in question and, if it&#8217;s a <code>TurboRacecar</code>, use the overridden
 method that returns 1100. This feature of Java is called <em>dynamic
 binding</em>. Not every object oriented programming language supports
 dynamic binding. C&#43;&#43; actually allows the programmer to specify whether
@@ -37087,30 +37090,44 @@ horsepower of a <code>StaticRacecar</code> like so:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">printHorsepower</span><span class="o">(</span> <span class="n">StaticRacecar</span> <span class="n">car</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span> <span class="n">car</span><span class="o">.</span><span class="na">HORSEPOWER</span> <span class="o">);</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">printHorsepower</span><span class="o">(</span><span class="n">StaticRacecar</span> <span class="n">car</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">car</span><span class="o">.</span><span class="na">HORSEPOWER</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Even if you pass an object of type <code>StaticTurboRacecar</code>, the value 700
-will be printed out every time. In Java, all fields, whether normal,
-<code>static</code>, or <code>final</code> are statically bound.</p>
+<p>Even if you pass an object of type <code>StaticTurboRacecar</code> to the
+<code>printHorsepower()</code> method, the value 700 will be printed out every time.
+In Java, all fields, whether normal, <code>static</code>, or <code>final</code> are statically bound,
+meaning that the <strong>variable</strong> type determines which field will be used at compile
+time. In contrast, dynamic binding means that the true type of the <strong>object</strong>
+(not the reference variable pointing to it) determines the method that will be
+called at run time. Dynamic binding applies only to regular instance methods.
+As their name implies, <code>static</code> methods are statically bound, determined at
+compile time by reference type.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><a href="#staticBindingExercise">Exercise 17.1</a><br>
+<a href="#staticBindingExampleExercise">Exercise 17.2</a></p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_general_vs_specific">17.2.3. General vs. specific</h4>
 <div class="paragraph">
-<p>Another way to look at inheritance is as a statement of a specialization
+<p>Another way to look at inheritance is as a statement of specialization
 and generalization. A <code>TurboRacecar</code> is a specific kind of <code>Racecar</code>
-while a <code>Racecar</code> is a general category that <code>TurboRacecar</code> belongs to.</p>
+while <code>Racecar</code> is a general category that <code>TurboRacecar</code> belongs to.</p>
 </div>
 <div class="paragraph">
 <p>The rules of Java say that you can always use a more specific version of
 a class than you need but never a more general one. You can use a
-<code>TurboRacecar</code> any time you need a <code>Racecar</code> but not the reverse. A
-square will do the job of a rectangle, but a rectangle will not always
-be suitable when a square is needed.</p>
+<code>TurboRacecar</code> any time you need a <code>Racecar</code> but never use a <code>Racecar</code> when
+you need a <code>TurboRacecar</code>. A square will do the job of a rectangle, but a
+rectangle will not always be suitable when a square is needed.</p>
 </div>
 <div class="paragraph">
 <p>Consider the following two classes:</p>
@@ -37118,36 +37135,36 @@ be suitable when a square is needed.</p>
 <div id="VehicleProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Vehicle</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">travel</span><span class="o">(</span> <span class="n">String</span> <span class="n">destination</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Traveling to "</span> <span class="o">+</span> <span class="n">destination</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">);</span>
-    <span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">travel</span><span class="o">(</span><span class="n">String</span> <span class="n">destination</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Traveling to "</span> <span class="o">+</span> <span class="n">destination</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">);</span>
+	<span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div id="RocketShipProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RocketShip</span> <span class="kd">extends</span> <span class="n">Vehicle</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">blastOff</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"FOOOOM!"</span><span class="o">);</span>
-    <span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">blastOff</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"10, 9, 8, 7, 6, 5, 4, 3, 2, 1 *ROAR*"</span><span class="o">);</span>
+	<span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Here is a method that requires a <code>RocketShip</code> but only uses its
+<p>Here&#8217;s a method that requires a <code>RocketShip</code> but only uses its
 <code>travel()</code> method.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">takeVacation</span><span class="o">(</span> <span class="n">RocketShip</span> <span class="n">ship</span><span class="o">,</span> <span class="n">String</span> <span class="n">destination</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">ship</span><span class="o">.</span><span class="na">travel</span><span class="o">(</span> <span class="n">destination</span> <span class="o">);</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">takeVacation</span><span class="o">(</span><span class="n">RocketShip</span> <span class="n">ship</span><span class="o">,</span> <span class="n">String</span> <span class="n">destination</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ship</span><span class="o">.</span><span class="na">travel</span><span class="o">(</span><span class="n">destination</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>It seems as though we should be able to pass any <code>Vehicle</code> to the
 <code>takeVacation()</code> method because the only method in <code>ship</code> used by
-<code>takeVacation()</code> is the <code>travel()</code> method. However, the programmer
+<code>takeVacation()</code> is <code>travel()</code>. However, the programmer
 specified that the parameter should be a <code>RocketShip</code>, and Java plays it
 safe. Just because it looks like there won&#8217;t be a problem, Java isn&#8217;t
 going to take any chances on passing an overly general <code>Vehicle</code> when a
@@ -37157,12 +37174,12 @@ the <code>takeVacation()</code> method was overridden by a method that did call
 </div>
 <div class="paragraph">
 <p>In summary, you can pass a <code>RocketShip</code> to a method which takes a
-<code>Vehicle</code> or store a <code>RocketShip</code> in an array of <code>Vehicles</code>, but not the
+<code>Vehicle</code> or store a <code>RocketShip</code> into an array of <code>Vehicles</code>, but not the
 reverse. Java usually gives a compile time error if you try to put
-something too general into a location that is too specific. There are,
-however, some situations which are so tricky that Java doesn&#8217;t catch the
-error until runtime. Arrays, specifically, can cause problems. Examine
-the following code snippet:</p>
+something too general into a location that&#8217;s too specific, but there are some
+situations which are so tricky that Java doesn&#8217;t catch the
+error until run time. Arrays, specifically, can cause problems. Examine
+the following code snippet.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -37171,30 +37188,30 @@ the following code snippet:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>On the first line, we are using a <code>Vehicle</code> array reference to store an
-array of 100 <code>RocketShip</code>s. But, in the second line, we try to store a
-<code>Vehicle</code> into an array that is really a <code>RocketShip</code> array, even though
+<p>On the first line, we&#8217;re using a <code>Vehicle</code> array reference to store an
+array of 100 <code>RocketShip</code> references. But, in the second line, we try to store a
+<code>Vehicle</code> into an array that&#8217;s really a <code>RocketShip</code> array, even though
 it looks to the compiler like a <code>Vehicle</code> array. Doing so will compile
-but throw an <code>ArrayStoreException</code> at runtime.</p>
+but throw an <code>ArrayStoreException</code> at run time.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_syntax_inheritance_tools_in_java">17.3. Syntax: Inheritance tools in Java</h3>
 <div class="paragraph">
-<p>So far, we have described polymorphism in Java with a conceptual focus.
+<p>So far, we&#8217;ve described polymorphism in Java with a conceptual focus.
 In our previous examples, the only language tool needed to use
-polymorphism was the <code>extends</code> keyword which you are well familiar with
-by now. There are a number of other tools designed to help you structure
+polymorphism was the <code>extends</code> keyword which you&#8217;re now well familiar with.
+There are a number of other tools designed to help you structure
 class hierarchies and enforce design decisions.</p>
 </div>
 <div class="sect3">
 <h4 id="_abstract_classes_and_methods">17.3.1. Abstract classes and methods</h4>
 <div class="paragraph">
 <p>One such tool is abstract classes. An abstract class is one which can
-never be instantiated. In order to use an abstract class, it is
-necessary to derive a class from it. To create an abstract class, you
-just need to add the <code>abstract</code> keyword to its definition, as in the
+<strong>never</strong> be instantiated. In order to use an abstract class, it&#8217;s
+necessary to make a child class from it. To create an abstract class, you
+simply add the <code>abstract</code> keyword to its definition, as in the
 following example.</p>
 </div>
 <div id="UselessProgram" class="listingblock">
@@ -37202,12 +37219,12 @@ following example.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Useless</span> <span class="o">{</span>
     <span class="kd">protected</span> <span class="kt">int</span> <span class="n">variable</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">Useless</span><span class="o">(</span> <span class="kt">int</span> <span class="n">input</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Useless</span><span class="o">(</span><span class="kt">int</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">variable</span> <span class="o">=</span> <span class="n">input</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">variable</span> <span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">variable</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -37216,12 +37233,12 @@ following example.</p>
 <p>This class is useless for a number of reasons. For one thing, there&#8217;s no
 way to find out the value of <code>variable</code> except by printing it out.
 Furthermore, there&#8217;s no way to change the value of <code>variable</code> after the
-object has been created. Finally, since an abstract class cannot be
+object&#8217;s been created. Finally, since an abstract class can&#8217;t be
 instantiated, the following code snippet will not compile.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">Useless</span> <span class="n">thing</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Useless</span><span class="o">(</span> <span class="mi">14</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Useless</span> <span class="n">thing</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Useless</span><span class="o">(</span><span class="mi">14</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -37230,9 +37247,13 @@ instantiated, the following code snippet will not compile.</p>
 <div id="UsefulProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Useful</span> <span class="kd">extends</span> <span class="n">Useless</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="nf">Useful</span><span class="o">(</span><span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+	<span class="o">}</span>
+
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getVariable</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">variable</span><span class="o">;</span> <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setVariable</span><span class="o">(</span> <span class="kt">int</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setVariable</span><span class="o">(</span><span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">variable</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -37244,25 +37265,25 @@ something.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">Useless</span> <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Useful</span><span class="o">(</span> <span class="mi">14</span> <span class="o">);</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Useless</span> <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Useful</span><span class="o">(</span><span class="mi">14</span><span class="o">);</span>
 <span class="n">item</span><span class="o">.</span><span class="na">print</span><span class="o">();</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that, in accordance with the rules of Java, we can store a more
-specific object of type <code>Useful</code> into more general reference of type
-<code>Useless</code>. Even though Java knows that the object it points to will
-never actually be a <code>Useless</code> object, it is perfectly legal to have a
+<p>Note that, in accordance with the rules of Java, we can store an object
+with the more specific type <code>Useful</code> into a reference with the more general
+type <code>Useless</code>. Even though Java knows that the object it points to will
+never actually be a <code>Useless</code> object, it&#8217;s perfectly legal to have a
 <code>Useless</code> reference. You can use abstract classes in this way to provide
 a base class with some fundamental fields and methods that all other
 classes in a particular hierarchy need. By using the keyword <code>abstract</code>,
-you are marking the class as template for other classes instead of a
+you&#8217;re marking the class as template for other classes instead of as a
 class that will be used directly.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="paragraph">
-<p><a href="#abstractClassesAndInterfacesExercise">Exercise 17.2</a></p>
+<p><a href="#abstractClassesAndInterfacesExercise">Exercise 17.3</a></p>
 </div>
 </div>
 </div>
@@ -37277,7 +37298,7 @@ children classes must implement, as shown below.</p>
     <span class="kd">protected</span> <span class="kt">int</span> <span class="n">number</span><span class="o">;</span>
     <span class="kd">protected</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CONSTANT</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">Sequence</span><span class="o">(</span> <span class="kt">int</span> <span class="n">number</span><span class="o">,</span> <span class="kt">int</span> <span class="n">constant</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Sequence</span><span class="o">(</span><span class="kt">int</span> <span class="n">number</span><span class="o">,</span> <span class="kt">int</span> <span class="n">constant</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">number</span> <span class="o">=</span> <span class="n">number</span><span class="o">;</span>
         <span class="n">CONSTANT</span> <span class="o">=</span> <span class="n">constant</span><span class="o">;</span>
     <span class="o">}</span>
@@ -37288,7 +37309,7 @@ children classes must implement, as shown below.</p>
 </div>
 <div class="paragraph">
 <p>This abstract class is supposed to be a template for classes which can
-produce some sequence of numbers. Note that there is no body for the
+produce some sequence of numbers. Note that there&#8217;s no body for the
 <code>getNextValue()</code> method. It simply ends with a semicolon. Every
 non-abstract derived class must implement a <code>getNextValue()</code> method to
 produce the next number in the sequence. For example, we could implement
@@ -37297,7 +37318,11 @@ an arithmetic or a geometric sequence as follows.</p>
 <div id="ArithmeticSequenceProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ArithmeticSequence</span> <span class="kd">extends</span> <span class="n">Sequence</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">int</span> <span class="nf">getNextValue</span><span class="o">()</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="nf">ArithmeticSequence</span><span class="o">(</span><span class="kt">int</span> <span class="n">firstTerm</span><span class="o">,</span> <span class="kt">int</span> <span class="n">difference</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">firstTerm</span><span class="o">,</span> <span class="n">difference</span><span class="o">);</span>
+	<span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getNextValue</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">number</span> <span class="o">+=</span> <span class="n">CONSTANT</span><span class="o">;</span>
         <span class="k">return</span> <span class="n">number</span><span class="o">;</span>
     <span class="o">}</span>
@@ -37307,7 +37332,11 @@ an arithmetic or a geometric sequence as follows.</p>
 <div id="GeometricSequenceProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GeometricSequence</span> <span class="kd">extends</span> <span class="n">Sequence</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">int</span> <span class="nf">getNextValue</span><span class="o">()</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="nf">GeometricSequence</span><span class="o">(</span><span class="kt">int</span> <span class="n">firstTerm</span><span class="o">,</span> <span class="kt">int</span> <span class="n">ratio</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">firstTerm</span><span class="o">,</span> <span class="n">ratio</span><span class="o">);</span>
+	<span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getNextValue</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">number</span> <span class="o">*=</span> <span class="n">CONSTANT</span><span class="o">;</span>
         <span class="k">return</span> <span class="n">number</span><span class="o">;</span>
     <span class="o">}</span>
@@ -37315,13 +37344,18 @@ an arithmetic or a geometric sequence as follows.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>Sequence</code> class does not specify <strong>how</strong> the sequence of numbers
+<p>The <code>Sequence</code> class doesn&#8217;t specify <strong>how</strong> the sequence of numbers
 should be generated, but any derived class must implement the
 <code>getNextValue()</code> method in order to compile. By using an abstract class,
 we don&#8217;t have to create a base class which generates a meaningless
 sequence of numbers just for the sake of establishing the
-<code>getNextValue()</code> method.</p>
+<code>getNextValue()</code> method. Abstract classes are like interfaces in that they
+can force the programmer who&#8217;s extending them to implement particular methods,
+but unlike interfaces they can also define fields and methods of any kind.</p>
 </div>
+<div class="exampleblock">
+<div class="title">Example 17.1 Bank account abstract class</div>
+<div class="content">
 <div class="paragraph">
 <p>Here&#8217;s a more involved example of an abstract class that gives a first
 step toward solving the bank account with a vengeance problem posed at
@@ -37341,8 +37375,8 @@ the beginning of the chapter.</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The first step is to import the <code>Calendar</code> class for some date stuff we
-are going to use later.</td>
+<td>The first step is to import the <code>Calendar</code> class for some date tools
+we&#8217;re going to use later.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -37355,10 +37389,9 @@ to be able to create a generic <code>BankAccount</code>.</td>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">BankAccount</span><span class="o">(</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">double</span> <span class="n">balance</span> <span class="o">)</span>
-        <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="nf">BankAccount</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">double</span> <span class="n">balance</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
-        <span class="n">changeBalance</span><span class="o">(</span> <span class="n">balance</span> <span class="o">);</span>
+        <span class="n">changeBalance</span><span class="o">(</span><span class="n">balance</span><span class="o">);</span>
         <span class="n">lastAccess</span> <span class="o">=</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
     <span class="o">}</span>
 
@@ -37381,34 +37414,31 @@ way to get a <code>Calendar</code> object with the current date and time.</p>
         <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getBalance</span><span class="o">();</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">deposit</span><span class="o">(</span> <span class="kt">double</span> <span class="n">amount</span> <span class="o">)</span>
-        <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">deposit</span><span class="o">(</span><span class="kt">double</span> <span class="n">amount</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
         <span class="n">update</span><span class="o">();</span>
-        <span class="kd">super</span><span class="o">.</span><span class="na">deposit</span><span class="o">(</span> <span class="n">amount</span> <span class="o">);</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">deposit</span><span class="o">(</span><span class="n">amount</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">withdraw</span><span class="o">(</span> <span class="kt">double</span> <span class="n">amount</span> <span class="o">)</span>
-        <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">withdraw</span><span class="o">(</span><span class="kt">double</span> <span class="n">amount</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
         <span class="n">update</span><span class="o">();</span>
         <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">withdraw</span><span class="o">(</span><span class="n">amount</span><span class="o">);</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then come the balance checking and changing methods. Each simply calls
-the parent methods after calling an <code>update()</code> method we discuss below.</p>
+<p>Then come the balance checking and changing methods. Each calls its parent
+method after calling an <code>update()</code> method we discuss below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">protected</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
         <span class="n">Calendar</span> <span class="n">current</span> <span class="o">=</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
         <span class="kt">int</span> <span class="n">months</span> <span class="o">=</span> <span class="mi">12</span><span class="o">*(</span><span class="n">current</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">YEAR</span><span class="o">)</span> <span class="o">-</span>
-        <span class="n">getLastAccess</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">YEAR</span><span class="o">))</span> <span class="o">+</span>
-        <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">MONTH</span><span class="o">)</span> <span class="o">-</span>
-        <span class="n">getLastAccess</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">MONTH</span><span class="o">));</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">months</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
-                <span class="n">lastAccess</span> <span class="o">=</span> <span class="n">current</span><span class="o">;</span>
-                <span class="n">monthsPassed</span> <span class="o">=</span> <span class="n">months</span><span class="o">;</span>
+			<span class="n">lastAccess</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">YEAR</span><span class="o">))</span> <span class="o">+</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">MONTH</span><span class="o">)</span> <span class="o">-</span>
+			<span class="n">lastAccess</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">MONTH</span><span class="o">));</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">months</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">lastAccess</span> <span class="o">=</span> <span class="n">current</span><span class="o">;</span>
+			<span class="n">monthsPassed</span> <span class="o">=</span> <span class="n">months</span><span class="o">;</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -37425,26 +37455,27 @@ charges will make them necessary. This method is synchronized so that
 the two fields associated with the last access are updated atomically.</p>
 </div>
 </div>
+</div>
+</div>
 <div class="sect3">
 <h4 id="_final_classes_and_methods">17.3.2. Final classes and methods</h4>
 <div class="paragraph">
-<p>If you look at the previous example carefully, you will notice that the
+<p>If you look at the previous example carefully, you&#8217;ll notice that the
 methods <code>getBalance()</code>, <code>deposit()</code>, and <code>withdraw()</code> were each declared
-with the keyword <code>final</code>. You have seen this keyword used to declare
-constants before. When applied to methods, <code>final</code> is philosophically
-similar (and almost the opposite of <code>abstract</code>). A method which is
-declared <code>final</code> cannot be overridden by child classes. If you are
+with the keyword <code>final</code>. You&#8217;ve seen this keyword used to declare
+constants before. The meaning that <code>final</code> has for methods is similar to
+what it means for constants (and almost the opposite of <code>abstract</code>). A method
+which is declared <code>final</code> can&#8217;t be overridden by child classes. If you&#8217;re
 designing a class hierarchy and you want to lock a method into doing a
 specific thing and never changing, this is the way to do it.</p>
 </div>
 <div class="paragraph">
 <p>Like <code>abstract</code>, the keyword <code>final</code> can be applied to a class as well.
 If you want to prevent a class from being extended further, apply the
-<code>final</code> keyword to its definition. You may not find yourself using this
-feature of Java very often. It is primarily useful in situations where a
+<code>final</code> keyword to its definition. You might not find yourself using this
+feature of Java very often. It&#8217;s primarily useful in situations where a
 large body of code has been designed to make use of a specific class.
-The designers of that specific class want to keep it exactly the way it
-is and prevent anything unexpected from happening.</p>
+Making child classes from that class could cause unexpected problems.</p>
 </div>
 <div class="paragraph">
 <p>The most common example of a <code>final</code> class is the <code>String</code> class.
@@ -37457,19 +37488,17 @@ Consider the following.</p>
 </div>
 <div class="paragraph">
 <p>This code will give a compiler error. <code>String</code> is perfect the way it is
-(or so the Java designers have decided). There is no reason to restrict
-your code arbitrarily, but use of the <code>final</code> keyword for classes,
-methods, and especially to specify constants allows the compiler to do
-some performance optimizations that would otherwise be impossible.</p>
+(or so the Java designers have decided). Use of the <code>final</code> keyword for
+classes, methods, and especially to specify constants allows the compiler to do
+performance optimizations that would otherwise be impossible.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_casting_2">17.3.3. Casting</h4>
 <div class="paragraph">
-<p>If we shift the focus back to polymorphism, we have to admit that we
-have avoided one of the messier issues. It&#8217;s true that polymorphism
-gives us lots of power. For example, we can make a <code>Vehicle</code> array and
-store subclasses of <code>Vehicle</code> inside, like so:</p>
+<p>Polymorphism gives us greater power and flexibility when writing code. For
+example, we can make a <code>Vehicle</code> array and store child class objects of
+<code>Vehicle</code> inside, like so.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -37484,20 +37513,20 @@ store subclasses of <code>Vehicle</code> inside, like so:</p>
 <div class="paragraph">
 <p>This process could be infinitely more complex. We could be reading data
 out of a file and dynamically creating different kinds of <code>Vehicle</code>
-objects. But, the final product of an array of <code>Vehicle</code> objects is the
+objects, but the final product of an array of <code>Vehicle</code> objects is the
 important thing. Now, we can run through the array with a loop and have
 the code magically work for each kind of <code>Vehicle</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vehicles</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-    <span class="n">vehicles</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">travel</span><span class="o">(</span> <span class="s">"Prague"</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vehicles</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+    <span class="n">vehicles</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">travel</span><span class="o">(</span><span class="s">"Prague"</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Each <code>Vehicle</code> will travel to Prague as it should. The only trouble is
-that we have hidden some information. We know that <code>vehicles[1]</code> is a
-<code>RocketShip</code>, but we can&#8217;t treat it like one.</p>
+that we&#8217;ve hidden some information from the compiler. We know that
+<code>vehicles[1]</code> is a <code>RocketShip</code>, but we can&#8217;t treat it like one.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -37505,7 +37534,7 @@ that we have hidden some information. We know that <code>vehicles[1]</code> is a
 </div>
 </div>
 <div class="paragraph">
-<p>This code will not compile.</p>
+<p>This code won&#8217;t compile.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -37513,19 +37542,19 @@ that we have hidden some information. We know that <code>vehicles[1]</code> is a
 </div>
 </div>
 <div class="paragraph">
-<p>This code will not compile either. In both cases, we must use an
+<p>This code won&#8217;t compile either. In both cases, we must use an
 explicit cast to tell the compiler that the object really <strong>is</strong> a
 <code>RocketShip</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">RocketShip</span> <span class="n">ship</span> <span class="o">=</span> <span class="o">(</span><span class="n">RocketShip</span><span class="o">)</span><span class="n">vehicles</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
-<span class="o">((</span><span class="n">RocketShip</span><span class="o">)</span><span class="n">vehicles</span><span class="o">[</span><span class="mi">1</span><span class="o">]).</span><span class="na">blastOff</span><span class="o">();</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="o">((</span><span class="n">RocketShip</span><span class="o">)</span><span class="n">vehicles</span><span class="o">[</span><span class="mi">1</span><span class="o">]).</span><span class="na">blastOff</span><span class="o">();</span>
+<span class="n">RocketShip</span> <span class="n">ship</span> <span class="o">=</span> <span class="o">(</span><span class="n">RocketShip</span><span class="o">)</span><span class="n">vehicles</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Both lines of code will work. The compiler is always conservative. It
-never makes guesses about the type of something. For example:</p>
+<p>Now, both lines of code work. The compiler is always conservative. It
+never makes guesses about the type of something. Consider the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -37534,11 +37563,11 @@ never makes guesses about the type of something. For example:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Even though <code>ship</code> <strong>must</strong> be a <code>RocketShip</code>, Java does not assume that.
+<p>Even though <code>ship</code> <strong>must</strong> be a <code>RocketShip</code>, Java doesn&#8217;t assume that it is.
 The compiler uses the reference type <code>Vehicle</code> to do the check and will
-refuse to compile. Casting allows us to use our human intellect to
-overcome the shortsightedness of the compiler. Human intellect is
-unfortunately flawed. What happens if you cast improperly?</p>
+refuse to compile. Casting allows us to use our human insights to
+overcome the shortsightedness of the compiler. Unfortunately, there&#8217;s no
+guarantee that human insights are correct. What happens if you cast improperly?</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -37548,10 +37577,10 @@ unfortunately flawed. What happens if you cast improperly?</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In this example, we are trying to cast a <code>Skateboard</code> into a
+<p>In this example, we&#8217;re trying to cast a <code>Skateboard</code> into a
 <code>RocketShip</code>. At compile time, no errors will be found. Because we use
 explicit casting, the compiler assumes that we, powerful human beings
-that we are, know what we are doing. The error will happen at runtime
+that we are, know what we&#8217;re doing. The error will happen at run time
 while executing the second line. Java will try to cast <code>vehicle</code> into a
 <code>RocketShip</code>, fail, and throw a <code>ClassCastException</code>.</p>
 </div>
@@ -37564,48 +37593,55 @@ the object is capable of it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">visitDenver</span><span class="o">(</span> <span class="n">Vehicle</span> <span class="n">vehicle</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">vehicle</span> <span class="k">instanceof</span> <span class="n">RocketShip</span> <span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">visitDenver</span><span class="o">(</span><span class="n">Vehicle</span> <span class="n">vehicle</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">vehicle</span> <span class="k">instanceof</span> <span class="n">RocketShip</span><span class="o">)</span>
         <span class="o">((</span><span class="n">RocketShip</span><span class="o">)</span><span class="n">vehicle</span><span class="o">).</span><span class="na">blastOff</span><span class="o">();</span>
-    <span class="n">vehicle</span><span class="o">.</span><span class="na">travel</span><span class="o">(</span> <span class="s">"Denver"</span> <span class="o">);</span>
+    <span class="n">vehicle</span><span class="o">.</span><span class="na">travel</span><span class="o">(</span><span class="s">"Denver"</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Even inside the <code>if</code> statement where it must be the case that <code>vehicle</code>
+<p>Even inside this <code>if</code> statement where it <strong>must</strong> be the case that <code>vehicle</code>
 is a <code>RocketShip</code>, we still must perform an explicit cast. Sometimes
 <code>instanceof</code> is not precise enough. If you must be sure that the object
-in question is a specific class and not just one of its subclasses, you
+in question is a particular class and not just one of its child classes, you
 can use the <code>getClass()</code> method on any object and compare it to the
 static class object. Using this tool, we can rewrite the former example
 to be more specific.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">visitDenver</span><span class="o">(</span> <span class="n">Vehicle</span> <span class="n">vehicle</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">vehicle</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">==</span>  <span class="n">RocketShip</span><span class="o">.</span><span class="na">class</span> <span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">visitDenver</span><span class="o">(</span><span class="n">Vehicle</span> <span class="n">vehicle</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">vehicle</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">==</span>  <span class="n">RocketShip</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
         <span class="o">((</span><span class="n">RocketShip</span><span class="o">)</span><span class="n">vehicle</span><span class="o">).</span><span class="na">blastOff</span><span class="o">();</span>
-    <span class="n">vehicle</span><span class="o">.</span><span class="na">travel</span><span class="o">(</span> <span class="s">"Denver"</span> <span class="o">);</span>
+    <span class="n">vehicle</span><span class="o">.</span><span class="na">travel</span><span class="o">(</span><span class="s">"Denver"</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This version of the code will only call <code>blastOff()</code> for objects of
-class <code>RocketShip</code> and not for objects of a subclass like
+class <code>RocketShip</code> and not for objects of a child class like
 <code>FusionPoweredRocketShip</code>.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><a href="#instanceofExercise">Exercise 17.6</a></p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_inheritance_and_exceptions">17.3.4. Inheritance and exceptions</h4>
 <div class="paragraph">
-<p>Beyond <code>ClassCastException</code>s, there are a few other issues that come up
+<p>Beyond <code>ClassCastException</code>, there are a few other issues that come up
 when combining exceptions with inheritance. As you already know, an
 exception handler for a parent class will work for a child class. As
-such, when using multiple exception handlers, it is necessary to order
+such, when using multiple exception handlers, it&#8217;s necessary to order
 them from most specific to most general in terms of class hierarchy.</p>
 </div>
 <div class="paragraph">
-<p>However, there is another subtle rule that is necessary to keep
+<p>However, there&#8217;s another subtle rule that&#8217;s necessary to keep
 polymorphism functioning smoothly. Let&#8217;s consider a <code>Fruit</code> class with
 an <code>eat()</code> method that throws an <code>UnripeFruitException</code>.</p>
 </div>
@@ -37619,15 +37655,14 @@ an <code>eat()</code> method that throws an <code>UnripeFruitException</code>.</
 </div>
 </div>
 <div class="paragraph">
-<p>Almost any fruit can be unripe, and it is unpleasant to try to eat an
-unripe fruit. But, there are other things that can go wrong when eating
+<p>Almost any fruit can be unripe, and it can be unpleasant to try to eat such
+a fruit. But there are other things that can go wrong when eating
 fruit. Consider the <code>Plum</code> class derived from <code>Fruit</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Plum</span> <span class="kd">extends</span> <span class="n">Fruit</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eat</span><span class="o">()</span> <span class="kd">throws</span>
-        <span class="n">UnripeFruitException</span><span class="o">,</span> <span class="n">ChokingOnPitException</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eat</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">UnripeFruitException</span><span class="o">,</span> <span class="n">ChokingOnPitException</span> <span class="o">{</span>
         <span class="o">...</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -37638,33 +37673,41 @@ fruit. Consider the <code>Plum</code> class derived from <code>Fruit</code>.</p>
 the special ways that eating a plum is different from eating fruit in
 general. When eating a plum, you can make a mistake and try to swallow
 the pit, throwing, it seems, a <code>ChokingOnPitException</code>. This scenario
-seems natural, but it is not allowed in Java.</p>
+seems natural, but it&#8217;s <strong>not</strong> allowed in Java.</p>
 </div>
 <div class="paragraph">
 <p>The principle behind polymorphism is that a more specialized version of
-something can be used in place of a more general version. Indeed, if you
-use a <code>Plum</code> in place of a <code>Fruit</code>, calling the <code>eat()</code> method is no
-problem. The problem happens if a <code>ChokingOnPitException</code> is thrown.
-Now, code which was designed for <code>Fruit</code> objects knows nothing about a
-<code>ChokingOnPitException</code>, so there is no way for such code to catch the
+something can <strong>always</strong> be used in place of a more general version. Indeed,
+if you use a <code>Plum</code> in place of a <code>Fruit</code>, calling the <code>eat()</code> method is no
+problem. The problem only happens if a <code>ChokingOnPitException</code> is thrown.
+Code that was designed for <code>Fruit</code> objects knows nothing about a
+<code>ChokingOnPitException</code>, so there&#8217;s no way for such code to catch the
 exception and deal with the situation.</p>
 </div>
 <div class="paragraph">
-<p>There is nothing wrong with throwing exceptions on overridden methods.
-The rule is that the overriding method must throw a subset (not a proper
-subset, so it could be all of the original exceptions) of the exceptions
-that the overridden method throws. This rule is actually a concept
-called Hoare&#8217;s rule of consequence that pops up several places in
-programming languages. Essentially, if you start with something that
-works, tighten the requirements on the input (use a <code>Plum</code> instead of
-any <code>Fruit</code>), loosen the requirements on the output (throw fewer
-exceptions than were originally thrown), it will still work.</p>
+<p>There&#8217;s nothing wrong with throwing exceptions on overridden methods.
+The rule is that the overriding method must throw a subset of the exceptions
+that the overridden method throws. This subset doesn&#8217;t need to be a proper
+subset, so it could be all, some, or none of the exceptions thrown by the
+overridden method. This rule demonstrates a concept called Hoare&#8217;s rule of
+consequence that pops up many times in programming language design. Essentially,
+if you start with something that works, you can tighten the requirements on
+the input (using a <code>Plum</code> instead of any <code>Fruit</code>) and loosen the requirements
+on the output (throwing fewer exceptions than were originally thrown), and it
+will still work.</p>
 </div>
-<div class="exampleblock">
-<div class="title">Example 17.1 More human than human</div>
+<div class="sidebarblock">
 <div class="content">
 <div class="paragraph">
-<p>Now we have a few additional examples in a somewhat larger class
+<p><a href="#polymorphismExceptionsExercise">Exercise 17.7</a></p>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 17.2 More human than human</div>
+<div class="content">
+<div class="paragraph">
+<p>Here we have a few additional examples in a somewhat larger class
 hierarchy.</p>
 </div>
 <div class="imageblock text-center">
@@ -37678,15 +37721,15 @@ hierarchy.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Animal</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">alive</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">happy</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">warmblooded</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">warmBlooded</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">Animal</span><span class="o">(</span> <span class="kt">boolean</span> <span class="n">warmblooded</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">warmblooded</span> <span class="o">=</span> <span class="n">warmblooded</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Animal</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">warmBlooded</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">warmBlooded</span> <span class="o">=</span> <span class="n">warmBlooded</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isHappy</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">happy</span><span class="o">;</span> <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setHappy</span><span class="o">(</span> <span class="kt">boolean</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span> <span class="n">happy</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setHappy</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span> <span class="n">happy</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span> <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isAlive</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">alive</span><span class="o">;</span> <span class="o">}</span>
 
@@ -37697,57 +37740,56 @@ hierarchy.</p>
 <div class="paragraph">
 <p>We begin with the abstract <code>Animal</code> class. This class gives a base
 definition for animals which includes whether the animal is alive,
-whether the animal is happy, and whether it is warmblooded (declared
-<code>final</code> because an animal can&#8217;t switch between warmblooded and
-coldblooded).</p>
+whether the animal is happy, and whether it&#8217;s warm-blooded (declared
+<code>final</code> because an animal can&#8217;t switch between warm-blooded and
+cold-blooded).</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Mammal</span> <span class="kd">extends</span> <span class="n">Animal</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">MALE</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">FEMALE</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">gender</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">gender</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">Mammal</span><span class="o">(</span> <span class="kt">boolean</span> <span class="n">gender</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="kc">true</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">Mammal</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">gender</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
         <span class="k">this</span><span class="o">.</span><span class="na">gender</span> <span class="o">=</span> <span class="n">gender</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="nf">getGender</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">gender</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">getGender</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">gender</span><span class="o">;</span> <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kd">abstract</span> <span class="n">String</span> <span class="nf">makeSound</span><span class="o">();</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We then extend <code>Animal</code> into <code>Mammal</code>. All mammals are warmblooded,
+<p>We then extend <code>Animal</code> into <code>Mammal</code>. All mammals are warm-blooded,
 which is reflected in the constructor call to the base class. In
-addition, it is assumed that all mammals make some sound. Mammals generally
-have well-defined genders, declared <code>final</code> because it cannot change
-once it has been set. Like <code>Animal</code>, <code>Mammal</code> is an abstract class, and
-any non-abstract subclass of <code>Mammal</code> must implement <code>makeSound()</code>.</p>
+addition, it&#8217;s assumed that all mammals make some sound. Mammals generally
+also have well-defined genders. Like <code>Animal</code>, <code>Mammal</code> is an abstract class,
+and any non-abstract child of <code>Mammal</code> must implement <code>makeSound()</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Platypus</span> <span class="kd">extends</span> <span class="n">Mammal</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="nf">Platypus</span><span class="o">(</span> <span class="kt">boolean</span> <span class="n">gender</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">gender</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">Platypus</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">gender</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">gender</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="n">String</span> <span class="nf">makeSound</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="s">"Quack!"</span>
+        <span class="k">return</span> <span class="s">"Quack!"</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="n">Egg</span> <span class="nf">layEgg</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">getGender</span><span class="o">()</span> <span class="o">==</span> <span class="n">FEMALE</span> <span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">getGender</span><span class="o">()</span> <span class="o">==</span> <span class="n">FEMALE</span><span class="o">)</span>
             <span class="k">return</span> <span class="k">new</span> <span class="nf">Egg</span><span class="o">();</span>
         <span class="k">else</span>
             <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">poison</span><span class="o">(</span> <span class="n">Animal</span> <span class="n">victim</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">getGender</span><span class="o">()</span> <span class="o">==</span> <span class="n">MALE</span> <span class="o">)</span>
-            <span class="n">victim</span><span class="o">.</span><span class="na">setHappy</span><span class="o">(</span> <span class="kc">false</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">poison</span><span class="o">(</span><span class="n">Animal</span> <span class="n">victim</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">getGender</span><span class="o">()</span> <span class="o">==</span> <span class="n">MALE</span><span class="o">)</span>
+            <span class="n">victim</span><span class="o">.</span><span class="na">setHappy</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -37760,13 +37802,13 @@ male).</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Mammal</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="nf">Human</span><span class="o">(</span> <span class="kt">boolean</span> <span class="n">gender</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">happy</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">gender</span> <span class="o">);</span>
-        <span class="n">setHappy</span><span class="o">(</span> <span class="n">happy</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="nf">Human</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">gender</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">happy</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">gender</span><span class="o">);</span>
+        <span class="n">setHappy</span><span class="o">(</span><span class="n">happy</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="n">String</span> <span class="nf">makeSound</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="s">"Hello, world."</span>
+        <span class="k">return</span> <span class="s">"Hello, world."</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -37775,8 +37817,7 @@ male).</p>
 <p>The <code>Human</code> class also extends <code>Mammal</code>. Depending on the problem being
 solved, this class might warrant a great deal more specialization. Right
 now the main addition is taking happiness as an argument to the
-constructor. Unfortunately, the default human state is not necessarily
-happiness.</p>
+constructor since the default human state is not necessarily happiness.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -37793,27 +37834,27 @@ happiness.</p>
 </div>
 <div class="paragraph">
 <p>Finally, the <code>DavidBowie</code> class extends <code>Human</code> and is declared a final
-class because it really is impossible to add anything to David Bowie.</p>
+class because it&#8217;s impossible to add anything to David Bowie.</p>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>You will notice that our examples have stretched fairly long in this
-chapter. It is difficult to give strong motivation for some aspects of
+<p>Our examples have stretched fairly long in this
+chapter. It&#8217;s difficult to give strong motivation for some aspects of
 inheritance and polymorphism without a large class hierarchy. These
 tools are designed to help organize large bodies of code and should
-become more useful as the size of the problem you are working on grows.
+become more useful as the size of the problem you&#8217;re working on grows.
 One of the best examples of the success of inheritance is the Java API
-itself. The standard Java library is very large and depends on
-inheritance a great deal.</p>
+itself. The standard Java library is large and depends on inheritance a
+great deal.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_solution_banking_account_with_a_vengeance">17.4. Solution: Banking account with a vengeance</h3>
 <div class="paragraph">
-<p>Now we return to the specific problem given at the beginning of the
-chapter and give its solution. We have already given you the
+<p>Now, we return to the specific problem given at the beginning of the
+chapter and give its solution. We&#8217;ve already given you the
 <code>BankAccount</code> abstract class which provides a lot of structure.</p>
 </div>
 <div class="imageblock text-center">
@@ -37823,20 +37864,19 @@ chapter and give its solution. We have already given you the
 <div class="title">Figure 17.2 Bank account class hierarchy.</div>
 </div>
 <div id="CheckingAccountProgram" class="listingblock">
-<div class="title">Program 17.1 Subclass of <code>BankAccount</code> that models a normal checking account.</div>
+<div class="title">Program 17.1 Child class of <code>BankAccount</code> that models a normal checking account.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CheckingAccount</span> <span class="kd">extends</span> <span class="n">BankAccount</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">FEE</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">CheckingAccount</span><span class="o">(</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">double</span> <span class="n">balance</span> <span class="o">)</span>
+    <span class="kd">public</span> <span class="nf">CheckingAccount</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">double</span> <span class="n">balance</span><span class="o">)</span>
         <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">name</span><span class="o">,</span> <span class="n">balance</span> <span class="o">);</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">balance</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="kd">protected</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span>
-        <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
         <span class="kd">super</span><span class="o">.</span><span class="na">update</span><span class="o">();</span>
-        <span class="n">changeBalance</span><span class="o">(</span> <span class="o">-</span><span class="n">getFee</span><span class="o">()*</span><span class="n">getMonthsPassed</span><span class="o">()</span> <span class="o">);</span>
+        <span class="n">changeBalance</span><span class="o">(-</span><span class="n">getFee</span><span class="o">()*</span><span class="n">getMonthsPassed</span><span class="o">());</span>
     <span class="o">}</span>
 
     <span class="kd">protected</span> <span class="kt">double</span> <span class="nf">getFee</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">FEE</span><span class="o">;</span> <span class="o">}</span>
@@ -37847,7 +37887,7 @@ chapter and give its solution. We have already given you the
 <p>The most basic account is the <code>CheckingAccount</code>. As you recall from the
 <code>BankingAccount</code> class, the <code>getBalance()</code>, <code>deposit()</code>, and
 <code>withdraw()</code> methods are all declared <code>final</code>. At first it seems as if
-there is no way to change these methods to add the $10 service charge.
+there&#8217;s no way to change these methods to add the $10 service charge.
 However, each of those methods calls the <code>update()</code> method first to take
 care of any bookkeeping. By overriding the <code>update()</code> method, we can
 easily add the service charge. The new <code>update()</code> method calls the
@@ -37855,10 +37895,10 @@ parent <code>update()</code> to calculate the passage of time, then it changes t
 balance based on the number of months that have passed.</p>
 </div>
 <div class="paragraph">
-<p>The system we have adopted may seem unusual at first. Any time the
+<p>The system we&#8217;ve adopted may seem unusual at first. Any time the
 balance is checked, deposited to, or withdrawn from, we call <code>update()</code>.
 By updating the account to reflect any months which may have passed
-before continuing on, we do not have to write code which periodically
+before continuing on, we don&#8217;t have to write code which periodically
 updates each bank account. Each bank account is only updated if needed.</p>
 </div>
 <div class="paragraph">
@@ -37868,20 +37908,20 @@ internal <code>Calendar</code> and the application of any fee atomic, just to be
 safe.</p>
 </div>
 <div class="paragraph">
-<p>Note that we do not use the constant <code>FEE</code> directly in <code>update()</code>.
+<p>Note that we don&#8217;t use the constant <code>FEE</code> directly in <code>update()</code>.
 Instead, we call the <code>getFee()</code> method. The reason for this decision is
 due to the next class.</p>
 </div>
 <div id="DirectDepositAccountProgram" class="listingblock">
-<div class="title">Program 17.2 Subclass of <code>CheckingAccount</code> that models the behavior of accounts with direct deposits.</div>
+<div class="title">Program 17.2 Child class of <code>CheckingAccount</code> that models the behavior of accounts with direct deposits.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.Calendar</span><span class="o">;</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">DirectDepositAccount</span> <span class="kd">extends</span> <span class="n">CheckingAccount</span> <span class="o">{</span>
     <span class="kd">protected</span> <span class="n">Calendar</span> <span class="n">lastDirectDeposit</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">DirectDepositAccount</span><span class="o">(</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">double</span> <span class="n">balance</span> <span class="o">)</span>
+    <span class="kd">public</span> <span class="nf">DirectDepositAccount</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">double</span> <span class="n">balance</span><span class="o">)</span>
         <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">name</span><span class="o">,</span> <span class="n">balance</span> <span class="o">);</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">balance</span><span class="o">);</span>
         <span class="n">lastDirectDeposit</span> <span class="o">=</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
     <span class="o">}</span>
 
@@ -37891,15 +37931,14 @@ due to the next class.</p>
         <span class="n">lastDirectDeposit</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">YEAR</span><span class="o">))</span> <span class="o">+</span>
         <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">MONTH</span><span class="o">)</span> <span class="o">-</span>
         <span class="n">lastDirectDeposit</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">MONTH</span><span class="o">));</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">months</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">months</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="o">)</span>
             <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
         <span class="k">else</span>
             <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getFee</span><span class="o">();</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">directDeposit</span><span class="o">(</span> <span class="kt">double</span> <span class="n">amount</span> <span class="o">)</span>
-        <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-        <span class="n">deposit</span><span class="o">(</span> <span class="n">amount</span> <span class="o">);</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">directDeposit</span><span class="o">(</span><span class="kt">double</span> <span class="n">amount</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">deposit</span><span class="o">(</span><span class="n">amount</span><span class="o">);</span>
         <span class="n">lastDirectDeposit</span> <span class="o">=</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -37907,25 +37946,25 @@ due to the next class.</p>
 </div>
 <div class="paragraph">
 <p>The <code>DirectDepositAccount</code> class extends the <code>CheckingAccount</code> class.
-Note that the <code>update()</code> method hasn&#8217;t been overridden. We have added
+Note that the <code>update()</code> method hasn&#8217;t been overridden. We&#8217;ve added
 another <code>Calendar</code> object to keep track of the last time a direct
-deposit was made. Then, we do override the <code>getFee()</code> method. If there
-has been a recent direct deposit, the fee is nothing, otherwise, it
+deposit was made. Then, we override the <code>getFee()</code> method. If there&#8217;s
+been a recent direct deposit, the fee is nothing; otherwise, it
 returns the fee from the <code>CheckingAccount</code>. Because of dynamic binding,
 the <code>update()</code> method defined in <code>CheckingAccount</code> will call this
 overridden <code>getFee()</code> method for <code>DirectDepositAccount</code> objects.</p>
 </div>
 <div id="SavingsAccountProgram" class="listingblock">
-<div class="title">Program 17.3 Subclass of <code>BankAccount</code> that models the behavior of a savings account.</div>
+<div class="title">Program 17.3 Child class of <code>BankAccount</code> that models the behavior of a savings account.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SavingsAccount</span> <span class="kd">extends</span> <span class="n">BankAccount</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">MINIMUM</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">;</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">FEE</span> <span class="o">=</span> <span class="mi">25</span><span class="o">;</span>
     <span class="kd">protected</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">RATE</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">SavingsAccount</span><span class="o">(</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">double</span> <span class="n">balance</span><span class="o">,</span> <span class="kt">double</span> <span class="n">rate</span> <span class="o">)</span>
+    <span class="kd">public</span> <span class="nf">SavingsAccount</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">double</span> <span class="n">balance</span><span class="o">,</span> <span class="kt">double</span> <span class="n">rate</span><span class="o">)</span>
         <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span> <span class="n">name</span><span class="o">,</span> <span class="n">balance</span> <span class="o">);</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">balance</span><span class="o">);</span>
         <span class="n">RATE</span> <span class="o">=</span> <span class="n">rate</span><span class="o">;</span>
     <span class="o">}</span>
 
@@ -37933,15 +37972,14 @@ overridden <code>getFee()</code> method for <code>DirectDepositAccount</code> ob
 
     <span class="kd">protected</span> <span class="kt">double</span> <span class="nf">getMinimum</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">MINIMUM</span><span class="o">;</span> <span class="o">}</span>
 
-    <span class="kd">protected</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span>
-        <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="kd">protected</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
         <span class="kd">super</span><span class="o">.</span><span class="na">update</span><span class="o">();</span>
         <span class="kt">int</span> <span class="n">months</span> <span class="o">=</span> <span class="n">getMonthsPassed</span><span class="o">();</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">months</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">getBalance</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span>
-                <span class="n">changeBalance</span><span class="o">(</span> <span class="n">getBalance</span><span class="o">()</span> <span class="o">*</span> <span class="o">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">RATE</span><span class="o">/</span><span class="mi">12</span><span class="o">)</span> <span class="o">);</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">getBalance</span><span class="o">()</span> <span class="o">&lt;</span> <span class="n">getMinimum</span><span class="o">()</span> <span class="o">)</span>
-                <span class="n">changeBalance</span><span class="o">(</span> <span class="o">-</span><span class="n">getFee</span><span class="o">()</span> <span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">months</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">getBalance</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+                <span class="n">changeBalance</span><span class="o">(</span><span class="n">getBalance</span><span class="o">()</span> <span class="o">*</span> <span class="o">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">RATE</span><span class="o">/</span><span class="mi">12</span><span class="o">));</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">getBalance</span><span class="o">()</span> <span class="o">&lt;</span> <span class="n">getMinimum</span><span class="o">())</span>
+                <span class="n">changeBalance</span><span class="o">(-</span><span class="n">getFee</span><span class="o">());</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -37949,14 +37987,14 @@ overridden <code>getFee()</code> method for <code>DirectDepositAccount</code> ob
 </div>
 <div class="paragraph">
 <p>There should be few surprises in the last class, <code>SavingsAccount</code>. The
-biggest difference is that, in the <code>update()</code> method, we use a loop to
+biggest difference is that we use a loop in the <code>update()</code> method to
 update the balance because the account could be gaining interest and
-also incurring fees. The interaction of the two operations may give a
+also incurring fees. The interaction of the two operations might give a
 different result than applying each in a block for the backlog of
 months.</p>
 </div>
 <div class="paragraph">
-<p>This set of classes may not resemble the way a real, commercial-grade
+<p>This set of classes might not resemble the way a real, commercial-grade
 banking application works. Nevertheless, with inheritance and
 polymorphism we were able to create bank accounts which do some
 complicated tasks with a relatively small amount of code. At the same
@@ -37968,33 +38006,31 @@ concurrent environments.</p>
 <h3 id="_concurrency_atomic_libraries">17.5. Concurrency: Atomic libraries</h3>
 <div class="paragraph">
 <p>This chapter has discussed using polymorphism to reuse code. To solve
-the Bank Account with a Vengeance problem from the beginning of the
+the banking account with a vengeance problem from the beginning of the
 chapter, we explored the process of extending several bank account
 classes to add additional features while working hard to maintain thread
 safety.</p>
 </div>
 <div class="paragraph">
 <p>Code can be reused by extending classes with child classes or by using
-instances of existing classes as fields. There is no single solution
-that is best for every case. As in the bank account examples, it can be
+instances of existing classes as fields. There&#8217;s no single solution
+that&#8217;s best for every case. As in the bank account examples, it can be
 difficult to know when to apply the <code>synchronized</code> keyword to methods.</p>
 </div>
 <div class="paragraph">
 <p>To lessen the load on the programmer, the Java API provides a library of
-atomic primitives in the<br>
-<code>java.util.concurrent.atomic</code> package. These are classes with certain
-operations that are guaranteed to execute atomically. For example, the
-<code>AtomicInteger</code> class encapsulates the functionality of an <code>int</code>
-variable with atomic accesses. One of its methods is
-<code>incrementAndGet()</code>, which will atomically increment its internal value
-by 1 and return the result. Recall from
+atomic primitives in the <code>java.util.concurrent.atomic</code> package. These are
+classes with certain operations guaranteed to execute atomically. For example,
+the <code>AtomicInteger</code> class encapsulates the functionality of an <code>int</code> variable
+with atomic accesses. One of its methods is <code>incrementAndGet()</code>, which will
+atomically increment its internal value by 1 and return the result. Recall from
 <a href="#RaceConditionProgram">Program 14.1</a> that even an operation as simple as
-<code>++</code> is not atomic. If many different threads try to increment a single
+<code>++</code> isn&#8217;t atomic. If many different threads try to increment a single
 variable, some of those increments can get lost, causing the final value
 to be less than it should be.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 17.2 AtomicInteger</div>
+<div class="title">Example 17.3 AtomicInteger</div>
 <div class="content">
 <div class="paragraph">
 <p>We can use the <code>AtomicInteger</code> class to rewrite
@@ -38010,24 +38046,24 @@ to be less than it should be.</p>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">THREADS</span> <span class="o">=</span> <span class="mi">4</span><span class="o">;</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">COUNT</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">NoRaceCondition</span><span class="o">[]</span> <span class="n">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NoRaceCondition</span><span class="o">[</span><span class="n">THREADS</span><span class="o">];</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
             <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NoRaceCondition</span><span class="o">();</span>
             <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
         <span class="o">}</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
                 <span class="n">threads</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">join</span><span class="o">();</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
         <span class="o">}</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Counter:\t"</span> <span class="o">+</span> <span class="n">counter</span><span class="o">.</span><span class="na">get</span><span class="o">()</span> <span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Counter:\t"</span> <span class="o">+</span> <span class="n">counter</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">COUNT</span> <span class="o">/</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">COUNT</span> <span class="o">/</span> <span class="n">THREADS</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
             <span class="n">counter</span><span class="o">.</span><span class="na">incrementAndGet</span><span class="o">();</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -38040,14 +38076,14 @@ that the type of <code>counter</code> has been changed from <code>int</code> to
 Consequently, the <code>++</code> operation was changed to an <code>incrementAndGet()</code>
 method call, and a <code>get()</code> method call was needed to get the final
 value. If you run this program, the final answer should always be
-1000000, no matter what.</p>
+1,000,000, no matter what.</p>
 </div>
 </div>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="paragraph">
-<p><a href="#atomicClassExercise">Exercise 17.9</a></p>
+<p><a href="#atomicClassExercise">Exercise 17.10</a></p>
 </div>
 </div>
 </div>
@@ -38057,21 +38093,20 @@ value. If you run this program, the final answer should always be
 <code>AtomicIntegerArray</code> and <code>AtomicLongArray</code> classes are included to
 perform atomic array accesses. For general purposes, the
 <code>AtomicReference&lt;V&gt;</code> class provides an atomic way to store a reference
-to any object. (The <code>&lt;V&gt;</code> is a generic type parameter, which will be
-discussed in <a href="#ch18-dynamic-data-structures">Chapter 18</a>.)</p>
+to any object. The <code>&lt;V&gt;</code> is a generic type parameter, which will be
+discussed in <a href="#ch18-dynamic-data-structures">Chapter 18</a>.</p>
 </div>
 <div class="paragraph">
 <p>Although you could use the <code>synchronized</code> keyword to create each one of
-these classes yourself, the result would not be as efficient. The atomic
-classes use a special <em>lock-free</em> mechanism. Unlike using the
-<code>synchronized</code> keyword which forces a thread to acquire a lock on a
-specific object, lock-free mechanisms are built on a <em>compare-and-swap</em>
-(CAS) hardware instruction. Thus, incrementing and the handful of other
-ways to update an atomic variable execute in one step because of special
-instructions on the CPU. Since there is no waiting to acquire a lock or
-fighting over which thread has the lock, the operation is very fast.
-Many high performance concurrent applications depends on CAS
-implementations.</p>
+these classes yourself, the result wouldn&#8217;t be as efficient. The atomic
+classes use a special <em>lock-free</em> mechanism. Unlike the <code>synchronized</code>
+keyword which forces a thread to acquire a lock on a specific object,
+lock-free mechanisms are built on a <em>compare-and-swap</em> (CAS) hardware
+instruction. Thus, incrementing and the handful of other ways to update an
+atomic variable execute in one step because of special instructions on the
+CPU. Since there&#8217;s no waiting to acquire a lock or fighting over which thread
+has the lock, the operation is very fast. Many high performance concurrent
+applications depends on CAS implementations.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -38089,7 +38124,11 @@ implementations.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Consider the following two classes:</p>
+<p><a id="staticBindingExercise"></a> Explain the difference between static binding and dynamic binding. In which
+situations does each apply?</p>
+</li>
+<li>
+<p><a id="staticBindingExampleExercise"></a> Consider the following two classes.</p>
 <div id="SaleProgram" class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sale</span> <span class="o">{</span>
@@ -38099,7 +38138,7 @@ implementations.</p>
         <span class="k">return</span> <span class="n">discount</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDiscount</span><span class="o">(</span> <span class="kt">double</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDiscount</span><span class="o">(</span><span class="kt">double</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">discount</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -38114,24 +38153,24 @@ implementations.</p>
         <span class="k">return</span> <span class="n">discount</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDiscount</span><span class="o">(</span> <span class="kt">double</span> <span class="n">value</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDiscount</span><span class="o">(</span><span class="kt">double</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">discount</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Given the following snippet of code, what is the output?</p>
+<p>Given the following snippet of code, what&#8217;s the output and why?</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">Sale</span> <span class="n">sale</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Blowout</span><span class="o">();</span>
-<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">sale</span><span class="o">.</span><span class="na">discount</span> <span class="o">);</span>
-<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">sale</span><span class="o">.</span><span class="na">getDiscount</span> <span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sale</span><span class="o">.</span><span class="na">discount</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sale</span><span class="o">.</span><span class="na">getDiscount</span><span class="o">);</span>
 <span class="n">Blowout</span> <span class="n">blowout</span> <span class="o">=</span> <span class="o">(</span><span class="n">Blowout</span><span class="o">)</span><span class="n">sale</span><span class="o">;</span>
-<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">blowout</span><span class="o">.</span><span class="na">discount</span> <span class="o">);</span>
-<span class="n">sale</span><span class="o">.</span><span class="na">setDiscount</span><span class="o">(</span> <span class="mf">0.75</span> <span class="o">);</span>
-<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">sale</span><span class="o">.</span><span class="na">discount</span> <span class="o">);</span></code></pre>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">blowout</span><span class="o">.</span><span class="na">discount</span><span class="o">);</span>
+<span class="n">sale</span><span class="o">.</span><span class="na">setDiscount</span><span class="o">(</span><span class="mf">0.75</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sale</span><span class="o">.</span><span class="na">discount</span><span class="o">);</span></code></pre>
 </div>
 </div>
 </li>
@@ -38147,41 +38186,70 @@ identify which line will cause an error and why.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">Vegetable</span><span class="o">[]</span> <span class="n">vegetables</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vegetable</span><span class="o">[</span><span class="mi">30</span><span class="o">];</span>
-<span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vegetables</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vegetables</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">3</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">vegetables</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Corn</span><span class="o">();</span>
     <span class="n">vegetables</span><span class="o">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Carrot</span><span class="o">();</span>
     <span class="n">vegetables</span><span class="o">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Potato</span><span class="o">();</span>
 <span class="o">}</span>
 <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">vegetables</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
 <span class="n">Potato</span> <span class="n">potato</span><span class="o">;</span>
-<span class="k">while</span><span class="o">(</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">while</span><span class="o">(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">potato</span> <span class="o">=</span> <span class="o">(</span><span class="n">Potato</span><span class="o">)</span><span class="n">vegetable</span><span class="o">[</span><span class="n">index</span><span class="o">];</span>
     <span class="n">potato</span><span class="o">.</span><span class="na">peel</span><span class="o">();</span>
+	<span class="n">index</span><span class="o">--;</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>How many different meanings of the keyword <code>final</code> are there in
-Java, and what does each mean?</p>
+<p>How many different structures can the keyword <code>final</code> be applied to in
+Java, and what does <code>final</code> mean in each case?</p>
 </li>
 <li>
-<p>Assume that <code>Quicksand</code> is a subclass of <code>Danger</code>.</p>
+<p><a id="instanceofExercise"></a> Assume that <code>Quicksand</code> is a child class of <code>Danger</code>.</p>
 <div class="paragraph">
-<p>What is the output of the following code?</p>
+<p>What&#8217;s the output of the following code and why?</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">Quicksand</span> <span class="n">quicksand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Quicksand</span><span class="o">();</span>
-<span class="k">if</span><span class="o">(</span> <span class="n">quicksand</span> <span class="k">instanceof</span> <span class="n">Danger</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span> <span class="s">"Run for your lives!"</span> <span class="o">);</span>
-<span class="k">if</span><span class="o">(</span> <span class="n">quicksand</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">==</span> <span class="n">Danger</span><span class="o">.</span><span class="na">class</span> <span class="o">)</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span> <span class="s">"Run even faster!"</span> <span class="o">);</span>
-<span class="k">if</span><span class="o">(</span> <span class="n">quicksand</span> <span class="k">instanceof</span> <span class="n">Quicksand</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span> <span class="s">"The more you struggle,"</span> <span class="o">+</span>
-    <span class="s">" the faster you'll sink!"</span> <span class="o">);</span>
-<span class="k">if</span><span class="o">(</span> <span class="n">quicksand</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">==</span> <span class="n">Quicksand</span><span class="o">.</span><span class="na">class</span> <span class="o">)</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span> <span class="s">"You'll need to find a vine to escape!"</span> <span class="o">);</span></code></pre>
+<span class="k">if</span><span class="o">(</span><span class="n">quicksand</span> <span class="k">instanceof</span> <span class="n">Danger</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Run for your lives!"</span><span class="o">);</span>
+<span class="k">if</span><span class="o">(</span><span class="n">quicksand</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">==</span> <span class="n">Danger</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Run even faster!"</span><span class="o">);</span>
+<span class="k">if</span><span class="o">(</span><span class="n">quicksand</span> <span class="k">instanceof</span> <span class="n">Quicksand</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"The more you struggle, the faster you'll sink!"</span><span class="o">);</span>
+<span class="k">if</span><span class="o">(</span><span class="n">quicksand</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">==</span> <span class="n">Quicksand</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"You'll need to find a vine to escape!"</span><span class="o">);</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a id="polymorphismExceptionsExercise"></a> Consider the following two classes.
+What&#8217;s the problem that prevents compilation?</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Snake</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">BiteException</span> <span class="o">{</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"You handled a snake!"</span><span class="o">);</span>
+		<span class="k">if</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">BiteException</span><span class="o">();</span>
+	<span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Cobra</span> <span class="kd">extends</span> <span class="n">Snake</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">BiteException</span><span class="o">,</span> <span class="n">PoisonException</span> <span class="o">{</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"You handled a cobra!"</span><span class="o">);</span>
+		<span class="k">if</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">if</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="o">)</span>
+				<span class="k">throw</span> <span class="k">new</span> <span class="nf">PoisonException</span><span class="o">();</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">BiteException</span><span class="o">();</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 </li>
@@ -38191,7 +38259,14 @@ Java, and what does each mean?</p>
 <p><strong>Programming Practice</strong></p>
 </div>
 <div class="olist arabic">
-<ol class="arabic" start="6">
+<ol class="arabic" start="8">
+<li>
+<p>Update the solution from <a href="#_solution_boolean_circuits">Section 11.5</a> so that it uses as
+many of the inheritance tools from this chapter as possible.  Clearly, the
+<code>Gate</code>, <code>UnaryOperator</code>, and <code>BinaryOperator</code> classes should be marked
+<code>abstract</code>.  Which methods should be <code>abstract</code>?  Which methods or classes
+should be <code>final</code>?</p>
+</li>
 <li>
 <p>Implement a program to assess income tax on normal employees,
 students, and international students using a class hierarchy. Normal
@@ -38212,71 +38287,47 @@ normal income tax according to the following table.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">10%</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">$0 - $7,825</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">$0 - $9,700</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">15%</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">$7,826 -$31,850</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">12%</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">$9,701 - $39,475</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">25%</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">$31,851 -$77,100</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">22%</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">$39,476 - $84,200</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">28%</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">$77,101- $160,850</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">24%</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">$84,201 - $160,725</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">33%</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">$160,851- $349,700</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">32%</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">$160,726 - $204,100</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">35%</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">$349,701+</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">$204,101 - $510,300</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">37%</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">$510,301+</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
 <p>Tax is assessed at a given rate for every dollar in the range. For
-example, if someone makes $10,000, she pays 10% tax on the first $7,825
-of her income and 15% on the remaining $2,175. The exception is
+example, if someone makes $35,000, she pays 10% tax on the first $9,700
+of her income and 12% on the remaining $25,300. The exception is
 international students whose country has a treaty with the U.S. so that
-they do not have to pay tax on the first $50,000 of income.</p>
-</div>
-</li>
-<li>
-<p>Refer to the sort given in <a href="#_solution_sort_it_out">Section 10.5</a> as the
-solution to the Sort It Out problem. Add another <code>boolean</code> to the
-parameters of the sort which specifies whether the sort is ascending or
-descending. Make the needed changes throughout the code to add this
-functionality.</p>
-</li>
-<li>
-<p><a id="parallelSortedArrayMergeExercise"></a> Again refer to the sort from
-<a href="#_solution_sort_it_out">Section 10.5</a>. The goal now is to parallelize the
-sort. Change the sort to work with <code>int</code> values then write some code
-which will generate an array of random <code>int</code> values. Design your code so
-that you can spawn \(n\) threads. Partition the single array
-into \(n\) arrays and map one partition to each thread. Use
-your bubble sort implementation to sort each partition. Finally, merge
-the arrays back together, in sorted order, into one final array. For
-now, just use one thread (ideally the main thread) to do the merge.</p>
-<div class="paragraph">
-<p>The merge operation is a simple idea, but it is easy to make mistakes in
-implementation. The idea is to have three indexes, one for each of the
-two arrays you are merging and one for the result array. Always take the
-smaller (or larger, if sorting in descending order) index value from the
-two arrays and put it in the result. Then increment the index from the
-array you took the data from as well as the index of the result array.
-Make sure that you are careful not to go beyond the end of the arrays
-which are being merged.</p>
+they don&#8217;t have to pay tax on the first $50,000 of income.</p>
 </div>
 </li>
 <li>
 <p><a id="atomicClassExercise"></a> Re-implement the original
 <code>SynchronizedAccount</code> class from <a href="#bankAccountExample">Example 14.2</a> using
 atomic classes. For simplicity, you can change the <code>balance</code> type from
-<code>double</code> to <code>AtomicInteger</code> since there is no <code>AtomicDouble</code> class. How
+<code>double</code> to <code>AtomicInteger</code> since there&#8217;s no <code>AtomicDouble</code> class. How
 much has this simplified the implementation? Is the <code>readers</code> field
 still necessary? Why or why not?</p>
 </li>
@@ -38286,16 +38337,7 @@ still necessary? Why or why not?</p>
 <p><strong>Experiments</strong></p>
 </div>
 <div class="olist arabic">
-<ol class="arabic" start="10">
-<li>
-<p>Once you have implemented the sort in parallel from
-<a href="#parallelSortedArrayMergeExercise">Exercise 17.8</a>, time it against the
-sequential version. Try 2, 4, and 8 different threads, particularly if
-you have 8 cores. Be sure to create one random array and use the same
-array for both the parallel and sequential versions. Try array sizes of
-1,000, 100,000, and 1,000,000. Did the performance increase as much as you
-expect?</p>
-</li>
+<ol class="arabic" start="11">
 <li>
 <p><a id="atomicTimingExercise"></a> Take <a href="#NoRaceConditionProgram">Program 17.4</a>
 and increase <code>COUNT</code> to <code>100000000</code>. Run it several times and time how
@@ -38305,14 +38347,14 @@ long it takes to run to completion.</p>
 <code>100000000</code> as well. Change the body of the <code>for</code> loop inside the
 <code>run()</code> method so that <code>count++;</code> is inside of a <code>synchronized</code> block
 that uses <code>RaceCondition.class</code> as the lock. (The choice of
-<code>RaceCondition.class</code> is arbitrary, but it is an object that all the
+<code>RaceCondition.class</code> is arbitrary, but it&#8217;s an object that all the
 threads can see.) In this way, the increment will occur atomically,
 since only the thread that has acquired the <code>RaceCondition.class</code> lock
 will be able to do the operation. Now, run this modified program several
 times and time it.</p>
 </div>
 <div class="paragraph">
-<p>How different are the running times? They may be similar, depending on
+<p>How different are the running times? They might be similar, depending on
 the implementation of locks and CAS on your OS and hardware platform.</p>
 </div>
 </li>

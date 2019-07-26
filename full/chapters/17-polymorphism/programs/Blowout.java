@@ -5,7 +5,7 @@ public class Blowout extends Sale {
         return discount;
     }
     
-    public void setDiscount( double value ) {
+    public void setDiscount(double value) {
         discount = value;
     }
 }

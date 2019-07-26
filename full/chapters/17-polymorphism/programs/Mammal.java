@@ -1,14 +1,14 @@
 public abstract class Mammal extends Animal {
     public static final boolean MALE = false;
     public static final boolean FEMALE = true;
-    private final boolean gender;
+    private boolean gender;
     
-    public Mammal( boolean gender ) {
-        super( true );
+    public Mammal(boolean gender) {
+        super(true);
         this.gender = gender;
     }
     
-    public getGender() { return gender; }   
+    public boolean getGender() { return gender; }   
 
     public abstract String makeSound();
 }
