@@ -1,31 +1,35 @@
 import java.util.ArrayList;
 
 public class ArrayListExample extends Thread {
-    private static ArrayList<String> list;
+    private ArrayList<String> list;
 
-    public static void main(String[] args) {
-        list = new ArrayList<String>(); // <1>
+    public static void main(String[] args) throws InterruptedException {
+        ArrayList<String> list = new ArrayList<String>(); // <.>
         
-        Thread t1 = new ArrayListExample(); // <2>
-        Thread t2 = new ArrayListExample();
+        Thread t1 = new ArrayListExample(list); // <.>
+        Thread t2 = new ArrayListExample(list);
         t1.start(); 
         t2.start();
+
+		t1.join();
+		t2.join();
         
-        try {
-            t1.join();
-            t2.join();
-        } catch (InterruptedException e) { e.printStackTrace(); }
-        
-        for (String s : list)
-            System.out.println(s);
+        for(String text: list) //<.>
+            System.out.println(text);
     }
+	
+	public ArrayListExample(ArrayList<String> list) {
+		this.list = list; 				//<.>
+	}
     
-    public void run() { // <3>
-        for (int i = 0; i < 10; i++) {
-            synchronized (list) { // <4>
+    public void run() { 
+        for(int i = 0; i < 10; i++) { 	// <.>
+            synchronized(list) { 		// <.>
                 list.add(this.getName() + ": " + i);
             }
-            try { Thread.sleep(1);  }
+            try { 
+				Thread.sleep(1); 		//<.>
+			}
             catch (InterruptedException e) {
                 e.printStackTrace();
             }

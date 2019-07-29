@@ -6,15 +6,15 @@ public class UseLinkedList {
         Scanner in = new Scanner(System.in);
         LinkedList list = new LinkedList();
 
-        while (in.hasNextLine())
+        while(in.hasNextLine())
             list.add(in.nextLine());
         
-        String[] names = new String[list.getSize()]; 
+        String[] names = new String[list.size()]; 
         list.fillArray(names);
 
         Arrays.sort(names);
         
-        for (int i = 0; i < names.length; i++)
-            System.out.println(names[i]);
+        for(String name: names)
+            System.out.println(names);
     }
 }

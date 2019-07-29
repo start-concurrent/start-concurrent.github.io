@@ -4,18 +4,18 @@ public class LinkedListStack implements Stack {
         public Node next;
     }
     
-    private Node head = null; // <1>
+    private Node head = null; // <.>
 
-    public void push(String value) { // <2>
+    public void push(String value) { // <.>
         Node temp = new Node();
         temp.value = value;
         temp.next = head;
         head = temp;
     }
 
-    public String pop() { // <3>
+    public String pop() { // <.>
         String value = null;
-        if (isEmpty())
+        if(isEmpty())
             System.out.println("Can't pop empty stack!");
         else {
             value = head.value;
@@ -26,7 +26,7 @@ public class LinkedListStack implements Stack {
 
     public String top() {
         String value = null;
-        if (isEmpty())
+        if(isEmpty())
             System.out.println("No top on an empty stack!");
         else
             value = head.value;

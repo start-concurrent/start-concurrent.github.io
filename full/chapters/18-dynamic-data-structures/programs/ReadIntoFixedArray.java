@@ -5,14 +5,14 @@ public class ReadIntoFixedArray {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         String[] names = new String[10];
-        int n = 0;
+        int count = 0;
 
-        while( in.hasNextLine() )
-            names[n++] = in.nextLine();
+        while(in.hasNextLine())
+            names[count++] = in.nextLine();
         
-        Arrays.sort(names, 0, n);
+        Arrays.sort(names, 0, count);
         
-        for( int i = 0; i < n; i++ )
-            System.out.println(names[i]);
+        for(String name: names) //<.>
+            System.out.println(name);
     }
 }

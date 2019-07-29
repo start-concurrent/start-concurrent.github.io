@@ -15,7 +15,7 @@ public class ObjectStack {
 
     public Object pop() {
         Object value = null;
-        if (isEmpty())
+        if(isEmpty())
             System.out.println("Can't pop empty stack!");
         else {
             value = head.value;
@@ -26,7 +26,7 @@ public class ObjectStack {
 
     public Object top() {
         Object value = null;
-        if (isEmpty())
+        if(isEmpty())
             System.out.println("Can't get top of empty stack!");
         else
             value = head.value;

@@ -4,9 +4,8 @@ public class DynamicArray {
     private String[] strings = new String[10];
    
     public synchronized void set(int i, String string) {
-        if (i == strings.length)
-            strings = Arrays.copyOfRange(strings, 0,
-                                         strings.length*2);
+        if(i == strings.length)
+            strings = Arrays.copyOfRange(strings, 0, strings.length*2);
         strings[i] = string;
     }
     

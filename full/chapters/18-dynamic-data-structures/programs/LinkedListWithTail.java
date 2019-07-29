@@ -8,35 +8,35 @@ public class LinkedListWithTail {
     private Node tail = null;
     private int size = 0;
     
-    public void addFirst(String value) {
+    public void addFirst(String value) { //<.>
         Node temp = new Node();
         temp.value = value;
         temp.next = head;
         head = temp;
-        if( tail == null )
+        if(tail == null)
             tail = head;
         size++;
     }
     
-    public void addLast(String value) {
+    public void addLast(String value) { //<.>
         Node temp = new Node();
-        temp.value = value;
-        temp.next = null;
-        if( tail == null )
-            head = tail = temp;
+        temp.value = value;        
+        if(tail == null)
+            head = temp;
         else 
             tail.next = temp;
+		tail = temp;
         size++;     
     }
     
-    public int getSize() {
+    public int size() {
         return size;
     }
     
     public void fillArray(String[] array) {     
         Node temp = head;
         int position = 0;
-        while( temp != null ) {
+        while(temp != null) {
             array[position++] = temp.value;
             temp = temp.next;
         }           
