@@ -22,7 +22,7 @@ public class GenericLinkedList<T> {
     public void fillArray(T[] array) {      
         Node<T> temp = head;
         int position = 0;
-        while( temp != null ) {
+        while(temp != null) {
             array[position++] = temp.value;
             temp = temp.next;
         }           

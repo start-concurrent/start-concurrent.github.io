@@ -1,4 +1,4 @@
-public class LinkedListQueueTS implements Queue {
+public class LinkedListQueueSafe implements Queue {
     private static class Node {
         public String value;
         public Node next;
@@ -10,24 +10,22 @@ public class LinkedListQueueTS implements Queue {
     public synchronized void enqueue(String value) {
         Node temp = new Node();
         temp.value = value;
-        temp.next = null;
-        
-        if( isEmpty() )
-            head = tail = temp;
-        else {          
+        temp.next = null;        
+        if(isEmpty())
+            head = temp;
+        else          
             tail.next = temp;
-            tail = temp;            
-        }
+		tail = temp; 
     }
     
     public synchronized String dequeue() {
         String value = null;
-        if( isEmpty() )
+        if(isEmpty())
             System.out.println("Can't dequeue an empty queue!");
         else {
             value = head.value;
             head = head.next;
-            if( head == null )
+            if(head == null)
                 tail = null;
         }
         return value;
@@ -35,7 +33,7 @@ public class LinkedListQueueTS implements Queue {
     
     public synchronized String front() {
         String value = null;
-        if( isEmpty() )
+        if(isEmpty())
             System.out.println("No front on an empty queue!");
         else
             value = head.value;

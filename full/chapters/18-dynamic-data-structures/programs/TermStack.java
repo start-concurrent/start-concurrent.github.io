@@ -6,7 +6,7 @@ public class TermStack {
     
     private Node head = null;
 
-    public void push( Term value ) {
+    public void push(Term value) {
         Node temp = new Node();
         temp.value = value;
         temp.next = head;
