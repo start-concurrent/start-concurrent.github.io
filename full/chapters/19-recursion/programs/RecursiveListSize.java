@@ -15,13 +15,13 @@ public class RecursiveListSize {
     
     // Proxy method
     public int size() {
-        return size( head );
+        return size(head);
     }
     
     private static int size(Node list) {
-        if( list == null ) // Base case
+        if(list == null) // Base case
             return 0;       
         // Recursive case
-        return 1 + size( list.next );
+        return 1 + size(list.next);
     }    
 }

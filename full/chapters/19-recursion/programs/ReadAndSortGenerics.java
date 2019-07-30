@@ -5,11 +5,10 @@ public class ReadAndSortGenerics {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
-        GenericTree<String> stringTree = new GenericTree<String>();
-        GenericTree<Integer> integerTree =
-            new GenericTree<Integer>();
+        GenericTree<String> stringTree = new GenericTree<>();
+        GenericTree<Integer> integerTree = new GenericTree<>();
         
-        while( in.hasNextLine() )
+        while(in.hasNextLine())
             stringTree.add(in.nextLine());      
         stringTree.print();
         

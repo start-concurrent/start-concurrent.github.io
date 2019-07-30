@@ -12,12 +12,12 @@ ____
 
 The evil mastermind from <<ch13-concurrency#ch13-concurrency>> has
 returned with a new attempt at world domination. Since he now knows that
-you can use concurrency to crack his security code, this time he has
+you can use concurrency to crack his security code, this time he's
 hidden his deadly virus in a secret location protected by a complex maze
 of walls and passageways. Fortunately, you've been able to get a copy of
 the maze floor plan, but now you must write a program to find a path
-through the maze so you can steal the deadly virus before the evil
-mastermind releases it on the world.
+through it so you can steal the deadly virus before the evil
+mastermind unleashes it on the world.
 
 [.text-center]
 .Example of a maze to solve.
@@ -29,37 +29,36 @@ and turns, keeping track of where you've been, backtracking out of dead
 ends, and producing a resulting path once you make it through. You
 already have the basic tools necessary to solve this problem. You can,
 for example, represent the maze with a two-dimensional array of
-characters, where a plus ( `'+'` ) represents a wall and a space ( `' '` )
-represents a passageway. You could create a path through the maze by
+characters, where a plus (`+'+'+`) represents a wall and a space (`'{nbsp}'`)
+represents a passageway. You could mark a path through the maze by
 replacing a contiguous (vertical and horizontal but not diagonal)
-sequence of `' '` characters by `'*'` characters, that lead from the
+sequence of `'{nbsp}'` characters by `'*'` characters, leading from the
 starting square to the final square where the deadly virus is located.
 
-The difficulty is dead ends or, worse, loops. How do you keep track of
+The difficulties are dead ends and, worse, loops. How do you keep track of
 which paths you've tried that didn't work? While you could use
-additional data structures to store this additional information,
+additional data structures to store this information,
 _recursion_ is a solution technique that makes solving problems like
 this one surprisingly straightforward.
 
 === Concepts: Recursive problem solving
 
-The idea that we use to solve this maze problem is called recursion.
-Imagine that you are in a maze and have the choice to go right, left, or
-straight. No matter which of the three paths you take, you will probably
-be confronted by more choices of going right, left, or straight. You
-need to explore them all systematically. The process of systematically
-exploring the right path is similar to the process of systematically
-exploring the left path. The choice at this moment between left, right,
-and straight is in fact part of the same systematic process that you
-want to follow when you are in the left, right, or straight branches of
-the maze.
+The idea that we'll use to solve this maze problem is called recursion.
+Imagine you're in a maze and have the choice to go right, left, or
+straight. No matter which of the three paths you take, you'll probably
+be confronted by more choices of going right, left, or straight as you
+progress. You need to explore them all systematically. The process of
+systematically exploring the right path is similar to the process of
+systematically exploring the left path. The choice at this moment between
+left, right, and straight is in fact part of the same systematic process
+you want to follow when you're in the left, right, or straight branches
+of the maze.
 
 Solutions that can be described in terms of themselves are recursive.
 But what is recursion? How can describing something in terms of itself
 be useful? Since recursion sounds circular, how can it be applied to
 problem solving in Java? How does the computer keep track of these
-self-references? The following subsections address precisely these
-questions.
+self-references? The following subsections address these questions.
 
 ==== What is recursion?
 
@@ -67,36 +66,43 @@ In the context of computer science and mathematics, recursion means
 describing some repetitive process in terms of itself. Many complex
 things can be described elegantly using recursion.
 
-Consider the question, "`How old are you now?`" If you were 27, you
-could answer, "`I am one year older than I was last year.`" If then
+Consider the question, "`How old are you now?`" If you're 27, you
+could answer, "`I'm one year older than I was last year.`" If then
 asked, "`Well, how old were you last year?`" Again, you could answer,
 "`I was one year older than I was the year before.`" Assuming that the
 person who wanted to wanted to know your age was very patient, you could
-repeat this answer over and over, explaining that each year you have
-been one year older than the previous year. However, after asking you 27
-times about your age on the previous year, you would run out of years of
+repeat this answer over and over, explaining that each year you've
+been one year older than the previous year. However, after being asked 27
+times about your age on the previous year, you'd run out of years of
 life and be forced to answer, "`Zero years old.`"
 
 This absurd dialog shows an important feature of useful recursive
 definitions: They have at least one _base case_ and at least one
-_recursive case_. The base case is the part of the definition that is
-not described in terms of itself. It is a concrete answer. Without the
+_recursive case_. The base case is the part of the definition that's
+*not* described in terms of itself. It's a concrete answer. Without the
 base case, the process would never end, and the definition would be
-meaningless. The recursive case is the part of the definition that is
+meaningless. The recursive case is the part of the definition that *is*
 defined in terms of itself. Without the recursive case, the definition
 could only describe a finite set of things.
 
-In the example above, the base case is the age of zero years old. You
+In the example above, the base case is being zero years old. You
 have no age before that. The recursive case is any age greater than zero
-years old. We can use mathematical notation to describe your age in a
-given year. Here stem:[age(year)] is a function that gives the
-age you were during year stem:[year].
+. We can use mathematical notation to describe your age in a
+given year. Here _age_(_year_) is a function that gives the
+age you were during _year_.
 
-stem:[age(year) =
-\begin{cases} 0 & \text{if you were born in $year$} & \text{(Base Case)}
-\\
-  1 + age(year-1) & \text{if you were born before $year$} & \text{(Recursive Case)}
-\end{cases}]
+//[stem]
+//++++
+//age(year) =
+//\left\{\begin{array}{lll}
+//0 & \text{if you were born in $year$} &  \text{(Base Case)} \\
+//1 + age(year-1) & \text{if you were born before $year$} &  \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::ageRecursion.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
+
 
 To be meaningful, recursive cases should be defined in terms of simpler
 or smaller values. In English, it is equally correct to say that you are
@@ -130,29 +136,36 @@ recursion are more useful for solving problems. As with many aspects of
 programming, there is a strong connection to mathematical principles.
 
 In mathematics, a _recursive definition_ is one that is defined in terms
-of itself. It is common to define functions and sequences (and also
-sets) recursively. Functions (such as stem:[f(n)]) are usually
-defined in relation to the same function with a smaller input (such as
-stem:[f(n - 1)]). Sequences (such as stem:[s_n]) are
-usually defined in relation to earlier elements in the sequence (such as
-stem:[s_{n - 1}]).
+of itself. It's common to define functions and sequences (and also
+sets) recursively. Functions, such as _f_(_n_), are usually
+defined in relation to the same function with a smaller input, such as
+_f_(_n_ - 1). Sequences, such as _s_~_n_~, are
+usually defined in relation to earlier elements in the sequence, such as
+_s_~_n_-1~.
 
 [[multiplicationDefinedRecursivelyExample]]
 .Multiplication defined recursively
 ====
 
 Even very common functions can be defined recursively. Consider the
-multiplication stem:[x \times y]. This multiplication means
-repeatedly adding the stem:[x] a total of stem:[y] times.
-If stem:[y] is a positive integer, we can describe this
+multiplication _x_ ⋅ _y_. This multiplication means
+repeatedly adding the _x_ a total of _y_ times.
+If _y_ is a positive integer, we can describe this
 multiplication with the following recursive definition. Note the base
 case and recursive case.
 
-stem:[x \times y =
-\begin{cases} x & \text{if  $y = 1$} & \text{(Base Case)}
-\\
-x + \left(x \times (y - 1)\right) & \text{if $y > 1$} & \text{(Recursive Case)}
-\end{cases}]
+//[stem]
+//++++
+//x \cdot y =
+//\left\{\begin{array}{lll}
+//x & \text{if  $y = 1$} & \text{(Base Case)} \\
+//x + \left(x \cdot (y - 1)\right) & \text{if $y > 1$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::multiplicationRecursion.svg[scaledwidth=50%,pdfwidth=50%,width=50%]
+
 
 Multiplication seems like such a basic operation that there would be no
 need to have such a definition. Yet mathematicians often use multiple
@@ -168,25 +181,30 @@ definition provides intuition for creating more complex definitions.
 ====
 
 Another mathematical function with a natural recursive definition is the
-factorial function, often written stem:[n!]. The factorial
+factorial function, often written __n__!. The factorial
 function is used heavily in probability and counting. The value of
-stem:[n! = n
-\cdot(n - 1)\cdot(n - 2) \ldots 3 \cdot 2 \cdot 1]. Mathematicians
-like recursive definitions because they are able to describe functions
-and sequences precisely without using ellipses (stem:[\ldots]).
+__n__! = _n_ ⋅ (_n_ - 1) ⋅ (_n_ - 2) ... 3 ⋅ 2 ⋅ 1. Mathematicians
+like recursive definitions because they're able to describe functions
+and sequences precisely without using ellipses (...).
 
-stem:[n! =
-\begin{cases} 1 & \text{if  $n = 0$} & \text{(Base Case)}
-\\
-n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
-\end{cases}]
 
-Note that the base case gives stem:[1] as the answer when
-stem:[n = 0]. By convention stem:[0! = 1]. Thus, this
-definition correctly gives stem:[0! = 1],
-stem:[1! = 1\cdot 0!
-= 1], stem:[2! = 2\cdot 1! = 2],
-stem:[3! = 3\cdot 2! = 6], and so on.
+//[stem]
+//++++
+//n! =
+//\left\{\begin{array}{lll}
+//1 & \text{if  $n = 0$} & \text{(Base Case)} \\
+//n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::factorialRecursion.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
+
+Note that the base case gives 1 as the answer when
+_n_ = 0. By convention 0! = 1. Thus, this
+definition correctly gives 0! = 1,
+1! = 1 ⋅ 0! = 1, 2! = 2 ⋅ 1! = 2,
+3! = 3 ⋅ 2! = 6, and so on.
 
 ====
 
@@ -194,7 +212,7 @@ stem:[3! = 3\cdot 2! = 6], and so on.
 ====
 
 The Fibonacci sequence is an infinite sequence of integers starting with
-1, 1, 2, 3, 5, 8, 13, 21, stem:[\ldots]. Each term after the two
+1, 1, 2, 3, 5, 8, 13, 21, .... Each term after the two
 initial 1s is the sum of the previous two terms in the sequence.
 Fibonacci has many interesting properties and crops up in surprisingly
 diverse areas of mathematics. It was originally used to model the growth
@@ -203,16 +221,24 @@ of rabbit populations.
 The Fibonacci sequence also has a natural recursive mathematical
 definition. Indeed, you may have noticed that we described each term as
 the sum of the two previous terms. We can formally define the
-stem:[n]^th^ Fibonacci number stem:[F_n] as follows,
-starting with stem:[n=0]. stem:[F_n=
-\begin{cases} 1 & \text{if  $n=0$ or  $n = 1$} & \text{(Base
-Cases)}
-\\
-F_{n-1}+F_{n-2} & \text{if $n>1$} & \text{(Recursive Case)}
-\end{cases}]
+_n_^th^ Fibonacci number _F_~_n_~ as follows,
+starting with _n_ = 0.
 
-Since the stem:[F_n] depends on the two previous terms, it is
-necessary to have two base cases. The Fibonacci sequence is a special
+//[stem]
+//++++
+//F_n =
+//\left\{\begin{array}{lll}
+//1 & \text{if  $n=0$ or  $n = 1$} & \text{(Base Cases)} \\
+//F_{n-1}+F_{n-2} & \text{if $n>1$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::fibonacciRecursion.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
+
+
+Since the _F_~_n_~ depends on the two previous terms, it's
+necessary to have *two* base cases. The Fibonacci sequence is a special
 kind of Lucas sequence. Other Lucas sequences specify different values
 for the two base cases (and sometimes coefficients to multiply the
 previous terms by).
@@ -316,7 +342,7 @@ image::recursivecalls.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 the call stack as each call to `factorial()` returns. As the answers are
 returned, they are incorporated into the answer that is generated and
 returned to the next caller in the sequence until the final answer `24`
-(stem:[4!]) is returned to `main()`.
+(4!) is returned to `main()`.
 
 [[figure-recursive_returns]]
 .Recursive methods returning results to their callers.
@@ -389,23 +415,29 @@ In our first example of a recursive implementation, we return to the
 factorial function. Recall the recursive definition that describes the
 function.
 
-stem:[n! =
-\begin{cases} 1 & \text{if $n = 0$} & \text{(Base Case)}
-\\
-n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
-\end{cases}]
+//[stem]
+//++++
+//n! =
+//\left\{\begin{array}{lll}
+//1 & \text{if  $n = 0$} & \text{(Base Case)} \\
+//n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::factorialRecursion.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
 
 By translating this mathematical definition almost directly into Java,
 we can generate a method that computes the factorial function.
 
 [source, java]
 ----
-    public static long factorial(int n) {
-        if (n == 0)     // Base case
-            return 1;
-        else            // Recursive case
-            return n * factorial(n-1);
-    }
+public static long factorial(int n) {
+	if (n == 0)     // Base case
+		return 1;
+	else            // Recursive case
+		return n * factorial(n-1);
+}
 ----
 
 Note the base case and recursive case are exactly the same as in the
@@ -419,14 +451,20 @@ enough to fit inside of an `int`.
 .Fibonacci implemented recursively
 ====
 
-Let us return to the recursive definition of Fibonacci.
+Let's return to the recursive definition of Fibonacci.
 
-stem:[F_n=
-\begin{cases} 1 & \text{if  $n=0$ or $n = 1$} & \text{(Base
-Cases)}
-\\
-F_{n-1}+F_{n-2} & \text{if  $n>1$} & \text{(Recursive Case)}
-\end{cases}]
+//[stem]
+//++++
+//F_n =
+//\left\{\begin{array}{lll}
+//1 & \text{if  $n=0$ or  $n = 1$} & \text{(Base Cases)} \\
+//F_{n-1}+F_{n-2} & \text{if $n>1$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::fibonacciRecursion.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
+
 
 Like factorial, this definition translates naturally into a recursive
 method in Java.
@@ -434,7 +472,7 @@ method in Java.
 [source, java]
 ----
 public static int fibonacci(int n) {
-    if( n == 0 || n == 1 )  // Base cases
+    if(n == 0 || n == 1)  // Base cases
         return 1;
     else                    // Recursive case
         return fibonacci(n-1) + fibonacci(n-2);
@@ -461,9 +499,9 @@ the recursion and store the result in the array.
 
 [source, java]
 ----
-public static int fibonacci( int n, int[] results ) {
-    if( results[n] == 0 ) {
-        if( n == 0 || n == 1 )
+public static int fibonacci(int n, int[] results) {
+    if(results[n] == 0) {
+        if(n == 0 || n == 1)
             results[n] = 1;
         else
             results[n] = fibonacci(n-1) + fibonacci(n-2);
@@ -472,7 +510,7 @@ public static int fibonacci( int n, int[] results ) {
 }
 ----
 
-This change makes the computation of the stem:[n]^th^ Fibonacci
+This change makes the computation of the _n_^th^ Fibonacci
 number much more efficient; however, even more efficient approaches are
 described in the exercises.
 ====
@@ -492,10 +530,10 @@ arranged in a tower on one pole in decreasing size, with the smallest
 diameter disk on top and the largest on the bottom.
 <<figure-hanoi>> shows an example of the puzzle. The goal is to
 move all the disks from the initial pole to the final pole, with two
-restrictions:
+restrictions.
 
-1.  only one disk can be moved at a time
-2.  a larger disk can never be placed on top of a smaller disk
+.  Only one disk can be moved at a time.
+.  A larger disk can never be placed on top of a smaller disk.
 
 [[figure-hanoi]]
 .Tower of Hanoi puzzle with 4 disks on the initial pole.
@@ -509,10 +547,10 @@ Base Case:::
   Moving one disk is easy. Just move it from the pole it's on to the
   destination pole.
 Recursive Case:::
-  In order to move stem:[n > 1] disks from one pole to another,
-  we can move stem:[n - 1] disks to an intermediate pole, move
-  the stem:[n]^th^ disk to the destination pole, then move the
-  stem:[n - 1] disks from the intermediate pole to the
+  In order to move _n_ > 1 disks from one pole to another,
+  we can move _n_ - 1 disks to an intermediate pole, move
+  the _n_^th^ disk to the destination pole, then move the
+  _n_ - 1 disks from the intermediate pole to the
   destination pole.
 
 The Tower of Hanoi solution in Java translates this outline into code.
@@ -528,7 +566,7 @@ A legend tells of monks that are solving the Tower of Hanoi puzzle with
 64 disks. The legend predicts that the world will end when they finish.
 Run the implementation above with different numbers of disks to see how
 long the sequence of moves is. Try small numbers of disks, since large
-numbers of disks takes a very long time.
+numbers of disks take a very long time.
 
 ====
 
@@ -544,18 +582,24 @@ excruciatingly long amount of time.
 
 However, we can apply recursion to many practical problems and get
 efficient solutions. Consider the problem of exponentiation, which looks
-trivial: Given a rational number stem:[a] and a positive integer
-stem:[n], find the value of stem:[a^n].
+trivial: Given a rational number _a_ and a positive integer
+_n_, find the value of _a_^_n_^.
 
 It's tempting to call `Math.pow(a, n)` or to use a short `for` loop to
 compute this value, but what if neither tool existed in Java? A simple
 recursive formulation can describe exponentiation.
 
-stem:[a^n =
-\begin{cases} a & \text{if $n=1$} & \text{(Base case)}
-\\
-a \cdot a^{n - 1} & \text{if $n>1$} & \text{(Recursive case)}
-\end{cases}]
+//[stem]
+//++++
+//a^n =
+//\left\{\begin{array}{lll}
+//a & \text{if $n=1$} & \text{(Base case)} \\
+//a \cdot a^{n - 1} & \text{if $n>1$} & \text{(Recursive case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::exponentRecursion1.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
 
 As with factorial and Fibonacci, directly converting the recursive
 definition into Java syntax yields a method that computes the correct
@@ -564,7 +608,7 @@ value.
 [source, java]
 ----
 public static double power(double a, int n) {
-    if( n == 1 )    // Base case
+    if(n == 1)    // Base case
         return a;
     else            // Recursive case
         return a*power(a, n - 1);
@@ -572,34 +616,41 @@ public static double power(double a, int n) {
 ----
 
 Admittedly, this method only works for positive integer values of
-stem:[n]. Ignoring that limitation, what can we say about its
-efficiency? For any legal value of stem:[n], the method is called
-stem:[n] times. If stem:[n] has a small value, like 2 or
-3, the process is quick. But if stem:[n] is 1,000,000 or so, the
+_n_. Ignoring that limitation, what can we say about its
+efficiency? For any legal value of _n_, the method is called
+_n_ times. If _n_ has a small value, like 2 or
+3, the process is quick. But if _n_ is 1,000,000 or so, the
 method might take a while to finish. Another problem is that stack size
 is limited. On most systems, the JVM crashes with a `StackOverflowError`
 if a method tries to call itself recursively a 1,000,000 times.
 
-If we limit stem:[n] to a power of 2, we can do something clever
+If we limit _n_ to a power of 2, we can do something clever
 that makes the method much more efficient with many fewer recursive
 calls. Consider this alternative recursion definition of exponentiation.
 
-stem:[a^n =
-\begin{cases} a & \text{if  $n=1$} & \text{(Base Case)}
-\\
-\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$} & \text{(Base Case)}
-\end{cases}]
+//[stem]
+//++++
+//a^n =
+//\left\{\begin{array}{lll}
+//a & \text{if  $n=1$} & \text{(Base Case)} \\
+//\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::exponentRecursion2.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
+
 
 Recalling basic rules of exponents,
-stem:[a^n = \left(a^{\frac{n}{2}}\right)^2], but what does that
+_a_^_n_^ = (_a_^_n_/2^)^2^, but what does that
 buy us? If we structure our method correctly, we cut the size of
-stem:[n] in half at each recursive step instead of only reducing
-stem:[n] by 1.
+_n_ in half at each recursive step instead of only reducing
+_n_ by 1.
 
 [source, java]
 ----
 public static double power(double a, int n) {
-    if( n == 1 )    // Base case
+    if(n == 1)    // Base case
         return a;
     else {          // Recursive case
         double temp = power(a, n/2);
@@ -610,37 +661,46 @@ public static double power(double a, int n) {
 
 Note that we only make the recursive call once and save it in `temp`. If
 we made two recursive calls, we would no longer be more efficient than
-the previous method. That version took stem:[n] recursive calls.
+the previous method. That version took _n_ recursive calls.
 How efficient is this version? The answer is the number of times you
-have to cut stem:[n] in half before you get 1. Let's call that
-value stem:[x]. Recall that stem:[n] is a power of 2,
-meaning that stem:[n = 2^k] for some integer
-stem:[k \geq 0].
+have to cut _n_ in half before you get 1. Let's call that
+value _x_. Recall that _n_ is a power of 2,
+meaning that _n_ = 2^_k_^ for some integer
+_k_ ≥ 0.
 
-stem:[\begin{aligned}
-\left(\frac{1}{2}\right)^x \cdot n &= 1\\
-2^x\left(\frac{1}{2}\right)^x \cdot n &= 2^x\\
-n &= 2^x\\
-2^k &= 2^x\\
-k &= x\\
-\log_2 n &= x\\\end{aligned}]
 
-In other words, the number of times you have to divide stem:[n]
-in half to get 1 is the logarithm base 2 of stem:[n], written
-stem:[\log_2 n]. The logarithm function is the inverse of
+//[stem]
+//++++
+//\begin{aligned}
+//\left(\frac{1}{2}\right)^x \cdot n &= 1\\
+//2^x\left(\frac{1}{2}\right)^x \cdot n &= 2^x\\
+//n &= 2^x\\
+//2^k &= 2^x\\
+//k &= x\\
+//\log_2 n &= x\\
+//\end{aligned}
+//++++
+
+[.text-center]
+image::logarithm.svg[scaledwidth=15%,pdfwidth=15%,width=15%]
+
+
+In other words, the number of times you have to divide _n_
+in half to get 1 is the logarithm base 2 of _n_, written
+log~2~ _n_. The logarithm function is the inverse of
 exponentiation. It cuts any number down to size very quickly (just as
 exponentiation blows up the value of a number very quickly). For
-example, stem:[2^{20} = 1,048,576]. Thus,
-stem:[\log_2 1,048,576 = 20]. The original version of `power()`
+example, 2^20^ = 1,048,576. Thus,
+log~2~ 1,048,576 = 20. The original version of `power()`
 would have to make 1,048,576 calls to raise a number to that power. This
 second version would only have to make 20 calls.
 
-It is critical that stem:[n] is a power of 2 (1, 2, 4, 8, …),
-otherwise the process of repeatedly cutting stem:[n] in half
+It's critical that _n_ is a power of 2 (1, 2, 4, 8, ...),
+otherwise the process of repeatedly cutting _n_ in half
 loses some data due to integer division. The problem is that, at some
-point in the recursion, the value of stem:[n] is odd unless you
+point in the recursion, the value of _n_ is odd unless you
 start with a power of 2. There is a way to extend this clever approach
-to all values of stem:[n], even and odd, but we leave it as an
+to all values of _n_, even and odd, but we leave it as an
 exercise.
 ====
 
@@ -665,12 +725,12 @@ keeps track of the position in the array it is swapping with the
 
 [source, java]
 ----
-public static void reverse( int[] array, int position ) {
-    if( position < array.length/2 ) {
+public static void reverse(int[] array, int position) {
+    if(position < array.length/2) {
         int temp = array[position];
         array[position] = array[array.length - position - 1];
         array[array.length - position - 1] = temp;
-        reverse( array, position + 1 );
+        reverse(array, position + 1);
     }
 }
 ----
@@ -709,17 +769,17 @@ sort algorithm.
 
 [source, java]
 ----
-public static void mergeSort( int[] array ) {
-    if( array.length > 1 ) {
+public static void mergeSort(int[] array) {
+    if(array.length > 1) {
         int[] a = new int[array.length / 2];
         int[] b = new int[array.length - a.length];
-        for( int i = 0; i < a.length; ++i )
+        for(int i = 0; i < a.length; ++i)
             a[i] = array[i];
-        for( int i = 0; i < b.length; ++i )
+        for(int i = 0; i < b.length; ++i)
             b[i] = array[a.length + i];
-        mergeSort( a );
-        mergeSort( b );
-        merge( array, a, b );
+        mergeSort(a);
+        mergeSort(b);
+        merge(array, a, b);
     }
 }
 ----
@@ -739,15 +799,15 @@ much of the real work in the algorithm.
 
 [source, java]
 ----
-public static void merge( int[] array, int[] a, int[] b ) {
+public static void merge(int[] array, int[] a, int[] b) {
     int aIndex = 0;
     int bIndex = 0;
-    for( int i = 0; i < array.length; ++i ) {
-        if( bIndex >= b.length )
+    for(int i = 0; i < array.length; ++i) {
+        if(bIndex >= b.length)
             array[i] = a[aIndex++];
-        else if( aIndex >= a.length )
+        else if(aIndex >= a.length)
             array[i] = b[bIndex++];
-        else if( a[aIndex] <= b[bIndex] )
+        else if(a[aIndex] <= b[bIndex])
             array[i] = a[aIndex++];
         else
             array[i] = b[bIndex++];
@@ -1052,16 +1112,17 @@ compile-time.
 include::{programsdir}/GenericTree.java[]
 ----
 
-First, note that the recursive methods are no longer `static`. The
-generic syntax for keeping them `static` is unnecessarily complex. The
-type specifier `T extends Comparable<T>` guarantees that type `T`
-implements the interface `Comparable<T>`. The generic `Comparable`
-interface defined in the Java API is as follows.
+First, note that the `Node` class and the recursive methods are no longer
+`static`. The generic syntax for keeping them `static` without producing
+compiler warnings is unnecessarily complex. The type specifier `T extends
+Comparable<T>` guarantees that type `T` implements the interface
+`Comparable<T>`. The generic `Comparable` interface defined in the Java API
+is as follows.
 
 [source, java]
 ----
 public interface Comparable<T> {
-    int compareTo(T object);
+	int compareTo(T object);
 }
 ----
 
@@ -1094,7 +1155,7 @@ include::{programsdir}/ReadAndSortGenerics.java[]
 Our algorithm for solving the maze follows the conventional
 pencil-and-paper method: trial and error! We mark locations in the maze
 with `+'*'+` as we explore them. If we come to a dead end, we unmark the
-location (by replacing `+'*'+` with `' '`) and return to our previous
+location (by replacing `+'*'+` with `'{nbsp}'`) and return to our previous
 location to try a different direction.
 
 Start at the beginning square of the maze, which must be a passageway.
@@ -1173,7 +1234,7 @@ include::{programsdir}/MazeSolver.java[lines=39..57]
 The heart of the solution is the recursive method `solve()`. The
 `solve()` method takes two parameters, `row` and `column`, and tries to
 find a solution to the maze starting at location `maze[row][column]`. It
-assumes that the maze is filled with `'+'` for walls, `' '` for
+assumes that the maze is filled with `'+'` for walls, `'{nbsp}'` for
 passageways, and may include `'*'` characters at locations that are part
 of the partially completed solution.
 
@@ -1189,14 +1250,14 @@ in the current path that has already been marked). This call to `solve`
 is not making progress toward the finish. Return `false`.
 
 If none of the base cases applies, then the current location, which must
-contain a `' '` character, *might* be on a successful path, so `solve()`
+contain a `'{nbsp}'` character, *might* be on a successful path, so `solve()`
 gives it a try. The method tentatively marks the current position with
 `'*'`. Then, it tries to find a path from the current
 location to each of the four neighboring cells by recursively calling `solve()`. If any of those four neighbors returns `true`, then `solve()` knows it has found a completed path and returns `true` to its caller.
 
 If none of the four neighbors was on a path to the destination, then the
 current location is not on a path. The method unmarks the current
-location (by storing a `' '`) and returns `false`. Presumably, its
+location (by storing a `'{nbsp}'`) and returns `false`. Presumably, its
 caller figures out what to do next, perhaps calling a different one of
 its neighbors or giving up and returning `false` to its caller.
 
@@ -1372,8 +1433,8 @@ print out the result.
 *Conceptual Problems*
 
 .  [[recursiveAdditionExercise]] <<multiplicationDefinedRecursivelyExample>> gave a mathematical recursive definition for
-stem:[x \times y]. Give a similar recursive definition for
-stem:[x + y]. The structure is similar to the recursion to
+_x_ ⋅ _y_. Give a similar recursive definition for
+_x_ + _y_. The structure is similar to the recursion to
 determine your current age given in <<What is recursion?>>.
 .  In principle, every problem that can be solved with an iterative
 solution can be solved with a recursive one (and vice versa). However,
@@ -1383,12 +1444,12 @@ recursive solutions that are impossible to turn into iterative ones?
 .  [[fibonacciCallsExercise]] Consider the first (non-memoized)
 recursive version of the Fibonacci method given in
 <<fibonacciImplementedRecursivelyExample>>. How many times is
-`fibonacci()` called with argument stem:[1] to compute
+`fibonacci()` called with argument 1 to compute
 `fibonacci(n)`? Instrument your program and count the number of calls
-for stem:[n = 2, 3, 4 \ldots 20].
+for _n_ = 2, 3, 4, ..., 20.
 .  In the recursive `solve()` method in the `MazeSolver` program given
 in <<Solution: Maze of doom>>, the current location in the maze
-array is is set to a blank character (`' '`) after no solution had been
+array is is set to a blank character (`'{nbsp}'`) after no solution had been
 found. What value was in that location? How would the program behave if
 the value was not changed?
 
@@ -1404,8 +1465,8 @@ test if a `String` is a palindrome, using the following signature.
 +
 [source, java]
 ----
-public static boolean isPalindrome( String text, int start,
-    int end )
+public static boolean isPalindrome(String text, int start,
+    int end)
 ----
 +
 In this method, the `start` parameter is the index of the first
@@ -1417,7 +1478,7 @@ initially be called with a `String`, `0`, and the length of the
 [source, java]
 ----
 boolean result =
-    isPalindrome( "A man, a plan, a canal: Panama", 0, 30 );
+    isPalindrome("A man, a plan, a canal: Panama", 0, 30);
 ----
 .  [[constantSpaceFibonacciExercise]] The efficient implementation of
 Fibonacci from <<fibonacciImplementedRecursivelyExample>>
@@ -1440,43 +1501,52 @@ The method would be called as follows for any value of `n`.
 +
 [source, java]
 ----
-int result = fibonacci( 0, 1, n );
+int result = fibonacci(0, 1, n);
 ----
 +
 Complete the implementation of this recursive method.
 .  [[fastExponentiationExercise]] Write an implementation of
-fast exponentiation that works for even and odd stem:[n]. This
+fast exponentiation that works for even and odd _n_. This
 implementation is exactly the same as the one given at the end of
-<<exponentiationExample>> except when stem:[n] is odd.
+<<exponentiationExample>> except when _n_ is odd.
 Use the following recursive definition of exponentiation to guide your
 implementation.
 +
-stem:[a^n =
-\begin{cases} a & \text{if  $n=1$} & \text{(Base Case)}
-\\
-\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$ and even} & \text{(Base Case)}
-\\
-a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 & \text{if  $n>1$ and odd} & \text{(Base Case)}
-\end{cases}]
+//[stem]
+//++++
+//a^n =
+//\left\{\begin{array}{lll}
+//a & \text{if  $n=1$} & \text{(Base Case)} \\
+//\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$ and even} & \text{(Recursive Case)} \\
+//a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 & \text{if  $n>1$ and odd} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+[.text-center]
+image::exponentRecursion3.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
 .  [[fastFibonacciExercise]] <<fibonacciImplementedRecursivelyExample>> shows two implementations that can be used to
-find the stem:[n]^th^ Fibonacci number. With a little bit of
+find the _n_^th^ Fibonacci number. With a little bit of
 math, it is possible to show that there is a closed-form equation that
-gives the stem:[n]^th^ Fibonacci number stem:[F_n] where
-stem:[F_0 = F_1 = 1].
+gives the _n_^th^ Fibonacci number _F_~_n_~ where
+_F_~0~ = _F_~1~ = 1.
 +
-stem:[F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n+1}  -  \left(\frac{1 -
-\sqrt{5}}{2}\right)^{n+1}}{\sqrt{5}}]
+//[stem]
+//++++
+//F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n+1}  -  \left(\frac{1 -
+//\sqrt{5}}{2}\right)^{n+1}}{\sqrt{5}}
+//++++
+[.text-center]
+image::fibonacciClosed.svg[scaledwidth=30%,pdfwidth=30%,width=30%]
 +
 Although this math is a bit ugly, you can plug numbers into this
-equation and discover the value of stem:[F_n] quickly, provided
+equation and discover the value of _F_~_n_~ quickly, provided
 that you have an efficient way to raise values to the
-stem:[n]^th^ power. Use the recursive algorithm for fast
+_n_^th^ power. Use the recursive algorithm for fast
 exponentation from <<fastExponentiationExercise>> to
-make an implementation that finds the stem:[n]^th^ Fibonacci
+make an implementation that finds the _n_^th^ Fibonacci
 number *very* quickly.
 +
 Note that this approach uses real numbers (including
-stem:[\sqrt{5}]) that need to be represented as `double` values.
+the square root of 5) that need to be represented as `double` values.
 There are exact methods that use fast exponentiation of integer matrices
 to do this computation without doing any floating-point arithmetic, but
 we do not go into those details here.
@@ -1518,8 +1588,7 @@ describes a tree ADT. Modify the programs in <<binarySearchTreeExample>> to use 
 
 . Write an iterative version of the factorial function and compare its
 speed to the recursive version given in the text. Use the
-`System.currentTimeMillis()` or +
-`System.nanoTime()` methods before and after `for` loops that call the
+`System.nanoTime()` method before and after `for` loops that call the
 factorial methods 1,000,000 times each for random values.
 . [[timeSortingExercise]] Write a program that generates four arrays
 of random `int` values with lengths 1,000, 10,000, 100,000, and
@@ -1527,25 +1596,23 @@ of random `int` values with lengths 1,000, 10,000, 100,000, and
 three copies of the array with the selection sort algorithm given in
 <<selectionSortExample>>, the bubble sort algorithm given in
 <<Problem: Sort it out>>, and the merge sort algorithm given in
-<<mergeSortExample>>, respectively. Use the
-`System.currentTimeMillis()` or `System.nanoTime()` methods to time each
-of the sorts. Note that both selection sort and bubble sort may take
+<<mergeSortExample>>, respectively. Use the `System.nanoTime()` method to time
+each of the sorts. Note that both selection sort and bubble sort may take
 quite a while to sort an array of 1,000,000 elements.
 +
 Run the program several times and find average values for each algorithm
 on each array size. Plot those times on a graph. The times needed to run
 selection sort and bubble sort should increase quadratically, but the
 time to run merge sort should increase linearithmically. In other words,
-an array length of stem:[n] should take time proportional to
-stem:[n^2] (multiplied by some constant) for selection sort and
+an array length of _n_ should take time proportional to
+_n_^2^ (multiplied by some constant) for selection sort and
 bubble sort, but it should take time proportional to
-stem:[n \log n] (multiplied by some constant) for merge sort. For
+_n_ log _n_ (multiplied by some constant) for merge sort. For
 large arrays, the difference in time is significant.
 . Investigate the performance of using recursion to compute Fibonacci
 numbers. Implement the naive recursive solution, the memoization method,
 and an iterative solution similar to the memoization method. Use the
-`System.currentTimeMillis()` or `System.nanoTime()` methods to time the
-computations for large values of `n`.
+`System.nanoTime()` method to time the computations for large values of `n`.
 +
 *Warning:* It may take a very long time to compute the `n`^th^ Fibonacci number with the naive
 recursive solution.
@@ -1557,6 +1624,5 @@ too low, look in the upper half of the array. Implement binary search
 both iteratively and recursively. Populate an array with 100,000 `int`
 values between 1 and 10,000,000 and sort it. Then, search for 1,000,000
 random values generated betwee 1 and 10,000,000 using iterative binary
-search and then recursive binary search. Use the
-`System.currentTimeMillis()` or `System.nanoTime()` methods to time each
+search and then recursive binary search. Use the `System.nanoTime()` method to time each
 process. Was the iterative or recursive approach faster? By how much?

@@ -711,12 +711,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>The evil mastermind from <a href="chap12.html#ch13-concurrency">Chapter 13</a> has
 returned with a new attempt at world domination. Since he now knows that
-you can use concurrency to crack his security code, this time he has
+you can use concurrency to crack his security code, this time he’s
 hidden his deadly virus in a secret location protected by a complex maze
 of walls and passageways. Fortunately, you’ve been able to get a copy of
 the maze floor plan, but now you must write a program to find a path
-through the maze so you can steal the deadly virus before the evil
-mastermind releases it on the world.</p>
+through it so you can steal the deadly virus before the evil
+mastermind unleashes it on the world.</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -730,16 +730,16 @@ and turns, keeping track of where you’ve been, backtracking out of dead
 ends, and producing a resulting path once you make it through. You
 already have the basic tools necessary to solve this problem. You can,
 for example, represent the maze with a two-dimensional array of
-characters, where a plus ( <code>'+'</code> ) represents a wall and a space ( <code>' '</code> )
-represents a passageway. You could create a path through the maze by
+characters, where a plus (<code>'+'</code>) represents a wall and a space (<code>' '</code>)
+represents a passageway. You could mark a path through the maze by
 replacing a contiguous (vertical and horizontal but not diagonal)
-sequence of <code>' '</code> characters by <code>'*'</code> characters, that lead from the
+sequence of <code>' '</code> characters by <code>'*'</code> characters, leading from the
 starting square to the final square where the deadly virus is located.</p>
 </div>
 <div class="paragraph">
-<p>The difficulty is dead ends or, worse, loops. How do you keep track of
+<p>The difficulties are dead ends and, worse, loops. How do you keep track of
 which paths you’ve tried that didn’t work? While you could use
-additional data structures to store this additional information,
+additional data structures to store this information,
 <em>recursion</em> is a solution technique that makes solving problems like
 this one surprisingly straightforward.</p>
 </div>
@@ -747,24 +747,23 @@ this one surprisingly straightforward.</p>
 <div class="sect2">
 <h3 id="_concepts_recursive_problem_solving">19.2. Concepts: Recursive problem solving</h3>
 <div class="paragraph">
-<p>The idea that we use to solve this maze problem is called recursion.
-Imagine that you are in a maze and have the choice to go right, left, or
-straight. No matter which of the three paths you take, you will probably
-be confronted by more choices of going right, left, or straight. You
-need to explore them all systematically. The process of systematically
-exploring the right path is similar to the process of systematically
-exploring the left path. The choice at this moment between left, right,
-and straight is in fact part of the same systematic process that you
-want to follow when you are in the left, right, or straight branches of
-the maze.</p>
+<p>The idea that we’ll use to solve this maze problem is called recursion.
+Imagine you’re in a maze and have the choice to go right, left, or
+straight. No matter which of the three paths you take, you’ll probably
+be confronted by more choices of going right, left, or straight as you
+progress. You need to explore them all systematically. The process of
+systematically exploring the right path is similar to the process of
+systematically exploring the left path. The choice at this moment between
+left, right, and straight is in fact part of the same systematic process
+you want to follow when you’re in the left, right, or straight branches
+of the maze.</p>
 </div>
 <div class="paragraph">
 <p>Solutions that can be described in terms of themselves are recursive.
 But what is recursion? How can describing something in terms of itself
 be useful? Since recursion sounds circular, how can it be applied to
 problem solving in Java? How does the computer keep track of these
-self-references? The following subsections address precisely these
-questions.</p>
+self-references? The following subsections address these questions.</p>
 </div>
 <div class="sect3">
 <h4 id="_what_is_recursion">19.2.1. What is recursion?</h4>
@@ -774,39 +773,37 @@ describing some repetitive process in terms of itself. Many complex
 things can be described elegantly using recursion.</p>
 </div>
 <div class="paragraph">
-<p>Consider the question, “How old are you now?” If you were 27, you
-could answer, “I am one year older than I was last year.” If then
+<p>Consider the question, “How old are you now?” If you’re 27, you
+could answer, “I’m one year older than I was last year.” If then
 asked, “Well, how old were you last year?” Again, you could answer,
 “I was one year older than I was the year before.” Assuming that the
 person who wanted to wanted to know your age was very patient, you could
-repeat this answer over and over, explaining that each year you have
-been one year older than the previous year. However, after asking you 27
-times about your age on the previous year, you would run out of years of
+repeat this answer over and over, explaining that each year you’ve
+been one year older than the previous year. However, after being asked 27
+times about your age on the previous year, you’d run out of years of
 life and be forced to answer, “Zero years old.”</p>
 </div>
 <div class="paragraph">
 <p>This absurd dialog shows an important feature of useful recursive
 definitions: They have at least one <em>base case</em> and at least one
-<em>recursive case</em>. The base case is the part of the definition that is
-not described in terms of itself. It is a concrete answer. Without the
+<em>recursive case</em>. The base case is the part of the definition that’s
+<strong>not</strong> described in terms of itself. It’s a concrete answer. Without the
 base case, the process would never end, and the definition would be
-meaningless. The recursive case is the part of the definition that is
+meaningless. The recursive case is the part of the definition that <strong>is</strong>
 defined in terms of itself. Without the recursive case, the definition
 could only describe a finite set of things.</p>
 </div>
 <div class="paragraph">
-<p>In the example above, the base case is the age of zero years old. You
+<p>In the example above, the base case is being zero years old. You
 have no age before that. The recursive case is any age greater than zero
-years old. We can use mathematical notation to describe your age in a
-given year. Here \(age(year)\) is a function that gives the
-age you were during year \(year\).</p>
+. We can use mathematical notation to describe your age in a
+given year. Here <em>age</em>(<em>year</em>) is a function that gives the
+age you were during <em>year</em>.</p>
 </div>
-<div class="paragraph">
-<p>\(age(year) =
-\begin{cases} 0 &amp; \text{if you were born in $year$} &amp; \text{(Base Case)}
-\\
-  1 + age(year-1) &amp; \text{if you were born before $year$} &amp; \text{(Recursive Case)}
-\end{cases}\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/ageRecursion.svg" alt="ageRecursion" width="75%">
+</div>
 </div>
 <div class="paragraph">
 <p>To be meaningful, recursive cases should be defined in terms of simpler
@@ -846,30 +843,28 @@ programming, there is a strong connection to mathematical principles.</p>
 </div>
 <div class="paragraph">
 <p>In mathematics, a <em>recursive definition</em> is one that is defined in terms
-of itself. It is common to define functions and sequences (and also
-sets) recursively. Functions (such as \(f(n)\)) are usually
-defined in relation to the same function with a smaller input (such as
-\(f(n - 1)\)). Sequences (such as \(s_n\)) are
-usually defined in relation to earlier elements in the sequence (such as
-\(s_{n - 1}\)).</p>
+of itself. It’s common to define functions and sequences (and also
+sets) recursively. Functions, such as <em>f</em>(<em>n</em>), are usually
+defined in relation to the same function with a smaller input, such as
+<em>f</em>(<em>n</em> - 1). Sequences, such as <em>s</em><sub><em>n</em></sub>, are
+usually defined in relation to earlier elements in the sequence, such as
+<em>s</em><sub><em>n</em>-1</sub>.</p>
 </div>
 <div id="multiplicationDefinedRecursivelyExample" class="exampleblock">
 <div class="title">Example 19.1 Multiplication defined recursively</div>
 <div class="content">
 <div class="paragraph">
 <p>Even very common functions can be defined recursively. Consider the
-multiplication \(x \times y\). This multiplication means
-repeatedly adding the \(x\) a total of \(y\) times.
-If \(y\) is a positive integer, we can describe this
+multiplication <em>x</em> ⋅ <em>y</em>. This multiplication means
+repeatedly adding the <em>x</em> a total of <em>y</em> times.
+If <em>y</em> is a positive integer, we can describe this
 multiplication with the following recursive definition. Note the base
 case and recursive case.</p>
 </div>
-<div class="paragraph">
-<p>\(x \times y =
-\begin{cases} x &amp; \text{if  $y = 1$} &amp; \text{(Base Case)}
-\\
-x + \left(x \times (y - 1)\right) &amp; \text{if $y &gt; 1$} &amp; \text{(Recursive Case)}
-\end{cases}\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/multiplicationRecursion.svg" alt="multiplicationRecursion" width="50%">
+</div>
 </div>
 <div class="paragraph">
 <p>Multiplication seems like such a basic operation that there would be no
@@ -891,27 +886,23 @@ definition provides intuition for creating more complex definitions.</p>
 <div class="content">
 <div class="paragraph">
 <p>Another mathematical function with a natural recursive definition is the
-factorial function, often written \(n!\). The factorial
+factorial function, often written <em>n</em>!. The factorial
 function is used heavily in probability and counting. The value of
-\(n! = n
-\cdot(n - 1)\cdot(n - 2) \ldots 3 \cdot 2 \cdot 1\). Mathematicians
-like recursive definitions because they are able to describe functions
-and sequences precisely without using ellipses (\(\ldots\)).</p>
+<em>n</em>! = <em>n</em> ⋅ (<em>n</em> - 1) ⋅ (<em>n</em> - 2) …​ 3 ⋅ 2 ⋅ 1. Mathematicians
+like recursive definitions because they’re able to describe functions
+and sequences precisely without using ellipses (…​).</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/factorialRecursion.svg" alt="factorialRecursion" width="45%">
+</div>
 </div>
 <div class="paragraph">
-<p>\(n! =
-\begin{cases} 1 &amp; \text{if  $n = 0$} &amp; \text{(Base Case)}
-\\
-n \cdot (n-1)! &amp; \text{if $n&gt;0$} &amp; \text{(Recursive Case)}
-\end{cases}\)</p>
-</div>
-<div class="paragraph">
-<p>Note that the base case gives \(1\) as the answer when
-\(n = 0\). By convention \(0! = 1\). Thus, this
-definition correctly gives \(0! = 1\),
-\(1! = 1\cdot 0!
-= 1\), \(2! = 2\cdot 1! = 2\),
-\(3! = 3\cdot 2! = 6\), and so on.</p>
+<p>Note that the base case gives 1 as the answer when
+<em>n</em> = 0. By convention 0! = 1. Thus, this
+definition correctly gives 0! = 1,
+1! = 1 ⋅ 0! = 1, 2! = 2 ⋅ 1! = 2,
+3! = 3 ⋅ 2! = 6, and so on.</p>
 </div>
 </div>
 </div>
@@ -920,7 +911,7 @@ definition correctly gives \(0! = 1\),
 <div class="content">
 <div class="paragraph">
 <p>The Fibonacci sequence is an infinite sequence of integers starting with
-1, 1, 2, 3, 5, 8, 13, 21, \(\ldots\). Each term after the two
+1, 1, 2, 3, 5, 8, 13, 21, …​. Each term after the two
 initial 1s is the sum of the previous two terms in the sequence.
 Fibonacci has many interesting properties and crops up in surprisingly
 diverse areas of mathematics. It was originally used to model the growth
@@ -930,17 +921,17 @@ of rabbit populations.</p>
 <p>The Fibonacci sequence also has a natural recursive mathematical
 definition. Indeed, you may have noticed that we described each term as
 the sum of the two previous terms. We can formally define the
-\(n\)<sup>th</sup> Fibonacci number \(F_n\) as follows,
-starting with \(n=0\). \(F_n=
-\begin{cases} 1 &amp; \text{if  $n=0$ or  $n = 1$} &amp; \text{(Base
-Cases)}
-\\
-F_{n-1}+F_{n-2} &amp; \text{if $n&gt;1$} &amp; \text{(Recursive Case)}
-\end{cases}\)</p>
+<em>n</em><sup>th</sup> Fibonacci number <em>F</em><sub><em>n</em></sub> as follows,
+starting with <em>n</em> = 0.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/fibonacciRecursion.svg" alt="fibonacciRecursion" width="55%">
+</div>
 </div>
 <div class="paragraph">
-<p>Since the \(F_n\) depends on the two previous terms, it is
-necessary to have two base cases. The Fibonacci sequence is a special
+<p>Since the <em>F</em><sub><em>n</em></sub> depends on the two previous terms, it’s
+necessary to have <strong>two</strong> base cases. The Fibonacci sequence is a special
 kind of Lucas sequence. Other Lucas sequences specify different values
 for the two base cases (and sometimes coefficients to multiply the
 previous terms by).</p>
@@ -1067,7 +1058,7 @@ recursively calls itself with successively smaller values.</p>
 the call stack as each call to <code>factorial()</code> returns. As the answers are
 returned, they are incorporated into the answer that is generated and
 returned to the next caller in the sequence until the final answer <code>24</code>
-(\(4!\)) is returned to <code>main()</code>.</p>
+(4!) is returned to <code>main()</code>.</p>
 </div>
 <div id="figure-recursive_returns" class="imageblock">
 <div class="content">
@@ -1152,12 +1143,10 @@ to processing data structures.</p>
 factorial function. Recall the recursive definition that describes the
 function.</p>
 </div>
-<div class="paragraph">
-<p>\(n! =
-\begin{cases} 1 &amp; \text{if $n = 0$} &amp; \text{(Base Case)}
-\\
-n \cdot (n-1)! &amp; \text{if $n&gt;0$} &amp; \text{(Recursive Case)}
-\end{cases}\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/factorialRecursion.svg" alt="factorialRecursion" width="45%">
+</div>
 </div>
 <div class="paragraph">
 <p>By translating this mathematical definition almost directly into Java,
@@ -1165,12 +1154,12 @@ we can generate a method that computes the factorial function.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">factorial</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>     <span class="c1">// Base case</span>
-            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="k">else</span>            <span class="c1">// Recursive case</span>
-            <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">factorial</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
-    <span class="o">}</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">factorial</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>     <span class="c1">// Base case</span>
+		<span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+	<span class="k">else</span>            <span class="c1">// Recursive case</span>
+		<span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">factorial</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1185,15 +1174,12 @@ enough to fit inside of an <code>int</code>.</p>
 <div class="title">Example 19.5 Fibonacci implemented recursively</div>
 <div class="content">
 <div class="paragraph">
-<p>Let us return to the recursive definition of Fibonacci.</p>
+<p>Let’s return to the recursive definition of Fibonacci.</p>
 </div>
-<div class="paragraph">
-<p>\(F_n=
-\begin{cases} 1 &amp; \text{if  $n=0$ or $n = 1$} &amp; \text{(Base
-Cases)}
-\\
-F_{n-1}+F_{n-2} &amp; \text{if  $n&gt;1$} &amp; \text{(Recursive Case)}
-\end{cases}\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/fibonacciRecursion.svg" alt="fibonacciRecursion" width="55%">
+</div>
 </div>
 <div class="paragraph">
 <p>Like factorial, this definition translates naturally into a recursive
@@ -1202,7 +1188,7 @@ method in Java.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">)</span>  <span class="c1">// Base cases</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>  <span class="c1">// Base cases</span>
         <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
     <span class="k">else</span>                    <span class="c1">// Recursive case</span>
         <span class="k">return</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="o">);</span>
@@ -1235,9 +1221,9 @@ the recursion and store the result in the array.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span> <span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">results</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">results</span><span class="o">[</span><span class="n">n</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">results</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">results</span><span class="o">[</span><span class="n">n</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>
             <span class="n">results</span><span class="o">[</span><span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
         <span class="k">else</span>
             <span class="n">results</span><span class="o">[</span><span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="o">);</span>
@@ -1247,7 +1233,7 @@ the recursion and store the result in the array.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This change makes the computation of the \(n\)<sup>th</sup> Fibonacci
+<p>This change makes the computation of the <em>n</em><sup>th</sup> Fibonacci
 number much more efficient; however, even more efficient approaches are
 described in the exercises.</p>
 </div>
@@ -1272,15 +1258,15 @@ arranged in a tower on one pole in decreasing size, with the smallest
 diameter disk on top and the largest on the bottom.
 <a href="#figure-hanoi">Figure 19.5</a> shows an example of the puzzle. The goal is to
 move all the disks from the initial pole to the final pole, with two
-restrictions:</p>
+restrictions.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>only one disk can be moved at a time</p>
+<p>Only one disk can be moved at a time.</p>
 </li>
 <li>
-<p>a larger disk can never be placed on top of a smaller disk</p>
+<p>A larger disk can never be placed on top of a smaller disk.</p>
 </li>
 </ol>
 </div>
@@ -1303,10 +1289,10 @@ destination pole.</p>
 </dd>
 <dt class="hdlist1">Recursive Case</dt>
 <dd>
-<p>In order to move \(n &gt; 1\) disks from one pole to another,
-we can move \(n - 1\) disks to an intermediate pole, move
-the \(n\)<sup>th</sup> disk to the destination pole, then move the
-\(n - 1\) disks from the intermediate pole to the
+<p>In order to move <em>n</em> &gt; 1 disks from one pole to another,
+we can move <em>n</em> - 1 disks to an intermediate pole, move
+the <em>n</em><sup>th</sup> disk to the destination pole, then move the
+<em>n</em> - 1 disks from the intermediate pole to the
 destination pole.</p>
 </dd>
 </dl>
@@ -1342,7 +1328,7 @@ destination pole.</p>
 64 disks. The legend predicts that the world will end when they finish.
 Run the implementation above with different numbers of disks to see how
 long the sequence of moves is. Try small numbers of disks, since large
-numbers of disks takes a very long time.</p>
+numbers of disks take a very long time.</p>
 </div>
 </div>
 </div>
@@ -1359,20 +1345,18 @@ excruciatingly long amount of time.</p>
 <div class="paragraph">
 <p>However, we can apply recursion to many practical problems and get
 efficient solutions. Consider the problem of exponentiation, which looks
-trivial: Given a rational number \(a\) and a positive integer
-\(n\), find the value of \(a^n\).</p>
+trivial: Given a rational number <em>a</em> and a positive integer
+<em>n</em>, find the value of <em>a</em><sup><em>n</em></sup>.</p>
 </div>
 <div class="paragraph">
 <p>It’s tempting to call <code>Math.pow(a, n)</code> or to use a short <code>for</code> loop to
 compute this value, but what if neither tool existed in Java? A simple
 recursive formulation can describe exponentiation.</p>
 </div>
-<div class="paragraph">
-<p>\(a^n =
-\begin{cases} a &amp; \text{if $n=1$} &amp; \text{(Base case)}
-\\
-a \cdot a^{n - 1} &amp; \text{if $n&gt;1$} &amp; \text{(Recursive case)}
-\end{cases}\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/exponentRecursion1.svg" alt="exponentRecursion1" width="45%">
+</div>
 </div>
 <div class="paragraph">
 <p>As with factorial and Fibonacci, directly converting the recursive
@@ -1382,7 +1366,7 @@ value.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">double</span> <span class="nf">power</span><span class="o">(</span><span class="kt">double</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">)</span>    <span class="c1">// Base case</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>    <span class="c1">// Base case</span>
         <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
     <span class="k">else</span>            <span class="c1">// Recursive case</span>
         <span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="n">power</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
@@ -1391,37 +1375,35 @@ value.</p>
 </div>
 <div class="paragraph">
 <p>Admittedly, this method only works for positive integer values of
-\(n\). Ignoring that limitation, what can we say about its
-efficiency? For any legal value of \(n\), the method is called
-\(n\) times. If \(n\) has a small value, like 2 or
-3, the process is quick. But if \(n\) is 1,000,000 or so, the
+<em>n</em>. Ignoring that limitation, what can we say about its
+efficiency? For any legal value of <em>n</em>, the method is called
+<em>n</em> times. If <em>n</em> has a small value, like 2 or
+3, the process is quick. But if <em>n</em> is 1,000,000 or so, the
 method might take a while to finish. Another problem is that stack size
 is limited. On most systems, the JVM crashes with a <code>StackOverflowError</code>
 if a method tries to call itself recursively a 1,000,000 times.</p>
 </div>
 <div class="paragraph">
-<p>If we limit \(n\) to a power of 2, we can do something clever
+<p>If we limit <em>n</em> to a power of 2, we can do something clever
 that makes the method much more efficient with many fewer recursive
 calls. Consider this alternative recursion definition of exponentiation.</p>
 </div>
-<div class="paragraph">
-<p>\(a^n =
-\begin{cases} a &amp; \text{if  $n=1$} &amp; \text{(Base Case)}
-\\
-\left(a^{\frac{n}{2}}\right)^2 &amp; \text{if  $n&gt;1$} &amp; \text{(Base Case)}
-\end{cases}\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/exponentRecursion2.svg" alt="exponentRecursion2" width="45%">
+</div>
 </div>
 <div class="paragraph">
 <p>Recalling basic rules of exponents,
-\(a^n = \left(a^{\frac{n}{2}}\right)^2\), but what does that
+<em>a</em><sup><em>n</em></sup> = (<em>a</em><sup><em>n</em>/2</sup>)<sup>2</sup>, but what does that
 buy us? If we structure our method correctly, we cut the size of
-\(n\) in half at each recursive step instead of only reducing
-\(n\) by 1.</p>
+<em>n</em> in half at each recursive step instead of only reducing
+<em>n</em> by 1.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">double</span> <span class="nf">power</span><span class="o">(</span><span class="kt">double</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">)</span>    <span class="c1">// Base case</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>    <span class="c1">// Base case</span>
         <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
     <span class="k">else</span> <span class="o">{</span>          <span class="c1">// Recursive case</span>
         <span class="kt">double</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">power</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="o">);</span>
@@ -1433,40 +1415,36 @@ buy us? If we structure our method correctly, we cut the size of
 <div class="paragraph">
 <p>Note that we only make the recursive call once and save it in <code>temp</code>. If
 we made two recursive calls, we would no longer be more efficient than
-the previous method. That version took \(n\) recursive calls.
+the previous method. That version took <em>n</em> recursive calls.
 How efficient is this version? The answer is the number of times you
-have to cut \(n\) in half before you get 1. Let’s call that
-value \(x\). Recall that \(n\) is a power of 2,
-meaning that \(n = 2^k\) for some integer
-\(k \geq 0\).</p>
+have to cut <em>n</em> in half before you get 1. Let’s call that
+value <em>x</em>. Recall that <em>n</em> is a power of 2,
+meaning that <em>n</em> = 2<sup><em>k</em></sup> for some integer
+<em>k</em> ≥ 0.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/logarithm.svg" alt="logarithm" width="15%">
+</div>
 </div>
 <div class="paragraph">
-<p>\(\begin{aligned}
-\left(\frac{1}{2}\right)^x \cdot n &amp;= 1\\
-2^x\left(\frac{1}{2}\right)^x \cdot n &amp;= 2^x\\
-n &amp;= 2^x\\
-2^k &amp;= 2^x\\
-k &amp;= x\\
-\log_2 n &amp;= x\\\end{aligned}\)</p>
-</div>
-<div class="paragraph">
-<p>In other words, the number of times you have to divide \(n\)
-in half to get 1 is the logarithm base 2 of \(n\), written
-\(\log_2 n\). The logarithm function is the inverse of
+<p>In other words, the number of times you have to divide <em>n</em>
+in half to get 1 is the logarithm base 2 of <em>n</em>, written
+log<sub>2</sub> <em>n</em>. The logarithm function is the inverse of
 exponentiation. It cuts any number down to size very quickly (just as
 exponentiation blows up the value of a number very quickly). For
-example, \(2^{20} = 1,048,576\). Thus,
-\(\log_2 1,048,576 = 20\). The original version of <code>power()</code>
+example, 2<sup>20</sup> = 1,048,576. Thus,
+log<sub>2</sub> 1,048,576 = 20. The original version of <code>power()</code>
 would have to make 1,048,576 calls to raise a number to that power. This
 second version would only have to make 20 calls.</p>
 </div>
 <div class="paragraph">
-<p>It is critical that \(n\) is a power of 2 (1, 2, 4, 8, …),
-otherwise the process of repeatedly cutting \(n\) in half
+<p>It’s critical that <em>n</em> is a power of 2 (1, 2, 4, 8, …​),
+otherwise the process of repeatedly cutting <em>n</em> in half
 loses some data due to integer division. The problem is that, at some
-point in the recursion, the value of \(n\) is odd unless you
+point in the recursion, the value of <em>n</em> is odd unless you
 start with a power of 2. There is a way to extend this clever approach
-to all values of \(n\), even and odd, but we leave it as an
+to all values of <em>n</em>, even and odd, but we leave it as an
 exercise.</p>
 </div>
 </div>
@@ -1498,12 +1476,12 @@ keeps track of the position in the array it is swapping with the
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">reverse</span><span class="o">(</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">position</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">/</span><span class="mi">2</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">reverse</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">position</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">/</span><span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">position</span><span class="o">];</span>
         <span class="n">array</span><span class="o">[</span><span class="n">position</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">position</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
         <span class="n">array</span><span class="o">[</span><span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">position</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
-        <span class="n">reverse</span><span class="o">(</span> <span class="n">array</span><span class="o">,</span> <span class="n">position</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">);</span>
+        <span class="n">reverse</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">position</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -1547,17 +1525,17 @@ sort algorithm.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">mergeSort</span><span class="o">(</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">array</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span><span class="o">(</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">mergeSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">];</span>
         <span class="kt">int</span><span class="o">[]</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span> <span class="o">)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span>
             <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span> <span class="o">)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span>
             <span class="n">b</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="n">i</span><span class="o">];</span>
-        <span class="n">mergeSort</span><span class="o">(</span> <span class="n">a</span> <span class="o">);</span>
-        <span class="n">mergeSort</span><span class="o">(</span> <span class="n">b</span> <span class="o">);</span>
-        <span class="n">merge</span><span class="o">(</span> <span class="n">array</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span> <span class="o">);</span>
+        <span class="n">mergeSort</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
+        <span class="n">mergeSort</span><span class="o">(</span><span class="n">b</span><span class="o">);</span>
+        <span class="n">merge</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -1579,15 +1557,15 @@ much of the real work in the algorithm.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">merge</span><span class="o">(</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">b</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">merge</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
     <span class="kt">int</span> <span class="n">aIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
     <span class="kt">int</span> <span class="n">bIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">bIndex</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span> <span class="o">)</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">bIndex</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
             <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">aIndex</span><span class="o">++];</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">aIndex</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">)</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">aIndex</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
             <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">b</span><span class="o">[</span><span class="n">bIndex</span><span class="o">++];</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">a</span><span class="o">[</span><span class="n">aIndex</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="o">[</span><span class="n">bIndex</span><span class="o">]</span> <span class="o">)</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">aIndex</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="o">[</span><span class="n">bIndex</span><span class="o">])</span>
             <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">aIndex</span><span class="o">++];</span>
         <span class="k">else</span>
             <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">b</span><span class="o">[</span><span class="n">bIndex</span><span class="o">++];</span>
@@ -1695,7 +1673,7 @@ counter and set the reference to the next element on the list.
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">Node</span> <span class="n">current</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
         <span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">while</span><span class="o">(</span> <span class="n">current</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">current</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
             <span class="n">counter</span><span class="o">++;</span>
         <span class="o">}</span>
@@ -1741,14 +1719,14 @@ internals.</p>
 
     <span class="c1">// Proxy method</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="nf">size</span><span class="o">(</span> <span class="n">head</span> <span class="o">);</span>
+        <span class="k">return</span> <span class="nf">size</span><span class="o">(</span><span class="n">head</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">(</span><span class="n">Node</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">list</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="c1">// Base case</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">list</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="c1">// Base case</span>
             <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
         <span class="c1">// Recursive case</span>
-        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">size</span><span class="o">(</span> <span class="n">list</span><span class="o">.</span><span class="na">next</span> <span class="o">);</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">size</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">next</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -1889,33 +1867,33 @@ object. The <code>Node</code> static nested class contains three fields.</p>
 
     <span class="c1">// Proxy add</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">root</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">root</span> <span class="o">);</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">root</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="kd">private</span> <span class="kd">static</span> <span class="n">Node</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">,</span> <span class="n">Node</span> <span class="n">tree</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">tree</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>    <span class="c1">// Base case</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tree</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>    <span class="c1">// Base case</span>
             <span class="n">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
             <span class="n">tree</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="c1">// Left recursive case</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span>
-            <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">);</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
         <span class="c1">// Right recursive case</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span>
-            <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">);</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">tree</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="c1">// Proxy print</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">print</span><span class="o">(</span> <span class="n">root</span> <span class="o">);</span>
+        <span class="n">print</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">(</span><span class="n">Node</span> <span class="n">tree</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">tree</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">print</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">);</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">value</span> <span class="o">);</span>
-            <span class="n">print</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tree</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">print</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">);</span>
+            <span class="n">print</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -1984,9 +1962,8 @@ process using a <code>Tree</code> object for storage.</p>
         <span class="n">Tree</span> <span class="n">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tree</span><span class="o">();</span>
         <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
 
-        <span class="k">while</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">()</span> <span class="o">)</span>
-                <span class="n">tree</span><span class="o">.</span><span class="na">add</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">()</span> <span class="o">);</span>
-
+        <span class="k">while</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">())</span>
+                <span class="n">tree</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">());</span>
         <span class="n">tree</span><span class="o">.</span><span class="na">print</span><span class="o">();</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -2032,33 +2009,33 @@ eventual transition into a parameterized generic type.</p>
 
     <span class="c1">// Proxy add</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">Integer</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">root</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">root</span> <span class="o">);</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">root</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="kd">private</span> <span class="kd">static</span> <span class="n">Node</span> <span class="nf">add</span><span class="o">(</span><span class="n">Integer</span> <span class="n">value</span><span class="o">,</span> <span class="n">Node</span> <span class="n">tree</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">tree</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>    <span class="c1">//base case</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tree</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>    <span class="c1">//base case</span>
             <span class="n">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
             <span class="n">tree</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="c1">// Left recursive case</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span>
-            <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">);</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
         <span class="c1">// Right recursive case</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span>
-            <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">);</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">tree</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="c1">// Proxy print</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">print</span><span class="o">(</span> <span class="n">root</span> <span class="o">);</span>
+        <span class="n">print</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">(</span><span class="n">Node</span> <span class="n">tree</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">tree</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">print</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">);</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">value</span> <span class="o">);</span>
-            <span class="n">print</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tree</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">print</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">);</span>
+            <span class="n">print</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -2092,59 +2069,60 @@ compile-time.</p>
 <div class="title">Program 19.7 Class that implements a generic tree.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GenericTree</span><span class="o">&lt;</span><span class="n">T</span> <span class="kd">extends</span> <span class="n">Comparable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Node</span><span class="o">&lt;</span><span class="n">T</span> <span class="kd">extends</span> <span class="n">Comparable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;{</span>
+    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="o">{</span>
         <span class="n">T</span> <span class="n">value</span><span class="o">;</span>
         <span class="n">Node</span> <span class="n">left</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="n">Node</span> <span class="n">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">root</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">Node</span> <span class="n">root</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 
     <span class="c1">// Proxy add</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">T</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">root</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">root</span> <span class="o">);</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">root</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">add</span><span class="o">(</span><span class="n">T</span> <span class="n">value</span><span class="o">,</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">tree</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">tree</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>    <span class="c1">// Base case</span>
-            <span class="n">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;();</span>
+    <span class="kd">private</span> <span class="n">Node</span> <span class="nf">add</span><span class="o">(</span><span class="n">T</span> <span class="n">value</span><span class="o">,</span> <span class="n">Node</span> <span class="n">tree</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tree</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>    <span class="c1">// Base case</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
             <span class="n">tree</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="c1">// Left recursive case</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span>
-            <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">);</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
         <span class="c1">// Right recursive case</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span>
-            <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span> <span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">);</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">value</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">tree</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="c1">// Proxy print</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">print</span><span class="o">(</span> <span class="n">root</span> <span class="o">);</span>
+        <span class="n">print</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">(</span><span class="n">Node</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">tree</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">tree</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">print</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">);</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">value</span> <span class="o">);</span>
-            <span class="n">print</span><span class="o">(</span> <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">);</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">(</span><span class="n">Node</span> <span class="n">tree</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tree</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">print</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">value</span><span class="o">);</span>
+            <span class="n">print</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>First, note that the recursive methods are no longer <code>static</code>. The
-generic syntax for keeping them <code>static</code> is unnecessarily complex. The
-type specifier <code>T extends Comparable&lt;T&gt;</code> guarantees that type <code>T</code>
-implements the interface <code>Comparable&lt;T&gt;</code>. The generic <code>Comparable</code>
-interface defined in the Java API is as follows.</p>
+<p>First, note that the <code>Node</code> class and the recursive methods are no longer
+<code>static</code>. The generic syntax for keeping them <code>static</code> without producing
+compiler warnings is unnecessarily complex. The type specifier <code>T extends
+Comparable&lt;T&gt;</code> guarantees that type <code>T</code> implements the interface
+<code>Comparable&lt;T&gt;</code>. The generic <code>Comparable</code> interface defined in the Java API
+is as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Comparable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
-    <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="n">T</span> <span class="n">object</span><span class="o">);</span>
+	<span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="n">T</span> <span class="n">object</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -2175,11 +2153,10 @@ are available as the <code>TreeSet</code> and <code>TreeMap</code> classes.</p>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
 
-        <span class="n">GenericTree</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">stringTree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GenericTree</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
-        <span class="n">GenericTree</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integerTree</span> <span class="o">=</span>
-            <span class="k">new</span> <span class="n">GenericTree</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+        <span class="n">GenericTree</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">stringTree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GenericTree</span><span class="o">&lt;&gt;();</span>
+        <span class="n">GenericTree</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integerTree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GenericTree</span><span class="o">&lt;&gt;();</span>
 
-        <span class="k">while</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">()</span> <span class="o">)</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">())</span>
             <span class="n">stringTree</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">());</span>
         <span class="n">stringTree</span><span class="o">.</span><span class="na">print</span><span class="o">();</span>
 
@@ -2201,7 +2178,7 @@ are available as the <code>TreeSet</code> and <code>TreeMap</code> classes.</p>
 <p>Our algorithm for solving the maze follows the conventional
 pencil-and-paper method: trial and error! We mark locations in the maze
 with <code>'*'</code> as we explore them. If we come to a dead end, we unmark the
-location (by replacing <code>'*'</code> with <code>' '</code>) and return to our previous
+location (by replacing <code>'*'</code> with <code>' '</code>) and return to our previous
 location to try a different direction.</p>
 </div>
 <div class="paragraph">
@@ -2241,9 +2218,9 @@ squares in the four directions, you call yourself recursively.</p>
     <span class="kd">private</span> <span class="kt">char</span><span class="o">[][]</span> <span class="n">maze</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">rows</span><span class="o">,</span> <span class="n">columns</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">MazeSolver</span> <span class="n">solver</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MazeSolver</span><span class="o">();</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">solver</span><span class="o">.</span><span class="na">solve</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span> <span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">solver</span><span class="o">.</span><span class="na">solve</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">))</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\nSolved!&quot;</span><span class="o">);</span>
         <span class="k">else</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\nNot solvable!&quot;</span><span class="o">);</span>
@@ -2271,7 +2248,7 @@ symbols if the maze is solvable.</p>
         <span class="n">columns</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
         <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
         <span class="n">maze</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="n">rows</span><span class="o">][</span><span class="n">columns</span><span class="o">];</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="o">;</span> <span class="n">row</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="o">;</span> <span class="n">row</span><span class="o">++)</span> <span class="o">{</span>
             <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">line</span><span class="o">);</span>
             <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">column</span> <span class="o">&lt;</span> <span class="n">columns</span><span class="o">;</span> <span class="n">column</span><span class="o">++)</span> <span class="o">{</span>
@@ -2295,7 +2272,7 @@ it reads, it prints out each line to the screen, showing the initial
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="o">;</span> <span class="n">row</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="o">;</span> <span class="n">row</span><span class="o">++)</span> <span class="o">{</span>
             <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">column</span> <span class="o">&lt;</span> <span class="n">columns</span><span class="o">;</span> <span class="n">column</span><span class="o">++)</span>
                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">maze</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
@@ -2310,17 +2287,17 @@ that row.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">solve</span><span class="o">(</span> <span class="kt">int</span> <span class="n">row</span><span class="o">,</span> <span class="kt">int</span> <span class="n">column</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">column</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">row</span> <span class="o">&gt;=</span> <span class="n">rows</span> <span class="o">||</span> <span class="n">column</span> <span class="o">&gt;=</span> <span class="n">columns</span><span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span> <span class="n">row</span><span class="o">,</span> <span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">column</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">row</span> <span class="o">&gt;=</span> <span class="n">rows</span> <span class="o">||</span> <span class="n">column</span> <span class="o">&gt;=</span> <span class="n">columns</span><span class="o">)</span>
             <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">maze</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">==</span> <span class="sc">'E'</span> <span class="o">)</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">maze</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">==</span> <span class="sc">'E'</span><span class="o">)</span>
             <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">maze</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">!=</span> <span class="sc">' '</span><span class="o">)</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">maze</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">!=</span> <span class="sc">' '</span><span class="o">)</span>
             <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
         <span class="k">else</span> <span class="o">{</span>
             <span class="n">maze</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="sc">'*'</span><span class="o">;</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">solve</span><span class="o">(</span><span class="n">row</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">column</span><span class="o">)</span> <span class="o">||</span> <span class="n">solve</span><span class="o">(</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">column</span><span class="o">)</span> <span class="o">||</span>
-                <span class="n">solve</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">||</span> <span class="n">solve</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">solve</span><span class="o">(</span><span class="n">row</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">column</span><span class="o">)</span> <span class="o">||</span> <span class="n">solve</span><span class="o">(</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">column</span><span class="o">)</span> <span class="o">||</span>
+                <span class="n">solve</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">||</span> <span class="n">solve</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span>
                 <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
             <span class="k">else</span> <span class="o">{</span>
                 <span class="n">maze</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="sc">' '</span><span class="o">;</span>
@@ -2335,7 +2312,7 @@ that row.</p>
 <p>The heart of the solution is the recursive method <code>solve()</code>. The
 <code>solve()</code> method takes two parameters, <code>row</code> and <code>column</code>, and tries to
 find a solution to the maze starting at location <code>maze[row][column]</code>. It
-assumes that the maze is filled with <code>'+'</code> for walls, <code>' '</code> for
+assumes that the maze is filled with <code>'+'</code> for walls, <code>' '</code> for
 passageways, and may include <code>'*'</code> characters at locations that are part
 of the partially completed solution.</p>
 </div>
@@ -2362,7 +2339,7 @@ is not making progress toward the finish. Return <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>If none of the base cases applies, then the current location, which must
-contain a <code>' '</code> character, <strong>might</strong> be on a successful path, so <code>solve()</code>
+contain a <code>' '</code> character, <strong>might</strong> be on a successful path, so <code>solve()</code>
 gives it a try. The method tentatively marks the current position with
 <code>'*'</code>. Then, it tries to find a path from the current
 location to each of the four neighboring cells by recursively calling <code>solve()</code>. If any of those four neighbors returns <code>true</code>, then <code>solve()</code> knows it has found a completed path and returns <code>true</code> to its caller.</p>
@@ -2370,7 +2347,7 @@ location to each of the four neighboring cells by recursively calling <code>solv
 <div class="paragraph">
 <p>If none of the four neighbors was on a path to the destination, then the
 current location is not on a path. The method unmarks the current
-location (by storing a <code>' '</code>) and returns <code>false</code>. Presumably, its
+location (by storing a <code>' '</code>) and returns <code>false</code>. Presumably, its
 caller figures out what to do next, perhaps calling a different one of
 its neighbors or giving up and returning <code>false</code> to its caller.</p>
 </div>
@@ -2485,14 +2462,14 @@ parameters, requiring us to use wrapper classes in those cases.</p>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">min</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">max</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">RootSummer</span><span class="o">(</span> <span class="kt">int</span> <span class="n">min</span><span class="o">,</span> <span class="kt">int</span> <span class="n">max</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">RootSummer</span><span class="o">(</span><span class="kt">int</span> <span class="n">min</span><span class="o">,</span> <span class="kt">int</span> <span class="n">max</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">min</span> <span class="o">=</span> <span class="n">min</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">max</span> <span class="o">=</span> <span class="n">max</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="n">Double</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span>
         <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">min</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">max</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span> <span class="o">)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">min</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">max</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span>
             <span class="n">sum</span> <span class="o">+=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">sum</span><span class="o">;</span>
     <span class="o">}</span>
@@ -2520,7 +2497,7 @@ the futures running, and collect the results.</p>
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">100000000</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">FUTURES</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;&gt;</span> <span class="n">futures</span> <span class="o">=</span>
             <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;&gt;(</span><span class="n">FUTURES</span><span class="o">);</span>
         <span class="n">ExecutorService</span> <span class="n">executor</span> <span class="o">=</span>
@@ -2549,11 +2526,11 @@ by <code>FUTURES</code>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Creating futures...&quot;</span><span class="o">);</span>
-        <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">FUTURES</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">FUTURES</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
             <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">summer</span> <span class="o">=</span>
-                <span class="k">new</span> <span class="nf">RootSummer</span><span class="o">(</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">work</span><span class="o">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)*</span><span class="n">work</span> <span class="o">);</span>
-            <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span> <span class="n">summer</span> <span class="o">);</span>
-            <span class="n">futures</span><span class="o">.</span><span class="na">add</span><span class="o">(</span> <span class="n">future</span> <span class="o">);</span>
+                <span class="k">new</span> <span class="nf">RootSummer</span><span class="o">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">work</span><span class="o">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)*</span><span class="n">work</span><span class="o">);</span>
+            <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="n">summer</span><span class="o">);</span>
+            <span class="n">futures</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">future</span><span class="o">);</span>
         <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -2569,11 +2546,11 @@ directly into the list <code>futures</code>.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Getting results from futures...&quot;</span><span class="o">);</span>
         <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">for</span><span class="o">(</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">:</span> <span class="n">futures</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">:</span> <span class="n">futures</span><span class="o">)</span> <span class="o">{</span>
             <span class="k">try</span> <span class="o">{</span>
                 <span class="n">sum</span> <span class="o">+=</span> <span class="n">future</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
             <span class="o">}</span>
-            <span class="k">catch</span><span class="o">(</span> <span class="n">InterruptedException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
             <span class="o">}</span>
             <span class="k">catch</span> <span class="o">(</span><span class="n">ExecutionException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -2617,8 +2594,8 @@ print out the result.</p>
 <ol class="arabic">
 <li>
 <p><a id="recursiveAdditionExercise"></a> <a href="#multiplicationDefinedRecursivelyExample">Example 19.1</a> gave a mathematical recursive definition for
-\(x \times y\). Give a similar recursive definition for
-\(x + y\). The structure is similar to the recursion to
+<em>x</em> ⋅ <em>y</em>. Give a similar recursive definition for
+<em>x</em> + <em>y</em>. The structure is similar to the recursion to
 determine your current age given in <a href="#_what_is_recursion">Section 19.2.1</a>.</p>
 </li>
 <li>
@@ -2632,14 +2609,14 @@ recursive solutions that are impossible to turn into iterative ones?</p>
 <p><a id="fibonacciCallsExercise"></a> Consider the first (non-memoized)
 recursive version of the Fibonacci method given in
 <a href="#fibonacciImplementedRecursivelyExample">Example 19.5</a>. How many times is
-<code>fibonacci()</code> called with argument \(1\) to compute
+<code>fibonacci()</code> called with argument 1 to compute
 <code>fibonacci(n)</code>? Instrument your program and count the number of calls
-for \(n = 2, 3, 4 \ldots 20\).</p>
+for <em>n</em> = 2, 3, 4, …​, 20.</p>
 </li>
 <li>
 <p>In the recursive <code>solve()</code> method in the <code>MazeSolver</code> program given
 in <a href="#_solution_maze_of_doom">Section 19.5</a>, the current location in the maze
-array is is set to a blank character (<code>' '</code>) after no solution had been
+array is is set to a blank character (<code>' '</code>) after no solution had been
 found. What value was in that location? How would the program behave if
 the value was not changed?</p>
 </li>
@@ -2660,8 +2637,8 @@ characters in between form a palindrome. Write a recursive method to
 test if a <code>String</code> is a palindrome, using the following signature.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isPalindrome</span><span class="o">(</span> <span class="n">String</span> <span class="n">text</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span>
-    <span class="kt">int</span> <span class="n">end</span> <span class="o">)</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isPalindrome</span><span class="o">(</span><span class="n">String</span> <span class="n">text</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span>
+    <span class="kt">int</span> <span class="n">end</span><span class="o">)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2674,7 +2651,7 @@ initially be called with a <code>String</code>, <code>0</code>, and the length o
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kt">boolean</span> <span class="n">result</span> <span class="o">=</span>
-    <span class="n">isPalindrome</span><span class="o">(</span> <span class="s">&quot;A man, a plan, a canal: Panama&quot;</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">30</span> <span class="o">);</span></code></pre>
+    <span class="n">isPalindrome</span><span class="o">(</span><span class="s">&quot;A man, a plan, a canal: Panama&quot;</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">30</span><span class="o">);</span></code></pre>
 </div>
 </div>
 </li>
@@ -2701,7 +2678,7 @@ number you were originally looking for.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="o">(</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="n">n</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2710,43 +2687,40 @@ number you were originally looking for.</p>
 </li>
 <li>
 <p><a id="fastExponentiationExercise"></a> Write an implementation of
-fast exponentiation that works for even and odd \(n\). This
+fast exponentiation that works for even and odd <em>n</em>. This
 implementation is exactly the same as the one given at the end of
-<a href="#exponentiationExample">Example 19.7</a> except when \(n\) is odd.
+<a href="#exponentiationExample">Example 19.7</a> except when <em>n</em> is odd.
 Use the following recursive definition of exponentiation to guide your
 implementation.</p>
-<div class="paragraph">
-<p>\(a^n =
-\begin{cases} a &amp; \text{if  $n=1$} &amp; \text{(Base Case)}
-\\
-\left(a^{\frac{n}{2}}\right)^2 &amp; \text{if  $n&gt;1$ and even} &amp; \text{(Base Case)}
-\\
-a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 &amp; \text{if  $n&gt;1$ and odd} &amp; \text{(Base Case)}
-\end{cases}\)</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/exponentRecursion3.svg" alt="exponentRecursion3" width="55%">
+</div>
 </div>
 </li>
 <li>
 <p><a id="fastFibonacciExercise"></a> <a href="#fibonacciImplementedRecursivelyExample">Example 19.5</a> shows two implementations that can be used to
-find the \(n\)<sup>th</sup> Fibonacci number. With a little bit of
+find the <em>n</em><sup>th</sup> Fibonacci number. With a little bit of
 math, it is possible to show that there is a closed-form equation that
-gives the \(n\)<sup>th</sup> Fibonacci number \(F_n\) where
-\(F_0 = F_1 = 1\).</p>
-<div class="paragraph">
-<p>\(F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n+1}  -  \left(\frac{1 -
-\sqrt{5}}{2}\right)^{n+1}}{\sqrt{5}}\)</p>
+gives the <em>n</em><sup>th</sup> Fibonacci number <em>F</em><sub><em>n</em></sub> where
+<em>F</em><sub>0</sub> = <em>F</em><sub>1</sub> = 1.</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="chapters/19-recursion/images/fibonacciClosed.svg" alt="fibonacciClosed" width="30%">
+</div>
 </div>
 <div class="paragraph">
 <p>Although this math is a bit ugly, you can plug numbers into this
-equation and discover the value of \(F_n\) quickly, provided
+equation and discover the value of <em>F</em><sub><em>n</em></sub> quickly, provided
 that you have an efficient way to raise values to the
-\(n\)<sup>th</sup> power. Use the recursive algorithm for fast
+<em>n</em><sup>th</sup> power. Use the recursive algorithm for fast
 exponentation from <a href="#fastExponentiationExercise">Exercise 19.7</a> to
-make an implementation that finds the \(n\)<sup>th</sup> Fibonacci
+make an implementation that finds the <em>n</em><sup>th</sup> Fibonacci
 number <strong>very</strong> quickly.</p>
 </div>
 <div class="paragraph">
 <p>Note that this approach uses real numbers (including
-\(\sqrt{5}\)) that need to be represented as <code>double</code> values.
+the square root of 5) that need to be represented as <code>double</code> values.
 There are exact methods that use fast exponentiation of integer matrices
 to do this computation without doing any floating-point arithmetic, but
 we do not go into those details here.</p>
@@ -2806,8 +2780,7 @@ describes a tree ADT. Modify the programs in <a href="#binarySearchTreeExample">
 <li>
 <p>Write an iterative version of the factorial function and compare its
 speed to the recursive version given in the text. Use the
-<code>System.currentTimeMillis()</code> or<br>
-<code>System.nanoTime()</code> methods before and after <code>for</code> loops that call the
+<code>System.nanoTime()</code> method before and after <code>for</code> loops that call the
 factorial methods 1,000,000 times each for random values.</p>
 </li>
 <li>
@@ -2817,19 +2790,18 @@ of random <code>int</code> values with lengths 1,000, 10,000, 100,000, and
 three copies of the array with the selection sort algorithm given in
 <a href="chap5.html#selectionSortExample">Example 6.2</a>, the bubble sort algorithm given in
 <a href="chap9.html#_problem_sort_it_out">Section 10.1</a>, and the merge sort algorithm given in
-<a href="#mergeSortExample">Example 19.8</a>, respectively. Use the
-<code>System.currentTimeMillis()</code> or <code>System.nanoTime()</code> methods to time each
-of the sorts. Note that both selection sort and bubble sort may take
+<a href="#mergeSortExample">Example 19.8</a>, respectively. Use the <code>System.nanoTime()</code> method to time
+each of the sorts. Note that both selection sort and bubble sort may take
 quite a while to sort an array of 1,000,000 elements.</p>
 <div class="paragraph">
 <p>Run the program several times and find average values for each algorithm
 on each array size. Plot those times on a graph. The times needed to run
 selection sort and bubble sort should increase quadratically, but the
 time to run merge sort should increase linearithmically. In other words,
-an array length of \(n\) should take time proportional to
-\(n^2\) (multiplied by some constant) for selection sort and
+an array length of <em>n</em> should take time proportional to
+<em>n</em><sup>2</sup> (multiplied by some constant) for selection sort and
 bubble sort, but it should take time proportional to
-\(n \log n\) (multiplied by some constant) for merge sort. For
+<em>n</em> log <em>n</em> (multiplied by some constant) for merge sort. For
 large arrays, the difference in time is significant.</p>
 </div>
 </li>
@@ -2837,8 +2809,7 @@ large arrays, the difference in time is significant.</p>
 <p>Investigate the performance of using recursion to compute Fibonacci
 numbers. Implement the naive recursive solution, the memoization method,
 and an iterative solution similar to the memoization method. Use the
-<code>System.currentTimeMillis()</code> or <code>System.nanoTime()</code> methods to time the
-computations for large values of <code>n</code>.</p>
+<code>System.nanoTime()</code> method to time the computations for large values of <code>n</code>.</p>
 <div class="paragraph">
 <p><strong>Warning:</strong> It may take a very long time to compute the <code>n</code><sup>th</sup> Fibonacci number with the naive
 recursive solution.</p>
@@ -2853,8 +2824,7 @@ too low, look in the upper half of the array. Implement binary search
 both iteratively and recursively. Populate an array with 100,000 <code>int</code>
 values between 1 and 10,000,000 and sort it. Then, search for 1,000,000
 random values generated betwee 1 and 10,000,000 using iterative binary
-search and then recursive binary search. Use the
-<code>System.currentTimeMillis()</code> or <code>System.nanoTime()</code> methods to time each
+search and then recursive binary search. Use the <code>System.nanoTime()</code> method to time each
 process. Was the iterative or recursive approach faster? By how much?</p>
 </li>
 </ol>

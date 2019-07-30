@@ -16,7 +16,7 @@ public class IterativeListSize {
     public int size() {
         Node current = head;
         int counter = 0;
-        while( current != null ) {
+        while(current != null) {
             current = current.next;
             counter++;
         }           
