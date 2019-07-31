@@ -1,8 +1,8 @@
 public class Tree {
     private static class Node {
-        String value;
-        Node left = null;
-        Node right = null;
+        public String value;
+        public Node left = null;
+        public Node right = null;
     }
     
     private Node root = null;
@@ -13,17 +13,17 @@ public class Tree {
     }
     
     private static Node add(String value, Node tree) {
-        if(tree == null) {    // Base case
+        if(tree == null) { // Base case <.>
             tree = new Node();
             tree.value = value;
         }
-        // Left recursive case
+        // Left recursive case    <.>
         else if(value.compareTo(tree.value) < 0)
             tree.left = add(value, tree.left);
-        // Right recursive case
+        // Right recursive case   <.>
         else if(value.compareTo(tree.value) > 0)
             tree.right = add(value, tree.right);
-        return tree;        
+        return tree; 			  //<.>
     }
     
     // Proxy print
@@ -33,9 +33,9 @@ public class Tree {
         
     private static void print(Node tree) {
         if(tree != null) {
-            print(tree.left);
-            System.out.println(tree.value);
-            print(tree.right);
+            print(tree.left); 				//<.>
+            System.out.println(tree.value);	//<.>
+            print(tree.right);				//<.>
         }
     }
 }

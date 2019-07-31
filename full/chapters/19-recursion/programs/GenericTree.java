@@ -13,7 +13,7 @@ public class GenericTree<T extends Comparable<T>> {
     }
     
     private Node add(T value, Node tree) {
-        if(tree == null) {    // Base case
+        if(tree == null) { // Base case
             tree = new Node();
             tree.value = value;
         }

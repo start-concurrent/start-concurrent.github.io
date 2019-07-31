@@ -13,7 +13,7 @@ public class IntegerTree {
     }
     
     private static Node add(Integer value, Node tree) {
-        if(tree == null) {    //base case
+        if(tree == null) { // Base case
             tree = new Node();
             tree.value = value;
         }

@@ -19,9 +19,9 @@ public class RecursiveListSize {
     }
     
     private static int size(Node list) {
-        if(list == null) // Base case
-            return 0;       
-        // Recursive case
-        return 1 + size(list.next);
+        if(list == null) 				// Base case
+            return 0;   
+        else
+			return 1 + size(list.next);	// Recursive case
     }    
 }
