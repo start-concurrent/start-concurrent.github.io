@@ -2416,46 +2416,45 @@ the goal, it’ll find one.</p>
 <p>This section doesn’t deal explicitly with recursion, but it does deal
 with concurrency and methods in an interesting way. When we call a
 method in Java, a stack frame for the method is put on the stack, and
-the thread of execution begins executing code inside the method. When it
-is done, it returns a value (or not), and execution resumes in the
-caller. But what if calling the method began executing an independent
-thread, and the caller continued on without waiting for the method to
-return?</p>
+the thread of execution begins executing code inside the method. When it’s
+done, it returns a value (or not), and execution resumes in the caller. But
+what if calling the method began executing an independent thread, and the
+caller continued on without waiting for the method to return?</p>
 </div>
 <div class="paragraph">
-<p>This second situation should seem familiar, since it is very much what
+<p>This second situation should seem familiar, since it’s exactly what
 happens when the <code>start()</code> method is called on a <code>Thread</code> object: the
 <code>start()</code> method returns immediately to its caller, but an independent
 thread of execution has begun executing the code in the <code>run()</code> method
 of the <code>Thread</code>.</p>
 </div>
 <div class="paragraph">
-<p>What if we only care about the value that is computed by the new thread
+<p>What if we only care about the value that’s computed by the new thread
 of execution? We can think of spawning the thread as an asynchronous
-method call, a value that is computed <strong>at some point</strong> rather than one we
+method call, a value that’s computed <strong>at some point</strong> rather than one we
 have to wait for. The name for such an asynchronous method call is a
 <em>future</em>. In some languages, particularly functional languages, all
 concurrency is expressed as a future. In Java, only a little bit of code
 is needed to create threads that can behave like futures. However, the
 idea of futures is pervasive enough that Java API tools were created to
-make the process of creating them easy.</p>
+make the process of creating them simple.</p>
 </div>
 <div class="paragraph">
 <p>We introduce three interfaces and a factory method call that can allow
 you to use futures in Java. This section is not a complete introduction
-to futures, but these tools are enough to get you started with them.</p>
+to futures, but these tools are enough to get you started.</p>
 </div>
 <div class="paragraph">
 <p>The first interface is the <code>Future</code> interface, which allows you to store
-a reference to the asynchronous computation while it is computing (and
-before you ask for its value). The second interface is the <code>Callable</code>
+a reference to the asynchronous computation while it’s computing,
+before you ask for its value. The second interface is the <code>Callable</code>
 interface, which is similar to the <code>Runnable</code> interface in that it
 allows you to specify a class whose objects can be started as
-independent threads. Both the <code>Future</code> interface and the <code>Callable</code> are
-generic interfaces that require to specify a type. Remember that futures
-are supposed to give back an answer, and that’s the type that you supply
+independent threads. Both the <code>Future</code> and <code>Callable</code> interfaces are
+generic interfaces that require you to specify a type. Remember that futures
+are supposed to give back an answer, and that’s the type you supply
 as a parameter. For example, when creating a future that returns an
-<code>int</code> value, you would create a class that implemented the
+<code>int</code> value, you would create a class that implements the
 <code>Callable&lt;Integer&gt;</code> interface, requiring it to contain a method with the
 signature <code>Integer call()</code>. Likewise, you would store a reference to the
 future you create in a <code>Future&lt;Integer&gt;</code> reference.</p>
@@ -2468,7 +2467,7 @@ threads is expensive, and it might not be worthwhile to create 100
 threads when only 8 are able to run concurrently. To deal with this
 problem, the Java API provides classes that implement the
 <code>ExecutorService</code> interface, which can maintain a fixed-size <em>pool</em> of
-threads. When a thread finishes computing one future, it is
+threads. When a thread finishes computing one future, it’s
 automatically assigned another. To create an object that can manage
 threads this way, call the static factory method <code>newFixedThreadPool()</code>
 on the <code>Executors</code> class with the size of the thread pool you want
@@ -2487,38 +2486,38 @@ of a particular type (such as <code>Callable&lt;Integer&gt;</code>) as a paramet
 (such as <code>Future&lt;Integer&gt;</code>). Then, the future is running (or at least
 scheduled to run). At any later point you can call the <code>get()</code> method on
 the <code>Future</code> object, which returns the value of its computation. Like
-calling <code>join()</code>, calling <code>get()</code> is a blocking call that may have to
+calling <code>join()</code>, calling <code>get()</code> is a blocking call that might have to
 wait for the future to finish executing.</p>
 </div>
 <div class="paragraph">
-<p>All of this messy syntax becomes clearer in the following example, which
+<p>All this messy syntax should become clearer in the following example, which
 uses futures to compute the sum of the square roots of the first
 100,000,000 integers concurrently.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 19.14 Futures to sum square roots</div>
+<div class="title">Example 19.14 Using futures to sum square roots</div>
 <div class="content">
 <div class="paragraph">
 <p>To use futures to sum the square roots of integers, we first need a
 worker class that implements <code>Callable</code>. Since the result of the sum of
 square roots is a <code>double</code>, it must implement <code>Callable&lt;Double&gt;</code>. Recall
-that primitive types such as <code>double</code> cannot be used as generic type
+that primitive types such as <code>double</code> can’t be used as generic type
 parameters, requiring us to use wrapper classes in those cases.</p>
 </div>
 <div id="RootSummerProgram" class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span>				<i class="conum" data-value="1"></i><b>(1)</b>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">RootSummer</span> <span class="kd">implements</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">min</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">max</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">RootSummer</span><span class="o">(</span><span class="kt">int</span> <span class="n">min</span><span class="o">,</span> <span class="kt">int</span> <span class="n">max</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">RootSummer</span><span class="o">(</span><span class="kt">int</span> <span class="n">min</span><span class="o">,</span> <span class="kt">int</span> <span class="n">max</span><span class="o">)</span> <span class="o">{</span> 	<i class="conum" data-value="2"></i><b>(2)</b>
         <span class="k">this</span><span class="o">.</span><span class="na">min</span> <span class="o">=</span> <span class="n">min</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">max</span> <span class="o">=</span> <span class="n">max</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="n">Double</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">Double</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span> 					<i class="conum" data-value="3"></i><b>(3)</b>
         <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
         <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">min</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">max</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span>
             <span class="n">sum</span> <span class="o">+=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
@@ -2527,12 +2526,24 @@ parameters, requiring us to use wrapper classes in those cases.</p>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><code>RootSummer</code> is a simple worker class that takes a <code>min</code> and a <code>max</code>
-value in its constructor. Its <code>call()</code> method sums the square roots of
-all the <code>int</code> values greater than or equal to <code>min</code> and less than <code>max</code>.
-It imports <code>java.util.concurrent.*</code> to have access to the <code>Callable</code>
-interface.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>First, we import <code>java.util.concurrent.*</code> to have access to the <code>Callable</code>
+interface.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>RootSummer</code> is a simple worker class that takes a <code>min</code> and a <code>max</code>
+value in its constructor.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Its <code>call()</code> method sums the square roots of all the <code>int</code> values greater
+than or equal to <code>min</code> and less than <code>max</code>.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Of course, we need another class to create the <code>ExecutorService</code>, start
@@ -2540,98 +2551,133 @@ the futures running, and collect the results.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">RootFutures</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">THREADS</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">THREADS</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span> <i class="conum" data-value="2"></i><b>(2)</b>
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">100000000</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">FUTURES</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">;</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;&gt;</span> <span class="n">futures</span> <span class="o">=</span>
-            <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;&gt;(</span><span class="n">FUTURES</span><span class="o">);</span>
-        <span class="n">ExecutorService</span> <span class="n">executor</span> <span class="o">=</span>
-            <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="n">THREADS</span><span class="o">);</span>
-        <span class="kt">int</span> <span class="n">work</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="n">FUTURES</span><span class="o">;</span></code></pre>
+        <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;&gt;</span> <span class="n">futures</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">FUTURES</span><span class="o">);</span>     <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="n">ExecutorService</span> <span class="n">executor</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="n">THREADS</span><span class="o">);</span> <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="kt">int</span> <span class="n">work</span> <span class="o">=</span> <span class="n">N</span><span class="o">/</span><span class="n">FUTURES</span><span class="o">;</span> <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The first part of <code>RootFutures</code> is setup. The imports give us the
-concurrency tools we need and a list to store our futures in. We have
-three constants. <code>THREADS</code> specifies the number of threads to create.
-<code>N</code> gives the number we are going up to. <code>FUTURES</code> is the total number
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The first part of <code>RootFutures</code> is setup. The imports give us the
+concurrency tools we need and a list to store our futures in.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We have three constants. <code>THREADS</code> specifies the number of threads to
+create. <code>N</code> gives the number we’re going up to. <code>FUTURES</code> is the total number
 of futures we create, considerably larger than the number of threads
-they share.</p>
-</div>
-<div class="paragraph">
-<p>Inside the <code>main()</code> method, we create an <code>ArrayList</code> to hold the
+they share.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Inside the <code>main()</code> method, we create an <code>ArrayList</code> to hold the
 futures. Since we know the number of futures ahead of time, an array
 would be ideal. Unfortunately, quirks in the way Java handles generics
 makes it illegal to create an array with a generic type. Instead, we
-create an <code>ArrayList</code> with the size we’ll need pre-allocated. Next, we
-create an <code>ExecutorService</code> with a thread pool of size <code>THREADS</code>.
-Finally, we find the amount of work done by each future by dividing <code>N</code>
-by <code>FUTURES</code>.</p>
+create an <code>ArrayList</code> with the size we’ll need pre-allocated.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Next, we create an <code>ExecutorService</code> with a thread pool of size <code>THREADS</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Finally, we find the amount of work done by each future by dividing <code>N</code>
+by <code>FUTURES</code>.  We can use simple division in this case instead of a more
+complicated load-balancing approach because 100,000,000 is divisible by 10.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Creating futures...&quot;</span><span class="o">);</span>
         <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">FUTURES</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">summer</span> <span class="o">=</span>
-                <span class="k">new</span> <span class="nf">RootSummer</span><span class="o">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">work</span><span class="o">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)*</span><span class="n">work</span><span class="o">);</span>
-            <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="n">summer</span><span class="o">);</span>
+            <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">summer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RootSummer</span><span class="o">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">work</span><span class="o">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)*</span><span class="n">work</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="n">summer</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
             <span class="n">futures</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">future</span><span class="o">);</span>
         <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>In this section of code, we create each future and start it running.
-First, we instantiate a <code>RootSummer</code> object with the appropriate bounds
-for the work it’s going to compute. Then, we supply that object to the
-<code>submit()</code> method on the <code>ExecutorService</code>, which returns a <code>Future</code>
-object. We could have saved a line of code by storing this return value
-directly into the list <code>futures</code>.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>To create the futures, we first instantiate a <code>RootSummer</code> object with the
+appropriate bounds for the work it’s going to compute.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Then, we supply that object to the <code>submit()</code> method on the
+<code>ExecutorService</code>, which returns a <code>Future</code> object. We could have saved a
+line of code by storing this return value
+directly into the list <code>futures</code>.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Getting results from futures...&quot;</span><span class="o">);</span>
         <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">for</span><span class="o">(</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">:</span> <span class="n">futures</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">:</span> <span class="n">futures</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="k">try</span> <span class="o">{</span>
-                <span class="n">sum</span> <span class="o">+=</span> <span class="n">future</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+                <span class="n">sum</span> <span class="o">+=</span> <span class="n">future</span><span class="o">.</span><span class="na">get</span><span class="o">();</span> <i class="conum" data-value="2"></i><b>(2)</b>
             <span class="o">}</span>
-            <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-            <span class="o">}</span>
-            <span class="k">catch</span> <span class="o">(</span><span class="n">ExecutionException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="o">|</span> <span class="n">ExecutionException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <i class="conum" data-value="3"></i><b>(3)</b>
                 <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="n">executor</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;The sum of square roots is: &quot;</span> <span class="o">+</span> <span class="n">sum</span><span class="o">);</span>
+        <span class="n">executor</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span> <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;The sum of square roots is: &quot;</span> <span class="o">+</span> <span class="n">sum</span><span class="o">);</span> <i class="conum" data-value="5"></i><b>(5)</b>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>All that remains is to collect the values from each future. We iterate
-through the list of futures with an enhanced <code>for</code> loop and add the return
-value of each future’s <code>get()</code> method to our running total <code>sum</code>. Because
-<code>get()</code> is a blocking call, we have to catch an <code>InterruptedException</code>
-in case we are interrupted while waiting for the future to respond.
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>To collect the values from each future, we iterate
+through the list of futures with an enhanced <code>for</code> loop.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We add the return value of each future’s <code>get()</code> method to our running
+total <code>sum</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Because <code>get()</code> is a blocking call, we have to catch an <code>InterruptedException</code>
+in case we’re interrupted while waiting for the future to respond.
 However, we also have to catch an <code>ExecutionException</code> in case an
-exception occurred during the execution of the future. This exception
+exception occurs during the execution of the future. This exception
 handling mechanism is one of the big advantages of using futures:
 Exceptions thrown by the future are propagated back to the thread that
 gets the answer from the future. Normal threads simply die if they have
-unhandled exceptions.</p>
-</div>
-<div class="paragraph">
-<p>After all the values have been read and summed, we shut the
-<code>ExecutorService</code> down. If we had wanted, we could have submitted
-additional <code>Callable</code> objects to it to run more futures. Finally, we
-print out the result.</p>
+unhandled exceptions. Note that we use the modern exception-catching syntax
+to handle two unrelated kinds of exceptions with the same <code>catch</code> block.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>After all the values have been read and summed, we shut the
+<code>ExecutorService</code> down. If we’d wanted, we could have submitted
+additional <code>Callable</code> objects to it to run more futures.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Finally, we print out the result.</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -2885,7 +2931,7 @@ process. Was the iterative or recursive approach faster? By how much?</p>
 </div></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-09 18:07:19 UTC
+Last updated 2019-07-17 17:13:33 UTC
 </div>
 </div>
 <style>

@@ -1272,42 +1272,41 @@ the goal, it'll find one.
 This section doesn't deal explicitly with recursion, but it does deal
 with concurrency and methods in an interesting way. When we call a
 method in Java, a stack frame for the method is put on the stack, and
-the thread of execution begins executing code inside the method. When it
-is done, it returns a value (or not), and execution resumes in the
-caller. But what if calling the method began executing an independent
-thread, and the caller continued on without waiting for the method to
-return?
+the thread of execution begins executing code inside the method. When it's
+done, it returns a value (or not), and execution resumes in the caller. But
+what if calling the method began executing an independent thread, and the
+caller continued on without waiting for the method to return?
 
-This second situation should seem familiar, since it is very much what
+This second situation should seem familiar, since it's exactly what
 happens when the `start()` method is called on a `Thread` object: the
 `start()` method returns immediately to its caller, but an independent
 thread of execution has begun executing the code in the `run()` method
 of the `Thread`.
 
-What if we only care about the value that is computed by the new thread
+What if we only care about the value that's computed by the new thread
 of execution? We can think of spawning the thread as an asynchronous
-method call, a value that is computed *at some point* rather than one we
+method call, a value that's computed *at some point* rather than one we
 have to wait for. The name for such an asynchronous method call is a
 _future_. In some languages, particularly functional languages, all
 concurrency is expressed as a future. In Java, only a little bit of code
 is needed to create threads that can behave like futures. However, the
 idea of futures is pervasive enough that Java API tools were created to
-make the process of creating them easy.
+make the process of creating them simple.
 
 We introduce three interfaces and a factory method call that can allow
 you to use futures in Java. This section is not a complete introduction
-to futures, but these tools are enough to get you started with them.
+to futures, but these tools are enough to get you started.
 
 The first interface is the `Future` interface, which allows you to store
-a reference to the asynchronous computation while it is computing (and
-before you ask for its value). The second interface is the `Callable`
+a reference to the asynchronous computation while it's computing, 
+before you ask for its value. The second interface is the `Callable`
 interface, which is similar to the `Runnable` interface in that it
 allows you to specify a class whose objects can be started as
-independent threads. Both the `Future` interface and the `Callable` are
-generic interfaces that require to specify a type. Remember that futures
-are supposed to give back an answer, and that's the type that you supply
+independent threads. Both the `Future` and `Callable` interfaces are
+generic interfaces that require you to specify a type. Remember that futures
+are supposed to give back an answer, and that's the type you supply
 as a parameter. For example, when creating a future that returns an
-`int` value, you would create a class that implemented the
+`int` value, you would create a class that implements the
 `Callable<Integer>` interface, requiring it to contain a method with the
 signature `Integer call()`. Likewise, you would store a reference to the
 future you create in a `Future<Integer>` reference.
@@ -1319,7 +1318,7 @@ threads is expensive, and it might not be worthwhile to create 100
 threads when only 8 are able to run concurrently. To deal with this
 problem, the Java API provides classes that implement the
 `ExecutorService` interface, which can maintain a fixed-size _pool_ of
-threads. When a thread finishes computing one future, it is
+threads. When a thread finishes computing one future, it's
 automatically assigned another. To create an object that can manage
 threads this way, call the static factory method `newFixedThreadPool()`
 on the `Executors` class with the size of the thread pool you want
@@ -1337,20 +1336,20 @@ of a particular type (such as `Callable<Integer>`) as a parameter to its
 (such as `Future<Integer>`). Then, the future is running (or at least
 scheduled to run). At any later point you can call the `get()` method on
 the `Future` object, which returns the value of its computation. Like
-calling `join()`, calling `get()` is a blocking call that may have to
+calling `join()`, calling `get()` is a blocking call that might have to
 wait for the future to finish executing.
 
-All of this messy syntax becomes clearer in the following example, which
+All this messy syntax should become clearer in the following example, which
 uses futures to compute the sum of the square roots of the first
 100,000,000 integers concurrently.
 
-.Futures to sum square roots
+.Using futures to sum square roots
 ====
 
 To use futures to sum the square roots of integers, we first need a
 worker class that implements `Callable`. Since the result of the sum of
 square roots is a `double`, it must implement `Callable<Double>`. Recall
-that primitive types such as `double` cannot be used as generic type
+that primitive types such as `double` can't be used as generic type
 parameters, requiring us to use wrapper classes in those cases.
 
 [source, java]
@@ -1358,74 +1357,68 @@ parameters, requiring us to use wrapper classes in those cases.
 ----
 include::{programsdir}/RootSummer.java[]
 ----
-
-
-`RootSummer` is a simple worker class that takes a `min` and a `max`
-value in its constructor. Its `call()` method sums the square roots of
-all the `int` values greater than or equal to `min` and less than `max`.
-It imports `java.util.concurrent.*` to have access to the `Callable`
+<.> First, we import `java.util.concurrent.*` to have access to the `Callable`
 interface.
+<.> `RootSummer` is a simple worker class that takes a `min` and a `max`
+value in its constructor.
+<.> Its `call()` method sums the square roots of all the `int` values greater
+than or equal to `min` and less than `max`.
 
 Of course, we need another class to create the `ExecutorService`, start
 the futures running, and collect the results.
 
 [source, java]
 ----
-include::{programsdir}/RootFutures.java[lines=1..14]
+include::{programsdir}/RootFutures.java[lines=1..12]
 ----
-
-
-The first part of `RootFutures` is setup. The imports give us the
-concurrency tools we need and a list to store our futures in. We have
-three constants. `THREADS` specifies the number of threads to create.
-`N` gives the number we are going up to. `FUTURES` is the total number
+<.> The first part of `RootFutures` is setup. The imports give us the
+concurrency tools we need and a list to store our futures in.
+<.> We have three constants. `THREADS` specifies the number of threads to
+create. `N` gives the number we're going up to. `FUTURES` is the total number
 of futures we create, considerably larger than the number of threads
 they share.
-
-Inside the `main()` method, we create an `ArrayList` to hold the
+<.> Inside the `main()` method, we create an `ArrayList` to hold the
 futures. Since we know the number of futures ahead of time, an array
 would be ideal. Unfortunately, quirks in the way Java handles generics
 makes it illegal to create an array with a generic type. Instead, we
-create an `ArrayList` with the size we'll need pre-allocated. Next, we
-create an `ExecutorService` with a thread pool of size `THREADS`.
-Finally, we find the amount of work done by each future by dividing `N`
-by `FUTURES`.
+create an `ArrayList` with the size we'll need pre-allocated.
+<.> Next, we create an `ExecutorService` with a thread pool of size `THREADS`.
+<.> Finally, we find the amount of work done by each future by dividing `N`
+by `FUTURES`.  We can use simple division in this case instead of a more
+complicated load-balancing approach because 100,000,000 is divisible by 10.
 
 [source, java]
 ----
-include::{programsdir}/RootFutures.java[lines=16..22]
+include::{programsdir}/RootFutures.java[lines=14..19]
 ----
-
-
-In this section of code, we create each future and start it running.
-First, we instantiate a `RootSummer` object with the appropriate bounds
-for the work it's going to compute. Then, we supply that object to the
-`submit()` method on the `ExecutorService`, which returns a `Future`
-object. We could have saved a line of code by storing this return value
+<.> To create the futures, we first instantiate a `RootSummer` object with the
+appropriate bounds for the work it's going to compute.
+<.> Then, we supply that object to the `submit()` method on the
+`ExecutorService`, which returns a `Future` object. We could have saved a
+line of code by storing this return value
 directly into the list `futures`.
 
 [source, java]
 ----
-include::{programsdir}/RootFutures.java[lines=24..40]
+include::{programsdir}/RootFutures.java[lines=21..34]
 ----
-
-
-All that remains is to collect the values from each future. We iterate
-through the list of futures with an enhanced `for` loop and add the return
-value of each future's `get()` method to our running total `sum`. Because
-`get()` is a blocking call, we have to catch an `InterruptedException`
-in case we are interrupted while waiting for the future to respond.
+<.> To collect the values from each future, we iterate
+through the list of futures with an enhanced `for` loop.
+<.> We add the return value of each future's `get()` method to our running
+total `sum`.
+<.> Because `get()` is a blocking call, we have to catch an `InterruptedException`
+in case we're interrupted while waiting for the future to respond.
 However, we also have to catch an `ExecutionException` in case an
-exception occurred during the execution of the future. This exception
+exception occurs during the execution of the future. This exception
 handling mechanism is one of the big advantages of using futures:
 Exceptions thrown by the future are propagated back to the thread that
 gets the answer from the future. Normal threads simply die if they have
-unhandled exceptions.
-
-After all the values have been read and summed, we shut the
-`ExecutorService` down. If we had wanted, we could have submitted
-additional `Callable` objects to it to run more futures. Finally, we
-print out the result.
+unhandled exceptions. Note that we use the modern exception-catching syntax
+to handle two unrelated kinds of exceptions with the same `catch` block.
+<.> After all the values have been read and summed, we shut the
+`ExecutorService` down. If we'd wanted, we could have submitted
+additional `Callable` objects to it to run more futures.
+<.> Finally, we print out the result.
 
 ====
 
