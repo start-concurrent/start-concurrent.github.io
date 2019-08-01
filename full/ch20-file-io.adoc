@@ -13,30 +13,34 @@ ____
 
 === Problem: A picture is worth 1,000 bytes
 
-If you are familiar with bitmap (bmp) files, you know that they can get
-very large. People often use a technique called data compression to
-reduce the size of large files for storage. There are many different
-kinds of compression and many which are tailored to work well on images.
-Your task is to write a program that will do a particular kind of
-compression called run length encoding (RLE), which we will test on
-bitmaps. The idea behind RLE is simple: Imagine a file as a stream of
-bytes. As you look through the stream, replace repeating sequences of a
-single byte with a count telling how many times it repeats followed by
+If you're familiar with bitmap (`.bmp`) files, you know that they can take
+up a lot of space compared to other popular image formats. People often use
+a technique called data compression to reduce the size of large files for
+storage. There are many different kinds of compression and many which are
+tailored to work well on images. Your task is to write a program that will
+do a particular kind of compression called run length encoding (RLE), which
+we will test on bitmaps. The idea behind RLE is simple: Imagine a file as a
+stream of bytes. As you look through the stream, replace repeating sequences
+of a single byte with a count telling how many times it repeats followed by
 the byte that repeats. Consider the following sequence.
 
-`215 7 7 7 7 7 7 7 7 7 123 94 94 94 71`
+----
+215 7 7 7 7 7 7 7 7 7 123 94 94 94 71
+----
 
-Its RLE compressed version could be as follows.
+Its RLE compressed version could be shown as follows.
 
-`1 215 9 7 1 123 3 94 1 71`
+----
+1 215 9 7 1 123 3 94 1 71
+----
 
-Since there is no simple way to keep track of which numbers are counts
+Since there's no simple way to keep track of which numbers are counts
 and which ones are actual bytes of data, we have to keep a count for
-every byte, even unrepeated ones. In this example, we went down from 15
-numbers to 10 numbers, a savings of a third. In the worst case, a file
+every byte, even unrepeated ones. In this example, we went from 15
+down to 10 numbers, a savings of a third. In the worst case, a file
 that has no repetition at all would actually double in size after being
 "`compressed`" with this kind of RLE. Nevertheless, RLE compression is
-used in practice and performs very well in some situations.
+used in practice and performs well in some situations.
 
 Your job is to write a Java program that takes two arguments from the
 command line. The first is either `-c` for compress or `-d` for
@@ -67,13 +71,13 @@ file.
 
 Before you can begin to tackle the problem of compressing, or even
 reading from and writing to, files, some background on files might be
-useful. By now, you have had many experiences with files: editing Java
+useful. By now, you've had many experiences with files: editing Java
 source files, compiling those files, and running them on a virtual
 machine, at the very least. You have probably done some word processing,
 looked at photos, listened to music, and watched videos, all on a
 computer. Each of these activities centers on one or more files. In
 order to reach these files, you probably had to look through some
-directories, which are a special kind of file as well. But, what is a
+directories, which are a special kind of file as well. But what is a
 file?
 
 ==== Non-volatile storage
@@ -86,14 +90,14 @@ do most computers. We need a place to store data between runs of a
 particular program. Likewise, we need a place to store data when our
 computer isn't turned on. Both scenarios share a common solution:
 secondary storage such as hard drives, flash drives, and optical media
-like CD-ROMs and DVD-ROMs.
+like DVD-ROMs and Blu-ray discs.
 
-Files are not always stored in non-volatile memory. It is possible to
+Files are not always stored in non-volatile memory. It's possible to
 load entire files into RAM and keep them there for long periods of time.
 Likewise, all input and output on Unix and Linux systems are viewed as
 file operations. Nevertheless, the characteristics of non-volatile
 memory are often associated with file I/O: slow access times and the
-possibility of errors in the event of hardware problems.
+possibility of errors in the event of inaccessible files or hardware problems.+
 
 ==== Stream model
 
@@ -122,30 +126,34 @@ different file I/O operations in Java.
 
 When talking about files, many people divide files into two categories:
 _text files_ and _binary files_. A text file can be read by humans. That
-is, when you open a text file with a simple file reader, it will not be
-filled by gibberish and nonsense characters. A Java source file is an
+is, when you open a text file with a simple file reader, it won't be
+filled with gibberish and nonsense characters. A Java source file is an
 excellent example of a text file.
 
 In contrast, a binary file is a file meant only to be read by a
 computer. Instead of printing out characters meant to be read by a
 human, the raw bytes of memory for specific pieces of data are written
-to binary files. To clarify, if we wanted to write the number 2127480645
+to binary files. To clarify, if we wanted to write the number 2,127,480,645
 in a text file, the file would contain the following.
 
-`2127480645`
+----
+2127480645
+----
 
 However, if we wanted to write the same number in a binary file, the
 file would contain the following.
 
-`~ÎÇE`
+----
+~ÎÇE
+----
 
-If you recall, an `int` in Java uses four bytes of storage. There is a
+If you recall, an `int` in Java uses four bytes of storage. There's a
 system of encoding called the ASCII table which maps each of the 256
 (0–255) numerical bytes to a character. The four characters given above
-are the ASCII representation of the four bytes of the number 2127480645.
+are the ASCII representation of the four bytes of the number 2,127,480,645.
 
 In some sense, the idea of a text file is artificial. All files are
-binary in the sense that they are readable by a computer. You will take
+binary in the sense that they are readable by a computer. You'll take
 different steps and create different objects depending on whether you
 want to do file I/O in the text or binary paradigms, but the overall
 process will be similar in either case.
@@ -237,14 +245,14 @@ the same as reading from the keyboard.
 ----
 Scanner in = null;
 try {
-    in = new Scanner( file );
-    while( in.hasNextInt() )
-        process( in.nextInt() );
+    in = new Scanner(file);
+    while(in.hasNextInt())
+        process(in.nextInt());
 }
-catch( FileNotFoundException e ) {
+catch(FileNotFoundException e) {
     System.out.println("File " + file.getName() + " not found!");
 }
-finally { if( in != null ) in.close(); }
+finally { if(in != null) in.close(); }
 ----
 
 Assuming that `file` is linked to a file which the program has read
@@ -280,15 +288,15 @@ we could do it as follows.
 ----
 PrintWriter out = null;
 try {
-    out = new PrintWriter( new FileOutputStream( file ) );
+    out = new PrintWriter(new FileOutputStream(file));
     Random random = new Random();
-    for( int i = 0; i < 100; i++ )
-        out.println( random.nextInt() );
+    for(int i = 0; i < 100; i++)
+        out.println(random.nextInt());
 }
-catch( FileNotFoundException e ) {
+catch(FileNotFoundException e) {
     System.out.println("File " + file.getName() + " not found!");
 }
-finally { if( out != null ) out.close(); }
+finally { if(out != null) out.close(); }
 ----
 
 Again, once you have a `PrintWriter` object, the methods for outputting
@@ -301,7 +309,7 @@ a path like so.
 [source, java]
 ----
 PrintWriter out = new PrintWriter(
-new FileOutputStream( "/homes/owilde/programs/file.txt" ) );
+new FileOutputStream("/homes/owilde/programs/file.txt"));
 ----
 
 Be sure to import `java.io.*` in order to have access to the
@@ -324,8 +332,8 @@ create one.
 
 [source, java]
 ----
-File file = new File( "file.bin" );
-FileInputStream in = new FileInputStream( file );
+File file = new File("file.bin");
+FileInputStream in = new FileInputStream(file);
 ----
 
 As it happens, `FileInputStream` also allows you to call its constructor
@@ -333,7 +341,7 @@ with a `String` specifying the file path and name.
 
 [source, java]
 ----
-FileInputStream in = new FileInputStream( "file.bin" );
+FileInputStream in = new FileInputStream("file.bin");
 ----
 
 The bad news is that you can't do much with a `FileInputStream` object.
@@ -345,16 +353,16 @@ the following method which prints the size of a file.
 
 [source, java]
 ----
-public static void printFileSize( String fileName ) {
+public static void printFileSize(String fileName) {
     FileInputStream in = null;
     try {
-        in = new FileInputStream( fileName );
+        in = new FileInputStream(fileName);
         int count = 0;
-        while( in.read() != -1 )
+        while(in.read() != -1)
             count++;
-        System.out.println("File size: " + count + " bytes" );
+        System.out.println("File size: " + count + " bytes");
     }
-    catch( Exception e ) {
+    catch(Exception e) {
         System.out.println("File access failed.");
     }
     finally { try{ in.close(); } catch(Exception e){} }
@@ -386,7 +394,7 @@ These objects exist, and they belong to the `ObjectInputStream` and
 [source, java]
 ----
 ObjectInputStream in =
-    new ObjectInputStream( new FileInputStream( "baseball.bin" ) );
+    new ObjectInputStream(new FileInputStream("baseball.bin"));
 ----
 
 Now, let's assume that `baseball.bin` contains baseball statistics. The
@@ -402,7 +410,7 @@ int records = in.readInt();
 int[] homeRuns = new int[records];
 int[] RBI = new int[records];
 float[] battingAverage = new float[records];
-for( int i = 0; i < records; i++ ) {
+for(int i = 0; i < records; i++) {
     homeRuns[i] = in.readInt();
     RBI[i] = in.readInt();
     battingAverage[i] = in.readFloat();
@@ -425,18 +433,18 @@ data and writes them to a file.
 ObjectOutputStream out = null;
 try {
     out = new ObjectOutputStream(
-        new FileOutputStream("baseball.bin") );
-    out.writeInt( homeRuns.length );
-    for( int i = 0; i < homeRuns.length; i++ ) {
-        out.writeInt( homeRuns[i] );
-        out.writeInt( RBI[i] );
-        out.writeFloat( battingAverage[i] );
+        new FileOutputStream("baseball.bin"));
+    out.writeInt(homeRuns.length);
+    for(int i = 0; i < homeRuns.length; i++) {
+        out.writeInt(homeRuns[i]);
+        out.writeInt(RBI[i]);
+        out.writeFloat(battingAverage[i]);
     }
 }
-catch( Exception e ) {
-    System.out.println( "File writing failed." );
+catch(Exception e) {
+    System.out.println("File writing failed.");
 }
-finally { try{ out.close(); } catch( Exception e ){} }
+finally { try{ out.close(); } catch(Exception e){} }
 ----
 
 Using `ObjectInputStream` and `ObjectOutputStream` in this way is not
@@ -463,14 +471,14 @@ the following.
 ObjectInputStream in = null;
 try {
     in = new ObjectInputStream(
-        new FileInputStream( "baseball.bin" ));
+        new FileInputStream("baseball.bin"));
     int records = in.readInt();
     BaseballPlayer[] players = new BaseballPlayer[records];
-    for( int i = 0; i < players.length; i++ )
+    for(int i = 0; i < players.length; i++)
         players[i] = (BaseballPlayer)in.readObject();
 }
-catch( Exception e ) {
-    System.out.println( "File reading failed." );
+catch(Exception e) {
+    System.out.println("File reading failed.");
 }
 finally { try{ in.close(); } catch(Exception e){} }
 ----
@@ -482,13 +490,13 @@ The output will become what follows.
 ObjectOutputStream out = null;
 try {
     out = new ObjectOutputStream(
-        new FileOutputStream( "baseball.bin" ));
-    out.writeInt( players.length );
-    for( int i = 0; i < players.length; i++ )
-        out.writeObject( players[i] );
+        new FileOutputStream("baseball.bin"));
+    out.writeInt(players.length);
+    for(int i = 0; i < players.length; i++)
+        out.writeObject(players[i]);
 }
-catch( Exception e ) {
-    System.out.println( "File writing failed." );
+catch(Exception e) {
+    System.out.println("File writing failed.");
 }
 finally { try{ out.close(); } catch(Exception e){} }
 ----
@@ -521,11 +529,11 @@ below.
 ObjectInputStream in = null;
 try {
     in = new ObjectInputStream(
-        new FileInputStream( "baseball.bin" ));
+        new FileInputStream("baseball.bin"));
     BaseballPlayer[] players = (BaseballPlayer[])in.readObject();
 }
-catch( Exception e ) {
-    System.out.println( "File reading failed." );
+catch(Exception e) {
+    System.out.println("File reading failed.");
 }
 finally { try{ in.close(); } catch(Exception e){} }
 ----
@@ -537,11 +545,11 @@ And the corresponding output code can be simplified as well.
 ObjectOutputStream out = null;
 try {
     out = new ObjectOutputStream(
-        new FileOutputStream( "baseball.bin" ));
-    out.writeObject( players );
+        new FileOutputStream("baseball.bin"));
+    out.writeObject(players);
 }
-catch( Exception e ) {
-    System.out.println( "File writing failed." );
+catch(Exception e) {
+    System.out.println("File writing failed.");
 }
 finally { try{ out.close(); } catch(Exception e){} }
 ----
@@ -549,6 +557,27 @@ finally { try{ out.close(); } catch(Exception e){} }
 It is worth noting that `DataInputStream` and `DataOutputStream` objects
 can be used in place of `ObjectInputStream` and `ObjectOutputStream`
 objects if you only need to read and write primitive data.
+
+
+==== Opening files with `JFileChooser`
+
+One of the more tedious aspects of working with files in command-line programs
+is typing the name of the file correctly.  Although most OS terminals have
+time-saving autocomplete features to help users choose the right file name,
+typing the name of a file directly into a prompt so that it can be read by
+a `Scanner` object is error prone.
+
+Indeed, most users are used to selecting files to open or to save via a GUI
+file chooser instead of typing file names explicitly.  The Java Swing library
+provides such a file chooser called `JFileChooser`.
+
+We discuss fully featured GUI programs in <<ch15-gui#ch15-gui>>, but like the
+`JOptionPane` class covered in <<ch07-gui-basics#ch07-gui-basics>>,
+`JFileChooser` can be used with or without a complex GUI.
+
+
+
+
 
 === Examples: File examples
 
@@ -584,9 +613,8 @@ it is a directory, and finally print the name given by `getName()`.
 Now, let's look at a data processing application of files. Let's assume
 that there is a file called `radiuses.txt` which holds the radiuses of a
 number of circles formatted as text, one on each line of the file. It's
-our job to read each radius, compute the area of the circle, and write
-those areas to a file called `areas.txt`, using the formula
-stem:[A = \pi r^2].
+our job to read each radius _r_, compute the areas of each circle using the
+formula _Area_ = _πr_^2^, and write those areas to a file called `areas.txt`.
 
 .Reads a list of radiuses from a text file and output their areas to another file.
 [source, java]
@@ -719,14 +747,14 @@ this behavior by changing the line below.
 
 [source, java]
 ----
-out = new PrintWriter( new FileOutputStream("concurrent.out") );
+out = new PrintWriter(new FileOutputStream("concurrent.out"));
 ----
 
 We replace it with the following.
 
 [source, java]
 ----
-out = new PrintWriter( new FileOutputStream("concurrent.out", true) );
+out = new PrintWriter(new FileOutputStream("concurrent.out", true));
 ----
 
 This second `boolean` parameter to the `FileOutputStream` constructor
@@ -794,7 +822,7 @@ input.
 beginning of a paragraph, and `</p>`, which marks the end of a
 paragraph. A lesser known feature of HTML is that ampersand (`&`) can
 mark special HTML entities used to produce symbols on a web page. For
-example, `&amp;pi;` is the entity for the Greek letter stem:[\pi].
+example, `&amp;pi;` is the entity for the Greek letter _π_.
 Because of these features of the language, raw text that is going to be
 marked up in HTML should not contain less than signs (`<`), greater than
 signs (`>`), or ampersands (`&`).
@@ -804,7 +832,7 @@ and writes to an output text file also specified by the user. The output
 file should be exactly the same as the input file except that every
 occurrence of a less than sign should be replaced by `&amp;lt;`, every
 occurrence of a greater than sign should be replaced by `&amp;gt;`, and
-every occurrence of an ampersand should be replaced by `&amp;`.
+every occurrence of an ampersand should be replaced by `&amp;amp;`.
 .  [[wordFileExercise]] Write a program that prompts the user for an
 input text file. Open the file and read each word from the file, where a
 word is defined as any `String` made up only of upper- and lowercase
@@ -841,10 +869,10 @@ are integer modulus and integer division.
 
 ..  Add up the values of all the bytes, storing this sum in a `long`
 variable
-..  Set stem:[sum = sum\mod 2^{32}]
-..  Let stem:[r = (sum\mod 2^{16}) + (sum \div 2^{16})]
-..  Let stem:[s = (r\mod 2^{16}) + (r \div 2^{16})]
-..  The final checksum is stem:[s]
+..  Set _sum_ = _sum_ mod 2^32^
+..  Let _r_ = (_sum_ mod 2^16^) + (_sum_ ÷ 2^16^)
+..  Let _s_ = (_r_ mod 2^16^) + (_r_ ÷ 2^16^)
+..  The final checksum is _s_
 +
 Remember that finding powers of 2 is easy with bitwise shifts. Write a
 program that opens a file for binary reading using `FileInputStream` and
@@ -854,7 +882,6 @@ The following is an example of the command used on a file called
 `wombat.dat`. The first number in the output below it, `6892`, is the
 checksum.
 +
-[source, java]
 ----
 sum -s wombat.dat
 6892 213 wombat.dat

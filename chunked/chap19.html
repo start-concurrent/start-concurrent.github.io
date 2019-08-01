@@ -712,34 +712,38 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="_problem_a_picture_is_worth_1000_bytes">20.1. Problem: A picture is worth 1,000 bytes</h3>
 <div class="paragraph">
-<p>If you are familiar with bitmap (bmp) files, you know that they can get
-very large. People often use a technique called data compression to
-reduce the size of large files for storage. There are many different
-kinds of compression and many which are tailored to work well on images.
-Your task is to write a program that will do a particular kind of
-compression called run length encoding (RLE), which we will test on
-bitmaps. The idea behind RLE is simple: Imagine a file as a stream of
-bytes. As you look through the stream, replace repeating sequences of a
-single byte with a count telling how many times it repeats followed by
+<p>If you’re familiar with bitmap (<code>.bmp</code>) files, you know that they can take
+up a lot of space compared to other popular image formats. People often use
+a technique called data compression to reduce the size of large files for
+storage. There are many different kinds of compression and many which are
+tailored to work well on images. Your task is to write a program that will
+do a particular kind of compression called run length encoding (RLE), which
+we will test on bitmaps. The idea behind RLE is simple: Imagine a file as a
+stream of bytes. As you look through the stream, replace repeating sequences
+of a single byte with a count telling how many times it repeats followed by
 the byte that repeats. Consider the following sequence.</p>
 </div>
-<div class="paragraph">
-<p><code>215 7 7 7 7 7 7 7 7 7 123 94 94 94 71</code></p>
+<div class="listingblock">
+<div class="content">
+<pre>215 7 7 7 7 7 7 7 7 7 123 94 94 94 71</pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Its RLE compressed version could be as follows.</p>
+<p>Its RLE compressed version could be shown as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1 215 9 7 1 123 3 94 1 71</pre>
+</div>
 </div>
 <div class="paragraph">
-<p><code>1 215 9 7 1 123 3 94 1 71</code></p>
-</div>
-<div class="paragraph">
-<p>Since there is no simple way to keep track of which numbers are counts
+<p>Since there’s no simple way to keep track of which numbers are counts
 and which ones are actual bytes of data, we have to keep a count for
-every byte, even unrepeated ones. In this example, we went down from 15
-numbers to 10 numbers, a savings of a third. In the worst case, a file
+every byte, even unrepeated ones. In this example, we went from 15
+down to 10 numbers, a savings of a third. In the worst case, a file
 that has no repetition at all would actually double in size after being
 “compressed” with this kind of RLE. Nevertheless, RLE compression is
-used in practice and performs very well in some situations.</p>
+used in practice and performs well in some situations.</p>
 </div>
 <div class="paragraph">
 <p>Your job is to write a Java program that takes two arguments from the
@@ -849,15 +853,19 @@ human, the raw bytes of memory for specific pieces of data are written
 to binary files. To clarify, if we wanted to write the number 2127480645
 in a text file, the file would contain the following.</p>
 </div>
-<div class="paragraph">
-<p><code>2127480645</code></p>
+<div class="listingblock">
+<div class="content">
+<pre>2127480645</pre>
+</div>
 </div>
 <div class="paragraph">
 <p>However, if we wanted to write the same number in a binary file, the
 file would contain the following.</p>
 </div>
-<div class="paragraph">
-<p><code>~ÎÇE</code></p>
+<div class="listingblock">
+<div class="content">
+<pre>~ÎÇE</pre>
+</div>
 </div>
 <div class="paragraph">
 <p>If you recall, an <code>int</code> in Java uses four bytes of storage. There is a
@@ -971,14 +979,14 @@ the same as reading from the keyboard.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">file</span> <span class="o">);</span>
-    <span class="k">while</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">hasNextInt</span><span class="o">()</span> <span class="o">)</span>
-        <span class="n">process</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">()</span> <span class="o">);</span>
+    <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">file</span><span class="o">);</span>
+    <span class="k">while</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">hasNextInt</span><span class="o">())</span>
+        <span class="n">process</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">nextInt</span><span class="o">());</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">FileNotFoundException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File &quot;</span> <span class="o">+</span> <span class="n">file</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; not found!&quot;</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span> <span class="n">in</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span></code></pre>
+<span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span><span class="n">in</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1017,15 +1025,15 @@ we could do it as follows.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span> <span class="n">file</span> <span class="o">)</span> <span class="o">);</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">file</span><span class="o">));</span>
     <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">()</span> <span class="o">);</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+        <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">());</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">FileNotFoundException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File &quot;</span> <span class="o">+</span> <span class="n">file</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; not found!&quot;</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span> <span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span></code></pre>
+<span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span><span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1039,7 +1047,7 @@ a path like so.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span>
-<span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span> <span class="s">&quot;/homes/owilde/programs/file.txt&quot;</span> <span class="o">)</span> <span class="o">);</span></code></pre>
+<span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">&quot;/homes/owilde/programs/file.txt&quot;</span><span class="o">));</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1066,8 +1074,8 @@ create one.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span> <span class="s">&quot;file.bin&quot;</span> <span class="o">);</span>
-<span class="n">FileInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span> <span class="n">file</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;file.bin&quot;</span><span class="o">);</span>
+<span class="n">FileInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">file</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1076,7 +1084,7 @@ with a <code>String</code> specifying the file path and name.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">FileInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span> <span class="s">&quot;file.bin&quot;</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">FileInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">&quot;file.bin&quot;</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1089,16 +1097,16 @@ the following method which prints the size of a file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">printFileSize</span><span class="o">(</span> <span class="n">String</span> <span class="n">fileName</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">printFileSize</span><span class="o">(</span><span class="n">String</span> <span class="n">fileName</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">FileInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
     <span class="k">try</span> <span class="o">{</span>
-        <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span> <span class="n">fileName</span> <span class="o">);</span>
+        <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">fileName</span><span class="o">);</span>
         <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">while</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">()</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">)</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">()</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span>
             <span class="n">count</span><span class="o">++;</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File size: &quot;</span> <span class="o">+</span> <span class="n">count</span> <span class="o">+</span> <span class="s">&quot; bytes&quot;</span> <span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File size: &quot;</span> <span class="o">+</span> <span class="n">count</span> <span class="o">+</span> <span class="s">&quot; bytes&quot;</span><span class="o">);</span>
     <span class="o">}</span>
-    <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File access failed.&quot;</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span>
@@ -1133,7 +1141,7 @@ are supposed to be.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span>
-    <span class="k">new</span> <span class="nf">ObjectInputStream</span><span class="o">(</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span> <span class="s">&quot;baseball.bin&quot;</span> <span class="o">)</span> <span class="o">);</span></code></pre>
+    <span class="k">new</span> <span class="nf">ObjectInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1150,7 +1158,7 @@ statistics into three arrays with the following code.</p>
 <span class="kt">int</span><span class="o">[]</span> <span class="n">homeRuns</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
 <span class="kt">int</span><span class="o">[]</span> <span class="n">RBI</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
 <span class="kt">float</span><span class="o">[]</span> <span class="n">battingAverage</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
-<span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">records</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">records</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
     <span class="n">homeRuns</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
     <span class="n">RBI</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
     <span class="n">battingAverage</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readFloat</span><span class="o">();</span>
@@ -1174,18 +1182,18 @@ data and writes them to a file.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
     <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">)</span> <span class="o">);</span>
-    <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span> <span class="n">homeRuns</span><span class="o">.</span><span class="na">length</span> <span class="o">);</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">homeRuns</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span> <span class="n">homeRuns</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">);</span>
-        <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span> <span class="n">RBI</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">);</span>
-        <span class="n">out</span><span class="o">.</span><span class="na">writeFloat</span><span class="o">(</span> <span class="n">battingAverage</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">);</span>
+        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span>
+    <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">homeRuns</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">homeRuns</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">homeRuns</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">RBI</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="n">out</span><span class="o">.</span><span class="na">writeFloat</span><span class="o">(</span><span class="n">battingAverage</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
     <span class="o">}</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;File writing failed.&quot;</span> <span class="o">);</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File writing failed.&quot;</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">){}</span> <span class="o">}</span></code></pre>
+<span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1204,7 +1212,7 @@ do so, we need to define a new class.</p>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">RBI</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">float</span> <span class="n">battingAverage</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">BaseballPlayer</span><span class="o">(</span> <span class="kt">int</span> <span class="n">homeRuns</span><span class="o">,</span> <span class="kt">int</span> <span class="n">RBI</span><span class="o">,</span> <span class="kt">float</span> <span class="n">battingAverage</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">BaseballPlayer</span><span class="o">(</span><span class="kt">int</span> <span class="n">homeRuns</span><span class="o">,</span> <span class="kt">int</span> <span class="n">RBI</span><span class="o">,</span> <span class="kt">float</span> <span class="n">battingAverage</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">homeRuns</span> <span class="o">=</span> <span class="n">homeRuns</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">RBI</span> <span class="o">=</span> <span class="n">RBI</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">battingAverage</span> <span class="o">=</span> <span class="n">battingAverage</span><span class="o">;</span>
@@ -1229,14 +1237,14 @@ the following.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
     <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span> <span class="s">&quot;baseball.bin&quot;</span> <span class="o">));</span>
+        <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span>
     <span class="kt">int</span> <span class="n">records</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
     <span class="n">BaseballPlayer</span><span class="o">[]</span> <span class="n">players</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BaseballPlayer</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">players</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">players</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
         <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="n">BaseballPlayer</span><span class="o">)</span><span class="n">in</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;File reading failed.&quot;</span> <span class="o">);</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File reading failed.&quot;</span><span class="o">);</span>
 <span class="o">}</span>
 <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span></code></pre>
 </div>
@@ -1249,13 +1257,13 @@ the following.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
     <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span> <span class="s">&quot;baseball.bin&quot;</span> <span class="o">));</span>
-    <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span> <span class="n">players</span><span class="o">.</span><span class="na">length</span> <span class="o">);</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">players</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span> <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">);</span>
+        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span>
+    <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">players</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">players</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+        <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;File writing failed.&quot;</span> <span class="o">);</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File writing failed.&quot;</span><span class="o">);</span>
 <span class="o">}</span>
 <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span></code></pre>
 </div>
@@ -1290,11 +1298,11 @@ below.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
     <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span> <span class="s">&quot;baseball.bin&quot;</span> <span class="o">));</span>
+        <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span>
     <span class="n">BaseballPlayer</span><span class="o">[]</span> <span class="n">players</span> <span class="o">=</span> <span class="o">(</span><span class="n">BaseballPlayer</span><span class="o">[])</span><span class="n">in</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;File reading failed.&quot;</span> <span class="o">);</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File reading failed.&quot;</span><span class="o">);</span>
 <span class="o">}</span>
 <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span></code></pre>
 </div>
@@ -1307,11 +1315,11 @@ below.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
     <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span> <span class="s">&quot;baseball.bin&quot;</span> <span class="o">));</span>
-    <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span> <span class="n">players</span> <span class="o">);</span>
+        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span>
+    <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">players</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;File writing failed.&quot;</span> <span class="o">);</span>
+<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File writing failed.&quot;</span><span class="o">);</span>
 <span class="o">}</span>
 <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span></code></pre>
 </div>
@@ -1348,14 +1356,14 @@ is a directory.</p>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">File</span> <span class="n">directory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;.&quot;</span><span class="o">);</span>
         <span class="n">File</span><span class="o">[]</span> <span class="n">files</span> <span class="o">=</span> <span class="n">directory</span><span class="o">.</span><span class="na">listFiles</span><span class="o">();</span>
-        <span class="k">for</span><span class="o">(</span> <span class="n">File</span> <span class="n">file</span> <span class="o">:</span> <span class="n">files</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span> <span class="n">DateFormat</span><span class="o">.</span><span class="na">getDateInstance</span><span class="o">().</span><span class="na">format</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">Date</span><span class="o">(</span> <span class="n">file</span><span class="o">.</span><span class="na">lastModified</span><span class="o">())</span> <span class="o">)</span> <span class="o">+</span> <span class="s">&quot;\t&quot;</span><span class="o">);</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">file</span><span class="o">.</span><span class="na">isDirectory</span><span class="o">()</span> <span class="o">)</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span> <span class="s">&quot;directory&quot;</span> <span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">File</span> <span class="nl">file:</span> <span class="n">files</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">DateFormat</span><span class="o">.</span><span class="na">getDateInstance</span><span class="o">().</span><span class="na">format</span><span class="o">(</span>
+                <span class="k">new</span> <span class="nf">Date</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">lastModified</span><span class="o">()))</span> <span class="o">+</span> <span class="s">&quot;\t&quot;</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">isDirectory</span><span class="o">())</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;directory&quot;</span><span class="o">);</span>
             <span class="k">else</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span> <span class="s">&quot;\t&quot;</span> <span class="o">);</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;\t&quot;</span> <span class="o">+</span>  <span class="n">file</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;\t&quot;</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\t&quot;</span> <span class="o">+</span>  <span class="n">file</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -1377,9 +1385,8 @@ it is a directory, and finally print the name given by <code>getName()</code>.</
 <p>Now, let’s look at a data processing application of files. Let’s assume
 that there is a file called <code>radiuses.txt</code> which holds the radiuses of a
 number of circles formatted as text, one on each line of the file. It’s
-our job to read each radius, compute the area of the circle, and write
-those areas to a file called <code>areas.txt</code>, using the formula
-\(A = \pi r^2\).</p>
+our job to read each radius <em>r</em>, compute the areas of each circle using the
+formula <em>Area</em> = <em>πr</em><sup>2</sup>, and write those areas to a file called <code>areas.txt</code>.</p>
 </div>
 <div id="AreaFromRadiusTextProgram" class="listingblock">
 <div class="title">Program 20.3 Reads a list of radiuses from a text file and output their areas to another file.</div>
@@ -1389,25 +1396,25 @@ those areas to a file called <code>areas.txt</code>, using the formula
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">AreaFromRadiusText</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">File</span> <span class="n">inFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span> <span class="s">&quot;radiuses.txt&quot;</span> <span class="o">);</span>
-        <span class="n">File</span> <span class="n">outFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span> <span class="s">&quot;areas.txt&quot;</span> <span class="o">);</span>
+        <span class="n">File</span> <span class="n">inFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;radiuses.txt&quot;</span><span class="o">);</span>
+        <span class="n">File</span> <span class="n">outFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;areas.txt&quot;</span><span class="o">);</span>
         <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="kt">double</span> <span class="n">radius</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">inFile</span> <span class="o">);</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span> <span class="n">outFile</span> <span class="o">);</span>
-            <span class="k">while</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">hasNextDouble</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">inFile</span><span class="o">);</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">outFile</span><span class="o">);</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">hasNextDouble</span><span class="o">())</span> <span class="o">{</span>
                 <span class="n">radius</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextDouble</span><span class="o">();</span>
-                <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">Math</span><span class="o">.</span><span class="na">PI</span><span class="o">*</span><span class="n">radius</span><span class="o">*</span><span class="n">radius</span> <span class="o">);</span>
+                <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">PI</span><span class="o">*</span><span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">()</span> <span class="o">);</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
         <span class="o">}</span>
         <span class="k">finally</span> <span class="o">{</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">in</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">in</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -1425,28 +1432,28 @@ will also implement this program to read from a binary file called
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">AreaFromRadiusBinary</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">File</span> <span class="n">inFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span> <span class="s">&quot;radiuses.bin&quot;</span> <span class="o">);</span>
-        <span class="n">File</span> <span class="n">outFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span> <span class="s">&quot;areas.bin&quot;</span> <span class="o">);</span>
+        <span class="n">File</span> <span class="n">inFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;radiuses.bin&quot;</span><span class="o">);</span>
+        <span class="n">File</span> <span class="n">outFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;areas.bin&quot;</span><span class="o">);</span>
         <span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="kt">double</span> <span class="n">radius</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
             <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span> <span class="n">inFile</span> <span class="o">));</span>
+                <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span><span class="n">inFile</span><span class="o">));</span>
             <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span> <span class="n">outFile</span> <span class="o">));</span>
-            <span class="k">while</span><span class="o">(</span> <span class="kc">true</span> <span class="o">)</span> <span class="o">{</span>
+                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="n">outFile</span><span class="o">));</span>
+            <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">radius</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readDouble</span><span class="o">();</span>
-                <span class="n">out</span><span class="o">.</span><span class="na">writeDouble</span><span class="o">(</span>  <span class="n">Math</span><span class="o">.</span><span class="na">PI</span><span class="o">*</span><span class="n">radius</span><span class="o">*</span><span class="n">radius</span> <span class="o">);</span>
+                <span class="n">out</span><span class="o">.</span><span class="na">writeDouble</span><span class="o">(</span> <span class="n">Math</span><span class="o">.</span><span class="na">PI</span><span class="o">*</span><span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">EOFException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{}</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">EOFException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
         <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">()</span> <span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
         <span class="o">}</span>
         <span class="k">finally</span> <span class="o">{</span>
-            <span class="k">try</span> <span class="o">{</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">){}</span>
-            <span class="k">try</span> <span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">){}</span>
+            <span class="k">try</span> <span class="o">{</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span>
+            <span class="k">try</span> <span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
@@ -1480,15 +1487,15 @@ method.</p>
         <span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
             <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
-            <span class="k">if</span><span class="o">(</span> <span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-c&quot;</span><span class="o">))</span>
-                <span class="n">compress</span><span class="o">(</span> <span class="n">in</span><span class="o">,</span> <span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">);</span>
-            <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-d&quot;</span><span class="o">))</span>
-                <span class="n">decompress</span><span class="o">(</span> <span class="n">in</span><span class="o">,</span> <span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-c&quot;</span><span class="o">))</span>
+                <span class="n">compress</span><span class="o">(</span><span class="n">in</span><span class="o">,</span> <span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+            <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-d&quot;</span><span class="o">))</span>
+                <span class="n">decompress</span><span class="o">(</span><span class="n">in</span><span class="o">,</span> <span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Bad input: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">()</span> <span class="o">);</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Bad input: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
         <span class="o">}</span>
-        <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">){}</span> <span class="o">}</span>
+        <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -1511,30 +1518,30 @@ safely close binary files.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">compress</span><span class="o">(</span> <span class="n">ObjectInputStream</span> <span class="n">in</span><span class="o">,</span>
-        <span class="n">String</span> <span class="n">file</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">compress</span><span class="o">(</span><span class="n">ObjectInputStream</span> <span class="n">in</span><span class="o">,</span>
+        <span class="n">String</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">temp</span><span class="o">,</span> <span class="n">current</span><span class="o">,</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
         <span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
             <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span> <span class="n">file</span> <span class="o">+</span> <span class="s">&quot;.compress&quot;</span> <span class="o">)</span> <span class="o">);</span>
+                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="n">file</span> <span class="o">+</span> <span class="s">&quot;.compress&quot;</span><span class="o">));</span>
             <span class="n">current</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
-            <span class="k">while</span><span class="o">(</span> <span class="o">(</span><span class="n">temp</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">())</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">)</span> <span class="o">{</span>
-                <span class="k">if</span><span class="o">(</span> <span class="n">temp</span> <span class="o">==</span> <span class="n">current</span> <span class="o">&amp;&amp;</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">127</span> <span class="o">)</span>
+            <span class="k">while</span><span class="o">((</span><span class="n">temp</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">())</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">temp</span> <span class="o">==</span> <span class="n">current</span> <span class="o">&amp;&amp;</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">127</span><span class="o">)</span>
                     <span class="n">count</span><span class="o">++;</span>
                 <span class="k">else</span> <span class="o">{</span>
-                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span> <span class="n">count</span> <span class="o">);</span>
-                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span> <span class="n">current</span> <span class="o">);</span>
+                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
+                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
                     <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
                     <span class="n">current</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
                 <span class="o">}</span>
-            <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span> <span class="n">count</span> <span class="o">);</span>
-            <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span> <span class="n">current</span> <span class="o">);</span>
+            <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
+            <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Compression failed: &quot;</span>
-                <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">()</span> <span class="o">);</span>
+                <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
         <span class="o">}</span>
         <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span> <span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span>
     <span class="o">}</span></code></pre>
@@ -1554,23 +1561,23 @@ safely close the output file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">decompress</span><span class="o">(</span> <span class="n">ObjectInputStream</span> <span class="n">in</span><span class="o">,</span>
-        <span class="n">String</span> <span class="n">file</span> <span class="o">)</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">decompress</span><span class="o">(</span><span class="n">ObjectInputStream</span> <span class="n">in</span><span class="o">,</span>
+        <span class="n">String</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">count</span><span class="o">,</span> <span class="n">temp</span><span class="o">;</span>
         <span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
             <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span> <span class="n">file</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span> <span class="mi">0</span><span class="o">,</span>
-                    <span class="n">file</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s">&quot;.compress&quot;</span><span class="o">))</span> <span class="o">));</span>
-            <span class="k">while</span><span class="o">(</span> <span class="o">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">())</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">)</span> <span class="o">{</span>
+                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span>
+                    <span class="n">file</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s">&quot;.compress&quot;</span><span class="o">))));</span>
+            <span class="k">while</span><span class="o">((</span><span class="n">count</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">())</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">temp</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readByte</span><span class="o">();</span>
-                <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
-                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span> <span class="n">temp</span> <span class="o">);</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">temp</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Decompression failed: &quot;</span>
-                <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">()</span> <span class="o">);</span>
+                <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
         <span class="o">}</span>
         <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span>
     <span class="o">}</span>
@@ -1616,33 +1623,33 @@ prints the odd ones.</p>
     <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">even</span><span class="o">;</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
-        <span class="n">Thread</span> <span class="n">writer1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span> <span class="k">new</span> <span class="n">ConcurrentFileAccess</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">);</span>
-        <span class="n">Thread</span> <span class="n">writer2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span> <span class="k">new</span> <span class="n">ConcurrentFileAccess</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span> <span class="o">);</span>
+        <span class="n">Thread</span> <span class="n">writer1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">ConcurrentFileAccess</span><span class="o">(</span><span class="kc">true</span><span class="o">));</span>
+        <span class="n">Thread</span> <span class="n">writer2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">ConcurrentFileAccess</span><span class="o">(</span><span class="kc">false</span><span class="o">));</span>
         <span class="n">writer1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
         <span class="n">writer2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="nf">ConcurrentFileAccess</span><span class="o">(</span> <span class="kt">boolean</span> <span class="n">even</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">ConcurrentFileAccess</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">even</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">even</span> <span class="o">=</span> <span class="n">even</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">if</span><span class="o">(</span> <span class="o">!</span><span class="n">even</span> <span class="o">)</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">even</span><span class="o">)</span>
             <span class="n">start</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
             <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span> <span class="s">&quot;concurrent.out&quot;</span><span class="o">,</span> <span class="kc">true</span> <span class="o">)</span> <span class="o">);</span>
-            <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">)</span> <span class="o">{</span>
-                <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">i</span> <span class="o">);</span>
+                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">&quot;concurrent.out&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">));</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
                 <span class="n">out</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="k">catch</span> <span class="o">(</span> <span class="n">FileNotFoundException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;concurrent.out not found!&quot;</span><span class="o">);</span>
         <span class="o">}</span>
-        <span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span> <span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span> <span class="o">();</span> <span class="o">}</span>
+        <span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span><span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span> <span class="o">();</span> <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -1671,7 +1678,7 @@ this behavior by changing the line below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">&quot;concurrent.out&quot;</span><span class="o">)</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">&quot;concurrent.out&quot;</span><span class="o">));</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1679,7 +1686,7 @@ this behavior by changing the line below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">&quot;concurrent.out&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">&quot;concurrent.out&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">));</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1776,7 +1783,7 @@ input.</p>
 beginning of a paragraph, and <code>&lt;/p&gt;</code>, which marks the end of a
 paragraph. A lesser known feature of HTML is that ampersand (<code>&amp;</code>) can
 mark special HTML entities used to produce symbols on a web page. For
-example, <code>&amp;pi;</code> is the entity for the Greek letter \(\pi\).
+example, <code>&amp;pi;</code> is the entity for the Greek letter <em>π</em>.
 Because of these features of the language, raw text that is going to be
 marked up in HTML should not contain less than signs (<code>&lt;</code>), greater than
 signs (<code>&gt;</code>), or ampersands (<code>&amp;</code>).</p>
@@ -1786,7 +1793,7 @@ and writes to an output text file also specified by the user. The output
 file should be exactly the same as the input file except that every
 occurrence of a less than sign should be replaced by <code>&amp;lt;</code>, every
 occurrence of a greater than sign should be replaced by <code>&amp;gt;</code>, and
-every occurrence of an ampersand should be replaced by <code>&amp;</code>.</p>
+every occurrence of an ampersand should be replaced by <code>&amp;amp;</code>.</p>
 </div>
 </li>
 <li>
@@ -1834,16 +1841,16 @@ are integer modulus and integer division.</p>
 variable</p>
 </li>
 <li>
-<p>Set \(sum = sum\mod 2^{32}\)</p>
+<p>Set <em>sum</em> = <em>sum</em> mod 2<sup>32</sup></p>
 </li>
 <li>
-<p>Let \(r = (sum\mod 2^{16}) + (sum \div 2^{16})\)</p>
+<p>Let <em>r</em> = (<em>sum</em> mod 2<sup>16</sup>) + (<em>sum</em> ÷ 2<sup>16</sup>)</p>
 </li>
 <li>
-<p>Let \(s = (r\mod 2^{16}) + (r \div 2^{16})\)</p>
+<p>Let <em>s</em> = (<em>r</em> mod 2<sup>16</sup>) + (<em>r</em> ÷ 2<sup>16</sup>)</p>
 </li>
 <li>
-<p>The final checksum is \(s\)</p>
+<p>The final checksum is <em>s</em></p>
 <div class="paragraph">
 <p>Remember that finding powers of 2 is easy with bitwise shifts. Write a
 program that opens a file for binary reading using <code>FileInputStream</code> and
@@ -1855,8 +1862,8 @@ checksum.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">sum</span> <span class="o">-</span><span class="n">s</span> <span class="n">wombat</span><span class="o">.</span><span class="na">dat</span>
-<span class="mi">6892</span> <span class="mi">213</span> <span class="n">wombat</span><span class="o">.</span><span class="na">dat</span></code></pre>
+<pre>sum -s wombat.dat
+6892 213 wombat.dat</pre>
 </div>
 </div>
 </li>

@@ -5,7 +5,7 @@ public class BaseballPlayer implements Serializable {
     private int RBI;
     private float battingAverage;
     
-    public BaseballPlayer( int homeRuns, int RBI, float battingAverage ) {
+    public BaseballPlayer(int homeRuns, int RBI, float battingAverage) {
         this.homeRuns = homeRuns;
         this.RBI = RBI;
         this.battingAverage = battingAverage;
