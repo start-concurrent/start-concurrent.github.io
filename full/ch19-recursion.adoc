@@ -12,12 +12,12 @@ ____
 
 The evil mastermind from <<ch13-concurrency#ch13-concurrency>> has
 returned with a new attempt at world domination. Since he now knows that
-you can use concurrency to crack his security code, this time he has
+you can use concurrency to crack his security code, this time he's
 hidden his deadly virus in a secret location protected by a complex maze
 of walls and passageways. Fortunately, you've been able to get a copy of
 the maze floor plan, but now you must write a program to find a path
-through the maze so you can steal the deadly virus before the evil
-mastermind releases it on the world.
+through it so you can steal the deadly virus before the evil
+mastermind unleashes it on the world.
 
 [.text-center]
 .Example of a maze to solve.
@@ -29,37 +29,36 @@ and turns, keeping track of where you've been, backtracking out of dead
 ends, and producing a resulting path once you make it through. You
 already have the basic tools necessary to solve this problem. You can,
 for example, represent the maze with a two-dimensional array of
-characters, where a plus ( `'+'` ) represents a wall and a space ( `' '` )
-represents a passageway. You could create a path through the maze by
+characters, where a plus (`+'+'+`) represents a wall and a space (`'{nbsp}'`)
+represents a passageway. You could mark a path through the maze by
 replacing a contiguous (vertical and horizontal but not diagonal)
-sequence of `' '` characters by `'*'` characters, that lead from the
+sequence of `'{nbsp}'` characters by `'*'` characters, leading from the
 starting square to the final square where the deadly virus is located.
 
-The difficulty is dead ends or, worse, loops. How do you keep track of
+The difficulties are dead ends and, worse, loops. How do you keep track of
 which paths you've tried that didn't work? While you could use
-additional data structures to store this additional information,
+additional data structures to store this information,
 _recursion_ is a solution technique that makes solving problems like
 this one surprisingly straightforward.
 
 === Concepts: Recursive problem solving
 
-The idea that we use to solve this maze problem is called recursion.
-Imagine that you are in a maze and have the choice to go right, left, or
-straight. No matter which of the three paths you take, you will probably
-be confronted by more choices of going right, left, or straight. You
-need to explore them all systematically. The process of systematically
-exploring the right path is similar to the process of systematically
-exploring the left path. The choice at this moment between left, right,
-and straight is in fact part of the same systematic process that you
-want to follow when you are in the left, right, or straight branches of
-the maze.
+The idea that we'll use to solve this maze problem is called recursion.
+Imagine you're in a maze and have the choice to go right, left, or
+straight. No matter which of the three paths you take, you'll probably
+be confronted by more choices of going right, left, or straight as you
+progress. You need to explore them all systematically. The process of
+systematically exploring the right path is similar to the process of
+systematically exploring the left path. The choice at this moment between
+left, right, and straight is in fact part of the same systematic process
+you want to follow when you're in the left, right, or straight branches
+of the maze.
 
 Solutions that can be described in terms of themselves are recursive.
 But what is recursion? How can describing something in terms of itself
 be useful? Since recursion sounds circular, how can it be applied to
 problem solving in Java? How does the computer keep track of these
-self-references? The following subsections address precisely these
-questions.
+self-references? The following subsections address these questions.
 
 ==== What is recursion?
 
@@ -67,39 +66,46 @@ In the context of computer science and mathematics, recursion means
 describing some repetitive process in terms of itself. Many complex
 things can be described elegantly using recursion.
 
-Consider the question, "`How old are you now?`" If you were 27, you
-could answer, "`I am one year older than I was last year.`" If then
+Consider the question, "`How old are you now?`" If you're 27, you
+could answer, "`I'm one year older than I was last year.`" If then
 asked, "`Well, how old were you last year?`" Again, you could answer,
 "`I was one year older than I was the year before.`" Assuming that the
 person who wanted to wanted to know your age was very patient, you could
-repeat this answer over and over, explaining that each year you have
-been one year older than the previous year. However, after asking you 27
-times about your age on the previous year, you would run out of years of
+repeat this answer over and over, explaining that each year you've
+been one year older than the previous year. However, after being asked 27
+times about your age on the previous year, you'd run out of years of
 life and be forced to answer, "`Zero years old.`"
 
 This absurd dialog shows an important feature of useful recursive
 definitions: They have at least one _base case_ and at least one
-_recursive case_. The base case is the part of the definition that is
-not described in terms of itself. It is a concrete answer. Without the
+_recursive case_. The base case is the part of the definition that's
+*not* described in terms of itself. It's a concrete answer. Without the
 base case, the process would never end, and the definition would be
-meaningless. The recursive case is the part of the definition that is
+meaningless. The recursive case is the part of the definition that *is*
 defined in terms of itself. Without the recursive case, the definition
 could only describe a finite set of things.
 
-In the example above, the base case is the age of zero years old. You
+In the example above, the base case is being zero years old. You
 have no age before that. The recursive case is any age greater than zero
-years old. We can use mathematical notation to describe your age in a
-given year. Here stem:[age(year)] is a function that gives the
-age you were during year stem:[year].
+. We can use mathematical notation to describe your age in a
+given year. Here _age_(_year_) is a function that gives the
+age you were during _year_.
 
-stem:[age(year) =
-\begin{cases} 0 & \text{if you were born in $year$} & \text{(Base Case)}
-\\
-  1 + age(year-1) & \text{if you were born before $year$} & \text{(Recursive Case)}
-\end{cases}]
+//[stem]
+//++++
+//age(year) =
+//\left\{\begin{array}{lll}
+//0 & \text{if you were born in $year$} &  \text{(Base Case)} \\
+//1 + age(year-1) & \text{if you were born before $year$} &  \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::ageRecursion.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
+
 
 To be meaningful, recursive cases should be defined in terms of simpler
-or smaller values. In English, it is equally correct to say that you are
+or smaller values. In English, it's equally correct to say that you are
 now a year younger than you'll be next year. Unfortunately, the age that
 you'll be next year is not any closer to a base case, making that
 recursion useless.
@@ -109,8 +115,8 @@ recursion useless.
 image::trees.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
 
-A recursive definition of your age suggests that recursion is all around
-us. It takes some work to write it down in formal notation, but
+A recursive definition for your age suggests that recursion is all around
+us. Though recursive definitions written in formal notation might seem artificial,
 self-similarity is a constant theme in art and nature. The branching of
 a trunk of a tree is similar to the branching of its limbs, which is
 similar to the branching of its branches, which in turn is similar to
@@ -120,39 +126,46 @@ of a tree to define a recursive data structure in
 starts with a simple Y-shaped branching. By successively replacing the
 branches with the previous shape, a tree is generated recursively.
 _Fractals_ are images generated by similar recursive techniques.
-Although many real trees exhibit recursive tendencies, they do not
+Although many real trees exhibit recursive tendencies, they don't
 follow rules consistently or rigidly.
 
 ==== Recursive definitions
 
-Although recursion has many fascinating applications, certain forms of
+Although recursion crops up throughout the world, certain forms of
 recursion are more useful for solving problems. As with many aspects of
-programming, there is a strong connection to mathematical principles.
+programming, the recursion we use has a strong connection to mathematical
+principles.
 
 In mathematics, a _recursive definition_ is one that is defined in terms
-of itself. It is common to define functions and sequences (and also
-sets) recursively. Functions (such as stem:[f(n)]) are usually
-defined in relation to the same function with a smaller input (such as
-stem:[f(n - 1)]). Sequences (such as stem:[s_n]) are
-usually defined in relation to earlier elements in the sequence (such as
-stem:[s_{n - 1}]).
+of itself. It's common to define functions, sequences, and  sets recursively.
+Functions, such as _f_(_n_), are usually defined in relation to the same
+function with a smaller input, such as _f_(_n_ - 1). Sequences, such as
+_s_~_n_~, are usually defined in relation to earlier elements in the sequence,
+such as _s_~_n_-1~.
 
 [[multiplicationDefinedRecursivelyExample]]
 .Multiplication defined recursively
 ====
 
 Even very common functions can be defined recursively. Consider the
-multiplication stem:[x \times y]. This multiplication means
-repeatedly adding the stem:[x] a total of stem:[y] times.
-If stem:[y] is a positive integer, we can describe this
+multiplication _x_ ⋅ _y_. This multiplication means
+repeatedly adding _x_ a total of _y_ times.
+If _y_ is a positive integer, we can describe this
 multiplication with the following recursive definition. Note the base
 case and recursive case.
 
-stem:[x \times y =
-\begin{cases} x & \text{if  $y = 1$} & \text{(Base Case)}
-\\
-x + \left(x \times (y - 1)\right) & \text{if $y > 1$} & \text{(Recursive Case)}
-\end{cases}]
+//[stem]
+//++++
+//x \cdot y =
+//\left\{\begin{array}{lll}
+//x & \text{if  $y = 1$} & \text{(Base Case)} \\
+//x + \left(x \cdot (y - 1)\right) & \text{if $y > 1$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::multiplicationRecursion.svg[scaledwidth=50%,pdfwidth=50%,width=50%]
+
 
 Multiplication seems like such a basic operation that there would be no
 need to have such a definition. Yet mathematicians often use multiple
@@ -168,25 +181,30 @@ definition provides intuition for creating more complex definitions.
 ====
 
 Another mathematical function with a natural recursive definition is the
-factorial function, often written stem:[n!]. The factorial
+factorial function, often written __n__!. The factorial
 function is used heavily in probability and counting. The value of
-stem:[n! = n
-\cdot(n - 1)\cdot(n - 2) \ldots 3 \cdot 2 \cdot 1]. Mathematicians
-like recursive definitions because they are able to describe functions
-and sequences precisely without using ellipses (stem:[\ldots]).
+__n__! = _n_ ⋅ (_n_ - 1) ⋅ (_n_ - 2) ⋅ ... ⋅ 3 ⋅ 2 ⋅ 1. Mathematicians
+like recursive definitions because they're able to describe functions
+and sequences precisely without using ellipses (...).
 
-stem:[n! =
-\begin{cases} 1 & \text{if  $n = 0$} & \text{(Base Case)}
-\\
-n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
-\end{cases}]
 
-Note that the base case gives stem:[1] as the answer when
-stem:[n = 0]. By convention stem:[0! = 1]. Thus, this
-definition correctly gives stem:[0! = 1],
-stem:[1! = 1\cdot 0!
-= 1], stem:[2! = 2\cdot 1! = 2],
-stem:[3! = 3\cdot 2! = 6], and so on.
+//[stem]
+//++++
+//n! =
+//\left\{\begin{array}{lll}
+//1 & \text{if  $n = 0$} & \text{(Base Case)} \\
+//n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::factorialRecursion.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
+
+Note that the base case gives 1 as the answer when
+_n_ = 0. By convention 0! = 1. Thus, this
+definition correctly gives 0! = 1,
+1! = 1 ⋅ 0! = 1, 2! = 2 ⋅ 1! = 2,
+3! = 3 ⋅ 2! = 6, and so on.
 
 ====
 
@@ -194,65 +212,72 @@ stem:[3! = 3\cdot 2! = 6], and so on.
 ====
 
 The Fibonacci sequence is an infinite sequence of integers starting with
-1, 1, 2, 3, 5, 8, 13, 21, stem:[\ldots]. Each term after the two
+1, 1, 2, 3, 5, 8, 13, 21, .... Each term after the two
 initial 1s is the sum of the previous two terms in the sequence.
 Fibonacci has many interesting properties and crops up in surprisingly
-diverse areas of mathematics. It was originally used to model the growth
+diverse areas of mathematics. It was originally developed to model the growth
 of rabbit populations.
 
 The Fibonacci sequence also has a natural recursive mathematical
 definition. Indeed, you may have noticed that we described each term as
 the sum of the two previous terms. We can formally define the
-stem:[n]^th^ Fibonacci number stem:[F_n] as follows,
-starting with stem:[n=0]. stem:[F_n=
-\begin{cases} 1 & \text{if  $n=0$ or  $n = 1$} & \text{(Base
-Cases)}
-\\
-F_{n-1}+F_{n-2} & \text{if $n>1$} & \text{(Recursive Case)}
-\end{cases}]
+_n_^th^ Fibonacci number _F_~_n_~ as follows,
+starting with _n_ = 0.
 
-Since the stem:[F_n] depends on the two previous terms, it is
-necessary to have two base cases. The Fibonacci sequence is a special
+//[stem]
+//++++
+//F_n =
+//\left\{\begin{array}{lll}
+//1 & \text{if  $n=0$ or  $n = 1$} & \text{(Base Cases)} \\
+//F_{n-1}+F_{n-2} & \text{if $n>1$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::fibonacciRecursion.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
+
+
+Since the _F_~_n_~ depends on the two previous terms, it's
+necessary to have *two* base cases. The Fibonacci sequence is a special
 kind of Lucas sequence. Other Lucas sequences specify different values
-for the two base cases (and sometimes coefficients to multiply the
-previous terms by).
+for the two base cases and sometimes coefficients to multiply the
+previous terms by.
 
 ====
 
 ==== Iteration vs. recursion
 
-These mathematical definitions are interesting, but what is their
-relationship to Java code? So far, we have considered algorithms that
+These mathematical definitions are interesting, but what's their
+relationship to Java code? So far, we've considered algorithms that
 are iterative in nature: processing is performed as a sequence of
 operations on elements of a sequential data structure. We sum the
 elements of an array by iterating through them from first to last. We
 multiply two matrices by using nested `for` loops to sequence through
-the matrix contents in the proper order. Similarly, one method may make
+the matrix contents in the proper order. Similarly, one method might make
 a sequence of one or more calls to other methods. We're confident that
 such computations terminate because we start at the beginning and work
 to the end of a finite structure. But what if the structure is not a
 simple linear or multidimensional array? The path we're trying to find
-through the maze is of unknown length and may not take a "`straight
-line`" through the array.
+through the maze is of unknown length and complexity.
 
-A method may call other methods to complete its operation. For example,
+A method might call other methods to complete its operation. For example,
 a method that sorts a list of `String` values calls another method to do
 pairwise comparison of the values in the list. A method that calls
 *itself*, either directly or indirectly, is called a _recursive_ method.
 
-A recursive method may seem like a circular argument that never ends. In
+A recursive method might seem like a circular argument that never ends. In
 fact, a recursive method only calls itself under certain circumstances.
-Other times, it does not. A recursive method has the same two parts that
-a mathematical recursive definition has.
+In other circumstances, it does not. A recursive method has the same two parts
+that a mathematical recursive definition has.
 
-Base case:::
-  The operation being computed is done without any recursive calls.
-Recursive case:::
-  The operation is broken down into smaller pieces, one or more of which
-  results in a recursive call to the method itself.
+* *Base case*  +
+The operation being computed is done without any recursive calls.
+* *Recursive case*  +
+The operation is broken down into smaller pieces, one or
+more of which results in a recursive call to the method itself.
 
-Each time a method calls itself recursively, it does so on a smaller
-problem. Eventually it reaches a base case, and the recursion
+Each time a method calls itself recursively it does so on a smaller
+problem. Eventually, it reaches a base case, and the recursion
 terminates.
 
 A recursive method is useful when a problem can be broken down into
@@ -265,16 +290,16 @@ Recursive methods are often surprisingly small given their complexity.
 Each recursive call only makes a single step forward in the process of
 solving the problem. In fact, it can appear that the problem is never
 solved. The code has something like a "`leap of faith`" inside of it.
-Assuming that you can solve a smaller subproblem, how do you put the
+Assuming you can solve a smaller subproblem, how do you put the
 solutions together to solve the full problem? This assumption is the
 leap of faith, but it works out as long as the subproblems get broken
 down into smaller and smaller pieces that eventually reach a base case.
 
 From a theoretical standpoint, any problem that can be solved
 iteratively can be solved recursively, and vice versa. Iteration and
-recursion are equivalent in computational power. Sometimes it is more
+recursion are equivalent in computational power. Sometimes it's more
 efficient or more elegant to use one approach or the other, and some
-languages are designed to work better with a given approach.
+languages are designed to work better with a particular approach.
 
 ==== Call stack
 
@@ -282,12 +307,14 @@ Many programmers who are new to recursion feel uncomfortable about the
 syntax. How can a method call itself? What does that even mean?
 
 Recursion in Java is grounded in the idea of a call stack. We discuss
-the stack abstract data type in <<ch18-dynamic-data-structures#ch18-dynamic-data-structures>>. A similar structure is used to control the flow of control
-of a program as it calls methods.
+the stack abstract data type in
+<<ch18-dynamic-data-structures#ch18-dynamic-data-structures>>. A similar
+structure is used to control the flow of control of a program as it calls
+methods.
 
 Recall that a stack is a first in, last out (FILO) data structure. Each
 time a method is called, its local variables are put on the call stack.
-As the method executes, a pointer to the current operation it is
+As the method executes, a pointer to the current operation it's
 executing is kept on the call stack as well. This collection of local
 variables and execution details for a method call is called the _stack
 frame_ or _activation record_. When another method is called, it pushes
@@ -298,7 +325,7 @@ execution) off the call stack.
 
 A recursive method is called in exactly the same way. It puts another
 copy of its stack frame on the call stack. Each call of the method has
-its own stack frame and operates independently. There is no way to
+its own stack frame and operates independently. There's no way to
 access the variables from one call to the next, other than by passing in
 parameters or returning values.
 
@@ -314,9 +341,9 @@ image::recursivecalls.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
 <<figure-recursive_returns>> shows the stack frames popping off
 the call stack as each call to `factorial()` returns. As the answers are
-returned, they are incorporated into the answer that is generated and
+returned, they're incorporated into the answer that's generated and
 returned to the next caller in the sequence until the final answer `24`
-(stem:[4!]) is returned to `main()`.
+(4!) is returned to `main()`.
 
 [[figure-recursive_returns]]
 .Recursive methods returning results to their callers.
@@ -325,15 +352,15 @@ image::recursivereturns.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
 === Syntax: Recursive methods
 
-Unlike many *Syntax* sections in other chapters, there is no new Java
+Unlike many *Syntax* sections in other chapters, there's no new Java
 syntax to introduce here. Any method that calls itself, directly or
 indirectly, is a recursive method. Recursive methods are simply methods
 like any others, called in the normal way.
 
 The real difficulty in learning to program recursively lies in breaking
-out of the way you are used to thinking about program control flow. All
-that you have learned about solving problems with iteration in previous
-chapters may make it harder for you to embrace recursion.
+out of the way you're used to thinking about program control flow. All
+that you've learned about solving problems with iteration in previous
+chapters might make it harder for you to embrace recursion.
 
 Iteration views the whole problem at once and tries to sequence all the
 pieces of the solution in some organized way. Recursion is only
@@ -347,7 +374,7 @@ call. Don't rush it!
 The use of recursion in languages like Java owes much to the development
 of _functional programming_. In many functional languages (such as
 Scheme), there are no loops, and *only* recursion is allowed. In a
-number of these languages, there is no assignment either. Each variable
+number of these languages, there's no assignment either. Each variable
 has one value for its entire lifetime, and that value comes as a
 parameter from whatever method called the current method.
 
@@ -367,18 +394,18 @@ state of fields or class variables. Again, sometimes changing external
 state is necessary, but recursive methods are meant to take in only
 their input parameters and give back only return values. Recursive code
 that reads and writes variables inside of objects or classes can be
-difficult to understand and debug, since it depends on outside data.
+difficult to understand and debug since it depends on outside data.
 
 With this information as background, we focus on examples for the rest
 of this section. Because recursion is a new way of thinking, approach
 these examples with an open mind. Many students have the experience that
 recursion makes no sense until they see the right example. Then, the way
-it works suddenly "`clicks.`" Do not be discouraged if recursion seems
+it works suddenly "`clicks.`" Don't be discouraged if recursion seems
 difficult at first.
 
 In this section, we work through examples of factorial computation,
-Fibonacci numbers, the classic Tower of Hanoi problem, exponentiation.
-These problems are mathematical in nature because the mathematical
+Fibonacci numbers, the classic Tower of Hanoi problem, and exponentiation.
+These problems are mathematical in nature because mathematical
 recursion is easy to model in code. The next section applies recursion
 to processing data structures.
 
@@ -389,23 +416,29 @@ In our first example of a recursive implementation, we return to the
 factorial function. Recall the recursive definition that describes the
 function.
 
-stem:[n! =
-\begin{cases} 1 & \text{if $n = 0$} & \text{(Base Case)}
-\\
-n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
-\end{cases}]
+//[stem]
+//++++
+//n! =
+//\left\{\begin{array}{lll}
+//1 & \text{if  $n = 0$} & \text{(Base Case)} \\
+//n \cdot (n-1)! & \text{if $n>0$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::factorialRecursion.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
 
 By translating this mathematical definition almost directly into Java,
 we can generate a method that computes the factorial function.
 
 [source, java]
 ----
-    public static long factorial(int n) {
-        if (n == 0)     // Base case
-            return 1;
-        else            // Recursive case
-            return n * factorial(n-1);
-    }
+public static long factorial(int n) {
+	if(n == 0)     // Base case
+		return 1;
+	else            // Recursive case
+		return n * factorial(n-1);
+}
 ----
 
 Note the base case and recursive case are exactly the same as in the
@@ -419,14 +452,20 @@ enough to fit inside of an `int`.
 .Fibonacci implemented recursively
 ====
 
-Let us return to the recursive definition of Fibonacci.
+Let's return to the recursive definition of Fibonacci.
 
-stem:[F_n=
-\begin{cases} 1 & \text{if  $n=0$ or $n = 1$} & \text{(Base
-Cases)}
-\\
-F_{n-1}+F_{n-2} & \text{if  $n>1$} & \text{(Recursive Case)}
-\end{cases}]
+//[stem]
+//++++
+//F_n =
+//\left\{\begin{array}{lll}
+//1 & \text{if  $n=0$ or  $n = 1$} & \text{(Base Cases)} \\
+//F_{n-1}+F_{n-2} & \text{if $n>1$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::fibonacciRecursion.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
+
 
 Like factorial, this definition translates naturally into a recursive
 method in Java.
@@ -434,14 +473,14 @@ method in Java.
 [source, java]
 ----
 public static int fibonacci(int n) {
-    if( n == 0 || n == 1 )  // Base cases
+    if(n == 0 || n == 1)  // Base cases
         return 1;
-    else                    // Recursive case
+    else                  // Recursive case
         return fibonacci(n-1) + fibonacci(n-2);
 }
 ----
 
-One significant problem with this example is performance. In this case,
+One significant problem with this implementation is performance. In this case,
 the double recursion performs a great deal of redundant computation.
 
 ****
@@ -461,9 +500,9 @@ the recursion and store the result in the array.
 
 [source, java]
 ----
-public static int fibonacci( int n, int[] results ) {
-    if( results[n] == 0 ) {
-        if( n == 0 || n == 1 )
+public static int fibonacci(int n, int[] results) {
+    if(results[n] == 0) {
+        if(n == 0 || n == 1)
             results[n] = 1;
         else
             results[n] = fibonacci(n-1) + fibonacci(n-2);
@@ -472,7 +511,7 @@ public static int fibonacci( int n, int[] results ) {
 }
 ----
 
-This change makes the computation of the stem:[n]^th^ Fibonacci
+This change makes the computation of the _n_^th^ Fibonacci
 number much more efficient; however, even more efficient approaches are
 described in the exercises.
 ====
@@ -492,10 +531,10 @@ arranged in a tower on one pole in decreasing size, with the smallest
 diameter disk on top and the largest on the bottom.
 <<figure-hanoi>> shows an example of the puzzle. The goal is to
 move all the disks from the initial pole to the final pole, with two
-restrictions:
+restrictions.
 
-1.  only one disk can be moved at a time
-2.  a larger disk can never be placed on top of a smaller disk
+.  Only one disk can be moved at a time.
+.  A larger disk can never be placed on top of a smaller disk.
 
 [[figure-hanoi]]
 .Tower of Hanoi puzzle with 4 disks on the initial pole.
@@ -505,15 +544,15 @@ image::hanoi.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 The extra pole is used as a holder for intermediate moves. The idea
 behind the recursive solution follows.
 
-Base Case:::
-  Moving one disk is easy. Just move it from the pole it's on to the
-  destination pole.
-Recursive Case:::
-  In order to move stem:[n > 1] disks from one pole to another,
-  we can move stem:[n - 1] disks to an intermediate pole, move
-  the stem:[n]^th^ disk to the destination pole, then move the
-  stem:[n - 1] disks from the intermediate pole to the
-  destination pole.
+* *Base Case* +
+Moving one disk is easy. Just move it from the pole it's on to the
+destination pole.
+* *Recursive Case* + 
+In order to move _n_ > 1 disks from one pole to another,
+we can move _n_ - 1 disks to an intermediate pole, move
+the _n_^th^ disk to the destination pole, and then move the
+_n_ - 1 disks from the intermediate pole to the
+destination pole.
 
 The Tower of Hanoi solution in Java translates this outline into code.
 
@@ -528,7 +567,7 @@ A legend tells of monks that are solving the Tower of Hanoi puzzle with
 64 disks. The legend predicts that the world will end when they finish.
 Run the implementation above with different numbers of disks to see how
 long the sequence of moves is. Try small numbers of disks, since large
-numbers of disks takes a very long time.
+numbers of disks take a very long time.
 
 ====
 
@@ -544,18 +583,24 @@ excruciatingly long amount of time.
 
 However, we can apply recursion to many practical problems and get
 efficient solutions. Consider the problem of exponentiation, which looks
-trivial: Given a rational number stem:[a] and a positive integer
-stem:[n], find the value of stem:[a^n].
+trivial: Given a rational number _a_ and a positive integer
+_n_, find the value of _a_^_n_^.
 
 It's tempting to call `Math.pow(a, n)` or to use a short `for` loop to
 compute this value, but what if neither tool existed in Java? A simple
 recursive formulation can describe exponentiation.
 
-stem:[a^n =
-\begin{cases} a & \text{if $n=1$} & \text{(Base case)}
-\\
-a \cdot a^{n - 1} & \text{if $n>1$} & \text{(Recursive case)}
-\end{cases}]
+//[stem]
+//++++
+//a^n =
+//\left\{\begin{array}{lll}
+//a & \text{if $n=1$} & \text{(Base case)} \\
+//a \cdot a^{n - 1} & \text{if $n>1$} & \text{(Recursive case)}
+//\end{array}\right.
+//++++
+
+[.text-center]
+image::exponentRecursion1.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
 
 As with factorial and Fibonacci, directly converting the recursive
 definition into Java syntax yields a method that computes the correct
@@ -564,42 +609,47 @@ value.
 [source, java]
 ----
 public static double power(double a, int n) {
-    if( n == 1 )    // Base case
+    if(n == 1)    // Base case
         return a;
-    else            // Recursive case
+    else          // Recursive case
         return a*power(a, n - 1);
 }
 ----
 
 Admittedly, this method only works for positive integer values of
-stem:[n]. Ignoring that limitation, what can we say about its
-efficiency? For any legal value of stem:[n], the method is called
-stem:[n] times. If stem:[n] has a small value, like 2 or
-3, the process is quick. But if stem:[n] is 1,000,000 or so, the
+_n_. Ignoring that limitation, what can we say about its
+efficiency? For any legal value of _n_, the method is called
+_n_ times. If _n_ has a small value, like 2 or
+3, the process is quick. But if _n_ is 1,000,000 or so, the
 method might take a while to finish. Another problem is that stack size
 is limited. On most systems, the JVM crashes with a `StackOverflowError`
-if a method tries to call itself recursively a 1,000,000 times.
+if a method tries to call itself recursively 1,000,000 times.
 
-If we limit stem:[n] to a power of 2, we can do something clever
+If we limit _n_ to a power of 2, we can do something clever
 that makes the method much more efficient with many fewer recursive
-calls. Consider this alternative recursion definition of exponentiation.
+calls. Consider this alternative recursive definition of exponentiation.
 
-stem:[a^n =
-\begin{cases} a & \text{if  $n=1$} & \text{(Base Case)}
-\\
-\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$} & \text{(Base Case)}
-\end{cases}]
+//[stem]
+//++++
+//a^n =
+//\left\{\begin{array}{lll}
+//a & \text{if  $n=1$} & \text{(Base Case)} \\
+//\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
 
-Recalling basic rules of exponents,
-stem:[a^n = \left(a^{\frac{n}{2}}\right)^2], but what does that
-buy us? If we structure our method correctly, we cut the size of
-stem:[n] in half at each recursive step instead of only reducing
-stem:[n] by 1.
+[.text-center]
+image::exponentRecursion2.svg[scaledwidth=45%,pdfwidth=45%,width=45%]
+
+
+Recalling basic rules of exponents, it's true that _a_^_n_^ = (_a_^_n_/2^)^2^,
+but what does that buy us? If we structure our method correctly, we cut the
+size of _n_ in half at each recursive step instead of only reducing _n_ by 1.
 
 [source, java]
 ----
 public static double power(double a, int n) {
-    if( n == 1 )    // Base case
+    if(n == 1)    // Base case
         return a;
     else {          // Recursive case
         double temp = power(a, n/2);
@@ -608,39 +658,48 @@ public static double power(double a, int n) {
 }
 ----
 
-Note that we only make the recursive call once and save it in `temp`. If
-we made two recursive calls, we would no longer be more efficient than
-the previous method. That version took stem:[n] recursive calls.
+Note that we only make the recursive call once and save its result in `temp`.
+If we made two recursive calls, we would no longer be more efficient than
+the previous method. That version took _n_ recursive calls.
 How efficient is this version? The answer is the number of times you
-have to cut stem:[n] in half before you get 1. Let's call that
-value stem:[x]. Recall that stem:[n] is a power of 2,
-meaning that stem:[n = 2^k] for some integer
-stem:[k \geq 0].
+have to cut _n_ in half before you get 1. Let's call that
+value _x_. Recall that _n_ is a power of 2,
+meaning that _n_ = 2^_k_^ for some integer
+_k_ ≥ 0.
 
-stem:[\begin{aligned}
-\left(\frac{1}{2}\right)^x \cdot n &= 1\\
-2^x\left(\frac{1}{2}\right)^x \cdot n &= 2^x\\
-n &= 2^x\\
-2^k &= 2^x\\
-k &= x\\
-\log_2 n &= x\\\end{aligned}]
 
-In other words, the number of times you have to divide stem:[n]
-in half to get 1 is the logarithm base 2 of stem:[n], written
-stem:[\log_2 n]. The logarithm function is the inverse of
+//[stem]
+//++++
+//\begin{aligned}
+//\left(\frac{1}{2}\right)^x \cdot n &= 1\\
+//2^x\left(\frac{1}{2}\right)^x \cdot n &= 2^x\\
+//n &= 2^x\\
+//2^k &= 2^x\\
+//k &= x\\
+//\log_2 n &= x\\
+//\end{aligned}
+//++++
+
+[.text-center]
+image::logarithm.svg[scaledwidth=15%,pdfwidth=15%,width=15%]
+
+
+In other words, the number of times you have to divide _n_
+in half to get 1 is the logarithm base 2 of _n_, written
+log~2~ _n_. The logarithm function is the inverse of
 exponentiation. It cuts any number down to size very quickly (just as
 exponentiation blows up the value of a number very quickly). For
-example, stem:[2^{20} = 1,048,576]. Thus,
-stem:[\log_2 1,048,576 = 20]. The original version of `power()`
+example, 2^20^ = 1,048,576. Thus,
+log~2~ 1,048,576 = 20. The original version of `power()`
 would have to make 1,048,576 calls to raise a number to that power. This
 second version would only have to make 20 calls.
 
-It is critical that stem:[n] is a power of 2 (1, 2, 4, 8, …),
-otherwise the process of repeatedly cutting stem:[n] in half
+It's critical that _n_ is a power of 2 (1, 2, 4, 8, ...);
+otherwise, the process of repeatedly cutting _n_ in half
 loses some data due to integer division. The problem is that, at some
-point in the recursion, the value of stem:[n] is odd unless you
-start with a power of 2. There is a way to extend this clever approach
-to all values of stem:[n], even and odd, but we leave it as an
+point in the recursion, the value of _n_ will become odd unless you
+start with a power of 2. There's a way to extend this clever approach
+to all values of _n_, even and odd, but we leave it as an
 exercise.
 ====
 
@@ -649,29 +708,29 @@ exercise.
 ****
 
 Recursion offers elegant ways to compute mathematical functions like
-those we have explored in this section. Recursion also offers powerful
+those we've explored in this section. Recursion also offers powerful
 ways to manipulate data structures. As we show in the next section,
 recursive methods are especially well suited to use with recursive data
 structures.
 
 === Syntax: Recursive data structures
 
-Because recursion can be used to do anything that iteration can do, it
-is clear that data structures can be processed recursively. For example,
+Because recursion can be used to do anything that iteration can do, it's
+clear that data structures can be processed recursively. For example,
 the following recursive method reverses the contents of an array. It
-keeps track of the position in the array it is swapping with the
+keeps track of the position it's swapping in the array with the
 `position` parameter. This method is initially called with a value of
 `0` passed as an argument for `position`.
 
 [source, java]
 ----
-public static void reverse( int[] array, int position ) {
-    if( position < array.length/2 ) {
-        int temp = array[position];
-        array[position] = array[array.length - position - 1];
-        array[array.length - position - 1] = temp;
-        reverse( array, position + 1 );
-    }
+public static void reverse(int[] array, int position) {
+	if(position < array.length/2) {
+		int temp = array[position];
+		array[position] = array[array.length - position - 1];
+		array[array.length - position - 1] = temp;
+		reverse(array, position + 1);
+	}
 }
 ----
 
@@ -679,14 +738,14 @@ Note that nothing is done in the base case for this recursive method.
 The recursion swaps the first element of the array (at index `0`) with
 the last (at index `array.length - 1`). Recursion continues until
 `position` has reached half the length of `array`. If execution
-continued past the halfway point, it would begin to swap elements that
+continued past the halfway point, it would begin to re-swap elements that
 had already been swapped.
 
 ****
 <<recusivePalindromeExercise>>
 ****
 
-Although it is possible to reverse an array recursively, there is
+Although it's possible to reverse an array recursively, there's
 usually no advantage in doing so. We introduced bubble sort and selection
 sort in previous chapters, but neither of these algorithms is very fast.
 Many of the best sorting algorithms are recursive, as in the following
@@ -697,30 +756,30 @@ example of merge sort.
 .Merge sort
 ====
 
-Merge sort is an efficient sorting algorithm that is usually implemented
+Merge sort is an efficient sorting algorithm that's often implemented
 recursively. The idea of the sort is to break a list of items in half
 and recursively merge sort each half. Then, these two sorted halves are
 merged back together into the final sorted list. The base case of the
 recursion is when there's only a single item in the list, since a list
 with only one thing in it is, by definition, sorted.
 
-Here is a method that recursively sorts an `int` array using the merge
+Here's a method that recursively sorts an `int` array using the merge
 sort algorithm.
 
 [source, java]
 ----
-public static void mergeSort( int[] array ) {
-    if( array.length > 1 ) {
-        int[] a = new int[array.length / 2];
-        int[] b = new int[array.length - a.length];
-        for( int i = 0; i < a.length; ++i )
-            a[i] = array[i];
-        for( int i = 0; i < b.length; ++i )
-            b[i] = array[a.length + i];
-        mergeSort( a );
-        mergeSort( b );
-        merge( array, a, b );
-    }
+public static void mergeSort(int[] array) {
+	if(array.length > 1) {
+		int[] a = new int[array.length/2];
+		int[] b = new int[array.length - a.length];
+		for(int i = 0; i < a.length; ++i)
+			a[i] = array[i];
+		for(int i = 0; i < b.length; ++i)
+			b[i] = array[a.length + i];
+		mergeSort(a);
+		mergeSort(b);
+		merge(array, a, b);
+	}
 }
 ----
 
@@ -739,15 +798,15 @@ much of the real work in the algorithm.
 
 [source, java]
 ----
-public static void merge( int[] array, int[] a, int[] b ) {
+public static void merge(int[] array, int[] a, int[] b) {
     int aIndex = 0;
     int bIndex = 0;
-    for( int i = 0; i < array.length; ++i ) {
-        if( bIndex >= b.length )
+    for(int i = 0; i < array.length; ++i) {
+        if(bIndex >= b.length)
             array[i] = a[aIndex++];
-        else if( aIndex >= a.length )
+        else if(aIndex >= a.length)
             array[i] = b[bIndex++];
-        else if( a[aIndex] <= b[bIndex] )
+        else if(a[aIndex] <= b[bIndex])
             array[i] = a[aIndex++];
         else
             array[i] = b[bIndex++];
@@ -767,13 +826,13 @@ either array. That's why the first two `if` statements in the `merge()`
 method check to see if the `bIndex` or the `aIndex` is already past the
 last element in its respective array. If so, the next element from the
 other array is automatically used. By the time the third `if` statement
-is reached, we are certain that both indexes are valid and can compare
+is reached, we're certain that both indexes are valid and can compare
 the elements at those locations to see which is smaller.
 
 Sorting lists using the merge sort algorithm seems more complicated than
 using bubble sort or selection sort, but this additional complication
 pays dividends. For large lists, merge sort performs much faster than
-either of those sorts. In fact, it is comparable in speed to the best
+either of those sorts. In fact, its speed is comparable to the best
 general sorting algorithms that are possible.
 ====
 
@@ -783,8 +842,8 @@ general sorting algorithms that are possible.
 
 Although recursive sorting algorithms are useful for arrays, recursion
 really shines when manipulating _recursive data structures_. A recursive
-data structure is one that is defined in terms of itself. For example,
-class `X` is recursive if there is a field inside `X` with type `X`.
+data structure is one that's defined in terms of itself. For example,
+class `X` is recursive if there's a field inside `X` with type `X`.
 
 [source, java]
 ----
@@ -794,21 +853,22 @@ public class X {
 }
 ----
 
-The linked list examples from <<ch18-dynamic-data-structures#ch18-dynamic-data-structures>> are recursive data structures, since a linked list node is
-defined in terms of itself. You may not have thought of the linked list
-`Node` class as being recursive since it simply has a reference to
-another `Node` inside it. However, this self-reference is the essence of
-a recursive data structure.
+The linked list examples from
+<<ch18-dynamic-data-structures#ch18-dynamic-data-structures>> are recursive
+data structures, since a linked list node is defined in terms of itself. You
+might not have thought of the linked list `Node` class as being recursive since
+it simply has a reference to another `Node` inside it. However, this
+self-reference is the essence of a recursive data structure.
 
 Data structures are often defined recursively. We typically need to
 represent an unbounded collection of data, but we always write bounded
 programs to describe the data. A recursive data structure allows us to
-bridge the gap between a compile-time, fixed length definition and a
+bridge the gap between a compile-time, fixed-length definition and a
 run-time, unbounded collection of objects.
 
 Recursive data structures have a base case to end the recursion.
 Typically, the end of the recursion is indicated by a link with a `null`
-value. For example, in the last node of a linked list, the link field is
+value. For example, in the last node of a linked list, the `next` field is
 `null`. Unsurprisingly, recursive methods are frequently used to
 manipulate recursive data structures.
 
@@ -834,11 +894,11 @@ include::{programsdir}/IterativeListSize.java[]
 An alternative way to count the number of elements in a linked list is
 to use the natural recursion of the linked list itself. We can say that
 the length of a linked list is 0 if the list is empty (the current link
-is `null`), otherwise, it is one more than the size of the rest of the
+is `null`); otherwise, it's one more than the size of the rest of the
 list.
 
 <<RecursiveListSizeProgram>> counts the elements in a linked
-list using this recursive procedure. Note that there is a non-recursive
+list using this recursive procedure. Note that there's a non-recursive
 `size()` method that calls the recursive `size()` method. This
 non-recursive method is called a _proxy method_. The recursive method
 requires access to the internals of the data structure. The proxy method
@@ -863,25 +923,25 @@ include::{programsdir}/RecursiveListSize.java[]
 ==== Trees
 
 A linked list models a linear, one-to-one relationship between its
-elements. Each item in the list is linked to a maximum of one following
-element. Another useful relationship to model is a hierarchical,
+elements since each item in the list is linked to a maximum of one following
+item. Another useful relationship to model is a hierarchical,
 one-to-many relationship: parent to children, boss to employees,
 directory to files, and so on. These relationships can be modeled using
 a _tree_ structure, which begins with a single _root_, and proceeds
-through _branches_, to the _leaves_. Typically, the elements of a tree
-are also called _nodes_, with three special cases:
+through _branches_ to the _leaves_. Typically, the elements of a tree
+are also called _nodes_, with the three following special cases.
 
-Root node:::
-  The root of the tree has no parents.
-Leaf node:::
-  A leaf is at the edge of a tree and has no children.
-Interior node:::
-  An interior node has a parent and at least one child; it is neither
-  the root nor a leaf.
+* *Root node*  +
+The root of the tree has no parents.
+* *Leaf node*  +
+A leaf is at the edge of a tree and has no children.
+* *Interior node* +
+An interior node has a parent and at least one child. It's
+neither the root nor a leaf.
 
 <<figure-tree_visualization>> shows a visualization of a tree. In
 nature, a tree has its root at the bottom and branches upward. Since the
-root is the starting point for a tree data structure, it is almost
+root is the starting point for a tree data structure, it's almost
 always drawn at the top.
 
 [[figure-tree_visualization]]
@@ -890,8 +950,8 @@ image::treevisualization.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
 
 Abstractly, a tree is either empty (the base case) or contains
-references to 0 or more other trees (the recursive case). Trees are very
-useful for storing and retrieving sortable data efficiently. Some
+references to 0 or more other trees (the recursive case). Trees are
+useful for storing and retrieving sorted data efficiently. Some
 applications include dictionaries, catalogs, ordered lists, and any
 other sorted set of objects. For these purposes, we can define an
 abstract data type that includes operations such as `add()` and
@@ -901,33 +961,33 @@ abstract data type that includes operations such as `add()` and
 <<treeInterfaceExercise>>
 ****
 
-A special case of a tree that is used frequently is a _binary tree_, in
+A special case of a tree that's used frequently is a _binary tree_, in
 which each node references at most two other trees.
 
 [[binarySearchTreeExample]]
 .Binary search tree
 ====
 
-A _binary search tree_ is a binary tree with the following three
-properties.
+A _binary search tree_ is a further special case of a binary tree with the
+following three properties.
 
-1.  The value in the left child of the root is smaller than the value in
+.  The value in the left child of the root is smaller than the value in
 the root.
-2.  The value in the right child of the root is larger than the value in
+.  The value in the right child of the root is larger than the value in
 the root.
-3.  Both the left and the right subtrees are binary search trees.
+.  Both the left and the right subtrees are binary search trees.
 
 This recursive definition describes a tree that makes items with a
-natural ordering easy to find. If you are looking for an item, you first
+natural ordering easy to find. If you're looking for an item, you first
 look at the root of the tree. If the item you want is in the root,
 you've found it! If the item you want is smaller than the root, go left.
 If the item you want is larger than the root, go right. If you ever run
-out of tree (hit a `null`), the item is not in the tree.
+out of tree nodes by hiting a `null`, the item isn't in the tree.
 
-This example is a simple binary tree that can stores a list of strings
-and print them out in alphabetical order. <<TreeProgram>> shows
+This example is a simple binary tree that can store a list of `String`
+values and print them out in alphabetical order. <<TreeProgram>> shows
 the `Tree` class that defines the fields and two public methods, `add()`
-and `print()` that operate on the tree. Each is a proxy method that
+and `print()`, that operate on the tree. Each is a proxy method that
 calls its private recursive version, which takes a reference to a `Node`
 object. The `Node` static nested class contains three fields.
 
@@ -935,12 +995,39 @@ object. The `Node` static nested class contains three fields.
 * `left`: a link to the left subtree
 * `right`: a link to the right subtree
 
-.Class that implements a simple binary search tree ADT for creating a sorted list of strings.
+.Class that implements a simple binary search tree ADT for creating a sorted list of `Strings` values.
 [source, java]
 [[TreeProgram]]
 ----
 include::{programsdir}/Tree.java[]
 ----
+<.> The recursive `add()` method first checks to see if the current subtree
+is empty (`null`). If so, it creates a new `Node` and puts `value`
+inside it.
+<.> If the current subtree is not `null`, it checks to see if
+`value` is smaller or larger than the `value` at the root of the subtee.
+If it's smaller, it recurses down the left subtree.
+<.> If it's larger, it
+recurses down the right subtree. If `value` is already in the root node,
+it does nothing.
+<.> Remember that all parameters are pass by value in Java. Thus, assigning
+a new `Node` to `tree` doesn't by itself change anything at higher
+levels of the tree. What does change the links in the parent of the
+current subtree is returning the `tree` pointer. If the recursive call
+to `add()` was made with a left or a right subtree, the `left` or
+`right` link, respectively, of the parent `Node` is assigned the return
+value. If the call was made with `root`, the parent of the entire tree,
+the non-recursive `add()` method sets its value when the recursive
+`add()` returns.
+<.> The recursive `print()` method starts by walking down the left subtree.
+Those values are all alphabetically less than the value of the current
+node.
+<.> When it finishes, it prints the current node value.
+<.> Finally, it
+walks the right subtree to print the values that alphabetically follow
+the value in the current node. This path through the nodes of the tree
+is called an _inorder traversal_.
+
 
 <<figure-tree_classes>> shows a visualization of the contents of
 this implementation of a binary search tree. As with a linked list, an
@@ -951,31 +1038,6 @@ this implementation of a binary search tree. As with a linked list, an
 .Visualization of a tree implementation with classes.
 image::treeclasses.svg[scaledwidth=75%,pdfwidth=75%,width=75%]
 
-
-The recursive `add()` method first checks to see if the current subtree
-is empty (`null`). If so, it creates a new `Node` and puts `value`
-inside it. If the current subtree is not `null`, it checks to see if
-`value` is smaller or larger than the `value` at the root of the subtee.
-If it is smaller, it recurses down the left subtree. If it is larger, it
-recurses down the right subtree. If `value` is already in the root node,
-it does nothing.
-
-Remember that all parameters are pass by value in Java. Thus, assigning
-a new `Node` to `tree` does not by itself change anything at higher
-levels of the tree. What does change the links in the parent of the
-current subtree is returning the `tree` pointer. If the recursive call
-to `add()` was made with a left or a right subtree, the `left` or
-`right` link, respectively, of the parent `Node` is assigned the return
-value. If the call was made with `root`, the parent of the entire tree,
-the non-recursive `add()` method sets its value when the recursive
-`add()` returns.
-
-The recursive `print()` method starts by walking down the left subtree.
-Those values are all alphabetically less than the value of the current
-node. When it finishes, it prints the current node value. Finally, it
-walks the right subtree to print the values that alphabetically follow
-the value in the current node. This path through the nodes of the tree
-is called an _inorder traversal_.
 
 ****
 <<recursiveFindExercise>> +
@@ -997,7 +1059,7 @@ include::{programsdir}/ReadAndSortStrings.java[]
 Binary search trees (and other trees, including heaps, tries, B-trees,
 and more) are fundamental data structures that have been studied
 heavily. Designing them to have efficient implementations that balance
-the size of their left and right subtrees is an important topic that is
+the size of their left and right subtrees is an important topic that's
 beyond the scope of this book.
 
 ====
@@ -1025,11 +1087,11 @@ include::{programsdir}/IntegerTree.java[]
 
 ====
 
-It is a waste to create class `IntegerTree`, which is identical to
+It's a waste to create class `IntegerTree`, which is identical to
 `Tree` except that the type `String` has been replaced by `Integer`. As
-in <<ch18-dynamic-data-structures#ch18-dynamic-data-structures>>, we want our data
+in <<Advanced: Generic data structures>>, we want our data
 structures, recursive or otherwise, to hold any type. In this way, we
-can reuse code.
+can reuse code across a wide range of applications.
 
 .Defining a generic binary search tree
 ====
@@ -1052,20 +1114,21 @@ compile-time.
 include::{programsdir}/GenericTree.java[]
 ----
 
-First, note that the recursive methods are no longer `static`. The
-generic syntax for keeping them `static` is unnecessarily complex. The
-type specifier `T extends Comparable<T>` guarantees that type `T`
-implements the interface `Comparable<T>`. The generic `Comparable`
-interface defined in the Java API is as follows.
+First, note that the `Node` class and the recursive methods are no longer
+`static`. The generic syntax for keeping them `static` without producing
+compiler warnings is unnecessarily complex. The type specifier `T extends
+Comparable<T>` guarantees that type `T` implements the interface
+`Comparable<T>`. The generic `Comparable` interface defined in the Java API
+is as follows.
 
 [source, java]
 ----
 public interface Comparable<T> {
-    int compareTo(T object);
+	int compareTo(T object);
 }
 ----
 
-The syntax for generics in Java with type bounds is complex, and we only
+The syntax for generics in Java with type bounds is complicated, and we only
 scratch the surface here. The good news is that these subtleties are
 more important for people designing data structures and libraries and
 come up infrequently for programmers who are only using the libraries.
@@ -1094,71 +1157,68 @@ include::{programsdir}/ReadAndSortGenerics.java[]
 Our algorithm for solving the maze follows the conventional
 pencil-and-paper method: trial and error! We mark locations in the maze
 with `+'*'+` as we explore them. If we come to a dead end, we unmark the
-location (by replacing `+'*'+` with `' '`) and return to our previous
+location (by replacing `+'*'+` with `'{nbsp}'`) and return to our previous
 location to try a different direction.
 
-Start at the beginning square of the maze, which must be a passageway.
-Mark that location as part of the path by putting `+'*'+` in the cell.
+We start at the beginning square of the maze, which must be a passageway.
+We mark that location as part of the path by putting `+'*'+` in the cell.
 Now, what can we do? There are, in general, four possible directions to
-head: up, down, left, or right. If that direction doesn't take you
-outside the bounds of the array, then you find either a wall or a
-passageway. If you have been walking through the maze, you may also find
-a part of the current path (often the square you were on before the
+head: up, down, left, or right. If that direction doesn't take us
+outside the bounds of the array, then we find either a wall or a
+passageway. If we've been walking through the maze, we might also find
+a part of the current path (often the square we were on before the
 current one).
 
-Suppose from your current point in the maze you could send a scout ahead
-in each of the four directions. If the direction did not take the scout
+Suppose from our current point in the maze we could send a scout ahead
+in each of the four directions. If the direction didn't take the scout
 out of bounds, he would find either a wall, a part of the current path
 (the path that led into that space), or an open passageway. If the scout
 doesn't find an open passageway, he reports back that that direction
 doesn't work.
 
 On the other hand, if the scout finds an open passageway, what does he
-do? Brace yourself! He does the exact same thing you just did: Sends out
+do? Brace yourself! He does the exact same thing we just did: send out
 scouts of his own in each of the four possible directions.
 
-With careful, consistent coding, you and the scout follow the exact same
-process. And the scout's scouts. And so on. There is, in fact, only one
+With careful, consistent coding, the scout follows the exact same
+process we did. And the scout's scouts. And so on. There is, in fact, only one
 method and instead of calling a scout method to investigate each of the
-squares in the four directions, you call yourself recursively.
+squares in the four directions, we call our own method recursively.
 
 [source, java]
 ----
 include::{programsdir}/MazeSolver.java[lines=1..14]
 ----
-
-
-The `MazeSolver` class needs a two-dimensional array of `char` values to
-store a representation of the maze. Likewise, it is convenient to store
-the number of rows and columns in fields.
-
-The `main()` method creates a new `MazeSolver` object and then calls its
+<.> The `MazeSolver` class needs a two-dimensional array of `char` values to
+store a representation of the maze.
+<.> It's also convenient to store the number of rows and columns as constant fields.
+<.> The `main()` method creates a new `MazeSolver` object and then calls its
 `solve()` method with a starting location of `(0, 0)`. It prints an
 appropriate message depending on whether or not the maze was solved.
-Finally, it prints out the maze, which includes a path marked with `'*'`
+<.> Finally, it prints out the maze, which includes a path marked with `'*'`
 symbols if the maze is solvable.
 
 [source, java]
 ----
-include::{programsdir}/MazeSolver.java[lines=16..29]
+include::{programsdir}/MazeSolver.java[lines=16..28]
 ----
-
-
-The constructor for `MazeSolver` creates a `Scanner`. It assumes that
+<.> The constructor for `MazeSolver` creates a `Scanner`. It assumes that
 the file describing the maze is redirected from standard input, although
 it would be easy to modify the constructor to take a file name and read
-from there instead. Next, it reads two integers and sets `rows` and
-`columns` to those values. It allocates a two-dimensional array of
-`char` values with `rows` rows and `columns` columns. Finally, it reads
+from there instead.
+<.> Next, it reads two integers and sets the `ROWS` and
+`COLUMNS` to those values, which will be constants moving forward.
+<.> It allocates a two-dimensional array of
+`char` values with `ROWS` rows and `COLUMNS` columns.
+<.> Finally, it reads
 through the file, storing each line of `char` values into this array. As
 it reads, it prints out each line to the screen, showing the initial
 (unsolved) maze.
 
 [source, java]
 ----
-include::{programsdir}/MazeSolver.java[lines=31..37]
+include::{programsdir}/MazeSolver.java[lines=30..36]
 ----
-
 
 The `print()` method is a utility method that prints out the maze. It
 iterates through each row, printing out the values for the columns in
@@ -1166,14 +1226,13 @@ that row.
 
 [source, java]
 ----
-include::{programsdir}/MazeSolver.java[lines=39..57]
+include::{programsdir}/MazeSolver.java[lines=38..56]
 ----
-
 
 The heart of the solution is the recursive method `solve()`. The
 `solve()` method takes two parameters, `row` and `column`, and tries to
 find a solution to the maze starting at location `maze[row][column]`. It
-assumes that the maze is filled with `'+'` for walls, `' '` for
+assumes that the maze is filled with `'+'` for walls, `'{nbsp}'` for
 passageways, and may include `'*'` characters at locations that are part
 of the partially completed solution.
 
@@ -1181,72 +1240,73 @@ If `solve()` is able to find a solution from the current location, it
 returns `true`, otherwise it returns `false`. There are three base cases
 for the current location in the maze.
 
-1.  The current location is outside the maze. Return `false`.
-2.  The current location is the final location. We have a winner, return
+.  The current location is outside the maze. Return `false`.
+.  The current location is the ending location (marked with `'E'`). We have a winner, return
 `true`!
-3.  The current location is not a passage (either a wall or a location
-in the current path that has already been marked). This call to `solve`
+.  The current location is not a passage (either a wall or a location
+in the current path that's already been marked). This call to `solve`
 is not making progress toward the finish. Return `false`.
 
 If none of the base cases applies, then the current location, which must
-contain a `' '` character, *might* be on a successful path, so `solve()`
+contain a `'{nbsp}'` character, *might* be on a successful path, so `solve()`
 gives it a try. The method tentatively marks the current position with
 `'*'`. Then, it tries to find a path from the current
-location to each of the four neighboring cells by recursively calling `solve()`. If any of those four neighbors returns `true`, then `solve()` knows it has found a completed path and returns `true` to its caller.
+location to each of the four neighboring cells by recursively calling `solve()`.
+If any of those four neighbors returns `true`, then `solve()` knows it's found
+a completed path and returns `true` to its caller.
 
 If none of the four neighbors was on a path to the destination, then the
 current location is not on a path. The method unmarks the current
-location (by storing a `' '`) and returns `false`. Presumably, its
+location (by storing a `'{nbsp}'`) and returns `false`. Presumably, its
 caller figures out what to do next, perhaps calling a different one of
 its neighbors or giving up and returning `false` to its caller.
 
 The very first call to `solve()` from the `main()` method either returns
 `true` if a complete path through the maze is found or `false` if no
 path exists. Note that this solver has no guarantee of finding the
-*shortest* path through the maze, but if there is at least one path to
-the goal, it finds one.
+*shortest* path through the maze, but if there's at least one path to
+the goal, it'll find one.
 
 === Concurrency: Futures
 
-This section does not deal explicitly with recursion, but it does deal
+This section doesn't deal explicitly with recursion, but it does deal
 with concurrency and methods in an interesting way. When we call a
 method in Java, a stack frame for the method is put on the stack, and
-the thread of execution begins executing code inside the method. When it
-is done, it returns a value (or not), and execution resumes in the
-caller. But what if calling the method began executing an independent
-thread, and the caller continued on without waiting for the method to
-return?
+the thread of execution begins executing code inside the method. When it's
+done, it returns a value (or not), and execution resumes in the caller. But
+what if calling the method began executing an independent thread, and the
+caller continued on without waiting for the method to return?
 
-This second situation should seem familiar, since it is very much what
+This second situation should seem familiar, since it's exactly what
 happens when the `start()` method is called on a `Thread` object: the
 `start()` method returns immediately to its caller, but an independent
 thread of execution has begun executing the code in the `run()` method
 of the `Thread`.
 
-What if we only care about the value that is computed by the new thread
+What if we only care about the value that's computed by the new thread
 of execution? We can think of spawning the thread as an asynchronous
-method call, a value that is computed *at some point* rather than one we
+method call, a value that's computed *at some point* rather than one we
 have to wait for. The name for such an asynchronous method call is a
 _future_. In some languages, particularly functional languages, all
 concurrency is expressed as a future. In Java, only a little bit of code
 is needed to create threads that can behave like futures. However, the
 idea of futures is pervasive enough that Java API tools were created to
-make the process of creating them easy.
+make the process of creating them simple.
 
 We introduce three interfaces and a factory method call that can allow
 you to use futures in Java. This section is not a complete introduction
-to futures, but these tools are enough to get you started with them.
+to futures, but the tools presented are enough to get you started.
 
 The first interface is the `Future` interface, which allows you to store
-a reference to the asynchronous computation while it is computing (and
-before you ask for its value). The second interface is the `Callable`
+a reference to the asynchronous computation while it's computing, 
+before you ask for its value. The second interface is the `Callable`
 interface, which is similar to the `Runnable` interface in that it
 allows you to specify a class whose objects can be started as
-independent threads. Both the `Future` interface and the `Callable` are
-generic interfaces that require to specify a type. Remember that futures
-are supposed to give back an answer, and that's the type that you supply
+independent threads. Both the `Future` and `Callable` interfaces are
+generic interfaces that require you to specify a type. Remember that futures
+are supposed to give back an answer, and that's the type you supply
 as a parameter. For example, when creating a future that returns an
-`int` value, you would create a class that implemented the
+`int` value, you would create a class that implements the
 `Callable<Integer>` interface, requiring it to contain a method with the
 signature `Integer call()`. Likewise, you would store a reference to the
 future you create in a `Future<Integer>` reference.
@@ -1258,7 +1318,7 @@ threads is expensive, and it might not be worthwhile to create 100
 threads when only 8 are able to run concurrently. To deal with this
 problem, the Java API provides classes that implement the
 `ExecutorService` interface, which can maintain a fixed-size _pool_ of
-threads. When a thread finishes computing one future, it is
+threads. When a thread finishes computing one future, it's
 automatically assigned another. To create an object that can manage
 threads this way, call the static factory method `newFixedThreadPool()`
 on the `Executors` class with the size of the thread pool you want
@@ -1272,24 +1332,24 @@ ExecutorService executor = Executors.newFixedThreadPool(8);
 
 Once you have an `ExecutorService`, you can give it a `Callable` object
 of a particular type (such as `Callable<Integer>`) as a parameter to its
-`submit()` method, and it returns a `Future` object of a matching type
+`submit()` method, and it will return a `Future` object of a matching type
 (such as `Future<Integer>`). Then, the future is running (or at least
 scheduled to run). At any later point you can call the `get()` method on
 the `Future` object, which returns the value of its computation. Like
-calling `join()`, calling `get()` is a blocking call that may have to
+calling `join()`, calling `get()` is a blocking call that might have to
 wait for the future to finish executing.
 
-All of this messy syntax becomes clearer in the following example, which
+All this messy syntax should become clearer in the following example which
 uses futures to compute the sum of the square roots of the first
 100,000,000 integers concurrently.
 
-.Futures to sum square roots
+.Using futures to sum square roots
 ====
 
 To use futures to sum the square roots of integers, we first need a
 worker class that implements `Callable`. Since the result of the sum of
 square roots is a `double`, it must implement `Callable<Double>`. Recall
-that primitive types such as `double` cannot be used as generic type
+that primitive types such as `double` can't be used as generic type
 parameters, requiring us to use wrapper classes in those cases.
 
 [source, java]
@@ -1297,84 +1357,79 @@ parameters, requiring us to use wrapper classes in those cases.
 ----
 include::{programsdir}/RootSummer.java[]
 ----
-
-
-`RootSummer` is a simple worker class that takes a `min` and a `max`
-value in its constructor. Its `call()` method sums the square roots of
-all the `int` values greater than or equal to `min` and less than `max`.
-It imports `java.util.concurrent.*` to have access to the `Callable`
+<.> First, we import `java.util.concurrent.*` to have access to the `Callable`
 interface.
+<.> `RootSummer` is a simple worker class that takes a `min` and a `max`
+value in its constructor.
+<.> Its `call()` method returns the sum of the square roots of all the `int`
+values greater than or equal to `min` and less than `max`.
 
 Of course, we need another class to create the `ExecutorService`, start
 the futures running, and collect the results.
 
 [source, java]
 ----
-include::{programsdir}/RootFutures.java[lines=1..14]
+include::{programsdir}/RootFutures.java[lines=1..12]
 ----
-
-
-The first part of `RootFutures` is setup. The imports give us the
-concurrency tools we need and a list to store our futures in. We have
-three constants. `THREADS` specifies the number of threads to create.
-`N` gives the number we are going up to. `FUTURES` is the total number
+<.> The first part of `RootFutures` is setup. The imports give us the
+concurrency tools we need and a list to store our futures in.
+<.> We have three constants. `THREADS` specifies the number of threads to
+create. `N` gives the number we're going up to. `FUTURES` is the total number
 of futures we create, considerably larger than the number of threads
 they share.
-
-Inside the `main()` method, we create an `ArrayList` to hold the
+<.> Inside the `main()` method, we create an `ArrayList` to hold the
 futures. Since we know the number of futures ahead of time, an array
 would be ideal. Unfortunately, quirks in the way Java handles generics
-makes it illegal to create an array with a generic type. Instead, we
-create an `ArrayList` with the size we'll need pre-allocated. Next, we
-create an `ExecutorService` with a thread pool of size `THREADS`.
-Finally, we find the amount of work done by each future by dividing `N`
-by `FUTURES`.
+make it illegal to create an array with a generic type. Instead, we
+create an `ArrayList` with the size we'll need pre-allocated.
+<.> Next, we create an `ExecutorService` with a thread pool of size `THREADS`.
+<.> Finally, we find the amount of work done by each future by dividing `N`
+by `FUTURES`.  We can use simple division in this case instead of a more
+complicated load-balancing approach because 100,000,000 is divisible by 10.
 
 [source, java]
 ----
-include::{programsdir}/RootFutures.java[lines=16..22]
+include::{programsdir}/RootFutures.java[lines=14..19]
 ----
-
-
-In this section of code, we create each future and start it running.
-First, we instantiate a `RootSummer` object with the appropriate bounds
-for the work it's going to compute. Then, we supply that object to the
-`submit()` method on the `ExecutorService`, which returns a `Future`
-object. We could have saved a line of code by storing this return value
+<.> To create the futures, we first instantiate a `RootSummer` object with the
+appropriate bounds for the work it's going to compute.
+<.> Then, we supply that object to the `submit()` method on the
+`ExecutorService`, which returns a `Future` object. We could have saved a
+line of code by storing this return value
 directly into the list `futures`.
 
 [source, java]
 ----
-include::{programsdir}/RootFutures.java[lines=24..40]
+include::{programsdir}/RootFutures.java[lines=21..34]
 ----
-
-
-All that remains is to collect the values from each future. We iterate
-through the list of futures with an enhanced `for` loop and add the return
-value of each future's `get()` method to our running total `sum`. Because
-`get()` is a blocking call, we have to catch an `InterruptedException`
-in case we are interrupted while waiting for the future to respond.
+<.> To collect the values from each future, we iterate
+through the list of futures with an enhanced `for` loop.
+<.> We add the return value of each future's `get()` method to our running
+total `sum`.
+<.> Because `get()` is a blocking call, we have to catch an `InterruptedException`
+in case we're interrupted while waiting for the future to respond.
 However, we also have to catch an `ExecutionException` in case an
-exception occurred during the execution of the future. This exception
+exception occurs during the execution of the future. This exception
 handling mechanism is one of the big advantages of using futures:
 Exceptions thrown by the future are propagated back to the thread that
 gets the answer from the future. Normal threads simply die if they have
-unhandled exceptions.
-
-After all the values have been read and summed, we shut the
-`ExecutorService` down. If we had wanted, we could have submitted
-additional `Callable` objects to it to run more futures. Finally, we
-print out the result.
+unhandled exceptions. Note that we use the modern exception-catching syntax
+to handle two unrelated exceptions with the same `catch` block.
+<.> After all the values have been read and summed, we shut the
+`ExecutorService` down. If we'd wanted, we could have submitted
+additional `Callable` objects to it to run more futures.
+<.> Finally, we print out the result.
 
 ====
 
 === Exercises
 *Conceptual Problems*
 
-.  [[recursiveAdditionExercise]] <<multiplicationDefinedRecursivelyExample>> gave a mathematical recursive definition for
-stem:[x \times y]. Give a similar recursive definition for
-stem:[x + y]. The structure is similar to the recursion to
-determine your current age given in <<What is recursion?>>.
+.  [[recursiveAdditionExercise]] <<multiplicationDefinedRecursivelyExample>>
+gave a mathematical recursive definition for _x_ ⋅ _y_. Give a similar
+recursive definition for _x_ + _y_, assuming that _y_ is a positive integer.
+The structure is similar to the recursion to determine your current age given
+in <<What is recursion?>>.
 .  In principle, every problem that can be solved with an iterative
 solution can be solved with a recursive one (and vice versa). However,
 the limited size of the call stack can present problems for recursive
@@ -1383,46 +1438,44 @@ recursive solutions that are impossible to turn into iterative ones?
 .  [[fibonacciCallsExercise]] Consider the first (non-memoized)
 recursive version of the Fibonacci method given in
 <<fibonacciImplementedRecursivelyExample>>. How many times is
-`fibonacci()` called with argument stem:[1] to compute
+`fibonacci()` called with argument 1 to compute
 `fibonacci(n)`? Instrument your program and count the number of calls
-for stem:[n = 2, 3, 4 \ldots 20].
+for _n_ = 2, 3, 4, ..., 20.
 .  In the recursive `solve()` method in the `MazeSolver` program given
 in <<Solution: Maze of doom>>, the current location in the maze
-array is is set to a blank character (`' '`) after no solution had been
+array is set to a space character (`'{nbsp}'`) if no solution is been
 found. What value was in that location? How would the program behave if
-the value was not changed?
+the value wasn't changed back?
 
 *Programming Practice*
 
 .  [[recusivePalindromeExercise]] <<palindromeExercise>>
 from <<ch08-methods#ch08-methods>> challenges you to write a method to
-determine whether a `String` contains a palindrome. Recall that a
-palindrome (if punctuation and spaces are ignored) can be described as a
-`String` in which the first and last characters are equal, and all the
-characters in between form a palindrome. Write a recursive method to
-test if a `String` is a palindrome, using the following signature.
+determine whether a `String` is a palindrome. Recall that a palindrome (if
+punctuation and spaces are ignored) can be described as an empty `String` or
+a `String` in which the first and last characters are equal, with all the
+characters in between forming a palindrome. Write a recursive method with the
+following signature to test if a `String` is a palindrome.
 +
 [source, java]
 ----
-public static boolean isPalindrome( String text, int start,
-    int end )
+public static boolean isPalindrome(String text, int start, int end)
 ----
 +
 In this method, the `start` parameter is the index of the first
-character you are examining, and the `end` parameter is the index
-immediately after the last character you are examining. Thus, it would
+character you're examining, and the `end` parameter is the index
+immediately after the last character you're examining. Thus, it would
 initially be called with a `String`, `0`, and the length of the
 `String`, as follows.
 +
 [source, java]
 ----
-boolean result =
-    isPalindrome( "A man, a plan, a canal: Panama", 0, 30 );
+boolean result = isPalindrome("A man, a plan, a canal: Panama", 0, 30);
 ----
 .  [[constantSpaceFibonacciExercise]] The efficient implementation of
 Fibonacci from <<fibonacciImplementedRecursivelyExample>>
 eliminates redundant computation through memoization, storing values in
-an array as they are found. It is possible to carry along the
+an array as they're found. However, it's possible to carry along the
 computations of the previous two Fibonacci numbers *without* the
 overhead of storing an array. Consider the following method signature.
 +
@@ -1440,66 +1493,72 @@ The method would be called as follows for any value of `n`.
 +
 [source, java]
 ----
-int result = fibonacci( 0, 1, n );
+int result = fibonacci(0, 1, n);
 ----
 +
 Complete the implementation of this recursive method.
 .  [[fastExponentiationExercise]] Write an implementation of
-fast exponentiation that works for even and odd stem:[n]. This
+fast exponentiation that works for even and odd _n_. This
 implementation is exactly the same as the one given at the end of
-<<exponentiationExample>> except when stem:[n] is odd.
+<<exponentiationExample>> except when _n_ is odd.
 Use the following recursive definition of exponentiation to guide your
 implementation.
 +
-stem:[a^n =
-\begin{cases} a & \text{if  $n=1$} & \text{(Base Case)}
-\\
-\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$ and even} & \text{(Base Case)}
-\\
-a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 & \text{if  $n>1$ and odd} & \text{(Base Case)}
-\end{cases}]
-.  [[fastFibonacciExercise]] <<fibonacciImplementedRecursivelyExample>> shows two implementations that can be used to
-find the stem:[n]^th^ Fibonacci number. With a little bit of
-math, it is possible to show that there is a closed-form equation that
-gives the stem:[n]^th^ Fibonacci number stem:[F_n] where
-stem:[F_0 = F_1 = 1].
+//[stem]
+//++++
+//a^n =
+//\left\{\begin{array}{lll}
+//a & \text{if  $n=1$} & \text{(Base Case)} \\
+//\left(a^{\frac{n}{2}}\right)^2 & \text{if  $n>1$ and even} & \text{(Recursive Case)} \\
+//a\cdot \left(a^{\frac{n - 1}{2}}\right)^2 & \text{if  $n>1$ and odd} & \text{(Recursive Case)}
+//\end{array}\right.
+//++++
+[.text-center]
+image::exponentRecursion3.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
+.  [[fastFibonacciExercise]] <<fibonacciImplementedRecursivelyExample>> shows
+two implementations that can be used to find the _n_^th^ Fibonacci number.
+With some knowledge of recurrence relations, it's possible to show that there's
+a closed-form equation that gives the _n_^th^ Fibonacci number _F_~_n_~ where
+_F_~0~ = _F_~1~ = 1.
 +
-stem:[F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n+1}  -  \left(\frac{1 -
-\sqrt{5}}{2}\right)^{n+1}}{\sqrt{5}}]
+//[stem]
+//++++
+//F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n}  -  \left(\frac{1 -
+//\sqrt{5}}{2}\right)^{n}}{\sqrt{5}}
+//++++
+[.text-center]
+image::fibonacciClosed.svg[scaledwidth=30%,pdfwidth=30%,width=30%]
 +
-Although this math is a bit ugly, you can plug numbers into this
-equation and discover the value of stem:[F_n] quickly, provided
-that you have an efficient way to raise values to the
-stem:[n]^th^ power. Use the recursive algorithm for fast
-exponentation from <<fastExponentiationExercise>> to
-make an implementation that finds the stem:[n]^th^ Fibonacci
-number *very* quickly.
+Although this equation is a bit ugly, you can plug numbers into it to discover
+the value of _F_~_n_~ quickly, provided that you have an efficient way to raise
+values to the _n_^th^ power. Use the recursive algorithm for fast exponentation
+from <<fastExponentiationExercise>> to make an implementation that finds the
+_n_^th^ Fibonacci number *very* quickly.
 +
 Note that this approach uses real numbers (including
-stem:[\sqrt{5}]) that need to be represented as `double` values.
+the square root of 5) that need to be represented as `double` values.
 There are exact methods that use fast exponentiation of integer matrices
 to do this computation without doing any floating-point arithmetic, but
-we do not go into those details here.
-.  [[recursivePrintExercise]] <<recursiveLinkedListSizeExample>> shows a way to calculate the size of a linked list
-recursively. Add a recursive method called `print()` to the
-`RecursiveListSize` class that prints out the values in the linked list
-recursively, on each line.
-. [[reversePrintExercise]] Expand the previous exercise
-to add another method called `reversePrint()` that prints out the values
-in the linked list the *opposite* order that they appear. It should take
-only a slight modification of the `print()` method you have already
-written.
+we won't go into those details here.
+.  [[recursivePrintExercise]] <<recursiveLinkedListSizeExample>> shows a way to
+calculate the size of a linked list recursively. Add a recursive method called
+`print()` to the `RecursiveListSize` class that prints out the values in the
+linked list recursively, one value per line.
+. [[reversePrintExercise]] Expand the previous exercise to add another method
+called `reversePrint()` that prints out the values in the linked list in the
+*opposite* order that they appear. It should take only a slight modification of
+the `print()` method you've already written.
 . [[recursiveFindExercise]] Create a recursive `find()` method (and a
 non-recursive proxy method to call it) for the `Tree` class given in
 <<TreeProgram>>. Its operation is similar to the `add()`
-method. If the subtree it is examining is empty (`null`), it should
-return `false`. If the value it is looking for is at the root of the
+method. If the subtree it's examining is empty (`null`), it should
+return `false`. If the value it's looking for is at the root of the
 current subtree, it should return `true`. These are the two base cases.
-If the value it is looking for comes earlier in the alphabet than the
+If the value it's looking for comes earlier in the alphabet than the
 value at the root of the current subtree, it should look in the left
-subtree. If the value it is looking for comes later in the alphabet than
+subtree. If the value it's looking for comes later in the alphabet than
 the value at the root of the current subtree, it should look in the
-right subtree. These are the two recursive cases.
+right subtree. Those are the two recursive cases.
 . [[recursiveHeightExercise]] The height of a binary tree is defined as
 the longest path from the root to any leaf node. Thus, the height of a
 tree with only a root node in it is 0. By convention, the height of an
@@ -1511,15 +1570,14 @@ method to call it) for the `Tree` class given in
 pointer), which has a height of -1. For the recursive case of a
 non-empty tree, its height is one more than the height of the larger of
 its two subtrees.
-. [[treeInterfaceExercise]] Create an `interface` that
-describes a tree ADT. Modify the programs in <<binarySearchTreeExample>> to use this `interface`.
+. [[treeInterfaceExercise]] Create a Java interface that describes a tree ADT.
+Modify the programs in <<binarySearchTreeExample>> to implement this interface.
 
 *Experiments*
 
 . Write an iterative version of the factorial function and compare its
 speed to the recursive version given in the text. Use the
-`System.currentTimeMillis()` or +
-`System.nanoTime()` methods before and after `for` loops that call the
+`System.nanoTime()` method before and after `for` loops that call the
 factorial methods 1,000,000 times each for random values.
 . [[timeSortingExercise]] Write a program that generates four arrays
 of random `int` values with lengths 1,000, 10,000, 100,000, and
@@ -1527,36 +1585,33 @@ of random `int` values with lengths 1,000, 10,000, 100,000, and
 three copies of the array with the selection sort algorithm given in
 <<selectionSortExample>>, the bubble sort algorithm given in
 <<Problem: Sort it out>>, and the merge sort algorithm given in
-<<mergeSortExample>>, respectively. Use the
-`System.currentTimeMillis()` or `System.nanoTime()` methods to time each
-of the sorts. Note that both selection sort and bubble sort may take
+<<mergeSortExample>>, respectively. Use the `System.nanoTime()` method to time
+each of the sorts. Note that both selection sort and bubble sort might take
 quite a while to sort an array of 1,000,000 elements.
 +
 Run the program several times and find average values for each algorithm
 on each array size. Plot those times on a graph. The times needed to run
 selection sort and bubble sort should increase quadratically, but the
 time to run merge sort should increase linearithmically. In other words,
-an array length of stem:[n] should take time proportional to
-stem:[n^2] (multiplied by some constant) for selection sort and
+an array length of _n_ should take time proportional to
+_n_^2^ (multiplied by some constant) for selection sort and
 bubble sort, but it should take time proportional to
-stem:[n \log n] (multiplied by some constant) for merge sort. For
+_n_ log~2~ _n_ (multiplied by some constant) for merge sort. For
 large arrays, the difference in time is significant.
 . Investigate the performance of using recursion to compute Fibonacci
 numbers. Implement the naive recursive solution, the memoization method,
 and an iterative solution similar to the memoization method. Use the
-`System.currentTimeMillis()` or `System.nanoTime()` methods to time the
-computations for large values of `n`.
+`System.nanoTime()` method to time the computations for large values of _n_.
 +
-*Warning:* It may take a very long time to compute the `n`^th^ Fibonacci number with the naive
-recursive solution.
+*Warning:* It might take a very long time to compute the _n_^th^ Fibonacci number
+with the naive recursive solution.
 . <<wordBinarySearchExercise>> from <<ch06-arrays#ch06-arrays>> explains how binary search can be used to search for a value in a sorted
 array of values. The idea is to play a "`high-low`" game, first looking
 at the middle value. If the value is the one you're looking for, you're
-done. If it is too high, look in the lower half of the array. If it is
+done. If it's too high, look in the lower half of the array. If it's
 too low, look in the upper half of the array. Implement binary search
 both iteratively and recursively. Populate an array with 100,000 `int`
 values between 1 and 10,000,000 and sort it. Then, search for 1,000,000
-random values generated betwee 1 and 10,000,000 using iterative binary
-search and then recursive binary search. Use the
-`System.currentTimeMillis()` or `System.nanoTime()` methods to time each
-process. Was the iterative or recursive approach faster? By how much?
+random values generated between 1 and 10,000,000 using iterative binary
+search and then recursive binary search. Use the `System.nanoTime()` method to
+time each process. Was the iterative or recursive approach faster? By how much?
