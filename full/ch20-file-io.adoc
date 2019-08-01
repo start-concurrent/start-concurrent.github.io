@@ -13,7 +13,7 @@ ____
 
 === Problem: A picture is worth 1,000 bytes
 
-If you're familiar with bitmap (`.bmp`) files, you know that they can take
+If you're familiar with bitmap (`bmp`) files, you know that they can take
 up a lot of space compared to other popular image formats. People often use
 a technique called data compression to reduce the size of large files for
 storage. There are many different kinds of compression and many which are
@@ -321,7 +321,7 @@ We covered text files first because the input and output is similar to
 command-line I/O. When reading and writing text files, it's easy to verify
 that what you wanted to write was written and what you read was what was
 in the file. Binary files, however, are more powerful. Data, as in the
-example with the integer 2127480645, can often be stored more compactly.
+example with the integer 2,127,480,645, can often be stored more compactly.
 Even better, Java provides facilities for easily dumping (and later
 retrieving) primitive data types, objects, and even complex data
 structures to binary files.
@@ -393,8 +393,7 @@ These objects exist, and they belong to the `ObjectInputStream` and
 
 [source, java]
 ----
-ObjectInputStream in =
-    new ObjectInputStream(new FileInputStream("baseball.bin"));
+ObjectInputStream in = new ObjectInputStream(new FileInputStream("baseball.bin"));
 ----
 
 Now, let's assume that `baseball.bin` contains baseball statistics. The
@@ -554,18 +553,18 @@ catch(Exception e) {
 finally { try{ out.close(); } catch(Exception e){} }
 ----
 
-It is worth noting that `DataInputStream` and `DataOutputStream` objects
+It's worth noting that `DataInputStream` and `DataOutputStream` objects
 can be used in place of `ObjectInputStream` and `ObjectOutputStream`
 objects if you only need to read and write primitive data.
 
-
-==== Opening files with `JFileChooser`
+==== Using `JFileChooser`
 
 One of the more tedious aspects of working with files in command-line programs
 is typing the name of the file correctly.  Although most OS terminals have
 time-saving autocomplete features to help users choose the right file name,
 typing the name of a file directly into a prompt so that it can be read by
-a `Scanner` object is error prone.
+a `Scanner` object is error prone.  Navigating long directory paths can also
+be a headache when using a command-line interface.
 
 Indeed, most users are used to selecting files to open or to save via a GUI
 file chooser instead of typing file names explicitly.  The Java Swing library
@@ -575,9 +574,119 @@ We discuss fully featured GUI programs in <<ch15-gui#ch15-gui>>, but like the
 `JOptionPane` class covered in <<ch07-gui-basics#ch07-gui-basics>>,
 `JFileChooser` can be used with or without a complex GUI.
 
+Unlike the `JOptionPane` class whose functionality is accessed through static
+methods, you must create a `JFileChooser` object to use it.
 
+[source, java]
+----
+JFileChooser chooser = new JFileChooser();
+----
 
+Once you've created the `JFileChooser` object, you can call either the
+`showOpenDialog()` method to show a dialog for opening existing files or the
+`showSaveDialog()` for saving a potentially new file.  The dialog looks similar
+in either case, with only minor differences such as title and buttons names.
 
+[source, java]
+----
+int result = chooser.showOpenDialog(null);
+----
+
+Both methods take a `Component` object as an argument.  If you're creating a
+GUI program, you can pass in a `JFrame` or a `JDialog` for this argument to pop
+up a modal file chooser dialog that must be dealt with before returning control
+to the parent frame or dialog.  If your program doesn't otherwise use a GUI,
+you can pass in `null`.
+
+Both methods also return an `int` value indicating the result of user input.
+A return value of `JFileChooser.APPROVE_OPTION` means that the user selected a
+file. The value `JFileChooser.CANCEL_OPTION` means that the user canceled
+instead of picking a file.  Finally, `JFileChooser.ERROR_OPTION` means some
+error occurred.
+
+Once the user has selected a file for opening or for saving, you can call the
+`getSelectedFile()` method to retrieve the `File` that the user selected.
+
+[source, java]
+----
+File file = chooser.getSelectedFile();
+----
+
+If the user canceled or an error occurred, this `File` object could be `null`.
+
+In many cases, a programmer will want to focus the user on files of a certain
+kind. For example, a program that plays audio files might display only
+files that have extensions associated with audio formats such as `wav`, `mp3`,
+and `flac`.  To include this functionality, you can create a
+`FileNameExtensionFilter` object and set it as a file filter on your
+`JFileChooser`.
+
+[source, java]
+----
+FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "wav", "mp3", "flac");
+chooser.setFileFilter(filter);
+----
+
+The first argument to the `FileNameExtensionFilter` constructor is a
+user-friendly description of the kinds of files displayed by the filter. After
+the description, the constructor takes a variable number of arguments, each of
+which gives one of the included file extensions.  Extensions are case
+insensitive and should not include a dot (`.`) at the beginning. You should set
+the file filter before displaying a dialog with either `showOpenDialog()` or 
+`showSaveDialog()`.
+
+`FileNameExtensionFilter` covers most of what people want from a file filter,
+but it's possible to create your own class that extends `FileFilter` if you
+need to filter files based on more complex criteria.
+
+Next, we'll give a short example that uses a `JFileChooser`.
+
+.Using `JFileChooser`
+====
+
+The short program below allows a user to select a file using
+`JFileChooser`.  Only image files with `jpg` or `png` extensions will be
+displayed. Once the file has been selected, the program will print out the
+number of bytes of storage that the file uses.
+
+.Tool to determine size of file selected with `JFileChooser`.
+[source, java]
+[[JFileChooserProgram]]
+----
+include::{programsdir}/FileChooserExample.java[]
+----
+<.> Imports are needed for the `JFileChooser`, the `FileNameExtensionFilter`,
+and the `File` object itself.
+<.> First, we create the `JFileChooser` object.
+<.> Next, we create and then set a file filter appropriate for image files.
+<.> We show the open dialog to allow the user to select a file.
+<.> If the user selected a file rather than canceling, we get the `File`
+object from the file chooser.
+<.> If the file exists, we get its length in bytes and print that out.
+
+If the file didn't exist or the user hit cancel, we print appropriate messages
+in those cases as well.
+
+<<fileChooserFigure>> shows the dialog displayed by this program.
+
+[.text-center]
+[[fileChooserFigure]]
+.`JFileChooser` showing an open dialog.
+image::fileChooserFigure.png[scaledwidth=60%,pdfwidth=60%,width=60%]
+====
+
+Note that the purpose of `JFileChooser` is to allow users to select a file.  It
+doesn't guarantee that the file exists or that the user has rights to read
+from the file or to write to it.  Most commercial software asks the user if
+he or she wants to overwrite an existing file when saving.  `JFileChooser`
+doesn't have that functionality built in, requiring additional program logic to
+to prompt the user if an existing file is about to be overwritten.
+
+Like most of the Swing library, `JFileChooser` has many options and features
+that we don't have time to cover.  Its display can be customized, and it can be
+configured to interact with the file system in a number of ways, such as
+displaying only normal files, displaying only directories, or both.  There are
+even settings that allow the user to select multiple files at once.
 
 === Examples: File examples
 
