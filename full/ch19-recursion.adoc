@@ -116,7 +116,7 @@ image::trees.svg[scaledwidth=100%,pdfwidth=100%,width=100%]
 
 
 A recursive definition for your age suggests that recursion is all around
-us. Though recursion definitions written in formal notation might seem artificial,
+us. Though recursive definitions written in formal notation might seem artificial,
 self-similarity is a constant theme in art and nature. The branching of
 a trunk of a tree is similar to the branching of its limbs, which is
 similar to the branching of its branches, which in turn is similar to
@@ -359,7 +359,7 @@ like any others, called in the normal way.
 
 The real difficulty in learning to program recursively lies in breaking
 out of the way you're used to thinking about program control flow. All
-that you have learned about solving problems with iteration in previous
+that you've learned about solving problems with iteration in previous
 chapters might make it harder for you to embrace recursion.
 
 Iteration views the whole problem at once and tries to sequence all the
@@ -1295,7 +1295,7 @@ make the process of creating them simple.
 
 We introduce three interfaces and a factory method call that can allow
 you to use futures in Java. This section is not a complete introduction
-to futures, but these tools are enough to get you started.
+to futures, but the tools presented are enough to get you started.
 
 The first interface is the `Future` interface, which allows you to store
 a reference to the asynchronous computation while it's computing, 
@@ -1332,14 +1332,14 @@ ExecutorService executor = Executors.newFixedThreadPool(8);
 
 Once you have an `ExecutorService`, you can give it a `Callable` object
 of a particular type (such as `Callable<Integer>`) as a parameter to its
-`submit()` method, and it returns a `Future` object of a matching type
+`submit()` method, and it will return a `Future` object of a matching type
 (such as `Future<Integer>`). Then, the future is running (or at least
 scheduled to run). At any later point you can call the `get()` method on
 the `Future` object, which returns the value of its computation. Like
 calling `join()`, calling `get()` is a blocking call that might have to
 wait for the future to finish executing.
 
-All this messy syntax should become clearer in the following example, which
+All this messy syntax should become clearer in the following example which
 uses futures to compute the sum of the square roots of the first
 100,000,000 integers concurrently.
 
@@ -1361,8 +1361,8 @@ include::{programsdir}/RootSummer.java[]
 interface.
 <.> `RootSummer` is a simple worker class that takes a `min` and a `max`
 value in its constructor.
-<.> Its `call()` method sums the square roots of all the `int` values greater
-than or equal to `min` and less than `max`.
+<.> Its `call()` method returns the sum of the square roots of all the `int`
+values greater than or equal to `min` and less than `max`.
 
 Of course, we need another class to create the `ExecutorService`, start
 the futures running, and collect the results.
@@ -1380,7 +1380,7 @@ they share.
 <.> Inside the `main()` method, we create an `ArrayList` to hold the
 futures. Since we know the number of futures ahead of time, an array
 would be ideal. Unfortunately, quirks in the way Java handles generics
-makes it illegal to create an array with a generic type. Instead, we
+make it illegal to create an array with a generic type. Instead, we
 create an `ArrayList` with the size we'll need pre-allocated.
 <.> Next, we create an `ExecutorService` with a thread pool of size `THREADS`.
 <.> Finally, we find the amount of work done by each future by dividing `N`
@@ -1414,7 +1414,7 @@ handling mechanism is one of the big advantages of using futures:
 Exceptions thrown by the future are propagated back to the thread that
 gets the answer from the future. Normal threads simply die if they have
 unhandled exceptions. Note that we use the modern exception-catching syntax
-to handle two unrelated kinds of exceptions with the same `catch` block.
+to handle two unrelated exceptions with the same `catch` block.
 <.> After all the values have been read and summed, we shut the
 `ExecutorService` down. If we'd wanted, we could have submitted
 additional `Callable` objects to it to run more futures.
@@ -1425,10 +1425,11 @@ additional `Callable` objects to it to run more futures.
 === Exercises
 *Conceptual Problems*
 
-.  [[recursiveAdditionExercise]] <<multiplicationDefinedRecursivelyExample>> gave a mathematical recursive definition for
-_x_ ⋅ _y_. Give a similar recursive definition for
-_x_ + _y_. The structure is similar to the recursion to
-determine your current age given in <<What is recursion?>>.
+.  [[recursiveAdditionExercise]] <<multiplicationDefinedRecursivelyExample>>
+gave a mathematical recursive definition for _x_ ⋅ _y_. Give a similar
+recursive definition for _x_ + _y_, assuming that _y_ is a positive integer.
+The structure is similar to the recursion to determine your current age given
+in <<What is recursion?>>.
 .  In principle, every problem that can be solved with an iterative
 solution can be solved with a recursive one (and vice versa). However,
 the limited size of the call stack can present problems for recursive
@@ -1442,41 +1443,39 @@ recursive version of the Fibonacci method given in
 for _n_ = 2, 3, 4, ..., 20.
 .  In the recursive `solve()` method in the `MazeSolver` program given
 in <<Solution: Maze of doom>>, the current location in the maze
-array is is set to a blank character (`'{nbsp}'`) after no solution had been
+array is set to a space character (`'{nbsp}'`) if no solution is been
 found. What value was in that location? How would the program behave if
-the value was not changed?
+the value wasn't changed back?
 
 *Programming Practice*
 
 .  [[recusivePalindromeExercise]] <<palindromeExercise>>
 from <<ch08-methods#ch08-methods>> challenges you to write a method to
-determine whether a `String` contains a palindrome. Recall that a
-palindrome (if punctuation and spaces are ignored) can be described as a
-`String` in which the first and last characters are equal, and all the
-characters in between form a palindrome. Write a recursive method to
-test if a `String` is a palindrome, using the following signature.
+determine whether a `String` is a palindrome. Recall that a palindrome (if
+punctuation and spaces are ignored) can be described as an empty `String` or
+a `String` in which the first and last characters are equal, with all the
+characters in between forming a palindrome. Write a recursive method with the
+following signature to test if a `String` is a palindrome.
 +
 [source, java]
 ----
-public static boolean isPalindrome(String text, int start,
-    int end)
+public static boolean isPalindrome(String text, int start, int end)
 ----
 +
 In this method, the `start` parameter is the index of the first
-character you are examining, and the `end` parameter is the index
-immediately after the last character you are examining. Thus, it would
+character you're examining, and the `end` parameter is the index
+immediately after the last character you're examining. Thus, it would
 initially be called with a `String`, `0`, and the length of the
 `String`, as follows.
 +
 [source, java]
 ----
-boolean result =
-    isPalindrome("A man, a plan, a canal: Panama", 0, 30);
+boolean result = isPalindrome("A man, a plan, a canal: Panama", 0, 30);
 ----
 .  [[constantSpaceFibonacciExercise]] The efficient implementation of
 Fibonacci from <<fibonacciImplementedRecursivelyExample>>
 eliminates redundant computation through memoization, storing values in
-an array as they are found. It is possible to carry along the
+an array as they're found. However, it's possible to carry along the
 computations of the previous two Fibonacci numbers *without* the
 overhead of storing an array. Consider the following method signature.
 +
@@ -1516,53 +1515,50 @@ implementation.
 //++++
 [.text-center]
 image::exponentRecursion3.svg[scaledwidth=55%,pdfwidth=55%,width=55%]
-.  [[fastFibonacciExercise]] <<fibonacciImplementedRecursivelyExample>> shows two implementations that can be used to
-find the _n_^th^ Fibonacci number. With a little bit of
-math, it is possible to show that there is a closed-form equation that
-gives the _n_^th^ Fibonacci number _F_~_n_~ where
+.  [[fastFibonacciExercise]] <<fibonacciImplementedRecursivelyExample>> shows
+two implementations that can be used to find the _n_^th^ Fibonacci number.
+With some knowledge of recurrence relations, it's possible to show that there's
+a closed-form equation that gives the _n_^th^ Fibonacci number _F_~_n_~ where
 _F_~0~ = _F_~1~ = 1.
 +
 //[stem]
 //++++
-//F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n+1}  -  \left(\frac{1 -
-//\sqrt{5}}{2}\right)^{n+1}}{\sqrt{5}}
+//F_n = \frac{\left(\frac{1 + \sqrt{5}}{2}\right)^{n}  -  \left(\frac{1 -
+//\sqrt{5}}{2}\right)^{n}}{\sqrt{5}}
 //++++
 [.text-center]
 image::fibonacciClosed.svg[scaledwidth=30%,pdfwidth=30%,width=30%]
 +
-Although this math is a bit ugly, you can plug numbers into this
-equation and discover the value of _F_~_n_~ quickly, provided
-that you have an efficient way to raise values to the
-_n_^th^ power. Use the recursive algorithm for fast
-exponentation from <<fastExponentiationExercise>> to
-make an implementation that finds the _n_^th^ Fibonacci
-number *very* quickly.
+Although this equation is a bit ugly, you can plug numbers into it to discover
+the value of _F_~_n_~ quickly, provided that you have an efficient way to raise
+values to the _n_^th^ power. Use the recursive algorithm for fast exponentation
+from <<fastExponentiationExercise>> to make an implementation that finds the
+_n_^th^ Fibonacci number *very* quickly.
 +
 Note that this approach uses real numbers (including
 the square root of 5) that need to be represented as `double` values.
 There are exact methods that use fast exponentiation of integer matrices
 to do this computation without doing any floating-point arithmetic, but
-we do not go into those details here.
-.  [[recursivePrintExercise]] <<recursiveLinkedListSizeExample>> shows a way to calculate the size of a linked list
-recursively. Add a recursive method called `print()` to the
-`RecursiveListSize` class that prints out the values in the linked list
-recursively, on each line.
-. [[reversePrintExercise]] Expand the previous exercise
-to add another method called `reversePrint()` that prints out the values
-in the linked list the *opposite* order that they appear. It should take
-only a slight modification of the `print()` method you have already
-written.
+we won't go into those details here.
+.  [[recursivePrintExercise]] <<recursiveLinkedListSizeExample>> shows a way to
+calculate the size of a linked list recursively. Add a recursive method called
+`print()` to the `RecursiveListSize` class that prints out the values in the
+linked list recursively, one value per line.
+. [[reversePrintExercise]] Expand the previous exercise to add another method
+called `reversePrint()` that prints out the values in the linked list in the
+*opposite* order that they appear. It should take only a slight modification of
+the `print()` method you've already written.
 . [[recursiveFindExercise]] Create a recursive `find()` method (and a
 non-recursive proxy method to call it) for the `Tree` class given in
 <<TreeProgram>>. Its operation is similar to the `add()`
-method. If the subtree it is examining is empty (`null`), it should
-return `false`. If the value it is looking for is at the root of the
+method. If the subtree it's examining is empty (`null`), it should
+return `false`. If the value it's looking for is at the root of the
 current subtree, it should return `true`. These are the two base cases.
-If the value it is looking for comes earlier in the alphabet than the
+If the value it's looking for comes earlier in the alphabet than the
 value at the root of the current subtree, it should look in the left
-subtree. If the value it is looking for comes later in the alphabet than
+subtree. If the value it's looking for comes later in the alphabet than
 the value at the root of the current subtree, it should look in the
-right subtree. These are the two recursive cases.
+right subtree. Those are the two recursive cases.
 . [[recursiveHeightExercise]] The height of a binary tree is defined as
 the longest path from the root to any leaf node. Thus, the height of a
 tree with only a root node in it is 0. By convention, the height of an
@@ -1574,8 +1570,8 @@ method to call it) for the `Tree` class given in
 pointer), which has a height of -1. For the recursive case of a
 non-empty tree, its height is one more than the height of the larger of
 its two subtrees.
-. [[treeInterfaceExercise]] Create an `interface` that
-describes a tree ADT. Modify the programs in <<binarySearchTreeExample>> to use this `interface`.
+. [[treeInterfaceExercise]] Create a Java interface that describes a tree ADT.
+Modify the programs in <<binarySearchTreeExample>> to implement this interface.
 
 *Experiments*
 
@@ -1590,7 +1586,7 @@ three copies of the array with the selection sort algorithm given in
 <<selectionSortExample>>, the bubble sort algorithm given in
 <<Problem: Sort it out>>, and the merge sort algorithm given in
 <<mergeSortExample>>, respectively. Use the `System.nanoTime()` method to time
-each of the sorts. Note that both selection sort and bubble sort may take
+each of the sorts. Note that both selection sort and bubble sort might take
 quite a while to sort an array of 1,000,000 elements.
 +
 Run the program several times and find average values for each algorithm
@@ -1600,22 +1596,22 @@ time to run merge sort should increase linearithmically. In other words,
 an array length of _n_ should take time proportional to
 _n_^2^ (multiplied by some constant) for selection sort and
 bubble sort, but it should take time proportional to
-_n_ log _n_ (multiplied by some constant) for merge sort. For
+_n_ log~2~ _n_ (multiplied by some constant) for merge sort. For
 large arrays, the difference in time is significant.
 . Investigate the performance of using recursion to compute Fibonacci
 numbers. Implement the naive recursive solution, the memoization method,
 and an iterative solution similar to the memoization method. Use the
-`System.nanoTime()` method to time the computations for large values of `n`.
+`System.nanoTime()` method to time the computations for large values of _n_.
 +
-*Warning:* It may take a very long time to compute the `n`^th^ Fibonacci number with the naive
-recursive solution.
+*Warning:* It might take a very long time to compute the _n_^th^ Fibonacci number
+with the naive recursive solution.
 . <<wordBinarySearchExercise>> from <<ch06-arrays#ch06-arrays>> explains how binary search can be used to search for a value in a sorted
 array of values. The idea is to play a "`high-low`" game, first looking
 at the middle value. If the value is the one you're looking for, you're
-done. If it is too high, look in the lower half of the array. If it is
+done. If it's too high, look in the lower half of the array. If it's
 too low, look in the upper half of the array. Implement binary search
 both iteratively and recursively. Populate an array with 100,000 `int`
 values between 1 and 10,000,000 and sort it. Then, search for 1,000,000
-random values generated betwee 1 and 10,000,000 using iterative binary
-search and then recursive binary search. Use the `System.nanoTime()` method to time each
-process. Was the iterative or recursive approach faster? By how much?
+random values generated between 1 and 10,000,000 using iterative binary
+search and then recursive binary search. Use the `System.nanoTime()` method to
+time each process. Was the iterative or recursive approach faster? By how much?

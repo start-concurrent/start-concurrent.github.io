@@ -19,8 +19,8 @@ public class RootFutures {
         }
         
         System.out.println("Getting results from futures...");
-        double sum = 0;
-        for(Future<Double> future : futures) { //<.>
+        double sum = 0.0;
+        for(Future<Double> future: futures) { //<.>
             try {
                 sum += future.get(); //<.>
             }
