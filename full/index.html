@@ -43507,7 +43507,7 @@ a technique called data compression to reduce the size of large files for
 storage. There are many different kinds of compression and many which are
 tailored to work well on images. Your task is to write a program that will
 do a particular kind of compression called run length encoding (RLE), which
-we will test on bitmaps. The idea behind RLE is simple: Imagine a file as a
+we&#8217;ll test on bitmaps. The idea behind RLE is simple: Imagine a file as a
 stream of bytes. As you look through the stream, replace repeating sequences
 of a single byte with a count telling how many times it repeats followed by
 the byte that repeats. Consider the following sequence.</p>
@@ -43556,7 +43556,7 @@ will overwrite a file of the same name.</p>
 repeating sequence of a byte (which can be as short as a single byte
 long), write the length of the sequence as a byte and then the byte
 itself into the compressed file. If a repeating sequence is more than
-127 bytes, you must break the sequence into more than one piece since
+127 bytes, you break the sequence into more than one piece since
 the largest value the <code>byte</code> data type can hold in Java is 127. (The
 <code>byte</code> type in Java is always signed, giving a range of -128 to 127.)
 Decompression simply reads the count then the byte value and writes the
@@ -43567,11 +43567,11 @@ file.</p>
 <div class="sect2">
 <h3 id="_concepts_file_io">20.2. Concepts: File I/O</h3>
 <div class="paragraph">
-<p>Before you can begin to tackle the problem of compressing, or even
+<p>Before you can tackle the problem of compressing, or even
 reading from and writing to, files, some background on files might be
 useful. By now, you&#8217;ve had many experiences with files: editing Java
 source files, compiling those files, and running them on a virtual
-machine, at the very least. You have probably done some word processing,
+machine, at the very least. You&#8217;ve probably done some word processing,
 looked at photos, listened to music, and watched videos, all on a
 computer. Each of these activities centers on one or more files. In
 order to reach these files, you probably had to look through some
@@ -43583,8 +43583,8 @@ file?</p>
 <div class="paragraph">
 <p>A computer program is like a living thing, always moving and restless.
 The variables in a program are stored in RAM, which is volatile storage.
-The data in volatile memory will only persist as long as there is
-electricity powering it. But programs do not run constantly, and neither
+The data in volatile memory will only persist as long as there&#8217;s
+electricity powering it. But most programs don&#8217;t run constantly, and neither
 do most computers. We need a place to store data between runs of a
 particular program. Likewise, we need a place to store data when our
 computer isn&#8217;t turned on. Both scenarios share a common solution:
@@ -43597,32 +43597,32 @@ load entire files into RAM and keep them there for long periods of time.
 Likewise, all input and output on Unix and Linux systems are viewed as
 file operations. Nevertheless, the characteristics of non-volatile
 memory are often associated with file I/O: slow access times and the
-possibility of errors in the event of inaccessible files or hardware problems.+</p>
+possibility of errors in the event of inaccessible files or hardware problems.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_stream_model">20.2.2. Stream model</h4>
 <div class="paragraph">
 <p>While discussing RLE encoding, we described a file as a stream of bytes,
-and that is a good definition for a file, especially in Java. Since Java
+and that&#8217;s a good definition for a file, especially in Java. Since Java
 is platform independent, and different operating systems and hardware
 will deal with the nitty gritty details of storing files in different
-ways, we want to think about files as abstractly as possible. The idea
-of a stream of bytes should make a connection with all the other input
-and output you have done so far. For the most part, file I/O will be
-similar and, in fact, can use some of the same classes.</p>
+ways, we want to think about files as abstractly as possible. Reading from and
+writing to a stream of bytes is not so different from the other input
+and output you&#8217;ve done so far. For the most part, file I/O will be
+similar to command-line I/O and, in fact, can use some of the same classes.</p>
 </div>
 <div class="paragraph">
-<p>Although reading and writing from the files will be very much like
-reading from the keyboard and writing to the screen, there are a few
-additional complications. For one thing, you must open a file before you
-can read and write. Sometimes opening the file will fail: You could try
-to open a file for reading which does not exist or try to open a file
-for writing which you do not have permissions for. When reading data,
+<p>Although reading and writing from the files can be like reading from the
+keyboard and writing to the screen, there are a few additional complications.
+For one thing, you must open a file before you
+can read or write. Sometimes opening the file will fail: You could try
+to open a file for reading which doesn&#8217;t exist or try to open a file
+for writing which you don&#8217;t have permissions for. When reading data,
 you might try to read past the end of the file or try to read an <code>int</code>
 when the next item is a <code>String</code>. Unlike reading from the keyboard, you
-cannot ask the user to try again if there is a mistake in input. To deal
-with all these possible errors, exception handling will accompany many
+cannot ask the user to try again if there&#8217;s a mistake in input. To deal
+with these possible errors, exception handling will accompany many
 different file I/O operations in Java.</p>
 </div>
 </div>
@@ -43660,11 +43660,12 @@ file would contain the following.</p>
 <p>If you recall, an <code>int</code> in Java uses four bytes of storage. There&#8217;s a
 system of encoding called the ASCII table which maps each of the 256
 (0–255) numerical bytes to a character. The four characters given above
-are the ASCII representation of the four bytes of the number 2,127,480,645.</p>
+are the extended ASCII representation of the four bytes of the number
+2,127,480,645.</p>
 </div>
 <div class="paragraph">
-<p>In some sense, the idea of a text file is artificial. All files are
-binary in the sense that they are readable by a computer. You&#8217;ll take
+<p>In some sense, the idea of a text file is artificial. <strong>All</strong> files are
+binary in the sense that they&#8217;re readable by a computer. You&#8217;ll take
 different steps and create different objects depending on whether you
 want to do file I/O in the text or binary paradigms, but the overall
 process will be similar in either case.</p>
@@ -43676,12 +43677,12 @@ process will be similar in either case.</p>
 <div class="sect3">
 <h4 id="_the_file_class">20.3.1. The <code>File</code> class</h4>
 <div class="paragraph">
-<p>The most basic object for interacting with a file in Java are objects of
-the <code>File</code> class. A <code>File</code> object allows you to interact with a file at
-the operating system level. You can create new files, test to see if a
-file is a directory, find out the size of a file, and so on. A number of
-file I/O classes require a <code>File</code> object as a parameter. To use the
-<code>File</code> class, import <code>java.io.File</code> or <code>java.io.*</code>.</p>
+<p>A basic class for interacting with files in Java is the <code>File</code> class. A <code>File</code>
+object allows you to interact with a file at the operating system level. You
+can create a new file, test to see if a file is a directory, find out the size
+of a file, and so on. A number of file I/O classes
+require a <code>File</code> object as a parameter. To use the <code>File</code> class, import
+<code>java.io.File</code> or <code>java.io.*</code>.</p>
 </div>
 <div class="paragraph">
 <p>To create a <code>File</code> object, you can call the <code>File</code> constructor with a
@@ -43694,17 +43695,17 @@ file I/O classes require a <code>File</code> object as a parameter. To use the
 </div>
 <div class="paragraph">
 <p>Doing so will create a virtual file object associated with the name
-<code>file.txt</code> (which may not exist yet) in the working directory of the
-Java program. In this case, the extension <code>.txt</code> doesn&#8217;t have any real
-meaning. On many systems, the extension (like <code>.doc</code> or <code>.html</code>) is used
+<code>file.txt</code> (which might not exist yet) in the working directory of the
+Java program. In this case, the extension <code>txt</code> doesn&#8217;t have any real
+meaning. On many systems, the extension (like <code>pdf</code> or <code>html</code>) is used
 by the operating system to guess which application should open the file.
 To Java, however, the extension is just part of the file name. A file
 name passed to the constructor of a <code>File</code> object can have any number of
-periods in it.</p>
+periods in it (or none).</p>
 </div>
 <div class="paragraph">
-<p>Creating a file is all well and good, but file systems are useful in
-part because of their hierarchical structure. If we want to create a
+<p>A file name without a directory is all well and good, but file systems are
+useful in part because of their hierarchical structure. If we want to create a
 file in a particular location, we specify the <em>path</em> in the <code>String</code>
 before the name of the file.</p>
 </div>
@@ -43714,8 +43715,8 @@ before the name of the file.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In this case, the prefix <code>"/homes/owilde/programs/"</code> is the path and
-<code>"file.txt"</code> is still the file name. Each slash (<code>'/'</code>) separates a
+<p>In this case, the prefix <code>/homes/owilde/programs/</code> is the path and
+<code>file.txt</code> is still the file name. Each slash (<code>'/'</code>) separates a
 parent directory from the files or directories inside of it. This path
 specifies that we start at the root, go into the <code>homes</code> directory, then
 the <code>owilde</code> directory, and then the <code>programs</code> directory. Note that we
@@ -43723,46 +43724,47 @@ can also use a single period (<code>.</code>) in a path to refer to the current
 working directory and two periods (<code>..</code>) to refer to a parent directory.</p>
 </div>
 <div class="paragraph">
-<p>This is one of those sticky places where Java is trying to be platform
+<p>This is one of those sticky places where Java&#8217;s trying to be platform
 independent, but the platforms each have different needs. The example we
-gave above is for a Unix or Linux system. In Windows, the way to specify
+gave above is for a macOS or Linux system. In Windows, the way to specify
 the path is slightly different. Creating a similar <code>File</code> object on
 Windows system might be done as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"C:\\My Documents\\programs\\file.txt"</span><span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"C:\\Users\\owilde\\Documents\\file.txt"</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Then, the path specifies that we start in the <code>C</code> drive, go into the
-<code>My Documents</code> directory and then the <code>programs</code> directory. Windows
-systems use a backslash (<code>\</code>) to separate a parent directory from its
-children. But, in Java, a backslash is not allowed to be by itself in a
+<code>Users</code> directory, the <code>owilde</code> directory, and then the <code>Documents</code> directory.
+Windows systems use a backslash (<code>\</code>) to separate a parent directory from its
+children. But in Java a backslash isn&#8217;t allowed to be by itself in a
 string literal, and so each backslash must be escaped with another
 backslash. To simplify things somewhat, Java allows Windows paths to be
-separated with regular slashes as well, so we will use this style for
+separated with regular slashes as well, so we&#8217;ll use this style for
 the rest of the book.</p>
 </div>
 <div class="paragraph">
-<p>If we return to objects of class <code>File</code>, there are a number of things we
+<p>Return to <code>File</code> objects, there are a number of things we
 can do directly. A <code>File</code> object has methods that can test if a file
-with the associated name and path exists, if it is readable, if it is
+with the associated name and path exists, if it&#8217;s readable, if it&#8217;s
 writable, and many other things. Because there are so many classes
-associated with file I/O and each class has so many methods, now is a
+associated with file I/O and each class has so many methods, now&#8217;s a
 good time to remind you of the usefulness of the Java API. If you visit
-the Oracle javase <a href="http://docs.oracle.com/javase" target="_blank" rel="noopener">documentation site</a>, you can choose the edition of Java you
-are using and get detailed documentation for all of the standard
-library, including file I/O classes.</p>
+the Java API <a href="https://docs.oracle.com/javase/8/docs/api/index.html" target="_blank" rel="noopener">documentation site</a>,
+you can get detailed documentation for the entire standard library, including
+file I/O classes.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_reading_and_writing_text_files">20.3.2. Reading and writing text files</h4>
 <div class="paragraph">
-<p>Once you have a <code>File</code> object, its true usefulness comes from combining
-it with other classes. You are already familiar with the <code>Scanner</code>
-class, and once you have a <code>File</code> object, reading from a text file is
-the same as reading from the keyboard.</p>
+<p>Once you have a <code>File</code> object, most of its usefulness comes from combining
+it with other classes. You&#8217;re already familiar with the <code>Scanner</code>
+class.  The <code>Scanner</code> constructor can take a <code>File</code> object (instead of
+<code>System.in</code>), creating a <code>Scanner</code> that reads from a text file just as you
+read from the keyboard.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -43781,20 +43783,23 @@ the same as reading from the keyboard.</p>
 <div class="paragraph">
 <p>Assuming that <code>file</code> is linked to a file which the program has read
 access to, this block of code will extract <code>int</code> values from the file
-and pass them to the <code>process()</code> method. If the file does not exist or
-is not readable to the program, a <code>FileNotFoundException</code> will be thrown
+and pass them to the <code>process()</code> method. If the file doesn&#8217;t exist or
+isn&#8217;t readable to the program, a <code>FileNotFoundException</code> will be thrown
 and an error message printed. Creating a <code>Scanner</code> from a <code>File</code> object
-instead of <code>System.in</code> can throw a checked exception, and so the <code>try</code>
-and <code>catch</code> are needed before the program will compile. Note that you
-will need to import <code>java.util.Scanner</code> or <code>java.util.*</code> just like any
-other time you use the <code>Scanner</code> class.</p>
+instead of <code>System.in</code> can throw a checked exception, so the <code>try</code> and <code>catch</code>
+are needed before the program will compile. Note that you&#8217;ll need to import
+<code>java.util.Scanner</code> or <code>java.util.*</code> just like any other time you use the
+<code>Scanner</code> class.</p>
 </div>
 <div class="paragraph">
 <p>And that&#8217;s all there is to it. After opening the file, using the
 <code>Scanner</code> class will be almost the same as before. One difference is
 that you should close the <code>Scanner</code> object (and by extension the file)
-when you are done reading from it, as we do in the example. Closing
-files is key to writing robust code. You&#8217;ll notice that we put
+when you&#8217;re done reading from it, as we do in the example. Closing
+files is key to writing robust code.</p>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll notice that we put
 <code>in.close()</code> in a <code>finally</code> block. Using <code>finally</code> is a good habit for
 file I/O. File operations could fail for any number of reasons, but you
 will still need to close the file afterwards. We put in the <code>null</code> check
@@ -43804,9 +43809,8 @@ complains that it might not have been initialized.)</p>
 </div>
 <div class="paragraph">
 <p>Writing information to a file is similar to using <code>System.out</code>. First,
-you need to create a <code>PrintWriter</code> object. Unlike <code>Scanner</code>, you cannot
-create a <code>PrintWriter</code> object directly from a <code>File</code> object. Instead,
-you have to create a <code>FileOutputStream</code> object first. If we want to
+you need to create a <code>PrintWriter</code> object. Like <code>Scanner</code>, you can
+create a <code>PrintWriter</code> object directly from a <code>File</code> object. If we want to
 write a list of random numbers to the file we were reading from earlier,
 we could do it as follows.</p>
 </div>
@@ -43814,7 +43818,7 @@ we could do it as follows.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">file</span><span class="o">));</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">file</span><span class="o">);</span>
     <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
     <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
         <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">());</span>
@@ -43827,49 +43831,25 @@ we could do it as follows.</p>
 </div>
 <div class="paragraph">
 <p>Again, once you have a <code>PrintWriter</code> object, the methods for outputting
-data will be just like using <code>System.out</code>. In this case, we already had
-an <code>File</code> object lying around. To save time, the <code>FileOutputStream</code>
-constructor can take a path name instead of a <code>File</code> object. So, it
-would be equivalent to create the <code>PrintWriter</code> from above by supplying
-a path like so.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span>
-<span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">"/homes/owilde/programs/file.txt"</span><span class="o">));</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Be sure to import <code>java.io.*</code> in order to have access to the
-<code>FileOutputStream</code> and <code>PrintWriter</code> classes.</p>
+data are just like using <code>System.out</code>. Be sure to import <code>java.io.*</code> in order
+to have access to the <code>PrintWriter</code> class.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_reading_and_writing_binary_files">20.3.3. Reading and writing binary files</h4>
 <div class="paragraph">
-<p>We covered text files first because the input and output is similar to
+<p>We covered text files first because their input and output is similar to
 command-line I/O. When reading and writing text files, it&#8217;s easy to verify
-that what you wanted to write was written and what you read was what was
-in the file. Binary files, however, are more powerful. Data, as in the
-example with the integer 2,127,480,645, can often be stored more compactly.
-Even better, Java provides facilities for easily dumping (and later
-retrieving) primitive data types, objects, and even complex data
-structures to binary files.</p>
+that what you wanted to write is written and the contents of the file are what
+you read. Binary files, however, are more powerful. Data can often be stored
+more compactly, as in the example with the integer 2,127,480,645. Even better,
+Java provides facilities for easily dumping (and later retrieving) primitive
+data types, objects, and even complex data structures to binary files.</p>
 </div>
 <div class="paragraph">
 <p>The first object you&#8217;ll need to read input from a binary file is a
-<code>FileInputStream</code> object. As before, all you need is a <code>File</code> object to
-create one.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"file.bin"</span><span class="o">);</span>
-<span class="n">FileInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">file</span><span class="o">);</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As it happens, <code>FileInputStream</code> also allows you to call its constructor
-with a <code>String</code> specifying the file path and name.</p>
+<code>FileInputStream</code> object. As with a <code>File</code> object, you can create a
+<code>FileInputStream</code> object from a <code>String</code> specifying the file path and name.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -43904,13 +43884,15 @@ the following method which prints the size of a file.</p>
 </div>
 <div class="paragraph">
 <p>Note the extra <code>try</code>-<code>catch</code> block inside of the <code>finally</code>. Like the
-other binary file I/O objects we will discuss in this chapter,
-<code>FileInputStream</code> can throw a <code>IOException</code> when closing. Usually, you
-will not need to deal with this exception, but you still must catch it.
+other binary file I/O objects we&#8217;ll discuss in this chapter,
+<code>FileInputStream</code> can throw an <code>IOException</code> when closing. Usually, you
+won&#8217;t need to deal with this exception, but you still must catch it.
 By catching any <code>Exception</code>, we can save a little bit of code by
 eliminating the <code>null</code> check. If <code>in</code> is <code>null</code> in this example, a
 <code>NullPointerException</code> will be thrown and immediately caught, causing no
-damage.</p>
+damage.  Catching <code>Exception</code> breaks our rule of never catching exceptions
+that are broader than we need, but we only have a single line of code
+in our <code>try</code> block with nothing to do if it fails.</p>
 </div>
 <div class="paragraph">
 <p>To output a number of bytes, you can create a <code>FileOutputStream</code> object.
@@ -43935,8 +43917,8 @@ are supposed to be.</p>
 <div class="paragraph">
 <p>Now, let&#8217;s assume that <code>baseball.bin</code> contains baseball statistics. The
 first thing in the file is an <code>int</code> indicating the number of records it
-contains. Then, for each record, it will list home runs, RBI, and
-batting average, as an <code>int</code>, an <code>int</code>, and a <code>float</code>, respectively.
+contains. Then, for each record, it&#8217;ll list home runs, RBI, and
+batting average, as an <code>int</code>, an <code>int</code>, and a <code>double</code>, respectively.
 Assuming that we&#8217;ve opened the file correctly above, we can read these
 statistics into three arrays with the following code.</p>
 </div>
@@ -43945,11 +43927,11 @@ statistics into three arrays with the following code.</p>
 <pre class="rouge highlight"><code data-lang="java"><span class="kt">int</span> <span class="n">records</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
 <span class="kt">int</span><span class="o">[]</span> <span class="n">homeRuns</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
 <span class="kt">int</span><span class="o">[]</span> <span class="n">RBI</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
-<span class="kt">float</span><span class="o">[]</span> <span class="n">battingAverage</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
+<span class="kt">double</span><span class="o">[]</span> <span class="n">battingAverage</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
 <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">records</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
     <span class="n">homeRuns</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
     <span class="n">RBI</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
-    <span class="n">battingAverage</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readFloat</span><span class="o">();</span>
+    <span class="n">battingAverage</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readDouble</span><span class="o">();</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -43969,13 +43951,12 @@ data and writes them to a file.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
     <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">homeRuns</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
     <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">homeRuns</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
         <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">homeRuns</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
         <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">RBI</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
-        <span class="n">out</span><span class="o">.</span><span class="na">writeFloat</span><span class="o">(</span><span class="n">battingAverage</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="n">out</span><span class="o">.</span><span class="na">writeDouble</span><span class="o">(</span><span class="n">battingAverage</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -43985,8 +43966,8 @@ data and writes them to a file.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Using <code>ObjectInputStream</code> and <code>ObjectOutputStream</code> in this way is not
-too difficult, but it seems cumbersome. The objects provide methods
+<p>Using <code>ObjectInputStream</code> and <code>ObjectOutputStream</code> in this way isn&#8217;t
+too difficult, but it seems cumbersome. These file I/O objects provide methods
 which elegantly allow you to read and write a whole object at a time. To
 do so, we need to define a new class.</p>
 </div>
@@ -43998,9 +43979,9 @@ do so, we need to define a new class.</p>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">BaseballPlayer</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">homeRuns</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">RBI</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="kt">float</span> <span class="n">battingAverage</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">double</span> <span class="n">battingAverage</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">BaseballPlayer</span><span class="o">(</span><span class="kt">int</span> <span class="n">homeRuns</span><span class="o">,</span> <span class="kt">int</span> <span class="n">RBI</span><span class="o">,</span> <span class="kt">float</span> <span class="n">battingAverage</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">BaseballPlayer</span><span class="o">(</span><span class="kt">int</span> <span class="n">homeRuns</span><span class="o">,</span> <span class="kt">int</span> <span class="n">RBI</span><span class="o">,</span> <span class="kt">double</span> <span class="n">battingAverage</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">homeRuns</span> <span class="o">=</span> <span class="n">homeRuns</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">RBI</span> <span class="o">=</span> <span class="n">RBI</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">battingAverage</span> <span class="o">=</span> <span class="n">battingAverage</span><span class="o">;</span>
@@ -44008,7 +43989,7 @@ do so, we need to define a new class.</p>
 
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getHomeRuns</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">homeRuns</span><span class="o">;</span> <span class="o">}</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getRBI</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">RBI</span><span class="o">;</span> <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">float</span> <span class="nf">getBattingAverage</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">battingAverage</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getBattingAverage</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">battingAverage</span><span class="o">;</span> <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -44016,7 +43997,7 @@ do so, we need to define a new class.</p>
 <p>The new class <code>BaseballPlayer</code> encapsulates the three pieces of
 information we want. Note that it also implements the interface
 <code>Serializable</code>, but it doesn&#8217;t seem to implement any special methods to
-conform to the interface. We&#8217;ll discuss this more after we show how
+conform to the interface. We&#8217;ll discuss this interface more after we show how
 using this new class can simplify the file I/O. The input will change to
 the following.</p>
 </div>
@@ -44024,8 +44005,7 @@ the following.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
+    <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
     <span class="kt">int</span> <span class="n">records</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
     <span class="n">BaseballPlayer</span><span class="o">[]</span> <span class="n">players</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BaseballPlayer</span><span class="o">[</span><span class="n">records</span><span class="o">];</span>
     <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">players</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
@@ -44038,14 +44018,13 @@ the following.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The output will become what follows.</p>
+<p>The corresponding output will become what follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
     <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">players</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
     <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">players</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
         <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
@@ -44060,9 +44039,9 @@ the following.</p>
 <p>This process of outputting an entire object at a time is called
 <em>serialization</em>. The <code>BaseballPlayer</code> class is very simple, but even
 complex objects can be serialized, and Java takes care of almost
-everything for you. The only magic needed is for the class which is
+everything for you. The only magic needed is for the class that&#8217;s
 going to be serialized to implement <code>Serializable</code>. There are no methods
-in <code>Serializable</code>. It is just a tag for a class which can be packed up
+in <code>Serializable</code>. It&#8217;s just a tag for a class which can be packed up
 and stored. The catch is that, if there are any references to other
 objects inside of the object being serialized, they must also be
 serializable. Otherwise, a <code>NotSerializableException</code> will be thrown
@@ -44071,8 +44050,7 @@ the vast majority of the Java API.</p>
 </div>
 <div class="paragraph">
 <p>However, objects which have some kind of special system dependent state,
-like a <code>Thread</code> or a<br>
-<code>FileInputStream</code> object cannot be serialized. If you need to serialize
+like a <code>Thread</code> or a <code>FileInputStream</code> object cannot be serialized. If you need to serialize
 a class with references to objects like these, add the <code>transient</code>
 keyword to the declaration of each unserializable reference. That said,
 these should be few and far between. For <code>BaseballPlayer</code>, adding
@@ -44085,8 +44063,7 @@ below.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
+    <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
     <span class="n">BaseballPlayer</span><span class="o">[]</span> <span class="n">players</span> <span class="o">=</span> <span class="o">(</span><span class="n">BaseballPlayer</span><span class="o">[])</span><span class="n">in</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
 <span class="o">}</span>
 <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -44102,8 +44079,7 @@ below.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-        <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">"baseball.bin"</span><span class="o">));</span>
     <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">players</span><span class="o">);</span>
 <span class="o">}</span>
 <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -44422,13 +44398,11 @@ will also implement this program to read from a binary file called
         <span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="kt">double</span> <span class="n">radius</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span><span class="n">inFile</span><span class="o">));</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="n">outFile</span><span class="o">));</span>
+            <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">inFile</span><span class="o">));</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">outFile</span><span class="o">));</span>
             <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">radius</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readDouble</span><span class="o">();</span>
-                <span class="n">out</span><span class="o">.</span><span class="na">writeDouble</span><span class="o">(</span> <span class="n">Math</span><span class="o">.</span><span class="na">PI</span><span class="o">*</span><span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="o">);</span>
+                <span class="n">out</span><span class="o">.</span><span class="na">writeDouble</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">PI</span><span class="o">*</span><span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">}</span>
         <span class="k">catch</span><span class="o">(</span><span class="n">EOFException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
@@ -44468,9 +44442,9 @@ method.</p>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">BitmapCompression</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">FileInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
+            <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
             <span class="k">if</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">"-c"</span><span class="o">))</span>
                 <span class="n">compress</span><span class="o">(</span><span class="n">in</span><span class="o">,</span> <span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
             <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">"-d"</span><span class="o">))</span>
@@ -44502,33 +44476,33 @@ safely close binary files.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">compress</span><span class="o">(</span><span class="n">ObjectInputStream</span> <span class="n">in</span><span class="o">,</span>
-        <span class="n">String</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">temp</span><span class="o">,</span> <span class="n">current</span><span class="o">,</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">compress</span><span class="o">(</span><span class="n">FileInputStream</span> <span class="n">in</span><span class="o">,</span> <span class="n">String</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">temp</span><span class="o">,</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">FileOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="n">file</span> <span class="o">+</span> <span class="s">".compress"</span><span class="o">));</span>
-            <span class="n">current</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">file</span> <span class="o">+</span> <span class="s">".compress"</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">current</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
             <span class="k">while</span><span class="o">((</span><span class="n">temp</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">())</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
                 <span class="k">if</span><span class="o">(</span><span class="n">temp</span> <span class="o">==</span> <span class="n">current</span> <span class="o">&amp;&amp;</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">127</span><span class="o">)</span>
                     <span class="n">count</span><span class="o">++;</span>
                 <span class="k">else</span> <span class="o">{</span>
-                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
-                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
+                    <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
+                    <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
                     <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
                     <span class="n">current</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
                 <span class="o">}</span>
-            <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
-            <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
             <span class="o">}</span>
+			<span class="c1">// Last sequences of bytes</span>
+			<span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
+            <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
         <span class="o">}</span>
         <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Compression failed: "</span>
-                <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Compression failed: "</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
         <span class="o">}</span>
-        <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span> <span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span>
-    <span class="o">}</span></code></pre>
+        <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span> <span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">decompress</span><span class="o">(</span><span class="n">FileInputStream</span> <span class="n">in</span><span class="o">,</span> <span class="n">String</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -44545,23 +44519,17 @@ safely close the output file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">decompress</span><span class="o">(</span><span class="n">ObjectInputStream</span> <span class="n">in</span><span class="o">,</span>
-        <span class="n">String</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">count</span><span class="o">,</span> <span class="n">temp</span><span class="o">;</span>
-        <span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java">        <span class="n">FileOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span>
-                    <span class="n">file</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s">".compress"</span><span class="o">))));</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">file</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s">".compress"</span><span class="o">)));</span>
             <span class="k">while</span><span class="o">((</span><span class="n">count</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">())</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">temp</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readByte</span><span class="o">();</span>
+                <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
                 <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">temp</span><span class="o">);</span>
+                    <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">temp</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">}</span>
         <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Decompression failed: "</span>
-                <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Decompression failed: "</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
         <span class="o">}</span>
         <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){}</span> <span class="o">}</span>
     <span class="o">}</span>
@@ -44579,7 +44547,7 @@ the count specifies.</p>
 <div class="sect2">
 <h3 id="_concurrency_file_io">20.6. Concurrency: File I/O</h3>
 <div class="paragraph">
-<p>By now, you have seen threads behave in unpredictable ways because of
+<p>By now, you&#8217;ve seen threads behave in unpredictable ways because of
 the way they are reading and writing to shared variables. Well, isn&#8217;t a
 file a shared resource as well? What happens when two threads try to
 access a file at the same time? If both threads are reading from the
@@ -44619,21 +44587,18 @@ prints the odd ones.</p>
 
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">if</span><span class="o">(!</span><span class="n">even</span><span class="o">)</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="n">even</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="mi">1</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span>
-                <span class="k">new</span> <span class="nf">FileOutputStream</span><span class="o">(</span><span class="s">"concurrent.out"</span><span class="o">,</span> <span class="kc">true</span><span class="o">));</span>
+			<span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">"concurrent.out"</span><span class="o">,</span> <span class="kc">true</span><span class="o">));</span>
             <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
-                <span class="n">out</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
-            <span class="o">}</span>
+				<span class="n">out</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
+			<span class="o">}</span>
         <span class="o">}</span>
         <span class="k">catch</span> <span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"concurrent.out not found!"</span><span class="o">);</span>
         <span class="o">}</span>
-        <span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span><span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span> <span class="o">();</span> <span class="o">}</span>
+        <span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span><span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -44648,21 +44613,19 @@ which thread it is. Afterwards, each thread closes the file and ends.</p>
 </div>
 <div class="paragraph">
 <p>What do you expect the file <code>concurrent.out</code> to look like after the
-program has completed? Run it several times, on Windows, Linux, and Mac
-computers, if you can. Most likely, the file will contain either all the
-even numbers from 0 to 9,998 or all the odd numbers from 1 to 9,999. If
-you run the program enough times, you should be able to see both
-possibilities.</p>
+program&#8217;s completed? Run it several times, on Windows, Linux, and macOS
+computers, if you can. The file might contain runs switching back
+and forth between even numbers and odd numbers, but it&#8217;s likely that many
+numbers, often about half, will be missing.</p>
 </div>
 <div class="paragraph">
 <p>Why are half the numbers getting lost? When you open a file for writing,
-by default it erases everything that was already in the file. So, an
-entire sequence of numbers is getting saved and then lost. We can change
-this behavior by changing the line below.</p>
+it overwrites the contents of the file. Thus, entire sequences of numbers are
+getting saved and then lost. We can change this behavior by changing the line below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">"concurrent.out"</span><span class="o">));</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"concurrent.out"</span><span class="o">));</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -44674,35 +44637,38 @@ this behavior by changing the line below.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This second <code>boolean</code> parameter to the <code>FileOutputStream</code> constructor
-specifies that output will <em>append</em> to the file instead of overwriting
-it.</p>
+<p>The <code>PrintWriter</code> constructor that takes a <code>File</code> object actually calls another
+constructor internally that builds an output stream object.  Instead, we can
+pass in a <code>FileOutputStream</code> object created with a second <code>boolean</code> parameter
+set to <code>true</code>. Doing so creates a <code>FileOutputStream</code> stream (and consequently a
+<code>PrintWriter</code>) whose output will be <em>appended</em> to the file instead of
+overwriting it.</p>
 </div>
 <div class="paragraph">
 <p>After this change, what does the file look like when we run the program?
-Since we&#8217;re going to append to any preexisting file, make sure that you
-delete <code>concurrent.out</code> before running the program again. The file may
-look different on different systems. The file probably contains long
-runs of numbers from each thread. In fact, it is quite possible to have
-the complete output from one thread followed by the complete output from
-the other.</p>
+Since we&#8217;re going to append to the file instead of ovewriting, make sure that
+you delete <code>concurrent.out</code> before running the program again. As usual, the
+file might look different on different systems. The file probably contains long
+runs of numbers from each thread. In fact, it&#8217;s possible to have the complete
+output from one thread followed by the complete output from the other.</p>
 </div>
 <div class="paragraph">
 <p>For performance reasons, file operations are usually done in batches.
 Instead of writing each number to the file as the thread produces it,
-output is usually stored in a buffer which is written as a whole. By calling <code>out.flush()</code> after each the <code>out.println()</code> call, we can flush
-the buffer to the file after each number is generated. Doing so will not
+output is usually stored in a buffer which is written as a whole. By calling
+<code>out.flush()</code> after each the <code>out.println()</code> call, we could flush
+the buffer to the file after each number is generated. Doing so won&#8217;t
 be as efficient, but it may give us some insight into how concurrent
 writes on files work.</p>
 </div>
 <div class="paragraph">
 <p>Using flushes, the output from the two threads should be thoroughly
 intermixed. On a Windows machine, if you copy the data from the file and
-sort it, you will probably see some numbers missing. This lost output is
-similar to situations where updates to variables were lost because they
+sort it, it&#8217;s possible that you&#8217;ll see some numbers missing. This lost output
+is similar to situations where updates to variables were lost because they
 were overwritten by another thread. On the other hand, most Linux
-systems have better concurrent file writing and will not lose any
-numbers. (Even on Linux, it is possible for a number to be printed in
+systems have better concurrent file writing and won&#8217;t lose any
+numbers. (Even on Linux, it&#8217;s possible for a number to be printed in
 the middle of another number, but no digits should be lost.)</p>
 </div>
 <div class="paragraph">
@@ -44714,8 +44680,8 @@ within your own program from accessing a file concurrently by using
 normal Java synchronization tools. If you expect other programs to
 interact with the same files that your program will use, Java provides a
 <code>FileLock</code> class which allows the user to lock up portions of a file. As
-with everything file-related, <code>FileLock</code> is dependent on the underlying
-OS and may behave differently on different systems.</p>
+with everything file related, <code>FileLock</code> is dependent on the underlying
+OS and might behave differently on different systems.</p>
 </div>
 </div>
 <div class="sect2">
@@ -45842,7 +45808,7 @@ multi-threaded versions?</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-09 18:07:19 UTC
+Last updated 2019-07-17 17:13:33 UTC
 </div>
 </div>
 <style>

@@ -19,7 +19,7 @@ a technique called data compression to reduce the size of large files for
 storage. There are many different kinds of compression and many which are
 tailored to work well on images. Your task is to write a program that will
 do a particular kind of compression called run length encoding (RLE), which
-we will test on bitmaps. The idea behind RLE is simple: Imagine a file as a
+we'll test on bitmaps. The idea behind RLE is simple: Imagine a file as a
 stream of bytes. As you look through the stream, replace repeating sequences
 of a single byte with a count telling how many times it repeats followed by
 the byte that repeats. Consider the following sequence.
@@ -60,7 +60,7 @@ To perform the compression, go byte by byte through the file. For each
 repeating sequence of a byte (which can be as short as a single byte
 long), write the length of the sequence as a byte and then the byte
 itself into the compressed file. If a repeating sequence is more than
-127 bytes, you must break the sequence into more than one piece since
+127 bytes, you break the sequence into more than one piece since
 the largest value the `byte` data type can hold in Java is 127. (The
 `byte` type in Java is always signed, giving a range of -128 to 127.)
 Decompression simply reads the count then the byte value and writes the
@@ -69,11 +69,11 @@ file.
 
 === Concepts: File I/O
 
-Before you can begin to tackle the problem of compressing, or even
+Before you can tackle the problem of compressing, or even
 reading from and writing to, files, some background on files might be
 useful. By now, you've had many experiences with files: editing Java
 source files, compiling those files, and running them on a virtual
-machine, at the very least. You have probably done some word processing,
+machine, at the very least. You've probably done some word processing,
 looked at photos, listened to music, and watched videos, all on a
 computer. Each of these activities centers on one or more files. In
 order to reach these files, you probably had to look through some
@@ -84,8 +84,8 @@ file?
 
 A computer program is like a living thing, always moving and restless.
 The variables in a program are stored in RAM, which is volatile storage.
-The data in volatile memory will only persist as long as there is
-electricity powering it. But programs do not run constantly, and neither
+The data in volatile memory will only persist as long as there's
+electricity powering it. But most programs don't run constantly, and neither
 do most computers. We need a place to store data between runs of a
 particular program. Likewise, we need a place to store data when our
 computer isn't turned on. Both scenarios share a common solution:
@@ -97,29 +97,29 @@ load entire files into RAM and keep them there for long periods of time.
 Likewise, all input and output on Unix and Linux systems are viewed as
 file operations. Nevertheless, the characteristics of non-volatile
 memory are often associated with file I/O: slow access times and the
-possibility of errors in the event of inaccessible files or hardware problems.+
+possibility of errors in the event of inaccessible files or hardware problems.
 
 ==== Stream model
 
 While discussing RLE encoding, we described a file as a stream of bytes,
-and that is a good definition for a file, especially in Java. Since Java
+and that's a good definition for a file, especially in Java. Since Java
 is platform independent, and different operating systems and hardware
 will deal with the nitty gritty details of storing files in different
-ways, we want to think about files as abstractly as possible. The idea
-of a stream of bytes should make a connection with all the other input
-and output you have done so far. For the most part, file I/O will be
-similar and, in fact, can use some of the same classes.
+ways, we want to think about files as abstractly as possible. Reading from and
+writing to a stream of bytes is not so different from the other input
+and output you've done so far. For the most part, file I/O will be
+similar to command-line I/O and, in fact, can use some of the same classes.
 
-Although reading and writing from the files will be very much like
-reading from the keyboard and writing to the screen, there are a few
-additional complications. For one thing, you must open a file before you
-can read and write. Sometimes opening the file will fail: You could try
-to open a file for reading which does not exist or try to open a file
-for writing which you do not have permissions for. When reading data,
+Although reading and writing from the files can be like reading from the
+keyboard and writing to the screen, there are a few additional complications.
+For one thing, you must open a file before you
+can read or write. Sometimes opening the file will fail: You could try
+to open a file for reading which doesn't exist or try to open a file
+for writing which you don't have permissions for. When reading data,
 you might try to read past the end of the file or try to read an `int`
 when the next item is a `String`. Unlike reading from the keyboard, you
-cannot ask the user to try again if there is a mistake in input. To deal
-with all these possible errors, exception handling will accompany many
+cannot ask the user to try again if there's a mistake in input. To deal
+with these possible errors, exception handling will accompany many
 different file I/O operations in Java.
 
 ==== Text files and binary files
@@ -150,10 +150,11 @@ file would contain the following.
 If you recall, an `int` in Java uses four bytes of storage. There's a
 system of encoding called the ASCII table which maps each of the 256
 (0–255) numerical bytes to a character. The four characters given above
-are the ASCII representation of the four bytes of the number 2,127,480,645.
+are the extended ASCII representation of the four bytes of the number
+2,127,480,645.
 
-In some sense, the idea of a text file is artificial. All files are
-binary in the sense that they are readable by a computer. You'll take
+In some sense, the idea of a text file is artificial. *All* files are
+binary in the sense that they're readable by a computer. You'll take
 different steps and create different objects depending on whether you
 want to do file I/O in the text or binary paradigms, but the overall
 process will be similar in either case.
@@ -162,12 +163,12 @@ process will be similar in either case.
 
 ==== The `File` class
 
-The most basic object for interacting with a file in Java are objects of
-the `File` class. A `File` object allows you to interact with a file at
-the operating system level. You can create new files, test to see if a
-file is a directory, find out the size of a file, and so on. A number of
-file I/O classes require a `File` object as a parameter. To use the
-`File` class, import `java.io.File` or `java.io.*`.
+A basic class for interacting with files in Java is the `File` class. A `File`
+object allows you to interact with a file at the operating system level. You
+can create a new file, test to see if a file is a directory, find out the size
+of a file, and so on. A number of file I/O classes
+require a `File` object as a parameter. To use the `File` class, import
+`java.io.File` or `java.io.*`.
 
 To create a `File` object, you can call the `File` constructor with a
 `String` specifying the name of the file.
@@ -178,16 +179,16 @@ File file = new File("file.txt");
 ----
 
 Doing so will create a virtual file object associated with the name
-`file.txt` (which may not exist yet) in the working directory of the
-Java program. In this case, the extension `.txt` doesn't have any real
-meaning. On many systems, the extension (like `.doc` or `.html`) is used
+`file.txt` (which might not exist yet) in the working directory of the
+Java program. In this case, the extension `txt` doesn't have any real
+meaning. On many systems, the extension (like `pdf` or `html`) is used
 by the operating system to guess which application should open the file.
 To Java, however, the extension is just part of the file name. A file
 name passed to the constructor of a `File` object can have any number of
-periods in it.
+periods in it (or none).
 
-Creating a file is all well and good, but file systems are useful in
-part because of their hierarchical structure. If we want to create a
+A file name without a directory is all well and good, but file systems are
+useful in part because of their hierarchical structure. If we want to create a
 file in a particular location, we specify the _path_ in the `String`
 before the name of the file.
 
@@ -196,50 +197,51 @@ before the name of the file.
 File file = new File("/homes/owilde/programs/file.txt");
 ----
 
-In this case, the prefix `"/homes/owilde/programs/"` is the path and
-`"file.txt"` is still the file name. Each slash (`'/'`) separates a
+In this case, the prefix `/homes/owilde/programs/` is the path and
+`file.txt` is still the file name. Each slash (`'/'`) separates a
 parent directory from the files or directories inside of it. This path
 specifies that we start at the root, go into the `homes` directory, then
 the `owilde` directory, and then the `programs` directory. Note that we
 can also use a single period (`.`) in a path to refer to the current
 working directory and two periods (`..`) to refer to a parent directory.
 
-This is one of those sticky places where Java is trying to be platform
+This is one of those sticky places where Java's trying to be platform
 independent, but the platforms each have different needs. The example we
-gave above is for a Unix or Linux system. In Windows, the way to specify
+gave above is for a macOS or Linux system. In Windows, the way to specify
 the path is slightly different. Creating a similar `File` object on
 Windows system might be done as follows.
 
 [source, java]
 ----
-File file = new File("C:\\My Documents\\programs\\file.txt");
+File file = new File("C:\\Users\\owilde\\Documents\\file.txt");
 ----
 
 Then, the path specifies that we start in the `C` drive, go into the
-`My Documents` directory and then the `programs` directory. Windows
-systems use a backslash (`\`) to separate a parent directory from its
-children. But, in Java, a backslash is not allowed to be by itself in a
+`Users` directory, the `owilde` directory, and then the `Documents` directory.
+Windows systems use a backslash (`\`) to separate a parent directory from its
+children. But in Java a backslash isn't allowed to be by itself in a
 string literal, and so each backslash must be escaped with another
 backslash. To simplify things somewhat, Java allows Windows paths to be
-separated with regular slashes as well, so we will use this style for
+separated with regular slashes as well, so we'll use this style for
 the rest of the book.
 
-If we return to objects of class `File`, there are a number of things we
+Return to `File` objects, there are a number of things we
 can do directly. A `File` object has methods that can test if a file
-with the associated name and path exists, if it is readable, if it is
+with the associated name and path exists, if it's readable, if it's
 writable, and many other things. Because there are so many classes
-associated with file I/O and each class has so many methods, now is a
+associated with file I/O and each class has so many methods, now's a
 good time to remind you of the usefulness of the Java API. If you visit
-the Oracle javase http://docs.oracle.com/javase[documentation site^], you can choose the edition of Java you
-are using and get detailed documentation for all of the standard
-library, including file I/O classes.
+the Java API https://docs.oracle.com/javase/8/docs/api/index.html[documentation site^],
+you can get detailed documentation for the entire standard library, including
+file I/O classes.
 
 ==== Reading and writing text files
 
-Once you have a `File` object, its true usefulness comes from combining
-it with other classes. You are already familiar with the `Scanner`
-class, and once you have a `File` object, reading from a text file is
-the same as reading from the keyboard.
+Once you have a `File` object, most of its usefulness comes from combining
+it with other classes. You're already familiar with the `Scanner`
+class.  The `Scanner` constructor can take a `File` object (instead of
+`System.in`), creating a `Scanner` that reads from a text file just as you
+read from the keyboard.
 
 [source, java]
 ----
@@ -257,19 +259,21 @@ finally { if(in != null) in.close(); }
 
 Assuming that `file` is linked to a file which the program has read
 access to, this block of code will extract `int` values from the file
-and pass them to the `process()` method. If the file does not exist or
-is not readable to the program, a `FileNotFoundException` will be thrown
+and pass them to the `process()` method. If the file doesn't exist or
+isn't readable to the program, a `FileNotFoundException` will be thrown
 and an error message printed. Creating a `Scanner` from a `File` object
-instead of `System.in` can throw a checked exception, and so the `try`
-and `catch` are needed before the program will compile. Note that you
-will need to import `java.util.Scanner` or `java.util.*` just like any
-other time you use the `Scanner` class.
+instead of `System.in` can throw a checked exception, so the `try` and `catch`
+are needed before the program will compile. Note that you'll need to import
+`java.util.Scanner` or `java.util.*` just like any other time you use the
+`Scanner` class.
 
 And that's all there is to it. After opening the file, using the
 `Scanner` class will be almost the same as before. One difference is
 that you should close the `Scanner` object (and by extension the file)
-when you are done reading from it, as we do in the example. Closing
-files is key to writing robust code. You'll notice that we put
+when you're done reading from it, as we do in the example. Closing
+files is key to writing robust code.
+
+You'll notice that we put
 `in.close()` in a `finally` block. Using `finally` is a good habit for
 file I/O. File operations could fail for any number of reasons, but you
 will still need to close the file afterwards. We put in the `null` check
@@ -278,9 +282,8 @@ valid object. (We also begin by setting `in` to `null`. Otherwise, Java
 complains that it might not have been initialized.)
 
 Writing information to a file is similar to using `System.out`. First,
-you need to create a `PrintWriter` object. Unlike `Scanner`, you cannot
-create a `PrintWriter` object directly from a `File` object. Instead,
-you have to create a `FileOutputStream` object first. If we want to
+you need to create a `PrintWriter` object. Like `Scanner`, you can
+create a `PrintWriter` object directly from a `File` object. If we want to
 write a list of random numbers to the file we were reading from earlier,
 we could do it as follows.
 
@@ -288,7 +291,7 @@ we could do it as follows.
 ----
 PrintWriter out = null;
 try {
-    out = new PrintWriter(new FileOutputStream(file));
+    out = new PrintWriter(file);
     Random random = new Random();
     for(int i = 0; i < 100; i++)
         out.println(random.nextInt());
@@ -300,44 +303,22 @@ finally { if(out != null) out.close(); }
 ----
 
 Again, once you have a `PrintWriter` object, the methods for outputting
-data will be just like using `System.out`. In this case, we already had
-an `File` object lying around. To save time, the `FileOutputStream`
-constructor can take a path name instead of a `File` object. So, it
-would be equivalent to create the `PrintWriter` from above by supplying
-a path like so.
-
-[source, java]
-----
-PrintWriter out = new PrintWriter(
-new FileOutputStream("/homes/owilde/programs/file.txt"));
-----
-
-Be sure to import `java.io.*` in order to have access to the
-`FileOutputStream` and `PrintWriter` classes.
+data are just like using `System.out`. Be sure to import `java.io.*` in order
+to have access to the `PrintWriter` class.
 
 ==== Reading and writing binary files
 
-We covered text files first because the input and output is similar to
+We covered text files first because their input and output is similar to
 command-line I/O. When reading and writing text files, it's easy to verify
-that what you wanted to write was written and what you read was what was
-in the file. Binary files, however, are more powerful. Data, as in the
-example with the integer 2,127,480,645, can often be stored more compactly.
-Even better, Java provides facilities for easily dumping (and later
-retrieving) primitive data types, objects, and even complex data
-structures to binary files.
+that what you wanted to write is written and the contents of the file are what
+you read. Binary files, however, are more powerful. Data can often be stored
+more compactly, as in the example with the integer 2,127,480,645. Even better,
+Java provides facilities for easily dumping (and later retrieving) primitive
+data types, objects, and even complex data structures to binary files.
 
 The first object you'll need to read input from a binary file is a
-`FileInputStream` object. As before, all you need is a `File` object to
-create one.
-
-[source, java]
-----
-File file = new File("file.bin");
-FileInputStream in = new FileInputStream(file);
-----
-
-As it happens, `FileInputStream` also allows you to call its constructor
-with a `String` specifying the file path and name.
+`FileInputStream` object. As with a `File` object, you can create a
+`FileInputStream` object from a `String` specifying the file path and name.
 
 [source, java]
 ----
@@ -370,13 +351,15 @@ public static void printFileSize(String fileName) {
 ----
 
 Note the extra `try`-`catch` block inside of the `finally`. Like the
-other binary file I/O objects we will discuss in this chapter,
-`FileInputStream` can throw a `IOException` when closing. Usually, you
-will not need to deal with this exception, but you still must catch it.
+other binary file I/O objects we'll discuss in this chapter,
+`FileInputStream` can throw an `IOException` when closing. Usually, you
+won't need to deal with this exception, but you still must catch it.
 By catching any `Exception`, we can save a little bit of code by
 eliminating the `null` check. If `in` is `null` in this example, a
 `NullPointerException` will be thrown and immediately caught, causing no
-damage.
+damage.  Catching `Exception` breaks our rule of never catching exceptions
+that are broader than we need, but we only have a single line of code
+in our `try` block with nothing to do if it fails.
 
 To output a number of bytes, you can create a `FileOutputStream` object.
 Its `write()` methods are the mirror images of the `read()` methods in
@@ -398,8 +381,8 @@ ObjectInputStream in = new ObjectInputStream(new FileInputStream("baseball.bin")
 
 Now, let's assume that `baseball.bin` contains baseball statistics. The
 first thing in the file is an `int` indicating the number of records it
-contains. Then, for each record, it will list home runs, RBI, and
-batting average, as an `int`, an `int`, and a `float`, respectively.
+contains. Then, for each record, it'll list home runs, RBI, and
+batting average, as an `int`, an `int`, and a `double`, respectively.
 Assuming that we've opened the file correctly above, we can read these
 statistics into three arrays with the following code.
 
@@ -408,11 +391,11 @@ statistics into three arrays with the following code.
 int records = in.readInt();
 int[] homeRuns = new int[records];
 int[] RBI = new int[records];
-float[] battingAverage = new float[records];
+double[] battingAverage = new double[records];
 for(int i = 0; i < records; i++) {
     homeRuns[i] = in.readInt();
     RBI[i] = in.readInt();
-    battingAverage[i] = in.readFloat();
+    battingAverage[i] = in.readDouble();
 }
 ----
 
@@ -431,13 +414,12 @@ data and writes them to a file.
 ----
 ObjectOutputStream out = null;
 try {
-    out = new ObjectOutputStream(
-        new FileOutputStream("baseball.bin"));
+    out = new ObjectOutputStream(new FileOutputStream("baseball.bin"));
     out.writeInt(homeRuns.length);
     for(int i = 0; i < homeRuns.length; i++) {
         out.writeInt(homeRuns[i]);
         out.writeInt(RBI[i]);
-        out.writeFloat(battingAverage[i]);
+        out.writeDouble(battingAverage[i]);
     }
 }
 catch(Exception e) {
@@ -446,8 +428,8 @@ catch(Exception e) {
 finally { try{ out.close(); } catch(Exception e){} }
 ----
 
-Using `ObjectInputStream` and `ObjectOutputStream` in this way is not
-too difficult, but it seems cumbersome. The objects provide methods
+Using `ObjectInputStream` and `ObjectOutputStream` in this way isn't
+too difficult, but it seems cumbersome. These file I/O objects provide methods
 which elegantly allow you to read and write a whole object at a time. To
 do so, we need to define a new class.
 
@@ -461,7 +443,7 @@ include::{programsdir}/BaseballPlayer.java[]
 The new class `BaseballPlayer` encapsulates the three pieces of
 information we want. Note that it also implements the interface
 `Serializable`, but it doesn't seem to implement any special methods to
-conform to the interface. We'll discuss this more after we show how
+conform to the interface. We'll discuss this interface more after we show how
 using this new class can simplify the file I/O. The input will change to
 the following.
 
@@ -469,8 +451,7 @@ the following.
 ----
 ObjectInputStream in = null;
 try {
-    in = new ObjectInputStream(
-        new FileInputStream("baseball.bin"));
+    in = new ObjectInputStream(new FileInputStream("baseball.bin"));
     int records = in.readInt();
     BaseballPlayer[] players = new BaseballPlayer[records];
     for(int i = 0; i < players.length; i++)
@@ -482,14 +463,13 @@ catch(Exception e) {
 finally { try{ in.close(); } catch(Exception e){} }
 ----
 
-The output will become what follows.
+The corresponding output will become what follows.
 
 [source, java]
 ----
 ObjectOutputStream out = null;
 try {
-    out = new ObjectOutputStream(
-        new FileOutputStream("baseball.bin"));
+    out = new ObjectOutputStream(new FileOutputStream("baseball.bin"));
     out.writeInt(players.length);
     for(int i = 0; i < players.length; i++)
         out.writeObject(players[i]);
@@ -503,9 +483,9 @@ finally { try{ out.close(); } catch(Exception e){} }
 This process of outputting an entire object at a time is called
 _serialization_. The `BaseballPlayer` class is very simple, but even
 complex objects can be serialized, and Java takes care of almost
-everything for you. The only magic needed is for the class which is
+everything for you. The only magic needed is for the class that's
 going to be serialized to implement `Serializable`. There are no methods
-in `Serializable`. It is just a tag for a class which can be packed up
+in `Serializable`. It's just a tag for a class which can be packed up
 and stored. The catch is that, if there are any references to other
 objects inside of the object being serialized, they must also be
 serializable. Otherwise, a `NotSerializableException` will be thrown
@@ -513,8 +493,7 @@ when the JVM tries to serialize. Most things are serializable, including
 the vast majority of the Java API.
 
 However, objects which have some kind of special system dependent state,
-like a `Thread` or a +
-`FileInputStream` object cannot be serialized. If you need to serialize
+like a `Thread` or a `FileInputStream` object cannot be serialized. If you need to serialize
 a class with references to objects like these, add the `transient`
 keyword to the declaration of each unserializable reference. That said,
 these should be few and far between. For `BaseballPlayer`, adding
@@ -527,8 +506,7 @@ below.
 ----
 ObjectInputStream in = null;
 try {
-    in = new ObjectInputStream(
-        new FileInputStream("baseball.bin"));
+    in = new ObjectInputStream(new FileInputStream("baseball.bin"));
     BaseballPlayer[] players = (BaseballPlayer[])in.readObject();
 }
 catch(Exception e) {
@@ -543,8 +521,7 @@ And the corresponding output code can be simplified as well.
 ----
 ObjectOutputStream out = null;
 try {
-    out = new ObjectOutputStream(
-        new FileOutputStream("baseball.bin"));
+    out = new ObjectOutputStream(new FileOutputStream("baseball.bin"));
     out.writeObject(players);
 }
 catch(Exception e) {
@@ -811,7 +788,7 @@ the count specifies.
 
 === Concurrency: File I/O
 
-By now, you have seen threads behave in unpredictable ways because of
+By now, you've seen threads behave in unpredictable ways because of
 the way they are reading and writing to shared variables. Well, isn't a
 file a shared resource as well? What happens when two threads try to
 access a file at the same time? If both threads are reading from the
@@ -843,20 +820,18 @@ opens the file and starts printing out even or odd numbers, depending on
 which thread it is. Afterwards, each thread closes the file and ends.
 
 What do you expect the file `concurrent.out` to look like after the
-program has completed? Run it several times, on Windows, Linux, and Mac
-computers, if you can. Most likely, the file will contain either all the
-even numbers from 0 to 9,998 or all the odd numbers from 1 to 9,999. If
-you run the program enough times, you should be able to see both
-possibilities.
+program's completed? Run it several times, on Windows, Linux, and macOS
+computers, if you can. The file might contain runs switching back
+and forth between even numbers and odd numbers, but it's likely that many
+numbers, often about half, will be missing.
 
 Why are half the numbers getting lost? When you open a file for writing,
-by default it erases everything that was already in the file. So, an
-entire sequence of numbers is getting saved and then lost. We can change
-this behavior by changing the line below.
+it overwrites the contents of the file. Thus, entire sequences of numbers are
+getting saved and then lost. We can change this behavior by changing the line below.
 
 [source, java]
 ----
-out = new PrintWriter(new FileOutputStream("concurrent.out"));
+out = new PrintWriter(new File("concurrent.out"));
 ----
 
 We replace it with the following.
@@ -866,32 +841,35 @@ We replace it with the following.
 out = new PrintWriter(new FileOutputStream("concurrent.out", true));
 ----
 
-This second `boolean` parameter to the `FileOutputStream` constructor
-specifies that output will _append_ to the file instead of overwriting
-it.
+The `PrintWriter` constructor that takes a `File` object actually calls another
+constructor internally that builds an output stream object.  Instead, we can
+pass in a `FileOutputStream` object created with a second `boolean` parameter
+set to `true`. Doing so creates a `FileOutputStream` stream (and consequently a
+`PrintWriter`) whose output will be _appended_ to the file instead of
+overwriting it.
 
 After this change, what does the file look like when we run the program?
-Since we're going to append to any preexisting file, make sure that you
-delete `concurrent.out` before running the program again. The file may
-look different on different systems. The file probably contains long
-runs of numbers from each thread. In fact, it is quite possible to have
-the complete output from one thread followed by the complete output from
-the other.
+Since we're going to append to the file instead of ovewriting, make sure that
+you delete `concurrent.out` before running the program again. As usual, the
+file might look different on different systems. The file probably contains long
+runs of numbers from each thread. In fact, it's possible to have the complete
+output from one thread followed by the complete output from the other.
 
 For performance reasons, file operations are usually done in batches.
 Instead of writing each number to the file as the thread produces it,
-output is usually stored in a buffer which is written as a whole. By calling `out.flush()` after each the `out.println()` call, we can flush
-the buffer to the file after each number is generated. Doing so will not
+output is usually stored in a buffer which is written as a whole. By calling
+`out.flush()` after each the `out.println()` call, we could flush
+the buffer to the file after each number is generated. Doing so won't
 be as efficient, but it may give us some insight into how concurrent
 writes on files work.
 
 Using flushes, the output from the two threads should be thoroughly
 intermixed. On a Windows machine, if you copy the data from the file and
-sort it, you will probably see some numbers missing. This lost output is
-similar to situations where updates to variables were lost because they
+sort it, it's possible that you'll see some numbers missing. This lost output
+is similar to situations where updates to variables were lost because they
 were overwritten by another thread. On the other hand, most Linux
-systems have better concurrent file writing and will not lose any
-numbers. (Even on Linux, it is possible for a number to be printed in
+systems have better concurrent file writing and won't lose any
+numbers. (Even on Linux, it's possible for a number to be printed in
 the middle of another number, but no digits should be lost.)
 
 Under ideal circumstances, no two threads or processes should be writing
@@ -902,8 +880,8 @@ within your own program from accessing a file concurrently by using
 normal Java synchronization tools. If you expect other programs to
 interact with the same files that your program will use, Java provides a
 `FileLock` class which allows the user to lock up portions of a file. As
-with everything file-related, `FileLock` is dependent on the underlying
-OS and may behave differently on different systems.
+with everything file related, `FileLock` is dependent on the underlying
+OS and might behave differently on different systems.
 
 === Exercises
 *Conceptual Problems*

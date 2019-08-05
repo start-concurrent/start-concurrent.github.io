@@ -8,13 +8,11 @@ public class AreaFromRadiusBinary {
         ObjectOutputStream out = null;
         double radius;
         try {
-            in = new ObjectInputStream(
-                new FileInputStream(inFile));
-            out = new ObjectOutputStream(
-                new FileOutputStream(outFile));           
+            in = new ObjectInputStream(new FileInputStream(inFile));
+            out = new ObjectOutputStream(new FileOutputStream(outFile));           
             while(true) {
                 radius = in.readDouble();
-                out.writeDouble( Math.PI*radius*radius);              
+                out.writeDouble(Math.PI*radius*radius);              
             }           
         }
         catch(EOFException e) {}
