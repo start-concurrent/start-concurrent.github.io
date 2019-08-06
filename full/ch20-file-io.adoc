@@ -309,14 +309,15 @@ to have access to the `PrintWriter` class.
 ==== Reading and writing binary files
 
 We covered text files first because their input and output is similar to
-command-line I/O. When reading and writing text files, it's easy to verify
-that what you wanted to write is written and the contents of the file are what
-you read. Binary files, however, are more powerful. Data can often be stored
-more compactly, as in the example with the integer 2,127,480,645. Even better,
-Java provides facilities for easily dumping (and later retrieving) primitive
-data types, objects, and even complex data structures to binary files.
+command-line I/O. When reading and writing text files, you can visually verify
+that file reading and writing operations were successful. Although it's harder
+to check the contents of binary files, they're more powerful than text files.
+Data can often be stored more compactly in binary files, as in the example with
+the integer 2,127,480,645. Even better, Java provides facilities for easily
+dumping (and later retrieving) primitive data types, objects, and even complex
+data structures to binary files.
 
-The first object you'll need to read input from a binary file is a
+The simplest object for reading input from a binary file is a
 `FileInputStream` object. As with a `File` object, you can create a
 `FileInputStream` object from a `String` specifying the file path and name.
 
@@ -326,11 +327,11 @@ FileInputStream in = new FileInputStream("file.bin");
 ----
 
 The bad news is that you can't do much with a `FileInputStream` object.
-Its methods allow you to read single bytes, either one at a time, or a
+Its methods allow you to read single bytes, either one at a time or a
 group of them into an array. The basic `read()` method returns the next
 byte in the file, or a -1 if the end of the file has been reached.
 Working at the low level of bytes, we can still write useful code like
-the following method which prints the size of a file.
+the following method that prints the size of a file.
 
 [source, java]
 ----
@@ -361,22 +362,22 @@ damage.  Catching `Exception` breaks our rule of never catching exceptions
 that are broader than we need, but we only have a single line of code
 in our `try` block with nothing to do if it fails.
 
-To output a number of bytes, you can create a `FileOutputStream` object.
+To output a sequence of bytes, you can create a `FileOutputStream` object.
 Its `write()` methods are the mirror images of the `read()` methods in
-`FileInputStream`. For output, what we really want is an object which
-will chop up primitive data types and objects into their component bytes
-and send those bytes to a `FileOutputStream`. Then, for input, we would
-want an object which could read a sequence of bytes from a
-`FileInputStream` and reassemble them into whatever kind of data they
-are supposed to be.
+`FileInputStream`. It would be convenient if there was a way to read
+and write any primitive type instead of just `byte` values, and
+`DataInputStream` and `DataOutputStream` provide exactly that functionality.
 
-These objects exist, and they belong to the `ObjectInputStream` and
-`ObjectOutputStream` classes, respectively. To create an
-`ObjectInputStream`, you supply a `FileInputStream` to its constructor.
+For output, a `DataOutputStream` chops up primitive data types into their
+component bytes and sends those bytes to a `FileOutputStream`. For input, a
+`DataOutputStream` reads a sequence of bytes from a `FileInputStream` and
+reassembles them into whatever kind of primitive data they're supposed to be.
+
+To create an `DataInputStream`, you supply a `FileInputStream` to its constructor.
 
 [source, java]
 ----
-ObjectInputStream in = new ObjectInputStream(new FileInputStream("baseball.bin"));
+DataInputStream in = new DataInputStream(new FileInputStream("baseball.bin"));
 ----
 
 Now, let's assume that `baseball.bin` contains baseball statistics. The
@@ -401,20 +402,20 @@ for(int i = 0; i < records; i++) {
 
 Of course, all of the code should be enclosed in a `try` block with
 appropriate exception handling and `in.close()` in a `finally` block at
-the end. If an `ObjectInputStream` object tries to read past the end of
-a file, an `EOFException` exception will be thrown. Using an
-`ObjectInputStream` object to read from a file also assumes that the
-file was created with an `ObjectOutputStream` object. If you substitute
-`write` for `read`, `ObjectOutputStream` methods are almost the same as
-`ObjectInputStream` methods. Below is a companion piece of code which
+the end. If a `DataInputStream` object tries to read past the end of
+a file, an `EOFException` exception will be thrown. As expected, the
+`DataInputStream` methods for reading from a file match `DataOutputStream`
+methods for writing to a file. If you substitute `write` for `read`,
+`DataOutputStream` methods are almost the same as
+`DataInputStream` methods. Below is a companion piece of code which
 assumes that `homeRuns`, `RBI`, and `battingAverage` are filled with
 data and writes them to a file.
 
 [source, java]
 ----
-ObjectOutputStream out = null;
+DataOutputStream out = null;
 try {
-    out = new ObjectOutputStream(new FileOutputStream("baseball.bin"));
+    out = new DataOutputStream(new FileOutputStream("baseball.bin"));
     out.writeInt(homeRuns.length);
     for(int i = 0; i < homeRuns.length; i++) {
         out.writeInt(homeRuns[i]);
@@ -428,10 +429,18 @@ catch(Exception e) {
 finally { try{ out.close(); } catch(Exception e){} }
 ----
 
-Using `ObjectInputStream` and `ObjectOutputStream` in this way isn't
-too difficult, but it seems cumbersome. These file I/O objects provide methods
-which elegantly allow you to read and write a whole object at a time. To
-do so, we need to define a new class.
+Using `DataInputStream` and `DataOutputStream` in this way isn't
+too difficult, but it seems cumbersome. The programmer has the responsibility
+to read and write every piece of primitive data separately.  It would be
+convenient if there was a way to read an entire object at once, including any
+references to  other objects that it contains.  If a tool exists for reading
+an entire object, we'd also want a matching tool for writing an entire
+object at once.
+
+It turns out that these tools can be found in the `ObjectInputStream` and
+`ObjectOutputStream` classes, respectively. These file I/O objects provide
+methods that elegantly allow you to read or write a whole object at a time. To
+use them with our baseball data example, we need to define a new class.
 
 .Serializable BaseballPlayer class.
 [source, java]
@@ -444,7 +453,7 @@ The new class `BaseballPlayer` encapsulates the three pieces of
 information we want. Note that it also implements the interface
 `Serializable`, but it doesn't seem to implement any special methods to
 conform to the interface. We'll discuss this interface more after we show how
-using this new class can simplify the file I/O. The input will change to
+using this new class can simplify file I/O. The input code will change to
 the following.
 
 [source, java]
@@ -485,22 +494,22 @@ _serialization_. The `BaseballPlayer` class is very simple, but even
 complex objects can be serialized, and Java takes care of almost
 everything for you. The only magic needed is for the class that's
 going to be serialized to implement `Serializable`. There are no methods
-in `Serializable`. It's just a tag for a class which can be packed up
+in `Serializable`. It's just a tag for a class that can be packed up
 and stored. The catch is that, if there are any references to other
 objects inside of the object being serialized, they must also be
 serializable. Otherwise, a `NotSerializableException` will be thrown
-when the JVM tries to serialize. Most things are serializable, including
-the vast majority of the Java API.
+when the JVM tries to perform the serialized output. Most classes are
+serializable, including the vast majority of the Java API.
 
-However, objects which have some kind of special system dependent state,
-like a `Thread` or a `FileInputStream` object cannot be serialized. If you need to serialize
-a class with references to objects like these, add the `transient`
-keyword to the declaration of each unserializable reference. That said,
-these should be few and far between. For `BaseballPlayer`, adding
-`implements Serializable` was all that was needed, and we can still get
-more mileage out of it. Consider that an array can be treated liked an
+However, objects that have some kind of special system-dependent state,
+like a `Thread` or a `FileInputStream` object, can't be serialized. If you
+need to serialize a class with references to objects like these, add the
+`transient` keyword to the declaration of each unserializable reference. That
+said, these should be few and far between. For `BaseballPlayer`, adding
+`implements Serializable` was all we needed, and we can still get
+*more* mileage out of serialization! An array can be treated liked an
 `Object` and is also serializable. We can further simplify the input as
-below.
+shown below.
 
 [source, java]
 ----
@@ -530,9 +539,60 @@ catch(Exception e) {
 finally { try{ out.close(); } catch(Exception e){} }
 ----
 
-It's worth noting that `DataInputStream` and `DataOutputStream` objects
-can be used in place of `ObjectInputStream` and `ObjectOutputStream`
-objects if you only need to read and write primitive data.
+When you go to write your code, which binary file I/O classes should you use?
+It depends on the situation.  `FileInputStream` and `FileOutputStream` are very
+low level.  You'll use those classes to construct `DataInputStream`,
+`DataOutputStream`, `ObjectInputStream`, and `ObjectOutputStream` objects, but
+you probably won't use them on their own unless your application is focused on
+byte-level input and output.
+
+If you only want to read and write primitive types, you can use
+`DataInputStream` and `DataOutputStream` objects.  These classes have methods
+to read and write all primitive types.  Ultimately, all objects are made up of
+primitive types, though those primitive types might be buried inside of other
+objects.  Most languages provide binary I/O tools like `DataInputStream` and
+`DataOutputStream`, so code using these objects will be similar to code in other
+languages that writes individual pieces of primitive data.
+
+Finally, if you want to read and write whole objects (or even arrays of objects)
+at a time, `ObjectInputStream` and `ObjectOutputStream` are powerful tools.
+Using them leverages Java serialization, making the JVM do the work of dividing
+up your objects into primitive types and writing them (for output) or
+reading that primitive data and reassembling it into objects (for input).  Even
+complex objects with many (potentially circular) references to other objects,
+like linked list classes, can be serialized.  The Java implementation of
+serialization is smart enough to write each unique object only once and then
+refer to it later. This power feels like magic, but serialization has
+limitations.  Only classes that implement the `Serializable` interface can
+be serialized.  Also, serialization carries with it some overhead: the files
+must contain additional metadata describing the class being stored. Using
+`DataInputStream` and `DataOutputStream` can allow you to write only the
+necessary member data, resulting in a smaller file.  You can also run into
+trouble if you make changes to a class.  If one version of an object is
+serialized and then you try to read that object back after making the smallest
+change to the class, your code will fail.  One last issues is that Java
+serializes objects according to its own rules, making files written in this
+way difficult (if not impossible) to use with code written in other languages.
+This consideration is not insignificant, since files are often written by one
+program and read by another.
+
+The following table summarizes the three approaches to binary I/O we've
+discussed.  Be sure to consult each class's documentation for more information.
+
+
+[.center%autowidth,cols="<,<,<.^,<.^",options="header",]
+|=======================================================================
+|Class |Use |Purpose |Limitations
+|`FileInputStream` |Input .2+<.^|Simplest binary I/O .2+| Can only read and write `byte` values
+|`FileOutputStream`| Output
+|`DataInputStream` |Input .2+<.^|Binary I/O for primitive types .2+| Can't read and write whole objects
+|`DataOutputStream`| Output
+|`ObjectInputStream` |Input .2+<.^|Powerful binary I/O for all types  .2+| Depends on Java serialization: can't work with files created in other ways
+|`ObjectOutputStream`| Output
+|=======================================================================
+
+
+
 
 ==== Using `JFileChooser`
 

@@ -1050,15 +1050,16 @@ to have access to the <code>PrintWriter</code> class.</p>
 <h4 id="_reading_and_writing_binary_files">20.3.3. Reading and writing binary files</h4>
 <div class="paragraph">
 <p>We covered text files first because their input and output is similar to
-command-line I/O. When reading and writing text files, it’s easy to verify
-that what you wanted to write is written and the contents of the file are what
-you read. Binary files, however, are more powerful. Data can often be stored
-more compactly, as in the example with the integer 2,127,480,645. Even better,
-Java provides facilities for easily dumping (and later retrieving) primitive
-data types, objects, and even complex data structures to binary files.</p>
+command-line I/O. When reading and writing text files, you can visually verify
+that file reading and writing operations were successful. Although it’s harder
+to check the contents of binary files, they’re more powerful than text files.
+Data can often be stored more compactly in binary files, as in the example with
+the integer 2,127,480,645. Even better, Java provides facilities for easily
+dumping (and later retrieving) primitive data types, objects, and even complex
+data structures to binary files.</p>
 </div>
 <div class="paragraph">
-<p>The first object you’ll need to read input from a binary file is a
+<p>The simplest object for reading input from a binary file is a
 <code>FileInputStream</code> object. As with a <code>File</code> object, you can create a
 <code>FileInputStream</code> object from a <code>String</code> specifying the file path and name.</p>
 </div>
@@ -1069,11 +1070,11 @@ data types, objects, and even complex data structures to binary files.</p>
 </div>
 <div class="paragraph">
 <p>The bad news is that you can’t do much with a <code>FileInputStream</code> object.
-Its methods allow you to read single bytes, either one at a time, or a
+Its methods allow you to read single bytes, either one at a time or a
 group of them into an array. The basic <code>read()</code> method returns the next
 byte in the file, or a -1 if the end of the file has been reached.
 Working at the low level of bytes, we can still write useful code like
-the following method which prints the size of a file.</p>
+the following method that prints the size of a file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1106,23 +1107,24 @@ that are broader than we need, but we only have a single line of code
 in our <code>try</code> block with nothing to do if it fails.</p>
 </div>
 <div class="paragraph">
-<p>To output a number of bytes, you can create a <code>FileOutputStream</code> object.
+<p>To output a sequence of bytes, you can create a <code>FileOutputStream</code> object.
 Its <code>write()</code> methods are the mirror images of the <code>read()</code> methods in
-<code>FileInputStream</code>. For output, what we really want is an object which
-will chop up primitive data types and objects into their component bytes
-and send those bytes to a <code>FileOutputStream</code>. Then, for input, we would
-want an object which could read a sequence of bytes from a
-<code>FileInputStream</code> and reassemble them into whatever kind of data they
-are supposed to be.</p>
+<code>FileInputStream</code>. It would be convenient if there was a way to read
+and write any primitive type instead of just <code>byte</code> values, and
+<code>DataInputStream</code> and <code>DataOutputStream</code> provide exactly that functionality.</p>
 </div>
 <div class="paragraph">
-<p>These objects exist, and they belong to the <code>ObjectInputStream</code> and
-<code>ObjectOutputStream</code> classes, respectively. To create an
-<code>ObjectInputStream</code>, you supply a <code>FileInputStream</code> to its constructor.</p>
+<p>For output, a <code>DataOutputStream</code> chops up primitive data types into their
+component bytes and sends those bytes to a <code>FileOutputStream</code>. For input, a
+<code>DataOutputStream</code> reads a sequence of bytes from a <code>FileInputStream</code> and
+reassembles them into whatever kind of primitive data they’re supposed to be.</p>
+</div>
+<div class="paragraph">
+<p>To create an <code>DataInputStream</code>, you supply a <code>FileInputStream</code> to its constructor.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">DataInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1149,20 +1151,20 @@ statistics into three arrays with the following code.</p>
 <div class="paragraph">
 <p>Of course, all of the code should be enclosed in a <code>try</code> block with
 appropriate exception handling and <code>in.close()</code> in a <code>finally</code> block at
-the end. If an <code>ObjectInputStream</code> object tries to read past the end of
-a file, an <code>EOFException</code> exception will be thrown. Using an
-<code>ObjectInputStream</code> object to read from a file also assumes that the
-file was created with an <code>ObjectOutputStream</code> object. If you substitute
-<code>write</code> for <code>read</code>, <code>ObjectOutputStream</code> methods are almost the same as
-<code>ObjectInputStream</code> methods. Below is a companion piece of code which
+the end. If a <code>DataInputStream</code> object tries to read past the end of
+a file, an <code>EOFException</code> exception will be thrown. As expected, the
+<code>DataInputStream</code> methods for reading from a file match <code>DataOutputStream</code>
+methods for writing to a file. If you substitute <code>write</code> for <code>read</code>,
+<code>DataOutputStream</code> methods are almost the same as
+<code>DataInputStream</code> methods. Below is a companion piece of code which
 assumes that <code>homeRuns</code>, <code>RBI</code>, and <code>battingAverage</code> are filled with
 data and writes them to a file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">DataOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 <span class="k">try</span> <span class="o">{</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="s">&quot;baseball.bin&quot;</span><span class="o">));</span>
     <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">homeRuns</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
     <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">homeRuns</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
         <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">homeRuns</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
@@ -1177,10 +1179,19 @@ data and writes them to a file.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Using <code>ObjectInputStream</code> and <code>ObjectOutputStream</code> in this way isn’t
-too difficult, but it seems cumbersome. These file I/O objects provide methods
-which elegantly allow you to read and write a whole object at a time. To
-do so, we need to define a new class.</p>
+<p>Using <code>DataInputStream</code> and <code>DataOutputStream</code> in this way isn’t
+too difficult, but it seems cumbersome. The programmer has the responsibility
+to read and write every piece of primitive data separately.  It would be
+convenient if there was a way to read an entire object at once, including any
+references to  other objects that it contains.  If a tool exists for reading
+an entire object, we’d also want a matching tool for writing an entire
+object at once.</p>
+</div>
+<div class="paragraph">
+<p>It turns out that these tools can be found in the <code>ObjectInputStream</code> and
+<code>ObjectOutputStream</code> classes, respectively. These file I/O objects provide
+methods that elegantly allow you to read or write a whole object at a time. To
+use them with our baseball data example, we need to define a new class.</p>
 </div>
 <div id="BaseballPlayerProgram" class="listingblock">
 <div class="title">Program 20.1 Serializable BaseballPlayer class.</div>
@@ -1209,7 +1220,7 @@ do so, we need to define a new class.</p>
 information we want. Note that it also implements the interface
 <code>Serializable</code>, but it doesn’t seem to implement any special methods to
 conform to the interface. We’ll discuss this interface more after we show how
-using this new class can simplify the file I/O. The input will change to
+using this new class can simplify file I/O. The input code will change to
 the following.</p>
 </div>
 <div class="listingblock">
@@ -1252,23 +1263,23 @@ the following.</p>
 complex objects can be serialized, and Java takes care of almost
 everything for you. The only magic needed is for the class that’s
 going to be serialized to implement <code>Serializable</code>. There are no methods
-in <code>Serializable</code>. It’s just a tag for a class which can be packed up
+in <code>Serializable</code>. It’s just a tag for a class that can be packed up
 and stored. The catch is that, if there are any references to other
 objects inside of the object being serialized, they must also be
 serializable. Otherwise, a <code>NotSerializableException</code> will be thrown
-when the JVM tries to serialize. Most things are serializable, including
-the vast majority of the Java API.</p>
+when the JVM tries to perform the serialized output. Most classes are
+serializable, including the vast majority of the Java API.</p>
 </div>
 <div class="paragraph">
-<p>However, objects which have some kind of special system dependent state,
-like a <code>Thread</code> or a <code>FileInputStream</code> object cannot be serialized. If you need to serialize
-a class with references to objects like these, add the <code>transient</code>
-keyword to the declaration of each unserializable reference. That said,
-these should be few and far between. For <code>BaseballPlayer</code>, adding
-<code>implements Serializable</code> was all that was needed, and we can still get
-more mileage out of it. Consider that an array can be treated liked an
+<p>However, objects that have some kind of special system-dependent state,
+like a <code>Thread</code> or a <code>FileInputStream</code> object, can’t be serialized. If you
+need to serialize a class with references to objects like these, add the
+<code>transient</code> keyword to the declaration of each unserializable reference. That
+said, these should be few and far between. For <code>BaseballPlayer</code>, adding
+<code>implements Serializable</code> was all we needed, and we can still get
+<strong>more</strong> mileage out of serialization! An array can be treated liked an
 <code>Object</code> and is also serializable. We can further simplify the input as
-below.</p>
+shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1300,10 +1311,97 @@ below.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>It’s worth noting that <code>DataInputStream</code> and <code>DataOutputStream</code> objects
-can be used in place of <code>ObjectInputStream</code> and <code>ObjectOutputStream</code>
-objects if you only need to read and write primitive data.</p>
+<p>When you go to write your code, which binary file I/O classes should you use?
+It depends on the situation.  <code>FileInputStream</code> and <code>FileOutputStream</code> are very
+low level.  You’ll use those classes to construct <code>DataInputStream</code>,
+<code>DataOutputStream</code>, <code>ObjectInputStream</code>, and <code>ObjectOutputStream</code> objects, but
+you probably won’t use them on their own unless your application is focused on
+byte-level input and output.</p>
 </div>
+<div class="paragraph">
+<p>If you only want to read and write primitive types, you can use
+<code>DataInputStream</code> and <code>DataOutputStream</code> objects.  These classes have methods
+to read and write all primitive types.  Ultimately, all objects are made up of
+primitive types, though those primitive types might be buried inside of other
+objects.  Most languages provide binary I/O tools like <code>DataInputStream</code> and
+<code>DataOutputStream</code>, so code using these objects will be similar to code in other
+languages that writes individual pieces of primitive data.</p>
+</div>
+<div class="paragraph">
+<p>Finally, if you want to read and write whole objects (or even arrays of objects)
+at a time, <code>ObjectInputStream</code> and <code>ObjectOutputStream</code> are powerful tools.
+Using them leverages Java serialization, making the JVM do the work of dividing
+up your objects into primitive types and writing them (for output) or
+reading that primitive data and reassembling it into objects (for input).  Even
+complex objects with many (potentially circular) references to other objects,
+like linked list classes, can be serialized.  The Java implementation of
+serialization is smart enough to write each unique object only once and then
+refer to it later. This power feels like magic, but serialization has
+limitations.  Only classes that implement the <code>Serializable</code> interface can
+be serialized.  Also, serialization carries with it some overhead: the files
+must contain additional metadata describing the class being stored. Using
+<code>DataInputStream</code> and <code>DataOutputStream</code> can allow you to write only the
+necessary member data, resulting in a smaller file.  You can also run into
+trouble if you make changes to a class.  If one version of an object is
+serialized and then you try to read that object back after making the smallest
+change to the class, your code will fail.  One last issues is that Java
+serializes objects according to its own rules, making files written in this
+way difficult (if not impossible) to use with code written in other languages.
+This consideration is not insignificant, since files are often written by one
+program and read by another.</p>
+</div>
+<div class="paragraph">
+<p>The following table summarizes the three approaches to binary I/O we’ve
+discussed.  Be sure to consult each class’s documentation for more information.</p>
+</div>
+<table class="tableblock frame-all grid-all fit-content center">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class</th>
+<th class="tableblock halign-left valign-top">Use</th>
+<th class="tableblock halign-left valign-middle">Purpose</th>
+<th class="tableblock halign-left valign-middle">Limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FileInputStream</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Input</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">Simplest binary I/O</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">Can only read and write <code>byte</code> values</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FileOutputStream</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataInputStream</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Input</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">Binary I/O for primitive types</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">Can’t read and write whole objects</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataOutputStream</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ObjectInputStream</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Input</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">Powerful binary I/O for all types</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">Depends on Java serialization: can’t work with files created in other ways</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ObjectOutputStream</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_using_jfilechooser">20.3.4. Using <code>JFileChooser</code></h4>
@@ -2055,7 +2153,7 @@ already stored in an array.</p>
 </div></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-17 17:13:33 UTC
+Last updated 2019-07-09 18:07:19 UTC
 </div>
 </div>
 <style>
