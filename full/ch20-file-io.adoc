@@ -48,13 +48,22 @@ decompress. The second argument is the name of the file to be compressed
 or decompressed. When compressing, append the suffix `.compress` to the
 end of the file name. When decompressing, remove that suffix.
 
-Executing `java BitmapCompression -c test.bmp` from the command line
-should generate an RLE compressed file called `test.bmp.compress`.
+Executing the following on the command line should generate an RLE compressed
+file called `test.bmp.compress`.
 
-Likewise, executing `java BitmapCompression -d test.bmp.compress` should
-create an uncompressed file called `test.bmp`. Be sure to make a backup
-of the original file (in this case `test.bmp`) because decompressing
-will overwrite a file of the same name.
+----
+java BitmapCompression -c test.bmp
+----
+
+Likewise, executing the following should create an uncompressed file called
+`test.bmp`.
+
+----
+java BitmapCompression -d test.bmp.compress
+----
+
+Be sure to make a backup of the original file (in this case `test.bmp`) because
+decompressing will overwrite a file of the same name.
 
 To perform the compression, go byte by byte through the file. For each
 repeating sequence of a byte (which can be as short as a single byte
@@ -67,11 +76,36 @@ Decompression simply reads the count then the byte value and writes the
 appropriate number of copies of the byte value into the decompressed
 file.
 
+You might be wondering how to read the command-line arguments such as
+`-c test.bmp` or `-d test.bmp.compress`.  These arguments can't be read
+using `Scanner` as we read most text.  Instead, they're passed *directly* into
+your program.  By this point, you've written so many `main()` methods that you
+might have stopped paying attention to their syntax.  Remember that `main()`
+methods always take a single parameter of type `String[]`.  We've always called
+this parameter `args` in this book, but you're free to call it whatever you
+like.
+
+This array of `String` values is how command-line arguments are passed into
+your program.  A Java program invoked by typing
+`java BitmapCompression -c test.bmp` will have an array of length 2 passed in.
+The first `String` stored in this array (`args[0]`) will be `"-c"`.  The second
+`String` stored in this array (`args[1]`) will be `"test.bmp"`.  The operating
+system passes in these command-line arguments to the JVM which passes them along
+to your program as `String` values.
+
+Command-line programs often take these arguments to specify which options the
+program will be run with. Although they're useful, we didn't focus on these
+arguments in early chapters partly because they involve arrays and partly because
+all arguments, even those that look like numbers, will be passed in as `String`
+values.  Furthermore, it's cumbersome to specify command-line arguments when
+using IDEs like Eclipse or IntelliJ.
+
+
 === Concepts: File I/O
 
 Before you can tackle the problem of compressing, or even
-reading from and writing to, files, some background on files might be
-useful. By now, you've had many experiences with files: editing Java
+reading from and writing to, files, some background on files is necessary.
+By now, you've had many experiences with files: editing Java
 source files, compiling those files, and running them on a virtual
 machine, at the very least. You've probably done some word processing,
 looked at photos, listened to music, and watched videos, all on a
@@ -98,6 +132,10 @@ Likewise, all input and output on Unix and Linux systems are viewed as
 file operations. Nevertheless, the characteristics of non-volatile
 memory are often associated with file I/O: slow access times and the
 possibility of errors in the event of inaccessible files or hardware problems.
+
+****
+<<volatileMemoryExercise>>
+****
 
 ==== Stream model
 
@@ -159,6 +197,10 @@ different steps and create different objects depending on whether you
 want to do file I/O in the text or binary paradigms, but the overall
 process will be similar in either case.
 
+****
+<<binaryVsTextFilesExercise>>
+****
+
 === Syntax: File operations in Java
 
 ==== The `File` class
@@ -194,14 +236,14 @@ before the name of the file.
 
 [source, java]
 ----
-File file = new File("/homes/owilde/programs/file.txt");
+File file = new File("/homes/owilde/documents/file.txt");
 ----
 
-In this case, the prefix `/homes/owilde/programs/` is the path and
+In this case, the prefix `/homes/owilde/documents/` is the path and
 `file.txt` is still the file name. Each slash (`'/'`) separates a
 parent directory from the files or directories inside of it. This path
 specifies that we start at the root, go into the `homes` directory, then
-the `owilde` directory, and then the `programs` directory. Note that we
+the `owilde` directory, and then the `documents` directory. Note that we
 can also use a single period (`.`) in a path to refer to the current
 working directory and two periods (`..`) to refer to a parent directory.
 
@@ -225,7 +267,11 @@ backslash. To simplify things somewhat, Java allows Windows paths to be
 separated with regular slashes as well, so we'll use this style for
 the rest of the book.
 
-Return to `File` objects, there are a number of things we
+A further complication is that file and directory names are case sensitive in
+Linux, aren't case sensitive in Windows, and could be either in macOS
+depending on file system settings.
+
+Returning to `File` objects, there are a number of things we
 can do directly. A `File` object has methods that can test if a file
 with the associated name and path exists, if it's readable, if it's
 writable, and many other things. Because there are so many classes
@@ -240,8 +286,8 @@ file I/O classes.
 Once you have a `File` object, most of its usefulness comes from combining
 it with other classes. You're already familiar with the `Scanner`
 class.  The `Scanner` constructor can take a `File` object (instead of
-`System.in`), creating a `Scanner` that reads from a text file just as you
-read from the keyboard.
+`System.in`), creating a `Scanner` that reads from a text file instead of the
+keyboard.
 
 [source, java]
 ----
@@ -293,7 +339,7 @@ PrintWriter out = null;
 try {
     out = new PrintWriter(file);
     Random random = new Random();
-    for(int i = 0; i < 100; i++)
+    for(int i = 0; i < 100; ++i)
         out.println(random.nextInt());
 }
 catch(FileNotFoundException e) {
@@ -306,16 +352,21 @@ Again, once you have a `PrintWriter` object, the methods for outputting
 data are just like using `System.out`. Be sure to import `java.io.*` in order
 to have access to the `PrintWriter` class.
 
+****
+<<HTMLProcessingExercise>> +
+<<wordFileExercise>>
+****
+
 ==== Reading and writing binary files
 
 We covered text files first because their input and output is similar to
 command-line I/O. When reading and writing text files, you can visually verify
 that file reading and writing operations were successful. Although it's harder
-to check the contents of binary files, they're more powerful than text files.
-Data can often be stored more compactly in binary files, as in the example with
-the integer 2,127,480,645. Even better, Java provides facilities for easily
-dumping (and later retrieving) primitive data types, objects, and even complex
-data structures to binary files.
+to check the contents of binary files, they have other advantages. Data can
+often be stored more compactly in binary files, as in the example with the
+integer 2,127,480,645. Even better, Java provides facilities for easily dumping
+(and later retrieving) primitive data types, objects, and even complex data
+structures to binary files.
 
 The simplest object for reading input from a binary file is a
 `FileInputStream` object. As with a `File` object, you can create a
@@ -326,12 +377,12 @@ The simplest object for reading input from a binary file is a
 FileInputStream in = new FileInputStream("file.bin");
 ----
 
-The bad news is that you can't do much with a `FileInputStream` object.
-Its methods allow you to read single bytes, either one at a time or a
-group of them into an array. The basic `read()` method returns the next
-byte in the file, or a -1 if the end of the file has been reached.
-Working at the low level of bytes, we can still write useful code like
-the following method that prints the size of a file.
+Unfortunately, you can't do much with a `FileInputStream` object.
+Its methods allow you to read single bytes, either one at a time or into an
+array as a group. The basic `read()` method returns the next byte in the file
+or a -1 if the end of the file has been reached. Working only at the level of
+bytes, we can still write useful code like the following method that prints the
+size of a file.
 
 [source, java]
 ----
@@ -352,15 +403,15 @@ public static void printFileSize(String fileName) {
 ----
 
 Note the extra `try`-`catch` block inside of the `finally`. Like the
-other binary file I/O objects we'll discuss in this chapter,
+other binary file I/O objects we'll discuss in this section,
 `FileInputStream` can throw an `IOException` when closing. Usually, you
 won't need to deal with this exception, but you still must catch it.
-By catching any `Exception`, we can save a little bit of code by
+Since we're catching any `Exception`, we're saving a little bit of code by
 eliminating the `null` check. If `in` is `null` in this example, a
 `NullPointerException` will be thrown and immediately caught, causing no
 damage.  Catching `Exception` breaks our rule of never catching exceptions
 that are broader than we need, but we only have a single line of code
-in our `try` block with nothing to do if it fails.
+in our `try` block with nothing else to do if it fails.
 
 To output a sequence of bytes, you can create a `FileOutputStream` object.
 Its `write()` methods are the mirror images of the `read()` methods in
@@ -370,10 +421,11 @@ and write any primitive type instead of just `byte` values, and
 
 For output, a `DataOutputStream` chops up primitive data types into their
 component bytes and sends those bytes to a `FileOutputStream`. For input, a
-`DataOutputStream` reads a sequence of bytes from a `FileInputStream` and
+`DataInputStream` reads a sequence of bytes from a `FileInputStream` and
 reassembles them into whatever kind of primitive data they're supposed to be.
 
-To create an `DataInputStream`, you supply a `FileInputStream` to its constructor.
+To create an `DataInputStream`, you supply a `FileInputStream` to its
+constructor, usually one that you've just created on the fly for this purpose.
 
 [source, java]
 ----
@@ -389,23 +441,37 @@ statistics into three arrays with the following code.
 
 [source, java]
 ----
-int records = in.readInt();
-int[] homeRuns = new int[records];
-int[] RBI = new int[records];
-double[] battingAverage = new double[records];
-for(int i = 0; i < records; i++) {
-    homeRuns[i] = in.readInt();
-    RBI[i] = in.readInt();
-    battingAverage[i] = in.readDouble();
+DataInputStream in = null;
+try {
+	in = new DataInputStream(new FileInputStream("baseball.bin"));
+	int records = in.readInt();
+	int[] homeRuns = new int[records];
+	int[] RBI = new int[records];
+	double[] battingAverage = new double[records];
+	for(int i = 0; i < records; ++i) {
+		homeRuns[i] = in.readInt();
+		RBI[i] = in.readInt();
+		battingAverage[i] = in.readDouble();
+	}
 }
+catch(IOException e) {
+    System.out.println("File reading failed.");
+}
+finally { try{ out.close(); } catch(Exception e){} }
 ----
 
-Of course, all of the code should be enclosed in a `try` block with
-appropriate exception handling and `in.close()` in a `finally` block at
-the end. If a `DataInputStream` object tries to read past the end of
-a file, an `EOFException` exception will be thrown. As expected, the
-`DataInputStream` methods for reading from a file match `DataOutputStream`
-methods for writing to a file. If you substitute `write` for `read`,
+When opening the file in the `FileInputStream` constructor, a
+`FileNotFoundException` will be thrown if the file doesn't exist or is
+inaccessible. If the `readInt()` or `readDouble()` methods fail, they'll throw
+an `IOException`.  If the `DataInputStream` object tries to read past the end
+of a file, it'll throw an `EOFException` exception. If you wanted to deal with
+these exceptions separately, you could, but since `FileNotFoundException` and
+`EOFException` are both children of `IOException`, a single `catch` clause
+for `IOException` handles all three.
+
+As expected, the
+`DataOutputStream` methods for writing to a file match `DataInputStream`
+methods for reading from a file. If you substitute `write` for `read`,
 `DataOutputStream` methods are almost the same as
 `DataInputStream` methods. Below is a companion piece of code which
 assumes that `homeRuns`, `RBI`, and `battingAverage` are filled with
@@ -417,17 +483,21 @@ DataOutputStream out = null;
 try {
     out = new DataOutputStream(new FileOutputStream("baseball.bin"));
     out.writeInt(homeRuns.length);
-    for(int i = 0; i < homeRuns.length; i++) {
+    for(int i = 0; i < homeRuns.length; ++i) {
         out.writeInt(homeRuns[i]);
         out.writeInt(RBI[i]);
         out.writeDouble(battingAverage[i]);
     }
 }
-catch(Exception e) {
+catch(IOException e) {
     System.out.println("File writing failed.");
 }
 finally { try{ out.close(); } catch(Exception e){} }
 ----
+
+****
+<<bytesToIntegersExercise>>
+****
 
 Using `DataInputStream` and `DataOutputStream` in this way isn't
 too difficult, but it seems cumbersome. The programmer has the responsibility
@@ -437,7 +507,7 @@ references to  other objects that it contains.  If a tool exists for reading
 an entire object, we'd also want a matching tool for writing an entire
 object at once.
 
-It turns out that these tools can be found in the `ObjectInputStream` and
+Such tools can be found in the `ObjectInputStream` and
 `ObjectOutputStream` classes, respectively. These file I/O objects provide
 methods that elegantly allow you to read or write a whole object at a time. To
 use them with our baseball data example, we need to define a new class.
@@ -453,7 +523,7 @@ The new class `BaseballPlayer` encapsulates the three pieces of
 information we want. Note that it also implements the interface
 `Serializable`, but it doesn't seem to implement any special methods to
 conform to the interface. We'll discuss this interface more after we show how
-using this new class can simplify file I/O. The input code will change to
+using this new class can simplify file I/O. Our input code will change to
 the following.
 
 [source, java]
@@ -463,10 +533,10 @@ try {
     in = new ObjectInputStream(new FileInputStream("baseball.bin"));
     int records = in.readInt();
     BaseballPlayer[] players = new BaseballPlayer[records];
-    for(int i = 0; i < players.length; i++)
+    for(int i = 0; i < players.length; ++i)
         players[i] = (BaseballPlayer)in.readObject();
 }
-catch(Exception e) {
+catch(IOException e) {
     System.out.println("File reading failed.");
 }
 finally { try{ in.close(); } catch(Exception e){} }
@@ -480,10 +550,10 @@ ObjectOutputStream out = null;
 try {
     out = new ObjectOutputStream(new FileOutputStream("baseball.bin"));
     out.writeInt(players.length);
-    for(int i = 0; i < players.length; i++)
+    for(int i = 0; i < players.length; ++i)
         out.writeObject(players[i]);
 }
-catch(Exception e) {
+catch(IOException e) {
     System.out.println("File writing failed.");
 }
 finally { try{ out.close(); } catch(Exception e){} }
@@ -498,7 +568,7 @@ in `Serializable`. It's just a tag for a class that can be packed up
 and stored. The catch is that, if there are any references to other
 objects inside of the object being serialized, they must also be
 serializable. Otherwise, a `NotSerializableException` will be thrown
-when the JVM tries to perform the serialized output. Most classes are
+when the JVM tries to perform the serialized output. Many classes are
 serializable, including the vast majority of the Java API.
 
 However, objects that have some kind of special system-dependent state,
@@ -518,7 +588,7 @@ try {
     in = new ObjectInputStream(new FileInputStream("baseball.bin"));
     BaseballPlayer[] players = (BaseballPlayer[])in.readObject();
 }
-catch(Exception e) {
+catch(IOException e) {
     System.out.println("File reading failed.");
 }
 finally { try{ in.close(); } catch(Exception e){} }
@@ -533,7 +603,7 @@ try {
     out = new ObjectOutputStream(new FileOutputStream("baseball.bin"));
     out.writeObject(players);
 }
-catch(Exception e) {
+catch(IOException e) {
     System.out.println("File writing failed.");
 }
 finally { try{ out.close(); } catch(Exception e){} }
@@ -570,7 +640,7 @@ must contain additional metadata describing the class being stored. Using
 necessary member data, resulting in a smaller file.  You can also run into
 trouble if you make changes to a class.  If one version of an object is
 serialized and then you try to read that object back after making the smallest
-change to the class, your code will fail.  One last issues is that Java
+change to the class, your code will fail.  One last issue is that Java
 serializes objects according to its own rules, making files written in this
 way difficult (if not impossible) to use with code written in other languages.
 This consideration is not insignificant, since files are often written by one
@@ -587,12 +657,15 @@ discussed.  Be sure to consult each class's documentation for more information.
 |`FileOutputStream`| Output
 |`DataInputStream` |Input .2+<.^|Binary I/O for primitive types .2+| Can't read and write whole objects
 |`DataOutputStream`| Output
-|`ObjectInputStream` |Input .2+<.^|Powerful binary I/O for all types  .2+| Depends on Java serialization: can't work with files created in other ways
+|`ObjectInputStream` |Input .2+<.^|Powerful binary I/O for all types  .2+| Depends on Java serialization and can't work with files created in other ways
 |`ObjectOutputStream`| Output
 |=======================================================================
 
-
-
+****
+<<serializationExercise>> +
+<<noSerializationExercise>> + 
+<<checksumExercise>>
+****
 
 ==== Using `JFileChooser`
 
@@ -607,7 +680,7 @@ Indeed, most users are used to selecting files to open or to save via a GUI
 file chooser instead of typing file names explicitly.  The Java Swing library
 provides such a file chooser called `JFileChooser`.
 
-We discuss fully featured GUI programs in <<ch15-gui#ch15-gui>>, but like the
+We discussed fully featured GUI programs in <<ch15-gui#ch15-gui>>, but like the
 `JOptionPane` class covered in <<ch07-gui-basics#ch07-gui-basics>>,
 `JFileChooser` can be used with or without a complex GUI.
 
@@ -620,8 +693,8 @@ JFileChooser chooser = new JFileChooser();
 ----
 
 Once you've created the `JFileChooser` object, you can call either the
-`showOpenDialog()` method to show a dialog for opening existing files or the
-`showSaveDialog()` for saving a potentially new file.  The dialog looks similar
+`showOpenDialog()` method to show a dialog to open existing files or the
+`showSaveDialog()` to save a potentially new file.  The dialog looks similar
 in either case, with only minor differences such as title and buttons names.
 
 [source, java]
@@ -731,11 +804,11 @@ even settings that allow the user to select multiple files at once.
 ====
 
 Let's return to the `File` class and look at another example of how to
-use it. It is often useful to know the contents of a directory. At the
+use it. It's often useful to know the contents of a directory. At the
 Windows command prompt, this is usually done using the `dir` command; in
-Linux and Unix, the `ls` command is generally used. In a few lines of
+Linux and macOS, the `ls` command is generally used. In a few lines of
 code, we can write a directory listing tool which lists all the files in
-a directory, the dates each was last modified, and whether or not a file
+a directory, the date each file was last modified, and whether or not a file
 is a directory.
 
 .Directory listing tool.
@@ -744,112 +817,197 @@ is a directory.
 ----
 include::{programsdir}/Directory.java[]
 ----
+<.> The code first creates a `File` object using `"."` to
+specify the current working directory.
+<.> The `listFiles()` method returns an array of `File` objects which we then
+iterate over.
+<.> We call
+`lastModified()` on each file to get its date,
+<.> `isDirectory()` to see if it's a directory,
+<.> and finally print the name given by `getName()`.
 
-As you can see, the code first creates a `File` object using `"."` to
-specify the current working directory. The `listFiles()` method returns
-an array of `File` objects which we then iterate over. We call
-`lastModified()` on each file to get its date, `isDirectory()` to see if
-it is a directory, and finally print the name given by `getName()`.
+
+The output for this program might look like the following.
+
+----
+Aug 5, 2019                     AreaFromRadiusBinary.java
+Aug 1, 2019                     AreaFromRadiusText.java
+Aug 5, 2019                     BaseballPlayer.java
+Aug 5, 2019                     BitmapCompression.java
+Aug 5, 2019                     ConcurrentFileAccess.java
+Aug 8, 2019                     Directory.class
+Aug 8, 2019                     Directory.java
+Aug 1, 2019                     FileChooserExample.java
+Aug 8, 2019     directory       Images
+Aug 5, 2019                     areas.bin
+Aug 5, 2019                     areas.txt
+Aug 5, 2019                     radiuses.bin
+Aug 5, 2019                     radiuses.txt
+----
+
 
 ====
 
+[[areaFromFileExample]]
 .Radiuses stored in a file
 ====
 
 Now, let's look at a data processing application of files. Let's assume
-that there is a file called `radiuses.txt` which holds the radiuses of a
+that there's a file called `radiuses.txt` which holds the radiuses of a
 number of circles formatted as text, one on each line of the file. It's
 our job to read each radius _r_, compute the areas of each circle using the
 formula _Area_ = _πr_^2^, and write those areas to a file called `areas.txt`.
 
-.Reads a list of radiuses from a text file and output their areas to another file.
+.Reads a list of radiuses from a text file and outputs their areas to another text file.
 [source, java]
 [[AreaFromRadiusTextProgram]]
 ----
 include::{programsdir}/AreaFromRadiusText.java[]
 ----
+<.> First, we create a `Scanner` to read text from a file.
+<.> Next, we create a `PrintWriter` to write text to a file.
+<.> We continue reading as long as there's another piece of text formatted
+as a legal `double`.
+<.> We read in the `double`, just as we would from a user typing on the
+keyboard.
+<.> We use the `format()` method to print out a `double` formatted with exactly
+three digits after the decimal point followed by a newline, just as we've used
+`System.out.format()` in the past.
+<.> As is typical with file I/O, we have to catch exceptions. A
+`FileNotFoundException` would have been thrown if either file was inaccessible.
+<.> In the `finally` block, we close both files.  It's vitally important to
+close output files to ensure that all their data is actually written to disk.
 
-The previous class did all of its input and output with text files. We
-will also implement this program to read from a binary file called
-`radiuses.bin` and write to a binary file called `areas.bin`.
+Perhaps the input file `radiuses.txt` contains the following 10 values.
 
-.Reads a list of radiuses from a binary file and output their areas to another file.
+----
+33.675
+4.156
+8.608
+60.350
+86.501
+78.581
+23.935
+2.263
+26.827
+73.358
+----
+
+Then, the output file `areas.txt` would be filled with these corresponding
+10 values.  Note that formatting the output to have three digits after the
+decimal point is easier to read, but it loses some precision.
+
+----
+3562.584
+54.263
+232.785
+11442.065
+23506.725
+19399.252
+1799.769
+16.089
+2260.966
+16906.155
+----
+
+The previous class did all of its input and output with text files. We'll
+also implement this program to read from a binary file called `radiuses.bin`
+and write to a binary file called `areas.bin`.
+
+.Reads a list of radiuses from a binary file and output their areas to another binary file.
 [source, java]
 [[AreaFromRadiusBinaryProgram]]
 ----
 include::{programsdir}/AreaFromRadiusBinary.java[]
 ----
-
-There should be few surprises in this piece of code as only a few
-changes have been made so that `ObjectInputStream` and
-`ObjectOutputStream` objects could be used. You may notice that the
-input `while` loop is an infinite loop. The easiest way to see if there
-is any more data in a binary file is to keep reading until an
-`EOFException` is thrown. As you can see, we do nothing to handle this
-exception, because, in this case, it is just a signal to stop reading.
+<.> We change the `Scanner` from the text version of this program to a
+`DataInputStream`.
+<.> We change the `PrintWriter` to a `DataOutputStream`.
+<.> We make what appears to be the strange choice of changing the `while`
+loop to an infinite loop. We do this because the easiest way to see if there's
+any more data in a binary file is to keep reading until an
+`EOFException` is thrown.
+<.> When the `EOFException` is thrown, we do nothing to handle it because, in
+this case, it's just a signal to stop reading.
 
 ====
 
+****
+<<textToBinaryExercise>>
+****
+
+[[fileChapterSolution]]
 === Solution: A picture is worth 1,000 bytes
 
-Now we will give the solution to the problem posed at the beginning of
+Now, we'll give the solution to the problem posed at the beginning of
 the chapter. First, let's look at the class definition and `main()`
 method.
 
 [source, java]
 ----
-include::{programsdir}/BitmapCompression.java[lines=1..17]
+include::{programsdir}/BitmapCompression.java[lines=1..21]
 ----
-
-
-Here we open an `ObjectInputStream` based on the file named passed as
-the second command line parameter. Then, we either compress or
-decompress the file depending on which switch is passed as the first
-command line parameter. The `catch` block will deal with the
-`FileNotFoundException` or the `IOException` which could be thrown by
-opening the file, as well as `ArrayIndexOutOfBoundsException` which
-could be caused if there are not enough command line arguments. In
-either case, the vague message `"Bad input: "` will be output with the
-message from the exception. Commercial-grade code should give a more
-specific error.
-
-After the rest of the method, note the usual `finally` block where the
-file is closed, including the inner `try`-`catch` blocks needed to
-safely close binary files.
+<.> We first check that there are exactly two command-line arguments.
+Otherwise, our program will crash when we try to access invalid array
+locations. For the wrong number of arguments, we print a usage message.
+<.> If we have the right number of arguments, we open a `DataInputStream`
+based on the file named passed as the second command-line parameter.
+<.> Then, we either compress or decompress the file depending on which switch
+was passed as the first command-line parameter.
+<.> The `catch` will deal with the `FileNotFoundException` by printing an
+appropriate error message.
+<.> Note the usual `finally` where the file is closed, including the inner
+`try`-`catch` blocks needed to safely close binary files.
 
 [source, java]
 ----
-include::{programsdir}/BitmapCompression.java[lines=19..45]
+include::{programsdir}/BitmapCompression.java[lines=23..53]
 ----
-
-
-In the `compress()` method we first open a new `ObjectOutputStream` for
+<.> In the `compress()` method, we first open a new `DataOutputStream` for
 a file named the same as the input file with `.compress` tacked on the
-end. Then, we read in bytes of data from the input file. As long as we
-keep seeing the same byte, we increment a counter. When we run into a
-new byte (or when we reach the limit of 127 of the same consecutive
-byte), we write the count and the byte we've been reading and move on.
-When `in.read()` returns `-1`, we know that we've reached the end of the
-file and output the last count and last byte value. The method finishes
+end.
+<.> We read in the first byte of data.
+<.> Then, we keep reading bytes of data from the input file.
+<.> As long as we keep seeing the same byte, we increment a counter.
+<.> When we run into a new byte (or when we reach the limit of 127 of the same
+consecutive byte), we write the count and the byte we've been reading and move
+on, resetting the counter.
+<.> When an `EOFException` is thrown, we've reached the end of the file.
+Because of the way our code is structured, we'll always have at least one byte
+(and possibly a long sequence of matching bytes) that we haven't yet written
+to the file.  Consequently, we have to write the counter and the current byte
+to finish.
+<.> The method finishes
 with the usual `catch` and `finally` blocks needed to catch errors and
 safely close the output file.
 
 [source, java]
 ----
-include::{programsdir}/BitmapCompression.java[lines=47..67]
+include::{programsdir}/BitmapCompression.java[lines=55..73]
 ----
+<.> The `decompress()` method is simpler than `compress()`. It begins
+by finding the original name of the file by removing `.compress`.  Note that
+this code will crash if the file being decompressed doesn't end with
+`.compress`.
+<.> Then, we open a new `DataOutputStream` for a file with the original name
+we've found.
+<.> Next, we read a counter, read a byte value, and write the byte value as
+many times as the count specifies.
+<.> As before, an `EOFException` signals the end of the input file.
+<.> An additional `catch` and `finally` deal with errors and close the output
+file.
 
-
-The `decompress()` method is even simpler than `compress()`. It begins
-by opening a new `ObjectOutputStream` for a file named the same as the
-input file with a `.compress` extension stripped off. Then, it reads a
-count, reads a byte value, and writes the byte value as many times as
-the count specifies.
+****
+<<changeToFileInputStreamExercise>> + 
+<<useJFileChooserExercise>> +
+<<batchReadingExercise>> +
+<<parallelCompressionExercise>>
+****
 
 === Concurrency: File I/O
 
 By now, you've seen threads behave in unpredictable ways because of
-the way they are reading and writing to shared variables. Well, isn't a
+the way they're reading and writing to shared variables. Isn't a
 file a shared resource as well? What happens when two threads try to
 access a file at the same time? If both threads are reading from the
 file, everything should work fine. If the threads are both writing or
@@ -871,17 +1029,22 @@ prints the odd ones.
 ----
 include::{programsdir}/ConcurrentFileAccess.java[]
 ----
-
-The code in this program should have no surprises. The `main()` method
-creates two `Thread` objects based on `ConcurrentFileAccess` objects,
-each with a different value for its `even` field. Then, the `main()`
-method starts the threads running. In each thread's `run()` method, it
-opens the file and starts printing out even or odd numbers, depending on
-which thread it is. Afterwards, each thread closes the file and ends.
+<.> The code in this program should have few surprises. The `main()` method
+creates two `Thread` objects from `ConcurrentFileAccess` objects,
+each with a different value for its `even` field.
+<.> Then, the `main()`
+method starts the threads running.
+<.> In each thread's `run()` method, it first decides on a starting point of
+0 or 1 depending on whether it's supposed to be even or odd.  Note the use of
+the ternary operator.
+<.> Each thread opens the file `concurrent.out`.
+<.> Then, it starts printing out even or odd numbers, depending on its starting
+point.
+<.> Afterwards, each thread closes the file and ends.
 
 What do you expect the file `concurrent.out` to look like after the
 program's completed? Run it several times, on Windows, Linux, and macOS
-computers, if you can. The file might contain runs switching back
+systems if you can. The file might contain runs switching back
 and forth between even numbers and odd numbers, but it's likely that many
 numbers, often about half, will be missing.
 
@@ -918,7 +1081,7 @@ output from one thread followed by the complete output from the other.
 For performance reasons, file operations are usually done in batches.
 Instead of writing each number to the file as the thread produces it,
 output is usually stored in a buffer which is written as a whole. By calling
-`out.flush()` after each the `out.println()` call, we could flush
+`out.flush()` after each `out.println()` call, we could flush
 the buffer to the file after each number is generated. Doing so won't
 be as efficient, but it may give us some insight into how concurrent
 writes on files work.
@@ -941,36 +1104,68 @@ normal Java synchronization tools. If you expect other programs to
 interact with the same files that your program will use, Java provides a
 `FileLock` class which allows the user to lock up portions of a file. As
 with everything file related, `FileLock` is dependent on the underlying
-OS and might behave differently on different systems.
+OS and might behave differently on different systems.  Also, `FileLock`
+is a tool from the Java Non-blocking I/O (NIO) library, which provides
+many impressive features but views I/O in a significantly different way from
+the file I/O operations discussed in this chapter. 
 
 === Exercises
 *Conceptual Problems*
 
-. What is the difference between volatile and non-volatile memory?
-Which is often associated with files and why?
-. What is the difference between text and binary files? What are the
+. [[volatileMemoryExercise]] What's the difference between volatile and non-volatile memory?
+Which is usually associated with files and why?
+. [[binaryVsTextFilesExercise]] What's the difference between text and binary files? What are the
 pros and cons of using each?
-. Define compression ratio to be the size of the uncompressed data in
-bytes divided by the size of the compressed data in bytes. What is the
-theoretical maximum compression ratio you can get out of the RLE
-encoding we used? What is the theoretical lowest compression ratio you
-can get out of the RLE encoding we used?
-. What is serialization in Java? What do you have to do to serialize
+. We can define compression ratio to be the size of the uncompressed data in
+bytes divided by the size of the compressed data in bytes. What's the
+theoretical maximum compression ratio you could get out of the RLE
+encoding we used? What's the theoretical lowest compression ratio you
+could get out of the RLE encoding we used?
+. [[serializationExercise]] What's serialization in Java? What do you have to do to serialize
 an object?
-. What kinds of objects cannot be serialized?
+. [[noSerializationExercise]] What kinds of objects can't be serialized?
 
 *Programming Practice*
 
-. Implement the RLE bitmap compression program using only
-`FileInputStream` and `FileOutputStream` for file input and output.
-.  Re-implement the maze solving program from <<Solution: Maze of doom>> to ask the user for a file instead of reading from standard
-input.
-. An HTML file contains many tags such as `<p>`, which marks the
-beginning of a paragraph, and `</p>`, which marks the end of a
-paragraph. A lesser known feature of HTML is that ampersand (`&`) can
+. [[bytesToIntegersExercise]] Write methods with the following signatures.
+.. `public static int readInt(FileInputStream in)`
+.. `public static long readLong(FileInputStream in)`
+.. `public static short readShort(FileInputStream in)`
+
++
+In each case, the method
+should read the appropriate number of bytes (4 for `int`, 8 for `long`, and
+2 for `short`) using the `FileInputStream` object and reassemble those bytes
+into the integer type specified.  Your methods should be compatible with
+integers written by a `DataOutputStream` object.  Note that such data is
+written in big-endian format.  In other words, the first byte of data
+corresponds to the most significant byte in an integer, the second byte of
+data corresponds to the second-most significant byte, and so on.
+
+. [[textToBinaryExercise]] <<AreaFromRadiusBinaryProgram>> from
+<<areaFromFileExample>> computes the areas of circles whose radiuses are given
+as `double` values stored in a binary file.  Although we provided a sample text
+file, we didn't show a sample binary file since the contents would look like
+gibberish.  Write a program that reads a file filled with `double` values
+stored as text and writes those same values into another file, storing the
+`double` values in binary.  Afterwards, you should be able to convert our
+sample text file into a sample binary file that can be used with
+<<AreaFromRadiusBinaryProgram>>.
+. [[changeToFileInputStreamExercise]] Re-implement the RLE bitmap compression program from
+<<fileChapterSolution>>  using only `FileInputStream` and
+`FileOutputStream` for file input and output. In some ways, doing so is simpler
+since you only need `byte` input and output for this program.
+. [[useJFileChooserExercise]] Update the RLE bitmap compression program from
+<<fileChapterSolution>> to use `JFileChooser` to allow the
+user to select a file with a GUI instead of using command-line arguments.
+.  Re-implement the maze solving program from <<Solution: Maze of doom>> to
+ask the user for a file instead of reading from standard input.
+. [[HTMLProcessingExercise]] An HTML file contains many tags such as `<p>`,
+which marks the beginning of a paragraph, and `</p>`, which marks the end of
+a paragraph. A lesser known feature of HTML is that ampersand (`&`) can
 mark special HTML entities used to produce symbols on a web page. For
-example, `&amp;pi;` is the entity for the Greek letter _π_.
-Because of these features of the language, raw text that is going to be
+example, `&amp;pi;` is the entity for the Greek letter π.
+Because of these features of the language, raw text that's going to be
 marked up in HTML should not contain less than signs (`<`), greater than
 signs (`>`), or ampersands (`&`).
 +
@@ -995,15 +1190,15 @@ the screen in alphabetical order.
 also prompts for a second file containing a dictionary in the form of a
 word list with one word on each line. Store the words from the
 dictionary in another binary search tree. Then, for each word in the
-larger document that you cannot find in the dictionary tree, add it to a
+larger document that you can't find in the dictionary tree, add it to a
 third binary search tree. Finally, print out the contents of this third
 binary search tree to the screen, and you will have implemented a
 rudimentary spell checker. You can test the quality of your
 implementation by using a novel from
-http://www.gutenberg.org[Project Gutenberg^] and a dictionary file from an open source
-spell checker or from a Scrabble word list.
-. Files can become corrupted when they are transferred over a network.
-It is common to make a _checksum_, a short code generated using the
+http://www.gutenberg.org[Project Gutenberg^] and a dictionary file from an
+open-source spell checker or a Scrabble word list.
+. [[checksumExercise]] Files can become corrupted when they're transferred over a network.
+It's common to make a _checksum_, a short code generated using the
 entire contents of a file. The checksum can be generated before and
 after file transmission. If both of the checksums match, there's a good
 chance that there were no transmission errors. Of course, there can be
@@ -1020,6 +1215,7 @@ variable
 ..  Let _r_ = (_sum_ mod 2^16^) + (_sum_ ÷ 2^16^)
 ..  Let _s_ = (_r_ mod 2^16^) + (_r_ ÷ 2^16^)
 ..  The final checksum is _s_
+
 +
 Remember that finding powers of 2 is easy with bitwise shifts. Write a
 program that opens a file for binary reading using `FileInputStream` and
@@ -1028,7 +1224,6 @@ operation of your program with the `sum` utility, using the `-s` option.
 The following is an example of the command used on a file called
 `wombat.dat`. The first number in the output below it, `6892`, is the
 checksum.
-+
 ----
 sum -s wombat.dat
 6892 213 wombat.dat
@@ -1036,7 +1231,24 @@ sum -s wombat.dat
 
 *Experiments*
 
-. Write the RLE bitmap compression program in parallel so that a file
+. [[batchReadingExercise]] Reading single bytes using either `FileInputStream` or `DataInputStream` is
+slow.  It's much faster to read a block of bytes all at once. Re-implement the
+RLE bitmap compression program from
+<<fileChapterSolution>> using the `int read(byte[] b)`
+method from the `DataInputStream` class, which tries to fill the array `b` with
+as many `byte` values as it can.  If there are enough bytes left in the file,
+the array will be filled completely.  If the array is longer than the remaining
+bytes, only the first part of the array will contain valid bytes.  In either
+case, this method will return the number of `byte` values successfully read
+into the array.
++
+Using a `byte` array of length 1,024, time the original program against the
+new version on files with sizes of about 500 KB, 1 MB, and 2 MB.  There's also
+a `void write(byte[] b, int off, int len)` method in `DataOutputStream` that
+can write an entire array of `byte` values at once.  Using it for output would
+further increase the speed of your program at the price of greater complexity.
+. [[parallelCompressionExercise]] Write the RLE bitmap compression program from
+<<fileChapterSolution>> in parallel so that a file
 is evenly divided into as many pieces as you have threads, compressed,
 and then each compressed portion is output in the correct order. Compare
 the speed for 2, 4, and 8 threads to the sequential implementation. Are
