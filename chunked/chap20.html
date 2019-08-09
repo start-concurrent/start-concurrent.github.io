@@ -711,47 +711,66 @@ infinite amounts of free time.</p>
 <div class="sect2">
 <h3 id="_problem_web_server">21.1. Problem: Web server</h3>
 <div class="paragraph">
-<p>It is no accident that the previous chapter about file I/O is followed
+<p>It’s no accident that the previous chapter about file I/O is followed
 by this one about networking. At first glance, the two probably seem
 unrelated. As it happens, both files and networks are used for input and
 output, and the designers of Java were careful to create an API with a
 similar interface for both.</p>
 </div>
 <div class="paragraph">
-<p>In the next two sections, we discuss how this API works, but first we
+<p>In the next two sections, we’ll discuss how this API works, but first we
 introduce the problem: You need to create a web server application. The
 term <em>server</em> is used to describe a computer on a network which other
-computers, called <em>clients</em>, connect to in order to access some services
-or resources. When you surf the Internet, your computer is a client
+computers, called <em>clients</em>, connect to in order to access services
+or resources. When you browse the Internet, your computer is a client
 connecting to web servers all over the world. Writing a web server might
-seem like a daunting task. The web browser you run on your client
-computer (e.g. Chrome, Firefox, Internet Explorer, or Safari) is, in modern
-times, a very complicated program, capable of playing sounds and movies,
-browsing in multiple tabs, automatically encrypting and decrypting
-secure information, and, at the very least, correctly displaying web
-pages of every description.</p>
+seem like a daunting task. The web browser you run on your client computer,
+such as Microsoft Edge, Mozilla Firefox, Apple Safari, or Google Chrome, is
+a complicated program, capable of streaming audio and video, browsing in
+multiple tabs, automatically encrypting and decrypting secure information,
+and at the very least, correctly displaying web pages of every description.</p>
 </div>
 <div class="paragraph">
 <p>In contrast, a web server application is much simpler. At its heart, a
-web server application gets requests for files and sends those files
+web server gets requests for files and sends those files
 over the network. More advanced servers can execute code and dynamically
 generate pages, and many web servers are multi-threaded to support heavy
-traffic. The web server you are writing needs only to focus on getting
+traffic. The web server you’ll write needs only to focus on getting
 requests for files and sending those files back to the requester.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><a href="#clientServerExercise">Exercise 21.2</a><br>
+<a href="#webBrowserExercise">Exercise 21.3</a></p>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_http_requests">21.1.1. HTTP requests</h4>
 <div class="paragraph">
 <p>To receive requests, a web server uses something called <em>hypertext
-transfer protocol (HTTP)</em>, which is just a way of specifying the format
-of the requests. The only request we are interested in is the <code>GET</code>
-request. All <code>GET</code> requests have the following format.<br>
-<code>GET</code> <strong>path</strong> <code>HTTP/</code><strong>version</strong><br>
-where <strong>path</strong> is the path of the file being requested and <strong>version</strong> is
-the HTTP version number. A typical request might be as follows.<br>
-<code>GET /images/banner.jpg HTTP/1.1</code><br>
-You should also note that all HTTP commands end with <strong>two</strong> newline
-characters (<code>'\\n'</code>). The extra blank line makes it easier to separate
+transfer protocol</em> (HTTP), which is just a way of specifying the format
+of the requests. The only request we’re interested in is the <code>GET</code>
+request. All <code>GET</code> requests have the following format.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET <em>path</em> HTTP/<em>version</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this request, <code><em>path</em></code> is the path of the file being requested and <code><em>version</em></code> is
+the HTTP version number. A typical request might be as follows.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET /images/banner.jpg HTTP/1.1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should also note that all HTTP commands end with <strong>two</strong> newline
+characters (<code>'\n'</code>). The extra blank line makes it easier to separate
 the commands from other data being sent.</p>
 </div>
 </div>
@@ -760,15 +779,27 @@ the commands from other data being sent.</p>
 <div class="paragraph">
 <p>After your web server receives a <code>GET</code> message, it looks for the file
 specified by the <strong>path</strong>. If the server finds the file, it sends the
-following message.<br>
-<code>HTTP/1.1 200 OK</code><br>
-Again, note that this message is followed with two newline characters.
+following message.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>HTTP/1.1 200 OK</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, note that this message is followed with two newline characters.
 After this message is sent, the server sends the requested file, byte by
-byte across the network. If the file cannot be found by the web server,
-it sends an error message as follows.<br>
-<code>HTTP/1.1 404 Not Found</code><br>
-Of course, two newlines will be sent after this as well. After the error
-message, servers will also typically send some default web page with an
+byte, across the network. If the file can’t be found by the web server,
+it sends an error message as follows.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>HTTP/1.1 404 Not Found</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course, two newlines will be sent after this message as well. After the
+error message, servers will also typically send some default web page with an
 explanation in HTML.</p>
 </div>
 <div class="paragraph">
@@ -780,20 +811,20 @@ over a network.</p>
 <div class="sect2">
 <h3 id="_concepts_tcpip_communication">21.2. Concepts: TCP/IP communication</h3>
 <div class="paragraph">
-<p>We begin where nearly every discussion of computer networking begins,
-with the Open Systems Interconnection Basic Reference Model (or OSI
+<p>We begin where many discussions of computer networking begin,
+the Open Systems Interconnection Basic Reference Model (or OSI
 model). As we mentioned before, the designers of Java wanted to make a
 networking API which was very similar to the file system API. This
-single API must be used for JVM’s running on Windows or on Mac OS or on
+single API is intended for JVMs running on Windows or on macOS or on
 Linux or any other operating system. Even with the same operating
 system, different computers have different hardware. Some computers have
 wired connections to a router or gateway. Others are connected
-wirelessly. And somehow, you have to figure out the address of the
-computer you want to send messages to and deal with its network,
-hardware, and software.</p>
+wirelessly. Beyond your own computer, you have to figure out the address of the
+computer you want to send messages to and deal with its network, hardware, and
+software.</p>
 </div>
 <div class="paragraph">
-<p>There are so many steps in the process that it seems hopelessly
+<p>There are so many details in the process that it seems hopelessly
 complicated. To combat this problem, the OSI seven layer model was
 developed. Each layer defines a specification for one aspect of the
 communication path between two computers. As long as a particular layer
@@ -833,7 +864,7 @@ calls that your code uses to send and receive data comprise the
 application layer for your purposes. The only thing above this layer is
 the user. Protocols like HTTP and FTP are the province of this layer.
 All the other communication problems have been solved, and the key issue
-is what to do with the data that is communicated.</p>
+is what to do with the data that’s communicated.</p>
 </div>
 <div class="paragraph">
 <p>The presentation layer changes one kind of message encoding to another.
@@ -843,8 +874,8 @@ but some kinds of encryption and compression can happen here.</p>
 <div class="paragraph">
 <p>The session layer allows for the creation of sessions when communicating
 between computers. Sessions requiring authentication and permissions can
-be dealt with here, but,in practice, this layer is not often used. One
-notable exception is the Secure Sockets Layer (SSL), the technology most
+be dealt with here, but in practice, this layer’s not often used. One
+notable exception is Transport Layer Security (TLS), the technology most
 commonly used to protect passwords and credit card numbers when you make
 online purchases.</p>
 </div>
@@ -856,16 +887,16 @@ be sent across the network. This layer can also provide reliability by
 checking to see if these packets make it to their destinations and
 resending them otherwise. The two most important protocols for this
 layer are Transmission Control Protocol (TCP) and User Datagram Protocol
-(UDP). TCP is more commonly used and provides communication that is
-reliable and ensures that packets are delivered in order. TCP is used
-for file transfers, e-mail, web browsing, and any number of other web
-applications. UDP does not have guarantees about reliability or
+(UDP). For Internet traffic, TCP is more commonly used and provides
+reliable communication that ensures packets are delivered in order.
+TCP is used for file transfers, e-mail, web browsing, and any number of other
+web applications. UDP doesn’t have guarantees about reliability or
 ordering; however, UDP is faster. For this reason, UDP is used for
 streaming media and online games.</p>
 </div>
 <div class="paragraph">
 <p>The network layer is responsible for packet transmission from source to
-destination. It is concerned with addressing schemes and routing. The
+destination. It’s concerned with addressing schemes and routing. The
 most well-known example of a network layer protocol is the Internet
 Protocol (IP) used to make the Internet work.</p>
 </div>
@@ -875,23 +906,31 @@ destination, the data link layer is responsible for the actual
 transmission of packets between each link in the chain. Here hardware
 becomes more important because there are so many different kinds of
 networks. Examples of data link layers include Ethernet, token ring
-networks, IEEE 802.11 wireless networks, and many more.</p>
+networks, IEEE 802.11 Wi-Fi networks, and many more.</p>
 </div>
 <div class="paragraph">
 <p>Finally, the lowest level is the physical layer. This layer defines the
-actual physical specifications for sending raw information from one
+physical specifications for sending raw bits of information from one
 place to another, over a wire or wirelessly. This layer is typically the
-least interesting to programmers but is a key area for electrical
+least interesting to programmers but is an important area for electrical
 engineers.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><a href="#OSIModelExercise">Exercise 21.4</a><br>
+<a href="#UDPandTCPExercise">Exercise 21.6</a></p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_syntax_networking_in_java">21.3. Syntax: Networking in Java</h3>
 <div class="paragraph">
 <p>The seven layer model might seem overwhelming, but there are only a few
-key pieces that we’ll need on a regular basis. In fact, the system of
+key pieces we’ll need on a regular basis. In fact, the system of
 layers is designed to help people focus on the one or two layers
-specified to their needs and ignore the rest.</p>
+specific to their needs and ignore the rest.</p>
 </div>
 <div class="sect3">
 <h4 id="_addresses">21.3.1. Addresses</h4>
@@ -902,15 +941,21 @@ gives the location on the network of a computer so that messages can be
 sent there.</p>
 </div>
 <div class="paragraph">
-<p>For most systems you use, such an address is be an <em>IP address</em>. There
+<p>For most systems you use, such an address will be an <em>IP address</em>. There
 are two current versions of IP addresses, IPv4 and IPv6. IPv6 is the way
 of the future and provides a huge number of possible addresses. Not all
-systems support IPv6, and the general public is not very aware of it.
+systems support IPv6, and the general public is often not aware of it.
 Although it will one day be the standard, we use the more common IPv4
 addresses here. An IPv4 address is typically written as four decimal
-numbers separated by dots. Each of these four numbers is in the range 0
-- 255. For example, <code>64.233.187.99</code> and <code>192.168.1.1</code> are IPv4
-addresses.</p>
+numbers separated by dots. Each of these four numbers is in the range 0-255.
+For example, <code>64.233.187.99</code> and <code>192.168.1.1</code> are IPv4 addresses.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><a href="#IPv4andIPv6Exercise">Exercise 21.7</a></p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -918,7 +963,7 @@ addresses.</p>
 <div class="paragraph">
 <p>The second topic we focus on is the transport layer. Here, you need to
 make a choice between TCP or UDP for communication. In this book, we
-only cover TCP communication because it is reliable and much more
+only cover TCP communication because it’s reliable and more
 commonly used than UDP. If you need to use UDP communication, the basics
 are not too different from TCP, and there are many excellent resources
 online.</p>
@@ -928,45 +973,45 @@ online.</p>
 client program. The difference between the two is not necessarily big.
 In fact, both the client and the server could be running on the same
 computer. What distinguishes the server is that it sets up a <em>port</em> and
-listens to it, waiting for a connection. Once the client makes a
-connection, the two programs can send and receive data on an equal
+listens on it, waiting for a connection. Once the client makes a
+connection to that port, the two programs can send and receive data on an equal
 footing.</p>
 </div>
 <div class="paragraph">
 <p>We just mentioned the term port. As you know, an address is the location
-of a computer in a network, but a single computer may be performing many
+of a computer in a network, but a single computer might be performing many
 different kinds of network communications. For example, your computer
-could be running a web browser, an instant message application, an
+could be running a web browser, an audio chat application, an
 online game, and a number of other things. So that none of these
 programs become confused and get each others' messages, each program
 uses a separate port for communication. To the outside world, your
 computer usually only has a single address but thousands of available
 ports. Many of these ports are set aside for specific purposes. For
 example, port 20 is for FTP, port 23 is for Telnet, and port 80 is for
-HTTP (webpages).</p>
+HTTP (web pages).</p>
 </div>
 <div class="paragraph">
-<p>When you write a server program, you will usually create a
-<code>ServerSocket</code> object which is linked to a particular port. For example,
+<p>When you write a server program, you’ll usually create a
+<code>ServerSocket</code> object linked to a particular port. For example,
 if you wanted to write a web server, you might create a <code>ServerSocket</code>
 as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span> <span class="mi">80</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="mi">80</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Once the <code>ServerSocket</code> object has been created, the server will
 typically listen to the socket and try to accept incoming connections.
 When a connection is accepted, a new <code>Socket</code> object is created for that
-connection. The purpose of the <code>ServerSocket</code> is just to set up this
+connection. The purpose of the <code>ServerSocket</code> is purely to set up this
 <code>Socket</code>. The <code>ServerSocket</code> doesn’t do any real communication on its
-own. This system may seem indirect, but it allows for greater
-flexibility. For example, a server could have a thread just listening
-for connections. When a connection is made, it could spawn a new thread
+own. This system might seem indirect, but it allows for greater
+flexibility. For example, a server could have a thread whose only job is to
+listen for connections. When a connection is made, it could spawn a new thread
 to do the communication. Commercial web servers often function in this
-way. The code for a server to listen for a connection is:</p>
+way. The code for a server to listen for a connection is as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -983,13 +1028,25 @@ you can create the <code>Socket</code> object directly.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span> <span class="s">&quot;64.233.187.99&quot;</span><span class="o">,</span> <span class="mi">80</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="s">&quot;64.233.187.99&quot;</span><span class="o">,</span> <span class="mi">80</span><span class="o">);</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The first parameter is a <code>String</code> specifying the address of the server,
-either as an IP address as shown or as domain like <code>&quot;google.com&quot;</code>. The
-second parameter is, of course, the port you want to connect on.</p>
+either as an IP address as shown or as a domain like <code>&quot;google.com&quot;</code>. The
+second parameter is the port you want to connect on.</p>
+</div>
+<div class="paragraph">
+<p>Note that the <code>Socket</code> and <code>ServerSocket</code> classes are both in the <code>java.net</code>
+package, so you’ll need to import <code>java.net.*</code> to use them and the rest of the
+basic networking library.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><a href="#portExercise">Exercise 21.5</a></p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -1002,33 +1059,34 @@ can be used for communication.</p>
 <div class="paragraph">
 <p>In order to get input from a <code>Socket</code>, you first call its
 <code>getInputStream()</code> method. You can use the <code>InputStream</code> returned to
-create an object used for normal file input like in the first half of
-the chapter. The considerations are similar. If you only need to receive
-plain, human readable from the <code>Socket</code>, you can create a <code>Scanner</code>
+create an object used for normal file input like in
+<a href="chap19.html#ch20-file-io">Chapter 20</a>. You will need to make similar considerations
+about the kind of data you want to read and write. If you only need to receive
+plain, human-readable text from the <code>Socket</code>, you can create a <code>Scanner</code>
 object as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">());</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Over the network, it will be much more common to send files and other
-binary data. For that purpose, you can create an <code>ObjectInputStream</code> or
-<code>DataInputStream</code> from the <code>Socket</code> in much the same way.</p>
+<p>Over the network, it will be more common to send files and other binary data.
+For that purpose, you can create a <code>DataInputStream</code> or an <code>ObjectInputStream</code>
+object from the <code>Socket</code> in much the same way.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span> <span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">DataInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataInputStream</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">());</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>It should be unsurprising that output is just as easy as input. Text
+<p>It should be unsurprising that output is just as simple as input. Text
 output can be accomplished by creating a <code>PrintWriter</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span> <span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">()</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">());</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1037,73 +1095,82 @@ output can be accomplished by creating a <code>PrintWriter</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-    <span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">()</span> <span class="o">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="n">DataOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataOutputStream</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">());</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Once you have these input and output objects, you use them in the same
 way you would for file processing. There are a few minor differences to
-keep in mind. In the first place, when reading data, you may not know
-when more is coming. There is no explicit end of file. Also, it is
+keep in mind. In the first place, when reading data, you might not know
+when more is coming. There’s no explicit end of file. Also, it’s
 sometimes necessary to call a <code>flush()</code> method after doing a write.
-Unlike writing to a disk, a socket may wait for a sizable chunk of data
-to be accumulated before it gets sent across the network. Without a
-<code>flush()</code>, the data you write may not be sent immediately.</p>
+A socket might wait for a sizable chunk of data to be accumulated before it
+gets sent across the network. Without a <code>flush()</code>, the data you write might
+not be sent immediately.</p>
 </div>
-<div class="exampleblock">
+<div id="clientServerSummingExample" class="exampleblock">
 <div class="title">Example 21.1 Simple client and server</div>
 <div class="content">
 <div class="paragraph">
-<p>Here’s an example of a piece of server code which listens on port 4321
-waits for a connection, then reads 100 <code>int</code> values in binary form from
+<p>Here’s an example of a piece of server code which listens on port 4321,
+waits for a connection, reads 100 <code>int</code> values in binary form from
 the socket, and prints their sum.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="k">try</span><span class="o">{</span>
-    <span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span> <span class="mi">4321</span> <span class="o">);</span>
+    <span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="mi">4321</span><span class="o">);</span>
     <span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
-    <span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">());</span>
+    <span class="n">DataInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataInputStream</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">());</span>
     <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
         <span class="n">sum</span> <span class="o">+=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
     <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sum: &quot;</span> <span class="o">+</span> <span class="n">sum</span><span class="o">);</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">IOException</span> <span class="n">e</span> <span class="o">)</span>
-<span class="o">{}</span></code></pre>
+<span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Network error: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Now, here’s a companion piece of client code which connects to port 4321
-and sends 100 <code>int</code> values in binary form, specifically, the first 100
+and sends 100 <code>int</code> values in binary form, specifically the first 100
 perfect squares.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="k">try</span><span class="o">{</span>
-    <span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">4321</span> <span class="o">);</span>
-    <span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-        <span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">());</span>
-    <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+    <span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">4321</span><span class="o">);</span>
+    <span class="n">DataOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataOutputStream</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">());</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
         <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">);</span>
     <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 <span class="o">}</span>
-<span class="k">catch</span><span class="o">(</span> <span class="n">IOException</span> <span class="n">e</span> <span class="o">)</span>
-<span class="o">{}</span></code></pre>
+<span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Network error: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Note that this client code connects to the IP address <code>127.0.0.1</code>. This
 is a special loopback IP address. When you connect to this IP address,
-it connects to the machine you are currently working on. In this way,
+it connects to the machine you’re currently working on. In this way,
 you can test your networking code without needing two separate
-computers. To test this client and server code together, you you will
-need to run two virtual machines. The simplest way to do this is open
+computers. To test this client and server code together, you will
+need to run two virtual machines. The simplest way to do so is to open
 two command line prompts and run the client from one and the server from
 the other. Be sure that you start the server first so that the client
-has something to connect to.</p>
+has something to connect to.  IDEs like Eclipse and IntelliJ will also allow
+you to start two programs simultaneously, but it can be difficult to be certain
+which one is which.</p>
+</div>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><a href="#textTransmissionExercise">Exercise 21.8</a></p>
 </div>
 </div>
 </div>
@@ -1111,18 +1178,10 @@ has something to connect to.</p>
 <div class="title">Example 21.2 Chat client and server</div>
 <div class="content">
 <div class="paragraph">
-<p>Now we look at a more complicated example of network communication which
-should be familiar: a chat program. If you want to apply the GUI design
-from <a href="chap14.html#ch15-gui">Chapter 15</a>, you can
-make a windowed version of this chat program which looks more like chat
-programs you are used to. For now, our chat program is be text only.</p>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="paragraph">
-<p><a href="#chatGUIExercise">Exercise 21.9</a></p>
-</div>
-</div>
+<p>Here we look at a more complicated example of network communication, a chat
+program. If you want to apply the GUI design from <a href="chap14.html#ch15-gui">Chapter 15</a>, you
+can make a windowed version of this chat program which looks more like typical
+chat programs. For now, our chat program is text only.</p>
 </div>
 <div class="paragraph">
 <p>The functionality of the program is simple. Once connected to a single
@@ -1133,50 +1192,85 @@ across the network to the other chat program, which will display it. We
 encapsulate both client and server functionality in a class called
 <code>Chat</code>.</p>
 </div>
-<div class="paragraph">
-<p>The first step is the appropriate import statements and the <code>main()</code>
-method, which creates a client or a server <code>Chat</code> object, depending on
-command line parameters.</p>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>	<i class="conum" data-value="1"></i><b>(1)</b>
 <span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Chat</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="n">Socket</span> <span class="n">socket</span><span class="o">;</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span> <span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-s&quot;</span><span class="o">)</span> <span class="o">)</span>
-            <span class="k">new</span> <span class="nf">Chat</span><span class="o">(</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span> <span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">)</span> <span class="o">);</span>
-        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span> <span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-c&quot;</span><span class="o">)</span> <span class="o">)</span>
-            <span class="k">new</span> <span class="nf">Chat</span><span class="o">(</span> <span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">],</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span> <span class="n">args</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">)</span>  <span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-s&quot;</span><span class="o">))</span> 		<i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="k">new</span> <span class="nf">Chat</span><span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-c&quot;</span><span class="o">))</span>	<i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="k">new</span> <span class="nf">Chat</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">],</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">2</span><span class="o">])</span> <span class="o">);</span>
         <span class="k">else</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Invalid command line flag.&quot;</span><span class="o">);</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The code given here calls the server version of the <code>Chat</code> constructor
-if the argument <code>&quot;-s&quot;</code> is given and the client version of the <code>Chat</code>
-constructor if the argument <code>&quot;-c&quot;</code> is given. For the server, only a port
-is required, but the client also needs an IP address to connect to.</p>
-</div>
-<div class="paragraph">
-<p>The server <code>Chat</code> constructor takes the port and listens for a
-connection on it. After a connection, it calls the <code>runChat()</code> method to
-perform the actual business of sending and receiving chats.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The first step is the appropriate import statements.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In the <code>main()</code> method, if the first command-line argument is <code>&quot;-s&quot;</code>, the
+server version of the <code>Chat</code> constructor will be called. We convert the next
+argument to an <code>int</code> and use it as a port number.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If the argument <code>&quot;-c&quot;</code> is given, the client version of the <code>Chat</code>
+constructor will be called. We use the next two command-line arguments for the
+IP address and the port number, respectively.</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="c1">// Server</span>
-    <span class="kd">public</span> <span class="nf">Chat</span><span class="o">(</span> <span class="kt">int</span> <span class="n">port</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Chat</span><span class="o">(</span><span class="kt">int</span> <span class="n">port</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span> <span class="n">port</span> <span class="o">);</span>
+            <span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="n">port</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="n">socket</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
-            <span class="n">runChat</span><span class="o">();</span>
+            <span class="n">runChat</span><span class="o">();</span>	<i class="conum" data-value="2"></i><b>(2)</b>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{}</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Network error: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+		<span class="o">}</span>
+    <span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The server <code>Chat</code> constructor takes the port and listens for a
+connection on it.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>After a connection, it calls the <code>runChat()</code> method to
+perform the actual business of sending and receiving chats.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java">    <span class="c1">// Client</span>
+    <span class="kd">public</span> <span class="nf">Chat</span><span class="o">(</span><span class="n">String</span> <span class="n">address</span><span class="o">,</span> <span class="kt">int</span> <span class="n">port</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="n">address</span><span class="o">,</span> <span class="n">port</span><span class="o">);</span>
+			<span class="n">runChat</span><span class="o">();</span>
+		<span class="o">}</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Network error: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+		<span class="o">}</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -1186,123 +1280,162 @@ IP address on the specified port.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="c1">// Client</span>
-    <span class="kd">public</span> <span class="nf">Chat</span><span class="o">(</span> <span class="n">String</span> <span class="n">address</span><span class="o">,</span> <span class="kt">int</span> <span class="n">port</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">try</span> <span class="o">{</span>
-            <span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span> <span class="n">address</span><span class="o">,</span> <span class="n">port</span> <span class="o">);</span>
-            <span class="n">runChat</span><span class="o">();</span>
-        <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span>
-        <span class="o">{}</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runChat</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Sender</span> <span class="n">sender</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Sender</span><span class="o">();</span>		<i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="n">Receiver</span> <span class="n">receiver</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Receiver</span><span class="o">();</span>
+        <span class="n">sender</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>						<i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="n">receiver</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="n">sender</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+			<span class="n">receiver</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+		<span class="o">}</span>
+		<span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Once the client and server are connected, they both run the <code>runChat()</code>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Once the client and server are connected, they both run the <code>runChat()</code>
 method, which creates a new <code>Sender</code> and a new <code>Receiver</code> to do the
-sending and receiving. Note that both <code>start()</code> and <code>join()</code> are called
-on the <code>Sender</code> and <code>Receiver</code> objects. These calls are needed because
-both classes are subclasses of <code>Thread</code>. Sending messages is an
+sending and receiving.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Note that both <code>start()</code> and <code>join()</code> are called
+on the <code>Sender</code> and <code>Receiver</code> objects.  These calls are needed because
+both classes are subclasses of <code>Thread</code>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Sending messages is an
 independent task concerned with reading input from the keyboard and then
 sending it across the network. Receiving messages is also an independent
-task, but it is concerned with reading input from the network and
-printing it on the screen. Since both tasks are independent, it is
+task, but it’s concerned with reading input from the network and
+printing it on the screen. Since both tasks are independent, it’s
 reasonable to allocate a separate thread to each.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runChat</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-        <span class="n">Sender</span> <span class="n">sender</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Sender</span><span class="o">();</span>
-        <span class="n">Receiver</span> <span class="n">receiver</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Receiver</span><span class="o">();</span>
-        <span class="n">sender</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">receiver</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">sender</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
-        <span class="n">receiver</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
-    <span class="o">}</span></code></pre>
-</div>
-</div>
 <div class="paragraph">
-<p>Below is the private inner class <code>Sender</code>. In this case it is convenient
-but not necessary to make <code>Sender</code> an inner class, especially since it
-is so short. The only piece of data <code>Sender</code> shares with <code>Chat</code> is the
-all important <code>socket</code> variable. The <code>Sender</code> begins by creating a
-<code>PrintWriter</code> object from the <code>Socket</code> output stream. After reading a
-name from the user, it waits for a line from the user. Each time a line
-is ready, it is printed and flushed, with the user name inserted at the
-beginning, through the <code>PrintWriter</code> connected to the <code>Socket</code> output
-stream. When the user types <code>quit</code>, the <code>Socket</code> will be closed.</p>
+<p>Below is the private inner class <code>Sender</code>. In this case it’s convenient
+but not necessary to make <code>Sender</code> an inner class, especially since it’s
+so short. The only piece of data <code>Sender</code> shares with <code>Chat</code> is the
+all important <code>socket</code> variable.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">Sender</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
         <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
             <span class="k">try</span> <span class="o">{</span>
-                <span class="n">PrintWriter</span> <span class="n">netOut</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span>
-                    <span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">()</span> <span class="o">);</span>
-                <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">System</span><span class="o">.</span><span class="na">in</span> <span class="o">);</span>
+                <span class="n">PrintWriter</span> <span class="n">netOut</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">());</span> <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Enter your name: &quot;</span><span class="o">);</span>
-                <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
-                <span class="n">String</span> <span class="n">buffer</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
-                <span class="k">while</span><span class="o">(</span> <span class="o">!</span><span class="n">socket</span><span class="o">.</span><span class="na">isClosed</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
-                    <span class="k">if</span><span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
-                        <span class="n">buffer</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
-                        <span class="k">if</span><span class="o">(</span> <span class="n">buffer</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;quit&quot;</span><span class="o">)</span> <span class="o">)</span>
-                            <span class="n">socket</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-                        <span class="k">else</span> <span class="o">{</span>
-                            <span class="n">netOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span>
-                                <span class="o">+</span> <span class="n">buffer</span> <span class="o">);</span>
-                            <span class="n">netOut</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
-                        <span class="o">}</span>
-                    <span class="o">}</span>
+                <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>				<i class="conum" data-value="2"></i><b>(2)</b>
+                <span class="k">while</span><span class="o">(!</span><span class="n">socket</span><span class="o">.</span><span class="na">isClosed</span><span class="o">())</span> <span class="o">{</span>
+					<span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span> 			<i class="conum" data-value="3"></i><b>(3)</b>
+					<span class="k">if</span><span class="o">(</span><span class="n">line</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;quit&quot;</span><span class="o">))</span>					<i class="conum" data-value="4"></i><b>(4)</b>
+						<span class="n">socket</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+					<span class="k">else</span> <span class="o">{</span>
+						<span class="n">netOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">line</span><span class="o">);</span> <i class="conum" data-value="5"></i><b>(5)</b>
+						<span class="n">netOut</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
+					<span class="o">}</span>
                 <span class="o">}</span>
             <span class="o">}</span>
-            <span class="k">catch</span><span class="o">(</span> <span class="n">IOException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{}</span>
+            <span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Network error: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+			<span class="o">}</span>
         <span class="o">}</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>Sender</code> begins by creating a
+<code>PrintWriter</code> object from the <code>Socket</code> output stream.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>It reads a name from the user.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Then, it waits for a line from the user.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>If the user types <code>quit</code>, the <code>Socket</code> will be closed.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Otherwise, each time a line is read, it’s printed and flushed through the
+<code>PrintWriter</code> connected to the <code>Socket</code> output stream, with the user name
+inserted at the beginning.</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>Below is the private inner class <code>Receiver</code>, the counterpart of
-<code>Sender</code>, as well as the last thing defined in the <code>Chat</code> class. The
-<code>Receiver</code> class is even simpler than the <code>Sender</code> class. After creating
-a <code>Scanner</code> object connected to the input stream of the <code>Socket</code>, it
-waits for a line of text to arrive from the connection. Each time a line
-arrives, it prints it to the screen. Here again, you can see that this
-problem is solved with threads much more easily than without them. Both
-the <code>in.hasNextLine()</code> method called by <code>Sender</code> and the
-<code>netIn.hasNextLine()</code> method called by <code>Receiver</code> are blocking
-functions. Because each might wait for input before continuing, they
-cannot easily be combined in one thread of execution.</p>
+<p>Below is the private inner class <code>Receiver</code>, the simpler counterpart of
+<code>Sender</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">Receiver</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
         <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
             <span class="k">try</span><span class="o">{</span>
-                <span class="n">Scanner</span> <span class="n">netIn</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span>
-                    <span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">())</span> <span class="o">;</span>
-                <span class="k">while</span><span class="o">(</span> <span class="o">!</span><span class="n">socket</span><span class="o">.</span><span class="na">isClosed</span><span class="o">()</span> <span class="o">)</span>
-                    <span class="k">if</span><span class="o">(</span> <span class="n">netIn</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">()</span> <span class="o">)</span>
-                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="n">netIn</span><span class="o">.</span><span class="na">nextLine</span><span class="o">()</span> <span class="o">);</span>
+                <span class="n">Scanner</span> <span class="n">netIn</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">());</span> 	<i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="k">while</span><span class="o">(!</span><span class="n">socket</span><span class="o">.</span><span class="na">isClosed</span><span class="o">())</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">netIn</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">())</span>
+                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">netIn</span><span class="o">.</span><span class="na">nextLine</span><span class="o">());</span>			<i class="conum" data-value="2"></i><b>(2)</b>
             <span class="o">}</span>
-            <span class="k">catch</span><span class="o">(</span> <span class="n">IOException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{}</span>
+            <span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Network error: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+			<span class="o">}</span>
         <span class="o">}</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre>
+    <span class="o">}</span></code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>First, it creates a <code>Scanner</code> object connected to the input stream of the <code>Socket</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Then, waits for a line of text to arrive from the connection. Each time a line
+arrives, it prints it to the screen.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can see that this problem is solved with threads much more
+easily than without them. Both the <code>in.nextLine()</code> method called by <code>Sender</code>
+and the <code>netIn.nextLine()</code> method called by <code>Receiver</code> are blocking calls.
+Because each must wait for input before continuing, they can’t easily be
+combined in one thread of execution.</p>
 </div>
 <div class="paragraph">
 <p>Although the fundamentals are present in this example, a real chat
-client should provide a buddy list, the opportunity to talk to more than
-one other user at a time, real error-handling code in the
+client should provide a contact list, the opportunity to talk to more than
+one other user at a time, better error-handling code in the
 <code>catch</code>-blocks, and many other features. Some of these features are
 easier to provide in a GUI.</p>
 </div>
 </div>
 </div>
+<div class="sidebarblock">
+<div class="content">
 <div class="paragraph">
-<p>In the next section, we give a solution for the Web Server problem.
-Since only the server side is provided, some of the networking is
+<p><a href="#chatGUIExercise">Exercise 21.9</a></p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>In the next section, we give a solution for the web server problem.
+Since only the server side is needed, some of the networking is
 simpler, and there are no threads. However, the communication is done in
 both binary and text mode.</p>
 </div>
@@ -1311,210 +1444,277 @@ both binary and text mode.</p>
 <div class="sect2">
 <h3 id="_solution_web_server">21.4. Solution: Web server</h3>
 <div class="paragraph">
-<p>Here is our solution to the Web Server problem. As usual, our solution
+<p>Here’s our solution to the web server problem. As usual, our solution
 doesn’t provide all the error checking or features that a real web
-server would, but it is entirely functional. When you compile and run
-the code, it will start a web server on port 8080 (an alternative port
-for HTTP) in the directory you run it from. Feel free to change those
-settings in the <code>main()</code> method. When the server is running, you should
-be able to open any web browser and go to <code><a href="http://127.0.0.1" class="bare">http://127.0.0.1</a></code>. If you put
-some sample HTML files in the directory you run the server from, you
+server would, but it’s entirely functional. When you compile and run
+the code, it will start a web server on port 80 in the directory you run it
+from. Feel free to change those settings in the <code>main()</code> method or create a
+<code>WebServer</code> object from another program. When the server’s running, you should
+be able to open any web browser and go to <a href="http://127.0.0.1" class="bare">http://127.0.0.1</a>. If you put
+some sample HTML and image files in the directory you run the server from, you
 should be able to browse them.</p>
-</div>
-<div class="paragraph">
-<p>As for our code, we start with the imports and constructor below. Note
-that the server has fields for the port communication will take place
-on, the root directory for the web page, and a <code>ServerSocket</code>. The
-<code>main()</code> method does nothing but call the constructor using the current
-directory as an argument and then start the server.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>			<i class="conum" data-value="1"></i><b>(1)</b>
 <span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebServer</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="kt">int</span> <span class="n">port</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="n">String</span> <span class="n">webRoot</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">WebServer</span><span class="o">(</span> <span class="kt">int</span> <span class="n">port</span><span class="o">,</span> <span class="n">String</span> <span class="n">webRoot</span> <span class="o">)</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebServer</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">port</span><span class="o">;</span>		<i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">webRoot</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">WebServer</span><span class="o">(</span><span class="kt">int</span> <span class="n">port</span><span class="o">,</span> <span class="n">String</span> <span class="n">webRoot</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">port</span> <span class="o">=</span> <span class="n">port</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">webRoot</span> <span class="o">=</span> <span class="n">webRoot</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">File</span> <span class="n">currentDirectory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;.&quot;</span><span class="o">);</span>
-        <span class="k">try</span><span class="o">{</span>
-            <span class="n">WebServer</span> <span class="n">server</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WebServer</span><span class="o">(</span><span class="mi">8080</span><span class="o">,</span>
-                <span class="n">currentDirectory</span><span class="o">.</span><span class="na">getCanonicalPath</span><span class="o">()</span> <span class="o">);</span>
-            <span class="n">server</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">IOException</span> <span class="n">e</span> <span class="o">)</span>
-        <span class="o">{}</span>
+		<span class="n">WebServer</span> <span class="n">server</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WebServer</span><span class="o">(</span><span class="mi">80</span><span class="o">,</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;.&quot;</span><span class="o">).</span><span class="na">getAbsolutePath</span><span class="o">());</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="n">server</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Below is the <code>start()</code> method. This method contains the central loop of
-the web server that waits for connections and loops forever. Once a
-connection has been made, the server creates input and output objects
-from the socket connection. Then, it tries to serve requests coming from
-the socket input. Our web server ignores any request other than a <code>GET</code>
-request and closes the connection after the first <code>GET</code>. When a <code>GET</code>
-request is made, the server removes the <code>&quot;HTTP&quot;</code> at the beginning and
-passes off the remaining path to the <code>serve()</code> method. Everything else
-in the <code>start()</code> method is made up of the necessary exception handling
-machinery.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Our code starts with the necessary imports.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The server has fields for the port where communication will take place
+and the root directory for the web page.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <code>main()</code> method calls the constructor using port 80 and a path
+corresponding to the current directory (<code>.</code>) as arguments. Then, it starts
+the server.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Note that the <code>out</code> object is of type <code>ObjectOutputStream</code>, allowing us
-to send binary data over the socket. However, the <code>in</code> variable is of
-type <code>Scanner</code>, because HTTP requests are generally only text.</p>
+<p>Below is the <code>start()</code> method. This method contains the central loop of
+the web server that waits for connections and loops forever.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="n">ObjectOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">DataOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
         <span class="k">try</span> <span class="o">{</span>
-            <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span> <span class="n">port</span> <span class="o">);</span>
-            <span class="k">while</span><span class="o">(</span> <span class="kc">true</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="n">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="n">port</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">socket</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
                 <span class="k">try</span> <span class="o">{</span>
-                    <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span> <span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">())</span> <span class="o">;</span>
-                    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span>
-                        <span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">()</span> <span class="o">);</span>
-                    <span class="k">while</span> <span class="o">(</span> <span class="n">in</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
+                    <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">())</span> <span class="o">;</span>	<i class="conum" data-value="2"></i><b>(2)</b>
+                    <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataOutputStream</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">());</span>
+					<span class="kt">boolean</span> <span class="n">requestRead</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                    <span class="k">while</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">requestRead</span><span class="o">)</span> <span class="o">{</span>	<i class="conum" data-value="3"></i><b>(3)</b>
                         <span class="n">line</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
-                        <span class="k">if</span><span class="o">(</span> <span class="n">line</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;GET&quot;</span><span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
-                            <span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span>
-                                <span class="n">line</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s">&quot;HTTP&quot;</span><span class="o">)).</span><span class="na">trim</span><span class="o">();</span>
-                            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span>
-                                <span class="s">&quot;Received request for: &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="o">);</span>
-                            <span class="n">serve</span><span class="o">(</span> <span class="n">out</span><span class="o">,</span> <span class="n">getPath</span><span class="o">(</span> <span class="n">path</span> <span class="o">)</span> <span class="o">);</span>
-                            <span class="n">socket</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-                            <span class="k">break</span><span class="o">;</span>
+                        <span class="k">if</span><span class="o">(</span><span class="n">line</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;GET&quot;</span><span class="o">))</span> <span class="o">{</span>
+                            <span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span>		<i class="conum" data-value="4"></i><b>(4)</b>
+								<span class="n">line</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s">&quot;HTTP&quot;</span><span class="o">)).</span><span class="na">trim</span><span class="o">();</span>
+                            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Received request for: &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="o">);</span>
+                            <span class="n">serve</span><span class="o">(</span><span class="n">out</span><span class="o">,</span> <span class="n">getPath</span><span class="o">(</span><span class="n">path</span><span class="o">));</span>			<i class="conum" data-value="5"></i><b>(5)</b>
+                            <span class="n">socket</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>						<i class="conum" data-value="6"></i><b>(6)</b>
+                            <span class="n">requestRead</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
                         <span class="o">}</span>
                     <span class="o">}</span>
                 <span class="o">}</span>
-                <span class="k">catch</span><span class="o">(</span> <span class="n">IOException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+                <span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>							<i class="conum" data-value="7"></i><b>(7)</b>
                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
-                <span class="o">}</span>
-                <span class="k">finally</span> <span class="o">{</span>
-                    <span class="k">if</span><span class="o">(</span> <span class="n">in</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-                    <span class="k">if</span><span class="o">(</span> <span class="n">out</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
                 <span class="o">}</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="k">catch</span><span class="o">(</span> <span class="n">IOException</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
         <span class="o">}</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>First, we create a <code>ServerSocket</code> to listen on the port.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Once a connection has been made, the server creates input and output objects
+from the socket connection. Then, it tries to serve requests coming from
+the socket input.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Our web server keeps reading lines until it finds a <code>GET</code> request.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>When a <code>GET</code> request is made, the server removes the <code>&quot;GET &quot;</code> at the
+beginning of the request and the HTTP version information at the end.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>It passes the remaining file path to the <code>serve()</code> method.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Afterwards, it closes the connection and sets <code>requestRead</code> to <code>true</code> so that
+we stop looping through requests made on this particular connection to the
+server.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>All that remains in the <code>start()</code> method is the necessary exception handling
+machinery.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Note that the <code>out</code> object is of type <code>DataOutputStream</code>, allowing us
+to send binary data over the socket. However, the <code>in</code> variable is of
+type <code>Scanner</code>, because HTTP requests are text only.</p>
+</div>
 <div class="paragraph">
 <p>Next is a short utility method which provides some amount of platform
-independence. The <code>getPath()</code> method take in a <code>String</code> representation
-of a path requested by a web browser and format it. This path should
+independence. The <code>getPath()</code> method takes in a <code>String</code> representation
+of a path requested by a web browser and formats it. This path should
 always be given in the Unix or Linux style with slashes (<code>/</code>) separating
-each directory. To function smoothly with other operating systems,
-<code>getPath()</code> uses the class variable <code>File.separatorChar</code> which gives the
-<code>char</code> used to separate directories on whichever platform the JVM is
-currently running. In addition, <code>getPath()</code> adds <code>&quot;index.html&quot;</code> to the
-end of the path if the path ends with a directory rather than a file
-name. Real web servers try a list of many different files such as
-<code>index.html</code>, <code>index.htm</code>, <code>index.php</code>, and so on, until a file is found
-or the list runs out.</p>
+each directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getPath</span><span class="o">(</span><span class="n">String</span> <span class="n">path</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="sc">'/'</span> <span class="o">!=</span> <span class="n">File</span><span class="o">.</span><span class="na">separatorChar</span><span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span><span class="sc">'/'</span> <span class="o">!=</span> <span class="n">File</span><span class="o">.</span><span class="na">separatorChar</span><span class="o">)</span>				<i class="conum" data-value="1"></i><b>(1)</b>
             <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="sc">'/'</span><span class="o">,</span> <span class="n">File</span><span class="o">.</span><span class="na">separatorChar</span><span class="o">);</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">path</span><span class="o">.</span><span class="na">endsWith</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="o">+</span> <span class="n">File</span><span class="o">.</span><span class="na">separatorChar</span> <span class="o">)</span> <span class="o">)</span>
-            <span class="k">return</span> <span class="n">webRoot</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="s">&quot;index.html&quot;</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">path</span><span class="o">.</span><span class="na">endsWith</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="o">+</span> <span class="n">File</span><span class="o">.</span><span class="na">separatorChar</span><span class="o">))</span>
+            <span class="k">return</span> <span class="n">webRoot</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="s">&quot;index.html&quot;</span><span class="o">;</span>	<i class="conum" data-value="2"></i><b>(2)</b>
         <span class="k">else</span>
             <span class="k">return</span> <span class="n">webRoot</span> <span class="o">+</span> <span class="n">path</span><span class="o">;</span>
     <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The last method in the <code>WebServer</code> class takes in a path and sends the
-corresponding file over the nextwork. The <code>serve()</code> method first tries
-to find the specified file. If it fails, it sends an <code>HTTP 404</code> message
-with a short explanatory piece of HTML. Anyone who surfs the Internet
-should be familiar with 404 messages. On the other hand, if this method
-finds the file, it sends the <code>HTTP 200</code> method indicating success and
-then creates a new <code>ObjectInputStream</code> object to read the file in binary
-format. In this case, it is necessary to read the file in binary. In
-general, HTML files are simple text files which are human readable, but
-the image files that web servers must often send such as GIF and JPEG
-files are binary files which are filled with unprintable characters.
-Because we need to send binary data, we were also careful to open an
-<code>ObjectOutputStream</code> on the socket earlier.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>To function smoothly with other operating systems,
+<code>getPath()</code> uses the class variable <code>File.separatorChar</code> which gives the
+<code>char</code> used to separate directories on whichever platform the JVM is
+currently running.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In addition, <code>getPath()</code> adds <code>&quot;index.html&quot;</code> to the
+end of the path if the path is a directory rather than a file
+name. Real web servers try a list of many different files such as
+<code>index.html</code>, <code>index.htm</code>, <code>index.php</code>, and so on, until a file is found
+or the list runs out.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Once the file is open, the <code>serve()</code> method simply reads it in, byte by
-byte, and sends each byte out over the socket. After the file has been
-sent, the method closes it and returns.</p>
+<p>The last method in the <code>WebServer</code> class takes in a path and transmits the
+corresponding file over the network.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">serve</span><span class="o">(</span> <span class="n">ObjectOutputStream</span> <span class="n">out</span><span class="o">,</span> <span class="n">String</span> <span class="n">path</span> <span class="o">)</span>
-        <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">serve</span><span class="o">(</span><span class="n">DataOutputStream</span> <span class="n">out</span><span class="o">,</span> <span class="n">String</span> <span class="n">path</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Trying to serve &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="o">);</span>
         <span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
-        <span class="k">if</span><span class="o">(</span> <span class="o">!</span><span class="n">file</span><span class="o">.</span><span class="na">exists</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>						<i class="conum" data-value="1"></i><b>(1)</b>
             <span class="n">out</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="s">&quot;HTTP/1.1 404 Not Found\n\n&quot;</span><span class="o">);</span>
-            <span class="n">out</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="s">&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;404 Not Found&quot;</span> <span class="o">+</span>
-                <span class="s">&quot;&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;Not Found&quot;</span> <span class="o">+</span>
-                <span class="s">&quot;&lt;/h1&gt;The requested URL &quot;</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span>
-                <span class="s">&quot; was not found on this server.&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="o">);</span>
+            <span class="n">out</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="s">&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;404 Not Found&lt;/title&gt;&lt;/head&gt;&quot;</span> <span class="o">+</span>
+				<span class="s">&quot;&lt;body&gt;&lt;h1&gt;Not Found&lt;/h1&gt;The requested URL &quot;</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span>
+				<span class="s">&quot; was not found on this server.&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="o">);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;File not found.&quot;</span><span class="o">);</span>
         <span class="o">}</span>
         <span class="k">else</span> <span class="o">{</span>
-            <span class="n">out</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="s">&quot;HTTP/1.1 200 OK\n\n&quot;</span><span class="o">);</span>
-            <span class="n">ObjectInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="n">out</span><span class="o">.</span><span class="na">writeBytes</span><span class="o">(</span><span class="s">&quot;HTTP/1.1 200 OK\n\n&quot;</span><span class="o">);</span>	<i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="n">DataInputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
             <span class="k">try</span> <span class="o">{</span>
-                <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span>
-                    <span class="k">new</span> <span class="nf">FileInputStream</span><span class="o">(</span> <span class="n">file</span> <span class="o">));</span>
-                <span class="kt">int</span> <span class="n">data</span><span class="o">;</span>
-                <span class="k">while</span> <span class="o">(</span> <span class="o">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readByte</span><span class="o">())</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">)</span>
-                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span><span class="n">data</span> <span class="o">);</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Request succeeded.&quot;</span><span class="o">);</span>
+                <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="n">file</span><span class="o">));</span> <i class="conum" data-value="3"></i><b>(3)</b>
+                <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span>
+                    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">readByte</span><span class="o">());</span>	<i class="conum" data-value="4"></i><b>(4)</b>
             <span class="o">}</span>
+			<span class="k">catch</span><span class="o">(</span><span class="n">EOFException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Request succeeded.&quot;</span><span class="o">);</span>
+			<span class="o">}</span>
             <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Error sending file: &quot;</span> <span class="o">+</span>
-                    <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Error sending file: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
             <span class="o">}</span>
-            <span class="k">finally</span> <span class="o">{</span> <span class="k">if</span><span class="o">(</span> <span class="n">in</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span>
+            <span class="k">finally</span> <span class="o">{</span> <span class="k">try</span><span class="o">{</span> <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span> <span class="o">}</span> <i class="conum" data-value="5"></i><b>(5)</b>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>serve()</code> method first checks to see if the specified file exists. If
+it doesn’t, the method sends an <code>HTTP 404</code> response with a short explanatory
+piece of HTML. Anyone who’s spent any time on the Internet should be familiar
+with 404 messages.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>On the other hand, if the file exists, the method sends an <code>HTTP 200</code>
+response indicating success.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Then, it creates a new <code>DataInputStream</code> object to read the file. In this
+case, it’s necessary to read the file in binary. In general, HTML files are
+human-readable text files, but the image files that web servers must often send
+such as GIF and JPEG files are binary files filled with unprintable characters.
+Because we need to send binary data, we were also careful to open a
+<code>DataOutputStream</code> on the socket earlier.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Once the file’s open, the <code>serve()</code> method simply reads it in, byte by
+byte, and sends each byte out over the socket.  It would be more efficient to
+read a block of bytes and send them together, but our approach is simpler.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>After the file has been sent, the method closes the <code>DataInputStream</code> and
+returns.</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>Because a web server is a real world application, we have to give the
-usual caveat that this implementation is quite bare-bones. There are
+<p>Because a web server is a real world application, we must repeat the
+caveat that this implementation is quite bare bones. There are
 other HTTP requests and many features, including error handling, that a
 web server should do better. Feel free to extend the functionality.</p>
 </div>
 <div class="paragraph">
-<p>Also, you might notice that there is no way to stop the web server. It
-has an infinite loop which is only broken if there is an <code>IOException</code>
-thrown. From a Windows, Linux, or Mac command prompt, you can usually
-stop a running program by typing <code>Ctrl-C</code>.</p>
+<p>You might also notice that there’s no way to stop the web server. It
+has an infinite loop that’s broken only if an <code>IOException</code> is thrown.
+From a Windows, Linux, or macOS command prompt, you can usually stop a
+running program by typing <code>Ctrl+C</code>.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><a href="#sendingByteBlocksExercise">Exercise 21.12</a></p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_concurrency_networking">21.5. Concurrency: Networking</h3>
 <div class="paragraph">
-<p>Throughout this book, we have used concurrency primarily for the purpose
+<p>Throughout this book, we’ve used concurrency primarily for the purpose
 of speedup. For that kind of performance improvement, concurrency is
-essentially icing on the cake. Unless you are performing massively
+often icing on the cake. Unless you’re performing massively
 parallel computations such as code breaking or scientific computing,
 concurrency will probably make your application run just a little faster
 or a little smoother.</p>
@@ -1522,13 +1722,13 @@ or a little smoother.</p>
 <div class="paragraph">
 <p>With network programming, the situation is different. Many networked
 programs, including chat clients, web servers, and peer-to-peer file
-sharing software, will simultaneously be connected to tens if not
+sharing software, can be simultaneously connected to tens if not
 hundreds of other computers at the same time. While there are
-single-threaded strategies to handle these scenarios, it is natural to
+single-threaded strategies to handle these scenarios, it’s natural to
 handle them in a multi-threaded way.</p>
 </div>
 <div class="paragraph">
-<p>A web server at Google, for example, may service thousands of requests
+<p>A web server at Google, for example, might service thousands of requests
 per second. If each request had to wait for the previous one to come to
 completion, the server would become hopelessly bogged down. By using a
 single thread to listen to requests and then spawn worker threads as
@@ -1538,18 +1738,19 @@ needed, the server can run more smoothly.</p>
 <div class="content">
 <div class="paragraph">
 <p><a href="#threadedWebServerExercise">Exercise 21.10</a><br>
-<a href="#threadPoolWebServerExercise">Exercise 21.11</a></p>
+<a href="#threadPoolWebServerExercise">Exercise 21.11</a><br>
+<a href="#threadedClientLatencyExercise">Exercise 21.13</a></p>
 </div>
 </div>
 </div>
 <div class="paragraph">
 <p>Even in <a href="#chatClientAndServerExample">Example 21.2</a>, it was convenient to
-create two different threads, <code>Sender</code> and <code>Receiver</code>. We did not create
+create two different threads, <code>Sender</code> and <code>Receiver</code>. We didn’t create
 them for speedup but simply because they were doing two different jobs.
 Since the <code>Sender</code> waits for the user to type a line and the <code>Receiver</code>
 waits for a line of text to arrive over the network, it would be
 difficult to write a single thread that could handle both jobs. Both
-threads call the <code>hasNextLine()</code> method, which can block execution. A
+threads call the <code>nextLine()</code> method, which blocks execution. A
 single thread waiting to see if the user had entered more text could not
 respond to text arriving over the network until the user hit enter.</p>
 </div>
@@ -1573,32 +1774,32 @@ threads to solve the networking problem effectively.</p>
 file I/O APIs in Java?</p>
 </li>
 <li>
-<p>Explain the difference between client and server computers in
+<p><a id="clientServerExercise"></a> Explain the difference between client and server computers in
 network communication. Is it possible for a single computer to be both a
 client and a server?</p>
 </li>
 <li>
-<p>Why is writing a web browser so much more complicated than writing a
+<p><a id="webBrowserExercise"></a> Why is writing a web browser so much more complicated than writing a
 web server?</p>
 </li>
 <li>
-<p>Name and briefly describe the seven layers of the OSI model.</p>
+<p><a id="OSIModelExercise"></a> Name and briefly describe the seven layers of the OSI model.</p>
 </li>
 <li>
-<p>Modern computers often have many programs running that are all in
+<p><a id="portExercise"></a> Modern computers often have many programs running that are all in
 communication over a network. Since a computer often has only one IP
 address that the outside world can send to, how are messages that arrive
 at the computer connected to the right program?</p>
 </li>
 <li>
-<p>What are the most popular choices of protocols at the transport
+<p><a id="UDPandTCPExercise"></a> What are the most popular choices of protocols at the transport
 layer of the OSI model? What are the advantages and disadvantages of
 each?</p>
 </li>
 <li>
-<p>How many possible IP addresses are there in IPv4? IPv6 addresses are
-often written as eight groups of four hexadecimal digits, totaling 32
-hexadecimal digits. How many possible IP addresses are there in IPv6?</p>
+<p><a id="IPv4andIPv6Exercise"></a> How many possible IP addresses are there in IPv4? IPv6
+addresses are often written as eight groups of four hexadecimal digits,
+totaling 32 hexadecimal digits. How many possible IP addresses are there in IPv6?</p>
 </li>
 </ol>
 </div>
@@ -1608,15 +1809,16 @@ hexadecimal digits. How many possible IP addresses are there in IPv6?</p>
 <div class="olist arabic">
 <ol class="arabic" start="8">
 <li>
-<p>Recall the client and server from <a href="#_receiving_and_sending_data">Section 21.3.3</a> that, respectively, send 100 <code>int</code> values and sum them.
-Rewrite these fragments to send and receive the <code>int</code> values in text
-rather than binary format.</p>
+<p><a id="textTransmissionExercise"></a> In <a href="#clientServerSummingExample">Example 21.1</a> a client
+sends 100 <code>int</code> values, and a server sums them. Rewrite these fragments to
+send and receive the <code>int</code> values in text rather than binary format. You will
+need to send whitespace between the values.</p>
 </li>
 <li>
 <p><a id="chatGUIExercise"></a> Add a GUI based on <code>JFrame</code> for the chat
-program given in <a href="#chatClientAndServerExample">Example 21.2</a>. Use a
-(non-editable) <code>JTextArea</code> to display the log of messages, including
-user name. Provide a <code>JTextField</code> for entering messages, a <code>JButton</code> for
+program given in <a href="#chatClientAndServerExample">Example 21.2</a>. Use a (non-editable)
+<code>JTextArea</code> to display the log of messages, including user name. Provide a
+<code>JTextField</code> for entering messages, a <code>JButton</code> for
 sending messages, and another <code>JButton</code> for closing the network
 connections and ending the program.</p>
 </li>
@@ -1643,12 +1845,26 @@ exercise to use a fixed pool of 10 worker threads.</p>
 <div class="olist arabic">
 <ol class="arabic" start="12">
 <li>
-<p>Consider the multi-threaded implementation of a web server from
+<p><a id="sendingByteBlocksExercise"></a> The web server program given in
+<a href="#_solution_web_server">Section 21.4</a> sends files byte by byte.  It would be much more
+efficient to send files in blocks of bytes instead of singly.
+Re-implement this program to send blocks of 1,024 bytes at a time.  Time the
+difference it takes to send image files with sizes of about 500 KB, 1 MB, and
+2 MB using the two different programs. If you can, also measure the time when
+you’re sending to a different computer, perhaps in the same computer lab.  To
+do so, the person on the other computer will need to enter the IP address of
+your computer instead of <code>127.0.0.1</code>.  It would also be valuable to time how
+long it takes to send a file to a computer at a remote location, but doing so
+often involves changes to firewall settings to allow an outside computer to
+connect to your server.</p>
+</li>
+<li>
+<p><a id="threadedClientLatencyExercise"></a> Consider the multi-threaded implementation of a web server from
 <a href="#threadedWebServerExercise">Exercise 21.10</a>. Can you design an
 experiment to measure the average amount of time a client waits to
-receive the requested file? How does this time change from the single
-threaded to the multi-threaded version? If the file size is larger, is
-the increase in the waiting time the same in both the single and
+receive the requested file? How does this time change from the single-threaded
+to the multi-threaded version? If the file size is larger, is
+the increase in the waiting time the same in both the single- and
 multi-threaded versions?</p>
 </li>
 </ol>
@@ -1658,7 +1874,7 @@ multi-threaded versions?</p>
 </div></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-09 18:07:19 UTC
+Last updated 2019-08-09 04:16:39 UTC
 </div>
 </div>
 <style>
@@ -1796,30 +2012,6 @@ pre.rouge .err {
   background-color: #FAA;
 }
 </style>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  messageStyle: "none",
-  tex2jax: {
-    inlineMath: [["\\(", "\\)"]],
-    displayMath: [["\\[", "\\]"]],
-    ignoreClass: "nostem|nolatexmath"
-  },
-  asciimath2jax: {
-    delimiters: [["\\$", "\\$"]],
-    ignoreClass: "nostem|noasciimath"
-  },
-  TeX: { equationNumbers: { autoNumber: "none" } }
-})
-MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
-  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
-    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
-      data.math.root.display = "block"
-    }
-    return data
-  })
-})
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
