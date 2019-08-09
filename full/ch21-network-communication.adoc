@@ -12,59 +12,80 @@ ____
 
 === Problem: Web server
 
-It is no accident that the previous chapter about file I/O is followed
+It's no accident that the previous chapter about file I/O is followed
 by this one about networking. At first glance, the two probably seem
 unrelated. As it happens, both files and networks are used for input and
 output, and the designers of Java were careful to create an API with a
 similar interface for both.
 
-In the next two sections, we discuss how this API works, but first we
+In the next two sections, we'll discuss how this API works, but first we
 introduce the problem: You need to create a web server application. The
 term _server_ is used to describe a computer on a network which other
-computers, called _clients_, connect to in order to access some services
-or resources. When you surf the Internet, your computer is a client
+computers, called _clients_, connect to in order to access services
+or resources. When you browse the Internet, your computer is a client
 connecting to web servers all over the world. Writing a web server might
-seem like a daunting task. The web browser you run on your client
-computer (e.g. Chrome, Firefox, Internet Explorer, or Safari) is, in modern
-times, a very complicated program, capable of playing sounds and movies,
-browsing in multiple tabs, automatically encrypting and decrypting
-secure information, and, at the very least, correctly displaying web
-pages of every description.
+seem like a daunting task. The web browser you run on your client computer,
+such as Microsoft Edge, Mozilla Firefox, Apple Safari, or Google Chrome, is
+a complicated program, capable of streaming audio and video, browsing in
+multiple tabs, automatically encrypting and decrypting secure information,
+and at the very least, correctly displaying web pages of every description.
 
 In contrast, a web server application is much simpler. At its heart, a
-web server application gets requests for files and sends those files
+web server gets requests for files and sends those files
 over the network. More advanced servers can execute code and dynamically
 generate pages, and many web servers are multi-threaded to support heavy
-traffic. The web server you are writing needs only to focus on getting
+traffic. The web server you'll write needs only to focus on getting
 requests for files and sending those files back to the requester.
+
+****
+<<clientServerExercise>> +
+<<webBrowserExercise>>
+****
 
 ==== HTTP requests
 
 To receive requests, a web server uses something called _hypertext
-transfer protocol (HTTP)_, which is just a way of specifying the format
-of the requests. The only request we are interested in is the `GET`
-request. All `GET` requests have the following format. +
-`GET` *path* `HTTP/`**version** +
-where *path* is the path of the file being requested and *version* is
-the HTTP version number. A typical request might be as follows. +
-`GET /images/banner.jpg HTTP/1.1` +
+transfer protocol_ (HTTP), which is just a way of specifying the format
+of the requests. The only request we're interested in is the `GET`
+request. All `GET` requests have the following format.
+
+[subs=+macros]
+....
+GET pass:quotes[_path_] HTTP/pass:quotes[_version_]
+....
+
+In this request, `_path_` is the path of the file being requested and `_version_` is
+the HTTP version number. A typical request might be as follows.
+
+....
+GET /images/banner.jpg HTTP/1.1
+....
+
 You should also note that all HTTP commands end with *two* newline
-characters (`'\\n'`). The extra blank line makes it easier to separate
+characters (`'\n'`). The extra blank line makes it easier to separate
 the commands from other data being sent.
 
 ==== HTTP responses
 
 After your web server receives a `GET` message, it looks for the file
 specified by the *path*. If the server finds the file, it sends the
-following message. +
-`HTTP/1.1 200 OK` +
+following message.
+
+....
+HTTP/1.1 200 OK
+....
+
 Again, note that this message is followed with two newline characters.
 After this message is sent, the server sends the requested file, byte by
-byte across the network. If the file cannot be found by the web server,
-it sends an error message as follows. +
-`HTTP/1.1 404 Not Found` +
-Of course, two newlines will be sent after this as well. After the error
-message, servers will also typically send some default web page with an
+byte, across the network. If the file can't be found by the web server,
+it sends an error message as follows.
+
+....
+HTTP/1.1 404 Not Found
+....
+
+Of course, two newlines will be sent after this message as well. After the
+error message, servers will also typically send some default web page with an
 explanation in HTML.
 
 Now, we return to the more fundamental problem of how to communicate
@@ -72,19 +93,19 @@ over a network.
 
 === Concepts: TCP/IP communication
 
-We begin where nearly every discussion of computer networking begins,
-with the Open Systems Interconnection Basic Reference Model (or OSI
+We begin where many discussions of computer networking begin,
+the Open Systems Interconnection Basic Reference Model (or OSI
 model). As we mentioned before, the designers of Java wanted to make a
 networking API which was very similar to the file system API. This
-single API must be used for JVM's running on Windows or on Mac OS or on
+single API is intended for JVMs running on Windows or on macOS or on
 Linux or any other operating system. Even with the same operating
 system, different computers have different hardware. Some computers have
 wired connections to a router or gateway. Others are connected
-wirelessly. And somehow, you have to figure out the address of the
-computer you want to send messages to and deal with its network,
-hardware, and software.
+wirelessly. Beyond your own computer, you have to figure out the address of the
+computer you want to send messages to and deal with its network, hardware, and
+software.
 
-There are so many steps in the process that it seems hopelessly
+There are so many details in the process that it seems hopelessly
 complicated. To combat this problem, the OSI seven layer model was
 developed. Each layer defines a specification for one aspect of the
 communication path between two computers. As long as a particular layer
@@ -106,7 +127,7 @@ calls that your code uses to send and receive data comprise the
 application layer for your purposes. The only thing above this layer is
 the user. Protocols like HTTP and FTP are the province of this layer.
 All the other communication problems have been solved, and the key issue
-is what to do with the data that is communicated.
+is what to do with the data that's communicated.
 
 The presentation layer changes one kind of message encoding to another.
 This layer is not one people usually spend a lot of time worrying about,
@@ -114,8 +135,8 @@ but some kinds of encryption and compression can happen here.
 
 The session layer allows for the creation of sessions when communicating
 between computers. Sessions requiring authentication and permissions can
-be dealt with here, but,in practice, this layer is not often used. One
-notable exception is the Secure Sockets Layer (SSL), the technology most
+be dealt with here, but in practice, this layer's not often used. One
+notable exception is Transport Layer Security (TLS), the technology most
 commonly used to protect passwords and credit card numbers when you make
 online purchases.
 
@@ -126,15 +147,15 @@ be sent across the network. This layer can also provide reliability by
 checking to see if these packets make it to their destinations and
 resending them otherwise. The two most important protocols for this
 layer are Transmission Control Protocol (TCP) and User Datagram Protocol
-(UDP). TCP is more commonly used and provides communication that is
-reliable and ensures that packets are delivered in order. TCP is used
-for file transfers, e-mail, web browsing, and any number of other web
-applications. UDP does not have guarantees about reliability or
+(UDP). For Internet traffic, TCP is more commonly used and provides
+reliable communication that ensures packets are delivered in order.
+TCP is used for file transfers, e-mail, web browsing, and any number of other
+web applications. UDP doesn't have guarantees about reliability or
 ordering; however, UDP is faster. For this reason, UDP is used for
 streaming media and online games.
 
 The network layer is responsible for packet transmission from source to
-destination. It is concerned with addressing schemes and routing. The
+destination. It's concerned with addressing schemes and routing. The
 most well-known example of a network layer protocol is the Internet
 Protocol (IP) used to make the Internet work.
 
@@ -143,20 +164,25 @@ destination, the data link layer is responsible for the actual
 transmission of packets between each link in the chain. Here hardware
 becomes more important because there are so many different kinds of
 networks. Examples of data link layers include Ethernet, token ring
-networks, IEEE 802.11 wireless networks, and many more.
+networks, IEEE 802.11 Wi-Fi networks, and many more.
 
 Finally, the lowest level is the physical layer. This layer defines the
-actual physical specifications for sending raw information from one
+physical specifications for sending raw bits of information from one
 place to another, over a wire or wirelessly. This layer is typically the
-least interesting to programmers but is a key area for electrical
+least interesting to programmers but is an important area for electrical
 engineers.
+
+****
+<<OSIModelExercise>> +
+<<UDPandTCPExercise>>
+****
 
 === Syntax: Networking in Java
 
 The seven layer model might seem overwhelming, but there are only a few
-key pieces that we'll need on a regular basis. In fact, the system of
+key pieces we'll need on a regular basis. In fact, the system of
 layers is designed to help people focus on the one or two layers
-specified to their needs and ignore the rest.
+specific to their needs and ignore the rest.
 
 ==== Addresses
 
@@ -165,21 +191,24 @@ layer are addresses. A network address is much like a street address. It
 gives the location on the network of a computer so that messages can be
 sent there.
 
-For most systems you use, such an address is be an _IP address_. There
+For most systems you use, such an address will be an _IP address_. There
 are two current versions of IP addresses, IPv4 and IPv6. IPv6 is the way
 of the future and provides a huge number of possible addresses. Not all
-systems support IPv6, and the general public is not very aware of it.
+systems support IPv6, and the general public is often not aware of it.
 Although it will one day be the standard, we use the more common IPv4
 addresses here. An IPv4 address is typically written as four decimal
-numbers separated by dots. Each of these four numbers is in the range 0
-- 255. For example, `64.233.187.99` and `192.168.1.1` are IPv4
-addresses.
+numbers separated by dots. Each of these four numbers is in the range 0-255.
+For example, `64.233.187.99` and `192.168.1.1` are IPv4 addresses.
+
+****
+<<IPv4andIPv6Exercise>>
+****
 
 ==== Sockets
 
 The second topic we focus on is the transport layer. Here, you need to
 make a choice between TCP or UDP for communication. In this book, we
-only cover TCP communication because it is reliable and much more
+only cover TCP communication because it's reliable and more
 commonly used than UDP. If you need to use UDP communication, the basics
 are not too different from TCP, and there are many excellent resources
 online.
@@ -188,42 +217,42 @@ To create a TCP connection, you typically need a server program and a
 client program. The difference between the two is not necessarily big.
 In fact, both the client and the server could be running on the same
 computer. What distinguishes the server is that it sets up a _port_ and
-listens to it, waiting for a connection. Once the client makes a
-connection, the two programs can send and receive data on an equal
+listens on it, waiting for a connection. Once the client makes a
+connection to that port, the two programs can send and receive data on an equal
 footing.
 
 We just mentioned the term port. As you know, an address is the location
-of a computer in a network, but a single computer may be performing many
+of a computer in a network, but a single computer might be performing many
 different kinds of network communications. For example, your computer
-could be running a web browser, an instant message application, an
+could be running a web browser, an audio chat application, an
 online game, and a number of other things. So that none of these
 programs become confused and get each others' messages, each program
 uses a separate port for communication. To the outside world, your
 computer usually only has a single address but thousands of available
 ports. Many of these ports are set aside for specific purposes. For
 example, port 20 is for FTP, port 23 is for Telnet, and port 80 is for
-HTTP (webpages).
+HTTP (web pages).
 
-When you write a server program, you will usually create a
-`ServerSocket` object which is linked to a particular port. For example,
+When you write a server program, you'll usually create a
+`ServerSocket` object linked to a particular port. For example,
 if you wanted to write a web server, you might create a `ServerSocket`
 as follows.
 
 [source, java]
 ----
-ServerSocket serverSocket = new ServerSocket( 80 );
+ServerSocket serverSocket = new ServerSocket(80);
 ----
 
 Once the `ServerSocket` object has been created, the server will
 typically listen to the socket and try to accept incoming connections.
 When a connection is accepted, a new `Socket` object is created for that
-connection. The purpose of the `ServerSocket` is just to set up this
+connection. The purpose of the `ServerSocket` is purely to set up this
 `Socket`. The `ServerSocket` doesn't do any real communication on its
-own. This system may seem indirect, but it allows for greater
-flexibility. For example, a server could have a thread just listening
-for connections. When a connection is made, it could spawn a new thread
+own. This system might seem indirect, but it allows for greater
+flexibility. For example, a server could have a thread whose only job is to
+listen for connections. When a connection is made, it could spawn a new thread
 to do the communication. Commercial web servers often function in this
-way. The code for a server to listen for a connection is:
+way. The code for a server to listen for a connection is as follows.
 
 [source, java]
 ----
@@ -238,12 +267,20 @@ you can create the `Socket` object directly.
 
 [source, java]
 ----
-Socket socket = new Socket( "64.233.187.99", 80 );
+Socket socket = new Socket("64.233.187.99", 80);
 ----
 
 The first parameter is a `String` specifying the address of the server,
-either as an IP address as shown or as domain like `"google.com"`. The
-second parameter is, of course, the port you want to connect on.
+either as an IP address as shown or as a domain like `"google.com"`. The
+second parameter is the port you want to connect on.
+
+Note that the `Socket` and `ServerSocket` classes are both in the `java.net`
+package, so you'll need to import `java.net.*` to use them and the rest of the
+basic networking library.
+
+****
+<<portExercise>>
+****
 
 ==== Receiving and sending data
 
@@ -253,31 +290,32 @@ can be used for communication.
 
 In order to get input from a `Socket`, you first call its
 `getInputStream()` method. You can use the `InputStream` returned to
-create an object used for normal file input like in the first half of
-the chapter. The considerations are similar. If you only need to receive
-plain, human readable from the `Socket`, you can create a `Scanner`
+create an object used for normal file input like in
+<<ch20-file-io#ch20-file-io>>. You will need to make similar considerations
+about the kind of data you want to read and write. If you only need to receive
+plain, human-readable text from the `Socket`, you can create a `Scanner`
 object as follows.
 
 [source, java]
 ----
-Scanner in = new Scanner( socket.getInputStream() );
+Scanner in = new Scanner(socket.getInputStream());
 ----
 
-Over the network, it will be much more common to send files and other
-binary data. For that purpose, you can create an `ObjectInputStream` or
-`DataInputStream` from the `Socket` in much the same way.
+Over the network, it will be more common to send files and other binary data.
+For that purpose, you can create a `DataInputStream` or an `ObjectInputStream`
+object from the `Socket` in much the same way.
 
 [source, java]
 ----
-ObjectInputStream in = new ObjectInputStream( socket.getInputStream() );
+DataInputStream in = new DataInputStream(socket.getInputStream());
 ----
 
-It should be unsurprising that output is just as easy as input. Text
+It should be unsurprising that output is just as simple as input. Text
 output can be accomplished by creating a `PrintWriter`.
 
 [source, java]
 ----
-PrintWriter out = new PrintWriter( socket.getOutputStream() );
+PrintWriter out = new PrintWriter(socket.getOutputStream());
 ----
 
 Likewise, binary output can be accomplished by creating an
@@ -285,84 +323,86 @@ Likewise, binary output can be accomplished by creating an
 
 [source, java]
 ----
-ObjectOutputStream out = new ObjectOutputStream(
-    socket.getOutputStream() );
+DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 ----
 
 Once you have these input and output objects, you use them in the same
 way you would for file processing. There are a few minor differences to
-keep in mind. In the first place, when reading data, you may not know
-when more is coming. There is no explicit end of file. Also, it is
+keep in mind. In the first place, when reading data, you might not know
+when more is coming. There's no explicit end of file. Also, it's
 sometimes necessary to call a `flush()` method after doing a write.
-Unlike writing to a disk, a socket may wait for a sizable chunk of data
-to be accumulated before it gets sent across the network. Without a
-`flush()`, the data you write may not be sent immediately.
+A socket might wait for a sizable chunk of data to be accumulated before it
+gets sent across the network. Without a `flush()`, the data you write might
+not be sent immediately.
 
+[[clientServerSummingExample]]
 .Simple client and server
 ====
 
-Here's an example of a piece of server code which listens on port 4321
-waits for a connection, then reads 100 `int` values in binary form from
+Here's an example of a piece of server code which listens on port 4321,
+waits for a connection, reads 100 `int` values in binary form from
 the socket, and prints their sum.
 
 [source, java]
 ----
 try{
-    ServerSocket serverSocket = new ServerSocket( 4321 );
+    ServerSocket serverSocket = new ServerSocket(4321);
     Socket socket = serverSocket.accept();
-    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+    DataInputStream in = new DataInputStream(socket.getInputStream());
     int sum = 0;
-    for( int i = 0; i < 100; i++ )
+    for(int i = 0; i < 100; i++)
         sum += in.readInt();
     in.close();
     System.out.println("Sum: " + sum);
 }
-catch( IOException e )
-{}
+catch(IOException e) {
+	System.out.println("Network error: " + e.getMessage());
+}
 ----
 
 Now, here's a companion piece of client code which connects to port 4321
-and sends 100 `int` values in binary form, specifically, the first 100
+and sends 100 `int` values in binary form, specifically the first 100
 perfect squares.
 
 [source, java]
 ----
 try{
-    Socket socket = new Socket( "127.0.0.1", 4321 );
-    ObjectOutputStream out = new ObjectOutputStream(
-        socket.getOutputStream());
-    for( int i = 1; i <= 100; i++ )
+    Socket socket = new Socket("127.0.0.1", 4321);
+    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+    for(int i = 1; i <= 100; i++)
         out.writeInt(i*i);
     out.close();
 }
-catch( IOException e )
-{}
+catch(IOException e) {
+	System.out.println("Network error: " + e.getMessage());
+}
 ----
 
 Note that this client code connects to the IP address `127.0.0.1`. This
 is a special loopback IP address. When you connect to this IP address,
-it connects to the machine you are currently working on. In this way,
+it connects to the machine you're currently working on. In this way,
 you can test your networking code without needing two separate
-computers. To test this client and server code together, you you will
-need to run two virtual machines. The simplest way to do this is open
+computers. To test this client and server code together, you will
+need to run two virtual machines. The simplest way to do so is to open
 two command line prompts and run the client from one and the server from
 the other. Be sure that you start the server first so that the client
-has something to connect to.
+has something to connect to.  IDEs like Eclipse and IntelliJ will also allow
+you to start two programs simultaneously, but it can be difficult to be certain
+which one is which.
 
 ====
+
+****
+<<textTransmissionExercise>>
+****
 
 [[chatClientAndServerExample]]
 .Chat client and server
 ====
-Now we look at a more complicated example of network communication which
-should be familiar: a chat program. If you want to apply the GUI design
-from <<ch15-gui#ch15-gui>>, you can
-make a windowed version of this chat program which looks more like chat
-programs you are used to. For now, our chat program is be text only.
-
-****
-<<chatGUIExercise>>
-****
+Here we look at a more complicated example of network communication, a chat
+program. If you want to apply the GUI design from <<ch15-gui#ch15-gui>>, you
+can make a windowed version of this chat program which looks more like typical
+chat programs. For now, our chat program is text only.
 
 The functionality of the program is simple. Once connected to a single
 other chat program, the user will enter his or her name, then enter
@@ -372,217 +412,240 @@ across the network to the other chat program, which will display it. We
 encapsulate both client and server functionality in a class called
 `Chat`.
 
-The first step is the appropriate import statements and the `main()`
-method, which creates a client or a server `Chat` object, depending on
-command line parameters.
+[source, java]
+----
+include::{programsdir}/Chat.java[lines=1..15]
+----
+<.> The first step is the appropriate import statements.
+<.> In the `main()` method, if the first command-line argument is `"-s"`, the
+server version of the `Chat` constructor will be called. We convert the next
+argument to an `int` and use it as a port number.
+<.> If the argument `"-c"` is given, the client version of the `Chat`
+constructor will be called. We use the next two command-line arguments for the
+IP address and the port number, respectively.
+
 
 [source, java]
 ----
-include::{programsdir}/Chat.java[lines=1..14]
+include::{programsdir}/Chat.java[lines=17..27]
 ----
-
-
-The code given here calls the server version of the `Chat` constructor
-if the argument `"-s"` is given and the client version of the `Chat`
-constructor if the argument `"-c"` is given. For the server, only a port
-is required, but the client also needs an IP address to connect to.
-
-The server `Chat` constructor takes the port and listens for a
-connection on it. After a connection, it calls the `runChat()` method to
+<.> The server `Chat` constructor takes the port and listens for a
+connection on it.
+<.> After a connection, it calls the `runChat()` method to
 perform the actual business of sending and receiving chats.
 
 [source, java]
 ----
-include::{programsdir}/Chat.java[lines=16..24]
+include::{programsdir}/Chat.java[lines=29..38]
 ----
-
 
 The client constructor is similar but connects directly to the specified
 IP address on the specified port.
 
+
 [source, java]
 ----
-include::{programsdir}/Chat.java[lines=26..34]
+include::{programsdir}/Chat.java[lines=40..50]
 ----
-
-
-Once the client and server are connected, they both run the `runChat()`
+<.> Once the client and server are connected, they both run the `runChat()`
 method, which creates a new `Sender` and a new `Receiver` to do the
-sending and receiving. Note that both `start()` and `join()` are called
-on the `Sender` and `Receiver` objects. These calls are needed because
-both classes are subclasses of `Thread`. Sending messages is an
+sending and receiving.
+<.>  Note that both `start()` and `join()` are called
+on the `Sender` and `Receiver` objects.  These calls are needed because
+both classes are subclasses of `Thread`.
+
+Sending messages is an
 independent task concerned with reading input from the keyboard and then
 sending it across the network. Receiving messages is also an independent
-task, but it is concerned with reading input from the network and
-printing it on the screen. Since both tasks are independent, it is
+task, but it's concerned with reading input from the network and
+printing it on the screen. Since both tasks are independent, it's
 reasonable to allocate a separate thread to each.
 
+
+Below is the private inner class `Sender`. In this case it's convenient
+but not necessary to make `Sender` an inner class, especially since it's
+so short. The only piece of data `Sender` shares with `Chat` is the
+all important `socket` variable. 
 [source, java]
 ----
-include::{programsdir}/Chat.java[lines=36..43]
+include::{programsdir}/Chat.java[lines=52..73]
 ----
+<.> The `Sender` begins by creating a
+`PrintWriter` object from the `Socket` output stream.
+<.> It reads a name from the user.
+<.> Then, it waits for a line from the user.
+<.> If the user types `quit`, the `Socket` will be closed.
+<.> Otherwise, each time a line is read, it's printed and flushed through the
+`PrintWriter` connected to the `Socket` output stream, with the user name
+inserted at the beginning.
 
 
-Below is the private inner class `Sender`. In this case it is convenient
-but not necessary to make `Sender` an inner class, especially since it
-is so short. The only piece of data `Sender` shares with `Chat` is the
-all important `socket` variable. The `Sender` begins by creating a
-`PrintWriter` object from the `Socket` output stream. After reading a
-name from the user, it waits for a line from the user. Each time a line
-is ready, it is printed and flushed, with the user name inserted at the
-beginning, through the `PrintWriter` connected to the `Socket` output
-stream. When the user types `quit`, the `Socket` will be closed.
+Below is the private inner class `Receiver`, the simpler counterpart of
+`Sender`.
 
-[source, java]
-----
-include::{programsdir}/Chat.java[lines=45..69]
-----
-
-Below is the private inner class `Receiver`, the counterpart of
-`Sender`, as well as the last thing defined in the `Chat` class. The
-`Receiver` class is even simpler than the `Sender` class. After creating
-a `Scanner` object connected to the input stream of the `Socket`, it
-waits for a line of text to arrive from the connection. Each time a line
-arrives, it prints it to the screen. Here again, you can see that this
-problem is solved with threads much more easily than without them. Both
-the `in.hasNextLine()` method called by `Sender` and the
-`netIn.hasNextLine()` method called by `Receiver` are blocking
-functions. Because each might wait for input before continuing, they
-cannot easily be combined in one thread of execution.
 
 [source, java]
 ----
-include::{programsdir}/Chat.java[lines=71..83]
+include::{programsdir}/Chat.java[lines=74..87]
 ----
+<.> First, it creates a `Scanner` object connected to the input stream of the `Socket`.
+<.> Then, waits for a line of text to arrive from the connection. Each time a line
+arrives, it prints it to the screen.
+
+You can see that this problem is solved with threads much more
+easily than without them. Both the `in.nextLine()` method called by `Sender`
+and the `netIn.nextLine()` method called by `Receiver` are blocking calls.
+Because each must wait for input before continuing, they can't easily be
+combined in one thread of execution.
 
 Although the fundamentals are present in this example, a real chat
-client should provide a buddy list, the opportunity to talk to more than
-one other user at a time, real error-handling code in the
+client should provide a contact list, the opportunity to talk to more than
+one other user at a time, better error-handling code in the
 `catch`-blocks, and many other features. Some of these features are
 easier to provide in a GUI.
 
 ====
 
-In the next section, we give a solution for the Web Server problem.
-Since only the server side is provided, some of the networking is
+
+****
+<<chatGUIExercise>>
+****
+
+
+In the next section, we give a solution for the web server problem.
+Since only the server side is needed, some of the networking is
 simpler, and there are no threads. However, the communication is done in
 both binary and text mode.
 
 === Solution: Web server
 
-Here is our solution to the Web Server problem. As usual, our solution
+Here's our solution to the web server problem. As usual, our solution
 doesn't provide all the error checking or features that a real web
-server would, but it is entirely functional. When you compile and run
-the code, it will start a web server on port 8080 (an alternative port
-for HTTP) in the directory you run it from. Feel free to change those
-settings in the `main()` method. When the server is running, you should
-be able to open any web browser and go to `http://127.0.0.1`. If you put
-some sample HTML files in the directory you run the server from, you
+server would, but it's entirely functional. When you compile and run
+the code, it will start a web server on port 80 in the directory you run it
+from. Feel free to change those settings in the `main()` method or create a
+`WebServer` object from another program. When the server's running, you should
+be able to open any web browser and go to http://127.0.0.1. If you put
+some sample HTML and image files in the directory you run the server from, you
 should be able to browse them.
-
-As for our code, we start with the imports and constructor below. Note
-that the server has fields for the port communication will take place
-on, the root directory for the web page, and a `ServerSocket`. The
-`main()` method does nothing but call the constructor using the current
-directory as an argument and then start the server.
 
 [source, java]
 ----
-include::{programsdir}/WebServer.java[lines=1..23]
+include::{programsdir}/WebServer.java[lines=1..17]
 ----
+<.> Our code starts with the necessary imports.
+<.> The server has fields for the port where communication will take place
+and the root directory for the web page.
+<.> The `main()` method calls the constructor using port 80 and a path
+corresponding to the current directory (`.`) as arguments. Then, it starts
+the server.
 
 
 Below is the `start()` method. This method contains the central loop of
-the web server that waits for connections and loops forever. Once a
-connection has been made, the server creates input and output objects
-from the socket connection. Then, it tries to serve requests coming from
-the socket input. Our web server ignores any request other than a `GET`
-request and closes the connection after the first `GET`. When a `GET`
-request is made, the server removes the `"HTTP"` at the beginning and
-passes off the remaining path to the `serve()` method. Everything else
-in the `start()` method is made up of the necessary exception handling
-machinery.
-
-Note that the `out` object is of type `ObjectOutputStream`, allowing us
-to send binary data over the socket. However, the `in` variable is of
-type `Scanner`, because HTTP requests are generally only text.
+the web server that waits for connections and loops forever.
 
 [source, java]
 ----
-include::{programsdir}/WebServer.java[lines=25..63]
+include::{programsdir}/WebServer.java[lines=19..52]
 ----
+<.> First, we create a `ServerSocket` to listen on the port.
+<.> Once a connection has been made, the server creates input and output objects
+from the socket connection. Then, it tries to serve requests coming from
+the socket input.
+<.> Our web server keeps reading lines until it finds a `GET` request.
+<.> When a `GET` request is made, the server removes the `"GET "` at the
+beginning of the request and the HTTP version information at the end.
+<.> It passes the remaining file path to the `serve()` method.
+<.> Afterwards, it closes the connection and sets `requestRead` to `true` so that
+we stop looping through requests made on this particular connection to the
+server.
+<.> All that remains in the `start()` method is the necessary exception handling
+machinery.
+
+Note that the `out` object is of type `DataOutputStream`, allowing us
+to send binary data over the socket. However, the `in` variable is of
+type `Scanner`, because HTTP requests are text only.
 
 
 Next is a short utility method which provides some amount of platform
-independence. The `getPath()` method take in a `String` representation
-of a path requested by a web browser and format it. This path should
+independence. The `getPath()` method takes in a `String` representation
+of a path requested by a web browser and formats it. This path should
 always be given in the Unix or Linux style with slashes (`/`) separating
-each directory. To function smoothly with other operating systems,
+each directory. 
+
+[source, java]
+----
+include::{programsdir}/WebServer.java[lines=54..61]
+----
+<.> To function smoothly with other operating systems,
 `getPath()` uses the class variable `File.separatorChar` which gives the
 `char` used to separate directories on whichever platform the JVM is
-currently running. In addition, `getPath()` adds `"index.html"` to the
-end of the path if the path ends with a directory rather than a file
+currently running.
+<.> In addition, `getPath()` adds `"index.html"` to the
+end of the path if the path is a directory rather than a file
 name. Real web servers try a list of many different files such as
 `index.html`, `index.htm`, `index.php`, and so on, until a file is found
 or the list runs out.
 
-[source, java]
-----
-include::{programsdir}/WebServer.java[lines=65..72]
-----
 
+The last method in the `WebServer` class takes in a path and transmits the
+corresponding file over the network.
 
-The last method in the `WebServer` class takes in a path and sends the
-corresponding file over the nextwork. The `serve()` method first tries
-to find the specified file. If it fails, it sends an `HTTP 404` message
-with a short explanatory piece of HTML. Anyone who surfs the Internet
-should be familiar with 404 messages. On the other hand, if this method
-finds the file, it sends the `HTTP 200` method indicating success and
-then creates a new `ObjectInputStream` object to read the file in binary
-format. In this case, it is necessary to read the file in binary. In
-general, HTML files are simple text files which are human readable, but
-the image files that web servers must often send such as GIF and JPEG
-files are binary files which are filled with unprintable characters.
-Because we need to send binary data, we were also careful to open an
-`ObjectOutputStream` on the socket earlier.
-
-Once the file is open, the `serve()` method simply reads it in, byte by
-byte, and sends each byte out over the socket. After the file has been
-sent, the method closes it and returns.
 
 [source, java]
 ----
-include::{programsdir}/WebServer.java[lines=74..104]
+include::{programsdir}/WebServer.java[lines=63..90]
 ----
+<.> The `serve()` method first checks to see if the specified file exists. If
+it doesn't, the method sends an `HTTP 404` response with a short explanatory
+piece of HTML. Anyone who's spent any time on the Internet should be familiar
+with 404 messages.
+<.> On the other hand, if the file exists, the method sends an `HTTP 200`
+response indicating success.
+<.> Then, it creates a new `DataInputStream` object to read the file. In this
+case, it's necessary to read the file in binary. In general, HTML files are
+human-readable text files, but the image files that web servers must often send
+such as GIF and JPEG files are binary files filled with unprintable characters.
+Because we need to send binary data, we were also careful to open a
+`DataOutputStream` on the socket earlier.
+<.> Once the file's open, the `serve()` method simply reads it in, byte by
+byte, and sends each byte out over the socket.  It would be more efficient to
+read a block of bytes and send them together, but our approach is simpler.
+<.> After the file has been sent, the method closes the `DataInputStream` and
+returns.
 
 
-Because a web server is a real world application, we have to give the
-usual caveat that this implementation is quite bare-bones. There are
+Because a web server is a real world application, we must repeat the
+caveat that this implementation is quite bare bones. There are
 other HTTP requests and many features, including error handling, that a
 web server should do better. Feel free to extend the functionality.
 
-Also, you might notice that there is no way to stop the web server. It
-has an infinite loop which is only broken if there is an `IOException`
-thrown. From a Windows, Linux, or Mac command prompt, you can usually
-stop a running program by typing `Ctrl-C`.
+You might also notice that there's no way to stop the web server. It
+has an infinite loop that's broken only if an `IOException` is thrown.
+From a Windows, Linux, or macOS command prompt, you can usually stop a
+running program by typing `Ctrl+C`.
+
+****
+<<sendingByteBlocksExercise>>
+****
 
 === Concurrency: Networking
 
-Throughout this book, we have used concurrency primarily for the purpose
+Throughout this book, we've used concurrency primarily for the purpose
 of speedup. For that kind of performance improvement, concurrency is
-essentially icing on the cake. Unless you are performing massively
+often icing on the cake. Unless you're performing massively
 parallel computations such as code breaking or scientific computing,
 concurrency will probably make your application run just a little faster
 or a little smoother.
 
 With network programming, the situation is different. Many networked
 programs, including chat clients, web servers, and peer-to-peer file
-sharing software, will simultaneously be connected to tens if not
+sharing software, can be simultaneously connected to tens if not
 hundreds of other computers at the same time. While there are
-single-threaded strategies to handle these scenarios, it is natural to
+single-threaded strategies to handle these scenarios, it's natural to
 handle them in a multi-threaded way.
 
-A web server at Google, for example, may service thousands of requests
+A web server at Google, for example, might service thousands of requests
 per second. If each request had to wait for the previous one to come to
 completion, the server would become hopelessly bogged down. By using a
 single thread to listen to requests and then spawn worker threads as
@@ -590,16 +653,17 @@ needed, the server can run more smoothly.
 
 ****
 <<threadedWebServerExercise>> +
-<<threadPoolWebServerExercise>>
+<<threadPoolWebServerExercise>> +
+<<threadedClientLatencyExercise>>
 ****
 
 Even in <<chatClientAndServerExample>>, it was convenient to
-create two different threads, `Sender` and `Receiver`. We did not create
+create two different threads, `Sender` and `Receiver`. We didn't create
 them for speedup but simply because they were doing two different jobs.
 Since the `Sender` waits for the user to type a line and the `Receiver`
 waits for a line of text to arrive over the network, it would be
 difficult to write a single thread that could handle both jobs. Both
-threads call the `hasNextLine()` method, which can block execution. A
+threads call the `nextLine()` method, which blocks execution. A
 single thread waiting to see if the user had entered more text could not
 respond to text arriving over the network until the user hit enter.
 
@@ -614,32 +678,33 @@ threads to solve the networking problem effectively.
 
 . Why are there so many similarities between the network I/O and the
 file I/O APIs in Java?
-. Explain the difference between client and server computers in
+. [[clientServerExercise]] Explain the difference between client and server computers in
 network communication. Is it possible for a single computer to be both a
 client and a server?
-. Why is writing a web browser so much more complicated than writing a
+. [[webBrowserExercise]] Why is writing a web browser so much more complicated than writing a
 web server?
-. Name and briefly describe the seven layers of the OSI model.
-. Modern computers often have many programs running that are all in
+. [[OSIModelExercise]] Name and briefly describe the seven layers of the OSI model.
+. [[portExercise]] Modern computers often have many programs running that are all in
 communication over a network. Since a computer often has only one IP
 address that the outside world can send to, how are messages that arrive
 at the computer connected to the right program?
-. What are the most popular choices of protocols at the transport
+. [[UDPandTCPExercise]] What are the most popular choices of protocols at the transport
 layer of the OSI model? What are the advantages and disadvantages of
 each?
-. How many possible IP addresses are there in IPv4? IPv6 addresses are
-often written as eight groups of four hexadecimal digits, totaling 32
-hexadecimal digits. How many possible IP addresses are there in IPv6?
+. [[IPv4andIPv6Exercise]] How many possible IP addresses are there in IPv4? IPv6
+addresses are often written as eight groups of four hexadecimal digits,
+totaling 32 hexadecimal digits. How many possible IP addresses are there in IPv6?
 
 *Programming Practice*
 
-. Recall the client and server from <<Receiving and sending data>> that, respectively, send 100 `int` values and sum them.
-Rewrite these fragments to send and receive the `int` values in text
-rather than binary format.
+.  [[textTransmissionExercise]] In <<clientServerSummingExample>> a client
+sends 100 `int` values, and a server sums them. Rewrite these fragments to
+send and receive the `int` values in text rather than binary format. You will
+need to send whitespace between the values.
 .  [[chatGUIExercise]] Add a GUI based on `JFrame` for the chat
-program given in <<chatClientAndServerExample>>. Use a
-(non-editable) `JTextArea` to display the log of messages, including
-user name. Provide a `JTextField` for entering messages, a `JButton` for
+program given in <<chatClientAndServerExample>>. Use a (non-editable)
+`JTextArea` to display the log of messages, including user name. Provide a
+`JTextField` for entering messages, a `JButton` for
 sending messages, and another `JButton` for closing the network
 connections and ending the program.
 . [[threadedWebServerExercise]] Study the web server
@@ -657,10 +722,22 @@ exercise to use a fixed pool of 10 worker threads.
 
 *Experiments*
 
-. Consider the multi-threaded implementation of a web server from
+. [[sendingByteBlocksExercise]] The web server program given in
+<<Solution: Web server>> sends files byte by byte.  It would be much more
+efficient to send files in blocks of bytes instead of singly. 
+Re-implement this program to send blocks of 1,024 bytes at a time.  Time the
+difference it takes to send image files with sizes of about 500 KB, 1 MB, and
+2 MB using the two different programs. If you can, also measure the time when
+you're sending to a different computer, perhaps in the same computer lab.  To
+do so, the person on the other computer will need to enter the IP address of
+your computer instead of `127.0.0.1`.  It would also be valuable to time how
+long it takes to send a file to a computer at a remote location, but doing so
+often involves changes to firewall settings to allow an outside computer to
+connect to your server.
+. [[threadedClientLatencyExercise]] Consider the multi-threaded implementation of a web server from
 <<threadedWebServerExercise>>. Can you design an
 experiment to measure the average amount of time a client waits to
-receive the requested file? How does this time change from the single
-threaded to the multi-threaded version? If the file size is larger, is
-the increase in the waiting time the same in both the single and
+receive the requested file? How does this time change from the single-threaded
+to the multi-threaded version? If the file size is larger, is
+the increase in the waiting time the same in both the single- and
 multi-threaded versions?

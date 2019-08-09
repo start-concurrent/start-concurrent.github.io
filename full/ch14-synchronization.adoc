@@ -305,7 +305,7 @@ while(true) {
 countVotes();
 ----
 
-What's the problem with this design? Notice that the counting thread is
+What's the problem with this design? The counting thread is
 running through the `while` loop over and over waiting for
 `votingComplete` to become `true`. On a single processor, the counting
 thread would slow down the job of the collecting thread which is trying
@@ -333,7 +333,7 @@ synchronized(this) {
 countVotes();
 ----
 
-Notice that the `while` loop has moved inside the synchronized block.
+Note that the `while` loop has moved inside the synchronized block.
 Doing so before might have kept our program from terminating: As long as
 the vote counting thread held the lock, the vote collecting thread would
 not be allowed to modify `votingComplete`. When a thread calls `wait()`,
