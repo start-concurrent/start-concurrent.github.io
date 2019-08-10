@@ -9,5 +9,5 @@ public class Cat implements Ageable, Weighable {
     
     public int getAge() { return age/9; }
     
-    public int getWeight() { return weight; }   
+    public double getWeight() { return weight; }   
 }
