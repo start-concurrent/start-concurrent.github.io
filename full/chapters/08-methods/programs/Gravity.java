@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Gravity {
     public static final double G = 6.673e-11;
 

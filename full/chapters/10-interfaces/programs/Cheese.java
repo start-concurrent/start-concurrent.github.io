@@ -11,7 +11,7 @@ public class Cheese implements Ageable, Weighable {
     
     public int getAge() { return age; }
     
-    public int getWeight() { return weight; }
+    public double getWeight() { return weight; }
     
     public String getType() { return type; }
 }

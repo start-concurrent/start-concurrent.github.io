@@ -9,5 +9,5 @@ public class Dog implements Ageable, Weighable {
     
     public int getAge() { return age*7; }
     
-    public int getWeight() { return weight; }
+    public double getWeight() { return weight; }
 }
