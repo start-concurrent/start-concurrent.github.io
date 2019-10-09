@@ -13,7 +13,8 @@ end
 def convert()
     old_verbose, $VERBOSE = $VERBOSE, false
 
-    Asciidoctor.convert_file 'index.adoc', to_file: true, to_dir: '../pdf', backend: 'pdf', safe: 'unsafe'  
+    Asciidoctor.convert_file 'index.adoc', to_file: true, to_dir: '../pdf', \
+        attributes: 'pdf-theme=default-with-fallback-font', backend: 'pdf', safe: 'unsafe'
 
     $VERBOSE = old_verbose
 end
