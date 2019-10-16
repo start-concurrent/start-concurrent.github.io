@@ -12,9 +12,11 @@ end
 
 def convert()
     old_verbose, $VERBOSE = $VERBOSE, false
+    source = 'index.adoc'
+    source = 'index-select.adoc'
 
-    Asciidoctor.convert_file 'index.adoc', to_file: true, to_dir: '../pdf', \
-        attributes: 'pdf-theme=default-with-fallback-font', backend: 'pdf', safe: 'unsafe'
+    Asciidoctor.convert_file source, to_file: true, to_dir: '../pdf', \
+        attributes: { "pdf-themesdir" => "..", "pdf-theme" => "book" }, backend: 'pdf', safe: 'unsafe'
 
     $VERBOSE = old_verbose
 end
