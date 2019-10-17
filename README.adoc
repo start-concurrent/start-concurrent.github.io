@@ -64,6 +64,22 @@ A UNIX script to update both the full and chunked versions of the HTML is locate
 . Run Asciidoctor PDF to do the conversion: +
 `$ (cd full; asciidoctor-pdf index.adoc -D ../pdf)`
 
+==== Special Workaround for Tables
+
+There is a bug in the https://github.com/prawnpdf/prawn-table[prawn-table] code used by Asciidoctor-PDF when formatting certain tables.  There is discussion and a (so-far incomplete) fix https://discuss.asciidoctor.org/Problem-using-Asciidoctor-PDF-to-format-wide-autowidth-table-header-cells-td7220.html[here].
+
+Steps to fix the problem (simplified to not use a Gemfile):
+
+. Download the latest prawn-table code to a separate repository.
+.. `git clone https://github.com/prawnpdf/prawn-table.git`
+.. `cd prawn-table`
+. Build and install.
+.. `gem build prawn-table.gemspec`
+.. `gem install prawn-table-0.2.3.gem`
+
+These steps do not fix all tables.  Specifically, not all tables with autowidth will work.  Advice
+from the Asciidoctor https://discuss.asciidoctor.org/Problem-using-Asciidoctor-PDF-to-format-wide-autowidth-table-header-cells-tp7220p7229.html[authority] is to use column ratios and table width.
+
 === Generating E-Book Formats
 
 WARNING: In progress.

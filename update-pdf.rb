@@ -6,14 +6,16 @@ require_relative './default.rb'
 require_relative './autoxref-treeprocessor.rb'
 
 Asciidoctor::Extensions.register do
-  treeprocessor AutoXrefTreeprocessor
+    treeprocessor AutoXrefTreeprocessor
 end
 
 
 def convert()
     old_verbose, $VERBOSE = $VERBOSE, false
+    source = 'index.adoc'
 
-    Asciidoctor.convert_file 'index.adoc', to_file: true, to_dir: '../pdf', backend: 'pdf', safe: 'unsafe'  
+    Asciidoctor.convert_file source, to_file: true, to_dir: '../pdf', \
+        attributes: { "pdf-themesdir" => "..", "pdf-theme" => "book" }, backend: 'pdf', safe: 'unsafe'
 
     $VERBOSE = old_verbose
 end
