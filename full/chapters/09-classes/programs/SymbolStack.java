@@ -7,8 +7,8 @@ public class SymbolStack {
         size = 0; //<.>
     }
     
-    public void push( char symbol ) { symbols[size++] = symbol; } //<.>       
-    public void pop() { size--; } //<.>   
+    public void push( char symbol ) { symbols[size++] = symbol; } //<.>
+    public void pop() { size--; } //<.>
     public char top() { return symbols[size - 1]; } //<.>
     public boolean isEmpty() { return size == 0; } //<.>
 }

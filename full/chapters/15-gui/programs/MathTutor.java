@@ -42,7 +42,7 @@ public class MathTutor implements ActionListener, ItemListener {
 				submitButton.setEnabled(false);
 			}			
 		});        
-        typeMenu.add(advanced); // <.>        
+        typeMenu.add(advanced); // <.>
         operationsMenu.add(add); // <.>
         operationsMenu.add(subtract);
         operationsMenu.add(multiply);

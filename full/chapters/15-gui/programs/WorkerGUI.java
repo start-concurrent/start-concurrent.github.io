@@ -25,7 +25,7 @@ public class WorkerGUI implements ActionListener {
     
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == computeButton) {
-            SwingWorker worker = new SwingWorker<String, Void>() { //<.>         
+            SwingWorker worker = new SwingWorker<String, Void>() { //<.>
                 public String doInBackground() { //<.>
                     try {
                         Thread.sleep(5000);

@@ -5,6 +5,6 @@ public class EmptyFrame {
         JFrame frame = new JFrame("Empty Frame"); //<.>
         frame.setSize(350,200); //<.>
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //<.>
-        frame.setVisible(true); //<.>       
+        frame.setVisible(true); //<.>
     }  
 }

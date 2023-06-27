@@ -9,7 +9,7 @@ public class Distance {
         
         // Solution to subproblem 1: Read input
         // Prompt the user and get speed and time
-        System.out.print("Enter the speed: "); // <3>       
+        System.out.print("Enter the speed: "); // <3>
         speed = in.nextDouble();
         System.out.print("Enter the time: ");
         time = in.nextDouble();
