@@ -15,7 +15,7 @@ public class Calendar {
                 squares[i][j] = " ";        
         Scanner in = new Scanner(System.in);
         System.out.print("Which day does your month start on? (0 - 6) ");
-        int start = in.nextInt(); //read starting day <4>        
+        int start = in.nextInt(); //read starting day <4>
         System.out.print("How many days does your month have? (28 - 31) ");
         int days = in.nextInt();  //read days in month <5>
         int day = 1;

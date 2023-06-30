@@ -15,7 +15,7 @@ public class ReverseComplement {
             }       
         String reverseComplement = "";
         //reverse the complement
-        for(int i = complement.length() - 1; i >= 0; i--)	//<2> 
+        for(int i = complement.length() - 1; i >= 0; i--)	//<2>
             reverseComplement += complement.charAt(i);
         System.out.println("Reverse complement: " + reverseComplement);
     }

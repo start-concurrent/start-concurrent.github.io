@@ -3,7 +3,7 @@ public class Factor {
     public static final long NUMBER = 59984005171248659L;
     
     public static void main(String[] args) {
-        FactorThread[] threads = new FactorThread[THREADS]; //<.> 
+        FactorThread[] threads = new FactorThread[THREADS]; //<.>
         long root = (long)Math.sqrt(NUMBER); // Go to square root
         long start = 3;  // No need to test 2       
         long quotient = root / THREADS;

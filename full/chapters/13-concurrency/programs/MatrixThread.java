@@ -14,7 +14,7 @@ public class MatrixThread extends Thread {
         this.upper = upper;
     }
     
-    public void run() { //<.>  
+    public void run() { //<.>
         for(int i = lower; i < upper; i++)
             for(int j = 0; j < c[i].length; j++)              
                 for(int k = 0; k < b.length; k++)

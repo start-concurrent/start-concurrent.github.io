@@ -4,11 +4,6 @@ require_relative './default.rb'
 require_relative './GoogleAnalyticsDocinfoProcessor.rb'
 require_relative './autoxref-treeprocessor.rb'
 
-Asciidoctor::Extensions.register do
-  treeprocessor AutoXrefTreeprocessor
-  docinfo_processor GoogleAnalyticsDocinfoProcessor
-end
-
 
 def convert()
     old_verbose, $VERBOSE = $VERBOSE, false

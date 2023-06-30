@@ -2,7 +2,7 @@ import java.io.*;
 
 public class BitmapCompression {
     public static void main(String[] args) {        
-		if(args.length != 2)					//<.>	
+		if(args.length != 2)					//<.>
 			System.out.println("Usage: java BitmapCompression (-c|-d) file");
 		else {
 			DataInputStream in = null;
@@ -28,7 +28,7 @@ public class BitmapCompression {
 			byte current = 0;
 			int count = 1;
 			try {
-				current = in.readByte(); 		//<.>       
+				current = in.readByte(); 		//<.>
 				while(true) {
 					byte temp = in.readByte(); 	//<.>
 					if(temp == current && count < 127)
@@ -41,7 +41,7 @@ public class BitmapCompression {
 					}
 				}
 			}
-			catch(EOFException e) { // Last sequence of bytes <.>			
+			catch(EOFException e) { // Last sequence of bytes <.>
 				out.writeByte(count);
 				out.writeByte(current);
 			}			

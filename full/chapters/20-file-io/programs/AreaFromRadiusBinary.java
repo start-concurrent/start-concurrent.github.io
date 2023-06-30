@@ -8,7 +8,7 @@ public class AreaFromRadiusBinary {
         DataOutputStream out = null;        
         try {
             in = new DataInputStream(new FileInputStream(inFile));		//<.>
-            out = new DataOutputStream(new FileOutputStream(outFile));	//<.>           
+            out = new DataOutputStream(new FileOutputStream(outFile));	//<.>
             while(true) {	//<.>
                 double radius = in.readDouble();
                 out.writeDouble(Math.PI*radius*radius);              

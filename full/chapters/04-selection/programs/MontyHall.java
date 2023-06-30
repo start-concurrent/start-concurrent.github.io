@@ -3,14 +3,14 @@ import java.util.*; //<.>
 public class MontyHall {
     public static void main(String[] args) {
         Random random = new Random();
-        int winner = random.nextInt(3); //<.>    
+        int winner = random.nextInt(3); //<.>
         Scanner in = new Scanner( System.in );
         System.out.print("Choose a door (enter 0, 1, or 2): ");
         int choice = in.nextInt(); //<.>
         int alternative; //<.>
         int open;
 
-        if( choice == winner ) { //<.>          
+        if( choice == winner ) { //<.>
             int low;
             int high;
             if( choice ==  0 ) { //<.>

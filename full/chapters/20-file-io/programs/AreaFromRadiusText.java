@@ -9,7 +9,7 @@ public class AreaFromRadiusText {
         PrintWriter out = null;     
         try {
             in = new Scanner(inFile);		//<.>
-            out = new PrintWriter(outFile);	//<.>           
+            out = new PrintWriter(outFile);	//<.>
             while(in.hasNextDouble()) {		//<.>
                 double radius = in.nextDouble();				//<.>
                 out.format("%.3f%n", Math.PI*radius*radius);	//<.>

@@ -23,7 +23,7 @@ public class SimpleMouseAdapter extends MouseAdapter { //<.>
     }
     
     // Override only those methods we want
-    public void mouseEntered(MouseEvent e) { //<.> 
+    public void mouseEntered(MouseEvent e) { //<.>
         if (e.getSource() == oneButton)
             status.setText("Mouse enters One.");
         else

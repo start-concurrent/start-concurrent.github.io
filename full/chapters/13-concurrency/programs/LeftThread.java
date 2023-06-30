@@ -8,7 +8,7 @@ public class LeftThread extends Thread {
             catch(InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Left"); //<.>              
+            System.out.println("Left"); //<.>
         }
     }
 }

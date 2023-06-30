@@ -11,7 +11,7 @@ public class DNASearch {
             System.out.print("Enter the DNA sequence you wish to search in: "); //<.>
             sequence = in.next().toUpperCase(); //<.>
             valid = true;
-            for(int i = 0; i < sequence.length() && valid; i++) { //<.>              
+            for(int i = 0; i < sequence.length() && valid; i++) { //<.>
                 c = sequence.charAt(i);
                 if(c != 'A' && c != 'C' && c != 'G' && c != 'T') { //<.>
                     System.out.println("Invalid DNA sequence!");

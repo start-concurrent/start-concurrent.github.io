@@ -4,10 +4,10 @@ public class SynchronizedAccount {
 
     public double getBalance() throws InterruptedException {
         double amount;      
-        synchronized(this) {   //<.>         
+        synchronized(this) {   //<.>
             readers++;
         }       
-        amount = balance;      //<.>      
+        amount = balance;      //<.>
         synchronized(this) {
             if(--readers == 0) //<.>
                 notifyAll();   //<.>

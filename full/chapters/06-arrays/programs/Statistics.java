@@ -4,7 +4,7 @@ public class Statistics {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int n = in.nextInt(); //<.>
-        int[] scores = new int[n]; //<.>                
+        int[] scores = new int[n]; //<.>
         for(int i = 0; i < n; i++) //<.>
             scores[i] = in.nextInt();
         int max = scores[0]; //<.>
@@ -24,7 +24,7 @@ public class Statistics {
         double variance = 0;
         for(int i = 0; i < n; i++)
             variance += (scores[i] - mean)*(scores[i] - mean); //<.>
-        variance /= (n - 1); //<.>        
+        variance /= (n - 1); //<.>
         System.out.println("Standard Deviation:\t" + Math.sqrt(variance)); //<.>
         int temp;
         for(int i = 0; i < n - 1; i++) { //<.>
