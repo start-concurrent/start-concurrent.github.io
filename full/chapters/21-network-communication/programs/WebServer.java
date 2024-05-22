@@ -22,7 +22,7 @@ public class WebServer {
         DataOutputStream out = null;
         String line;
         try {
-            ServerSocket serverSocket = new ServerSocket(port); //<.>        
+            ServerSocket serverSocket = new ServerSocket(port); //<.>
             while(true) {
                 socket = serverSocket.accept(); 
                 try {               
@@ -55,7 +55,7 @@ public class WebServer {
         if('/' != File.separatorChar)				//<.>
             path = path.replace('/', File.separatorChar);       
         if(path.endsWith("" + File.separatorChar))
-            return webRoot + path + "index.html";	//<.>      
+            return webRoot + path + "index.html";	//<.>
         else
             return webRoot + path;      
     }

@@ -17,7 +17,7 @@ public class DiningPhilosopher extends Thread {
         }
         try {
             for(int i = 0; i < SEATS; i++)                        
-                philosophers[i].join(); //<.>      
+                philosophers[i].join(); //<.>
         }
         catch(InterruptedException e) {
             e.printStackTrace();
@@ -25,7 +25,7 @@ public class DiningPhilosopher extends Thread {
         System.out.println("All philosophers done.");
     }
     
-    public void run() {               	//<.>       
+    public void run() {               	//<.>
         for(int i = 0; i < 100; i++) {	//<.>
             think();				   
             getChopsticks();           
@@ -49,7 +49,7 @@ public class DiningPhilosopher extends Thread {
         synchronized(chopsticks) {	  	//<.>
             while(chopsticks[location1] || chopsticks[location2]) { //<.>
                 try {
-                    chopsticks.wait();	//<.>         
+                    chopsticks.wait();	//<.>
                 }
                 catch(InterruptedException e) {
                     e.printStackTrace();

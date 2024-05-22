@@ -13,7 +13,7 @@ public class GetInputCLI { // <2>
         System.out.println("Bouncing Ball: Subproblem 1"); // <6>
         System.out.print("Enter the height: "); 
         height = in.nextDouble(); // <7>
-        System.out.print("Enter restitution coefficient: "); // <8> 
+        System.out.print("Enter restitution coefficient: "); // <8>
         coefficient = in.nextDouble();
         System.out.print("Enter the number of bounces: "); 
         bounces = in.nextInt();

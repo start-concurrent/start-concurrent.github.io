@@ -17,7 +17,7 @@ public class Chat {
     // Server
     public Chat(int port) {
         try {
-            ServerSocket serverSocket = new ServerSocket(port); //<.>  
+            ServerSocket serverSocket = new ServerSocket(port); //<.>
             socket = serverSocket.accept();
             runChat();	//<.>
         }

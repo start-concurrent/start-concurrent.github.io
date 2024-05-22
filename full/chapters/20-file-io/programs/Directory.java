@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Directory {    
     public static void main(String[] args) {
-        File directory = new File(".");			//<.>    
+        File directory = new File(".");			//<.>
         File[] files = directory.listFiles();	//<.>
         for(File file: files) {
             System.out.print(DateFormat.getDateInstance().format(

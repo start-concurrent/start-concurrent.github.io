@@ -1,14 +1,14 @@
 import java.util.Random;
 
 public class SumThread extends Thread {
-    private double sum = 0.0; //<.>    
+    private double sum = 0.0; //<.>
     private int lower;
     private int upper;
 	private double[] array; //<.>
     public static final int SIZE = 1000000; //<.>
     public static final int THREADS = 8;
     
-    public SumThread(double[] array, int lower, int upper) { //<.> 
+    public SumThread(double[] array, int lower, int upper) { //<.>
 		this.array = array;
         this.lower = lower;
         this.upper = upper;     

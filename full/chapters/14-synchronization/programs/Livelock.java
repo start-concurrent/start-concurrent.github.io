@@ -29,7 +29,7 @@ public class Livelock extends Thread {
     
         try {       
             while(!done) { //<.>
-                Thread.sleep(75); // Prepare for party <.>      
+                Thread.sleep(75); // Prepare for party <.>
                 synchronized(lock) {
                     totalReady++;       //<.>
                 }                   

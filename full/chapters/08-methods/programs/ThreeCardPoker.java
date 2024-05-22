@@ -91,7 +91,7 @@ public class ThreeCardPoker {
                getSuit(hand[1]) == getSuit(hand[2]);
     }
 
-    private static boolean hasStraight(int[] hand) { //<.>    
+    private static boolean hasStraight(int[] hand) { //<.>
         return (getRank(hand[0]) == 0 && getRank(hand[1]) == 1
                 && getRank(hand[2]) == 12) || //ace low
                (getRank(hand[1]) == getRank(hand[0]) + 1 &&

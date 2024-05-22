@@ -16,7 +16,7 @@ public class CollegeCosts {
         System.out.print("Enter food cost per month:\t$");
         double monthlyFood = in.nextDouble(); //<.>
         System.out.print("Annual interest rate:\t\t");
-        double annualInterest = in.nextDouble(); //<.>       
+        double annualInterest = in.nextDouble(); //<.>
         System.out.print("Years to pay back your loan:\t");
         int years = in.nextInt(); //<.>
         

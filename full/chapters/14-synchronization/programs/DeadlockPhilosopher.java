@@ -15,7 +15,7 @@ public class DeadlockPhilosopher extends Thread {
         }
         try {
             for(int i = 0; i < SEATS; i++)                        
-                philosophers[i].join(); //<.>      
+                philosophers[i].join(); //<.>
         }
         catch(InterruptedException e) {
             e.printStackTrace();
@@ -25,7 +25,7 @@ public class DeadlockPhilosopher extends Thread {
 
     public void run() {         
         try { 
-            getChopstick(seat);     			//<.>       
+            getChopstick(seat);     			//<.>
             Thread.sleep(50);       			//<.>
 			getChopstick((seat + 1) % SEATS); 	//<.>
         }
