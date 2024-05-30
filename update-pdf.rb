@@ -1,7 +1,6 @@
 require 'asciidoctor'
 require 'rouge'
 require 'asciidoctor-pdf'
-require 'asciidoctor-mathematical'
 require_relative './default.rb'
 require_relative './autoxref-treeprocessor.rb'
 
@@ -20,6 +19,8 @@ def convert()
     $VERBOSE = old_verbose
 end
 
+pdf_dir = "pdf"
+Dir.mkdir(pdf_dir) unless File.exist?(pdf_dir)
 Dir.chdir('full') do
     convert()
 end
