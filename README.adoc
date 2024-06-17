@@ -1,4 +1,4 @@
-:icons: font
+`:icons: font
 
 == README
 
@@ -12,19 +12,10 @@ This repository contains the source for the textbook https://start-concurrent.gi
 https://github.com/start-concurrent/start-concurrent.github.io[Start Concurrent repository])
 . https://www.ruby-lang.org/en/downloads/[Ruby]
 . https://asciidoctor.org[Asciidoctor]
-. https://github.com/asciidoctor/asciidoctor-mathematical[Asciidoctor-Mathematical] (note special instructions below for installing Mathematical on MacOS Mojave)
-
-==== Packages for Chunking the Book into a File per Chapter
-
+. https://github.com/asciidoctor/asciidoctor-mathematical[Asciidoctor-Mathematical]
 . https://github.com/wshito/asciidoctor-chunker[Asciidoctor Chunker] (to convert to HTML chunks)
-. https://github.com/roswell/roswell[Roswell] (needed by Asciidoctor Chunker)
-
-==== MacOS: Installing Mathematical (and Asciidoctor-Mathematical) on Mojave (10.14.x)
-
-. Fix MacOS header file location by running this command in a terminal window: `open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg`.
-. Add the Homebrew package path to PKG_CONFIG_PATH (e.g., in .bash_profile): `export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"`
-
-These instructions are highly situation dependent.  See https://stackoverflow.com/questions/51274905/brew-install-on-mojave[Brew Install on Mojave] for additional suggestions.
+. https://github.com/jirutka/asciidoctor-rouge[Asciidoctor Rouge] (for syntax highlighting)
+. https://asciidoctor.org/docs/asciidoctor-pdf/[Asciidoctor PDF gem] (to generate a PDF version)
 
 === Editing the Illustrations
 
@@ -41,30 +32,17 @@ To create a new figure or edit an existing one...
 
 Note: Don't save the outlined text version back to the original PDF file!
 
-=== Generating the HTML File
+=== Generating the HTML Files
 
-`$ ruby update-html.rb`
-
-Note: The https://github.com/jirutka/asciidoctor-rouge[Asciidoctor Rouge] plug-in is required for syntax highlighting.
-
-=== Generating an HTML File per Chapter
-
-. Install https://github.com/wshito/asciidoctor-chunker[Asciidoctor Chunker], including
-https://github.com/roswell/roswell[Roswell].
-. Create the full HTML version of the book: +
-`ruby update-html.rb`
-. Convert using Asciidoctor Chunker (with `ascidoctor-chunker.ros` in your path): +
-`$ asciidoctor-chunker.ros full/index.html -o chunked`
-
-A UNIX script to update both the full and chunked versions of the HTML is located in the root directory (`update-html`).
+See the shell script `update-html` and companion ruby script `update-html.rb`.  The shell script generates both the full book as a single-page html file and a "chunked" version that generates one chapter per html file (for faster downloading).
 
 === Generating the PDF
 
-. Install the https://asciidoctor.org/docs/asciidoctor-pdf/[Asciidoctor PDF gem].
-. Run Asciidoctor PDF to do the conversion: +
-`$ (cd full; asciidoctor-pdf index.adoc -D ../pdf)`
+See the shell script `update-pdf` and companion ruby script `update-pdf.rb`.
 
-==== Special Workaround for Tables
+==== Special Workaround for Tables when Generating PDF
+
+WARNING: This section has not been updated lately and a permanent fix may now be in place.
 
 There is a bug in the https://github.com/prawnpdf/prawn-table[prawn-table] code used by Asciidoctor-PDF when formatting certain tables.  There is discussion and a (so-far incomplete) fix https://discuss.asciidoctor.org/Problem-using-Asciidoctor-PDF-to-format-wide-autowidth-table-header-cells-td7220.html[here].
 
